@@ -1,5 +1,17 @@
 package cs309.a1.player;
 
-public class QuitGameActivity {
+import android.app.Activity;
+import android.widget.TextView;
 
+public class QuitGameActivity extends Activity{
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		setContentView(R.layout.information);
+
+		TextView title = (TextView) findViewById(R.id.informationTitle);
+		title.setText(R.string.QuitGameActivity_title);
+		
+	}
 }

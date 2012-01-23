@@ -8,5 +8,12 @@
     <string name="About">About</string>
     <string name="Information_about">This is the information about the program.</string>
     <string name="Information_rules">These are the rules of the game.</string>
+    <string name="ConnectActivity_title">Connect to Devices</string>
+    <string name="ConnectFailActivity_title">Connection Failure</string>
+    <string name="GameResultsActivity_title">Game Results</string>
+    <string name="PauseActivity_title">Paused</string>
+    <string name="QuitApplicationActivity_title">Quit</string>
+    <string name="QuitGameActivity_title">Quit</string>
+    <string name="ShowCardsActivity_title">Your Cards</string>
 
 </resources>
