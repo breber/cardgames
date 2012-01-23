@@ -20,7 +20,6 @@
         </activity>
         
         <activity android:name=".RulesActivity" />
-        <activity android:name=".PlayActivity" />
         <activity android:name=".AboutActivity" />
         <activity android:name=".ConnectActivity" />
         <activity android:name=".ConnectionFailActivity" />

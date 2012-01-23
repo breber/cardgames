@@ -42,7 +42,7 @@ public class MainMenu extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent playButtonClick = new Intent(MainMenu.this,
-						PlayActivity.class);
+						ConnectActivity.class);
 				startActivity(playButtonClick);
 			}
 		});
