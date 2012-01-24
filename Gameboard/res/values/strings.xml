@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World!</string>
-    <string name="app_name">MoonoPlayer</string>
-    <string name="Play">Play</string>
-    <string name="Rules">Rules</string>
-    <string name="About">About</string>
-    <string name="Information_about">This is the information about the program.</string>
-    <string name="Information_rules">These are the rules of the game.</string>
-
 </resources>
