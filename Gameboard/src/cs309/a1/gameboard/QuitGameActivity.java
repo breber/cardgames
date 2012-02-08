@@ -11,6 +11,8 @@ public class QuitGameActivity extends Activity {
 		setContentView(R.layout.information);
 
 		TextView title = (TextView) findViewById(R.id.informationTitle);
+		
+		//Set the text for the dialog box
 		title.setText("You want to quit the game?");
 	}
 
