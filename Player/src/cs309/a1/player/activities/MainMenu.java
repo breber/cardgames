@@ -1,16 +1,14 @@
 package cs309.a1.player.activities;
 
-import cs309.a1.player.R;
-import cs309.a1.player.R.id;
-import cs309.a1.player.R.layout;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import cs309.a1.player.R;
 
 public class MainMenu extends Activity {
-//Josh was here
+	//Josh was here
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -21,31 +19,22 @@ public class MainMenu extends Activity {
 		Button rules = (Button) findViewById(R.id.btRules);
 
 		rules.setOnClickListener(new OnClickListener() {
-
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent ruleButtonClick = new Intent(MainMenu.this,
-						RulesActivity.class);
+				Intent ruleButtonClick = new Intent(MainMenu.this, RulesActivity.class);
 				startActivity(ruleButtonClick);
 			}
 		});
 
 		about.setOnClickListener(new OnClickListener() {
-
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent aboutButtonClick = new Intent(MainMenu.this,
-						AboutActivity.class);
+				Intent aboutButtonClick = new Intent(MainMenu.this,	AboutActivity.class);
 				startActivity(aboutButtonClick);
 			}
 		});
 
 		play.setOnClickListener(new OnClickListener() {
-
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent playButtonClick = new Intent(MainMenu.this,
-						ConnectActivity.class);
+				Intent playButtonClick = new Intent(MainMenu.this, ConnectActivity.class);
 				startActivity(playButtonClick);
 			}
 		});

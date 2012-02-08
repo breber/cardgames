@@ -1,11 +1,8 @@
 package cs309.a1.player.activities;
 
-import cs309.a1.player.R;
-import cs309.a1.player.R.id;
-import cs309.a1.player.R.layout;
-import cs309.a1.player.R.string;
 import android.app.Activity;
 import android.widget.TextView;
+import cs309.a1.player.R;
 
 public class QuitApplicationActivity extends Activity{
 	//Josh was not here
@@ -16,6 +13,6 @@ public class QuitApplicationActivity extends Activity{
 
 		TextView title = (TextView) findViewById(R.id.informationTitle);
 		title.setText(R.string.QuitApplicationActivity_title);
-		
+
 	}
 }
