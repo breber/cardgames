@@ -7,7 +7,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 public class MainMenu extends Activity {
-
+//This will run at the start of the app
 	@Override
 	protected void onStart() {
 		super.onStart();
