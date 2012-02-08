@@ -5,7 +5,7 @@ import android.app.Activity;
 import android.widget.TextView;
 
 public class ConnectionFailActivity extends Activity {
-	// Fantashley was here
+	
 	@Override
 	protected void onStart() {
 		super.onStart();

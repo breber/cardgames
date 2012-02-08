@@ -5,7 +5,7 @@ import android.app.Activity;
 import android.widget.TextView;
 
 public class PauseMenuActivity extends Activity {
-// But mostly here
+
 	@Override
 	protected void onStart() {
 		super.onStart();
