@@ -1,5 +1,6 @@
-package cs309.a1.gameboard;
+package cs309.a1.gameboard.activities;
 
+import cs309.a1.gameboard.R;
 import android.app.Activity;
 import android.widget.TextView;
 

@@ -1,5 +1,6 @@
-package cs309.a1.gameboard;
+package cs309.a1.gameboard.activities;
 
+import cs309.a1.gameboard.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 public class MainMenu extends Activity {
+// She was here too
 //This will run at the start of the app
 	@Override
 	protected void onStart() {

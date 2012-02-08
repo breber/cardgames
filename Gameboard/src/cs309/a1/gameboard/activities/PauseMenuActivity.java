@@ -1,17 +1,18 @@
-package cs309.a1.gameboard;
+package cs309.a1.gameboard.activities;
 
+import cs309.a1.gameboard.R;
 import android.app.Activity;
 import android.widget.TextView;
 
-public class ConnectActivity extends Activity {
-//Josh was here
+public class PauseMenuActivity extends Activity {
+// But mostly here
 	@Override
 	protected void onStart() {
 		super.onStart();
 		setContentView(R.layout.information);
 
 		TextView title = (TextView) findViewById(R.id.informationTitle);
-		title.setText("Connect Activity");
+		title.setText("Game Paused");
 	}
 
 }
