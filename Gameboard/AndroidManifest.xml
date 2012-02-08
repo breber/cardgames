@@ -8,7 +8,6 @@
     <supports-screens android:smallScreens="false" android:largeScreens="true" android:xlargeScreens="true" android:normalScreens="false"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:icon="@drawable/ic_launcher"
