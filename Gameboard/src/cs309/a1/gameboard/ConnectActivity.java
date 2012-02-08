@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.widget.TextView;
 
 public class ConnectActivity extends Activity {
-
+//Josh was here
 	@Override
 	protected void onStart() {
 		super.onStart();
