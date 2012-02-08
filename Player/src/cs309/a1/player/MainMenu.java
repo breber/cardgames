@@ -7,7 +7,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 public class MainMenu extends Activity {
-
+//Josh was here
 	@Override
 	protected void onStart() {
 		super.onStart();

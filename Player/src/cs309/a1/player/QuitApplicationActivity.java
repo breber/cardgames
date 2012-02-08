@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.widget.TextView;
 
 public class QuitApplicationActivity extends Activity{
-	
+	//Josh was not here
 	@Override
 	protected void onStart() {
 		super.onStart();
