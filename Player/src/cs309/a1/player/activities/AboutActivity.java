@@ -1,9 +1,13 @@
-package cs309.a1.player;
+package cs309.a1.player.activities;
 
+import cs309.a1.player.R;
+import cs309.a1.player.R.id;
+import cs309.a1.player.R.layout;
+import cs309.a1.player.R.string;
 import android.app.Activity;
 import android.widget.TextView;
 
-public class RulesActivity extends Activity {
+public class AboutActivity extends Activity {
 
 	@Override
 	protected void onStart() {
@@ -11,10 +15,10 @@ public class RulesActivity extends Activity {
 		setContentView(R.layout.information);
 
 		TextView title = (TextView) findViewById(R.id.informationTitle);
-		title.setText(R.string.Rules);
+		title.setText(R.string.About);
 
 		TextView body = (TextView) findViewById(R.id.informationBody);
-		body.setText(R.string.Information_rules);
+		body.setText(R.string.Information_about);
 	}
 
 }

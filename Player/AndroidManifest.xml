@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Black.NoTitleBar" >
         <activity
-            android:name=".MainMenu"
+            android:name=".activities.MainMenu"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,15 +21,15 @@
             </intent-filter>
         </activity>
         
-        <activity android:name=".RulesActivity" />
-        <activity android:name=".AboutActivity" />
-        <activity android:name=".ConnectActivity" />
-        <activity android:name=".ConnectionFailActivity" />
-        <activity android:name=".GameResultsActivity" />
-        <activity android:name=".PauseMenuActivity" />
-        <activity android:name=".QuitApplicationActivity" />
-        <activity android:name=".QuitGameActivity" />
-        <activity android:name=".ShowCardsActivity" />
+        <activity android:name=".activities.RulesActivity" />
+        <activity android:name=".activities.AboutActivity" />
+        <activity android:name=".activities.ConnectActivity" />
+        <activity android:name=".activities.ConnectionFailActivity" />
+        <activity android:name=".activities.GameResultsActivity" />
+        <activity android:name=".activities.PauseMenuActivity" />
+        <activity android:name=".activities.QuitApplicationActivity" />
+        <activity android:name=".activities.QuitGameActivity" />
+        <activity android:name=".activities.ShowCardsActivity" />
     </application>
 
 </manifest>
