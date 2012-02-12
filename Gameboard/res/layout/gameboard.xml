@@ -4,16 +4,17 @@
     android:layout_height="fill_parent"
     android:gravity="center_vertical|center_horizontal"
     android:keepScreenOn="true"
-    android:orientation="horizontal" >
+    android:orientation="horizontal" 
+    android:background="@drawable/ic_launcher">
     
     <Button
-        android:id="@+id/connectButton"
+        android:id="@+id/pauseButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dip"
         android:layout_marginRight="15dip"
         android:padding="15dip"
-        android:text="@string/ConnectActivity_title" >
+        android:text="@string/pauseGame" >
     </Button>
 
 </LinearLayout>

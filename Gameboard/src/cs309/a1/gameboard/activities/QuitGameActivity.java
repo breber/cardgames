@@ -1,20 +1,35 @@
 package cs309.a1.gameboard.activities;
 
-import cs309.a1.gameboard.R;
 import android.app.Activity;
-import android.widget.TextView;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import cs309.a1.gameboard.R;
 
 public class QuitGameActivity extends Activity {
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		setContentView(R.layout.information);
+		setContentView(R.layout.quitgameprompt);
 
-		TextView title = (TextView) findViewById(R.id.informationTitle);
-		
-		//Set the text for the dialog box
-		title.setText("You want to quit the game?");
+		Button affirmative = (Button) findViewById(R.id.affirmative);
+		affirmative.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setResult(RESULT_OK);
+				finish();
+			}
+		});
+
+		Button negative = (Button) findViewById(R.id.negative);
+		negative.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setResult(RESULT_CANCELED);
+				finish();
+			}
+		});
 	}
 
 }

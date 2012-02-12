@@ -1,15 +1,15 @@
 package cs309.a1.gameboard.activities;
 
-import cs309.a1.gameboard.R;
 import android.app.Activity;
 import android.widget.TextView;
+import cs309.a1.gameboard.R;
 
 public class PauseMenuActivity extends Activity {
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		setContentView(R.layout.information);
+		setContentView(R.layout.pausemenu);
 
 		TextView title = (TextView) findViewById(R.id.informationTitle);
 		title.setText("Game Paused");

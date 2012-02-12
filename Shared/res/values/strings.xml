@@ -5,8 +5,11 @@
     <string name="Play">Play</string>
     <string name="Rules">Rules</string>
     <string name="About">About</string>
+    
+    
     <string name="Information_about">This is the information about the program.</string>
     <string name="Information_rules">These are the rules of the game.</string>
+    
     <string name="ConnectActivity_title">Connect to Devices</string>
     <string name="ConnectFailActivity_title">Connection Failure</string>
     <string name="GameResultsActivity_title">Game Results</string>
@@ -14,8 +17,11 @@
     <string name="QuitApplicationActivity_title">Quit</string>
     <string name="QuitGameActivity_title">Quit</string>
     <string name="ShowCardsActivity_title">Your Cards</string>
-    <string name="quit">Are you sure you want to quit?</string>
+    
+    <string name="pauseGame">Pause</string>
+    <string name="quit">Are you sure you want to quit the current game?</string>
     <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string name="cancel">Cancel</string>
 
 </resources>

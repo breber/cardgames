@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/quitGameTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/quit"
+        android:textSize="30sp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="fill_parent"
+        android:layout_height="50dip"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/affirmative"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:layout_weight="1"
+            android:text="@string/yes" />
+
+        <Button
+            android:id="@+id/negative"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:layout_weight="1"
+            android:text="@string/no" />
+    </LinearLayout>
+
+</LinearLayout>
