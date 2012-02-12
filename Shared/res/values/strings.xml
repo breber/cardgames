@@ -14,5 +14,8 @@
     <string name="QuitApplicationActivity_title">Quit</string>
     <string name="QuitGameActivity_title">Quit</string>
     <string name="ShowCardsActivity_title">Your Cards</string>
+    <string name="quit">Are you sure you want to quit?</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
 
 </resources>
