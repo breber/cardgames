@@ -38,8 +38,10 @@
         <activity
             android:name=".activities.PauseMenuActivity"
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar.MinWidth" />
-        <activity android:name=".activities.QuitAppicationActivity" />
-        <activity android:name=".activities.QuitGameActivity" />
+        <activity android:name=".activities.QuitAppicationActivity"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar.MinWidth" />
+        <activity android:name=".activities.QuitGameActivity"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar.MinWidth" />
         <activity android:name=".activities.RulesActivity" />
     </application>
 

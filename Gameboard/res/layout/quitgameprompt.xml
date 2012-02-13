@@ -3,14 +3,15 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical" 
-    android:gravity="center_horizontal">
+    android:gravity="center">
 
     <TextView
         android:id="@+id/quitGameTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/quit"
-        android:textSize="30sp"
+        android:textSize="35sp"
+        android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout

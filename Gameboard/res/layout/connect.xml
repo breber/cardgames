@@ -4,7 +4,8 @@
     android:layout_height="fill_parent"
     android:gravity="center_vertical|center_horizontal"
     android:keepScreenOn="true"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:background="@drawable/wooden_top" >
     
     <Button
         android:id="@+id/connectButton"

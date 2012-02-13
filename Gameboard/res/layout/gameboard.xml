@@ -5,7 +5,7 @@
     android:gravity="center_vertical|center_horizontal"
     android:keepScreenOn="true"
     android:orientation="horizontal" 
-    android:background="@drawable/ic_launcher">
+    android:background="@drawable/wooden_top">
     
     <Button
         android:id="@+id/pauseButton"
