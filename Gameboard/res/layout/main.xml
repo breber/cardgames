@@ -12,8 +12,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/black"
-        android:paddingTop="25dp"
-        android:paddingBottom="25dp" >
+        android:paddingBottom="25dp"
+        android:paddingTop="25dp" >
+
         <TextView
             style="@style/TitleFont"
             android:gravity="center"
@@ -21,51 +22,39 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_below="@+id/title"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_below="@+id/title"
         android:background="@drawable/wooden_top"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical" >
 
         <Button
-            style="GameButton"
-            android:background="@drawable/button"
             android:id="@+id/btPlay"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dip"
+            style="@style/GameButton"
             android:layout_marginLeft="75dip"
             android:layout_marginRight="75dip"
-            android:padding="25dip"
+            android:layout_marginTop="15dip"
             android:text="@string/CreateGame"
             android:textSize="70sp" >
         </Button>
 
         <Button
-            style="GameButton"
-            android:background="@drawable/button"
             android:id="@+id/btRules"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dip"
+            style="@style/GameButton"
             android:layout_marginBottom="15dip"
             android:layout_marginLeft="85dip"
             android:layout_marginRight="85dip"
-            android:padding="10dip"
-            android:textSize="45sp"
+            android:layout_marginTop="15dip"
             android:text="@string/Rules" >
         </Button>
 
         <Button
             android:id="@+id/btAbout"
-            android:background="@drawable/button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            style="@style/GameButton"
+            android:layout_marginBottom="15dip"
             android:layout_marginLeft="85dip"
             android:layout_marginRight="85dip"
-            android:padding="10dip"
-            android:textSize="45sp"
             android:text="@string/About" >
         </Button>
     </LinearLayout>

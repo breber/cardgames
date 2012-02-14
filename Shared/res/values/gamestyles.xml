@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="TitleFont" parent="@android:style/TextAppearance.Large">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -7,18 +8,22 @@
         <item name="android:textSize">100sp</item>
         <item name="android:typeface">normal</item>
     </style>
+
     <style name="ButtonFont" parent="@android:style/TextAppearance.Medium">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">#000000</item>
         <item name="android:typeface">normal</item>
     </style>
+
     <style name="GameButton">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">20dip</item>
-        <item name="android:button">@drawable/button</item>
+        <item name="android:padding">10dip</item>
+        <item name="android:background">@drawable/button</item>
         <item name="android:textColor">#000000</item>
+        <item name="android:textSize">45sp</item>
         <item name="android:typeface">normal</item>
     </style>
+
 </resources>
