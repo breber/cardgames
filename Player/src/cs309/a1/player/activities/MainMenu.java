@@ -8,7 +8,7 @@ import android.widget.Button;
 import cs309.a1.player.R;
 
 public class MainMenu extends Activity {
-	//Josh was here
+	
 	@Override
 	protected void onStart() {
 		super.onStart();
