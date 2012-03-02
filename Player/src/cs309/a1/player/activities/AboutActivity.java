@@ -15,7 +15,7 @@ public class AboutActivity extends Activity {
 		title.setText(R.string.About);
 
 		TextView body = (TextView) findViewById(R.id.informationBody);
-		body.setText(R.string.Information_about);
+		body.setText(R.string.Information_about_handheld);
 	}
 
 }
