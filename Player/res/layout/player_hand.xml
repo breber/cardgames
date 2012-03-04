@@ -4,13 +4,15 @@
     android:layout_height="fill_parent"
     android:gravity="center_vertical|center_horizontal"
     android:keepScreenOn="true"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@drawable/wooden_top">
 
 	<LinearLayout 
 	    android:layout_width="match_parent"
     	android:layout_height="match_parent"
     	android:orientation="horizontal"
-    	android:gravity="left">
+    	android:gravity="left"
+    	android:layout_marginTop="10dip">
 	    
 	  	<Button
 	        android:id="@+id/btDraw"
@@ -28,7 +30,8 @@
 	    android:layout_width="match_parent"
     	android:layout_height="match_parent"
     	android:orientation="horizontal"
-    	android:gravity="right">
+    	android:gravity="right"
+    	android:layout_marginTop="10dip">
 	    
 	  	<Button
 	        android:id="@+id/btPlay"
