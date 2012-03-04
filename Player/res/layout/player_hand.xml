@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_vertical|center_horizontal"
+    android:keepScreenOn="true"
+    android:orientation="vertical" >
+
+	<LinearLayout 
+	    android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:orientation="horizontal"
+    	android:gravity="left">
+	    
+	  	<Button
+	        android:id="@+id/btDraw"
+	        style="@style/GameButton"
+	        android:layout_width="121dip"
+	        android:layout_marginBottom="5dip"
+	        android:layout_marginLeft="10dip"
+	        android:layout_marginRight="5dip"
+	        android:layout_marginTop="10dip"
+        	android:text="@string/Draw"
+        	android:textSize="20sp" android:layout_gravity="left"/>
+	</LinearLayout>
+   
+	<LinearLayout 
+	    android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:orientation="horizontal"
+    	android:gravity="right">
+	    
+	  	<Button
+	        android:id="@+id/btPlay"
+	        style="@style/GameButton"
+	        android:layout_width="121dip"
+	        android:layout_marginBottom="5dip"
+	        android:layout_marginLeft="5dip"
+	        android:layout_marginRight="10dip"
+	        android:layout_marginTop="10dip"
+        	android:text="@string/Play"
+        	android:textSize="20sp" android:layout_gravity="left"/>
+	</LinearLayout>
+    
+</RelativeLayout>
