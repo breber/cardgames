@@ -19,11 +19,13 @@
 	        style="@style/GameButton"
 	        android:layout_width="121dip"
 	        android:layout_marginBottom="5dip"
-	        android:layout_marginLeft="10dip"
+	        android:layout_marginLeft="5dip"
 	        android:layout_marginRight="5dip"
-	        android:layout_marginTop="10dip"
+	        android:layout_marginTop="5dip"
         	android:text="@string/Draw"
-        	android:textSize="20sp" android:layout_gravity="left"/>
+        	android:textSize="30sp" 
+        	android:textStyle="bold"
+        	android:layout_gravity="left"/>
 	</LinearLayout>
    
 	<LinearLayout 
@@ -42,7 +44,9 @@
 	        android:layout_marginRight="10dip"
 	        android:layout_marginTop="10dip"
         	android:text="@string/Play"
-        	android:textSize="20sp" android:layout_gravity="left"/>
+        	android:textSize="30sp" 
+        	android:textStyle="bold"
+        	android:layout_gravity="left"/>
 	</LinearLayout>
     
 </RelativeLayout>
