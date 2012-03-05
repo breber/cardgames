@@ -45,5 +45,13 @@ To use this application properly, download the application titled “Crazy Eight
     <string name="title_paired_devices">Paired Devices</string>
     <string name="title_other_devices">Other Available Devices</string>
     <string name="button_scan">Scan for devices</string>
+    <string name="exit_game">Exit Game</string>
+    <string name="main_menu">Main Menu</string>
+    <string name="resume">Resume</string>
+    <string name="reconnect">Reconnect</string>
+    <string name="drop_player">Drop Player</string>
+    <string name="player_lost">A player has been disconnected</string>
+    <string name="waiting">Waiting to reconnect...</string>
+    <string name="winner">You Won!</string>
 
 </resources>
