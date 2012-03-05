@@ -1,40 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" 
-    android:gravity="center">
-
-    <TextView
-        android:id="@+id/quitGameTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/quit"
-        android:textSize="35sp"
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/footer"
+        android:id="@+id/linearLayout1"
+        style="@style/GameButton"
         android:layout_width="fill_parent"
-        android:layout_height="50dip"
-        android:orientation="horizontal" >
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/affirmative"
-            android:layout_width="0dip"
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="416dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dip"
-            android:layout_weight="1"
-            android:text="@string/yes" />
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/quit"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="45sp" />
 
-        <Button
-            android:id="@+id/negative"
-            android:layout_width="0dip"
+        <LinearLayout
+            
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dip"
-            android:layout_weight="1"
-            android:text="@string/no" />
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/affirmative"
+                style="@style/GameButtonBlack"
+                android:layout_width="125dip"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dip"
+                android:layout_marginRight="35dip"
+                android:layout_marginTop="5dip"
+                android:text="@string/yes" />
+
+            <Button
+                android:id="@+id/negative"
+                style="@style/GameButtonBlack"
+                android:layout_width="125dip"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dip"
+                android:layout_marginTop="5dip"
+                android:text="@string/no" />
+        </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
