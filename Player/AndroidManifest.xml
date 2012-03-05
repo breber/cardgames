@@ -27,8 +27,9 @@
         </activity>
         <activity android:name=".activities.RulesActivity" />
         <activity android:name=".activities.AboutActivity" />
-        <activity android:name=".activities.ConnectActivity" 
-            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".activities.ConnectActivity"
+            android:screenOrientation="landscape" />
         <activity android:name=".activities.ConnectionFailActivity" />
         <activity android:name=".activities.GameResultsActivity" />
         <activity android:name=".activities.PauseMenuActivity" />
@@ -36,7 +37,7 @@
         <activity android:name=".activities.QuitGameActivity" />
         <activity android:name=".activities.ShowCardsActivity" />
         <activity
-            android:name="cs309.a1.shared.bluetooth.DeviceListActivity"
+            android:name="cs309.a1.shared.activities.DeviceListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/select_device" />
     </application>
