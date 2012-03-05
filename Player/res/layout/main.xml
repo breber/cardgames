@@ -2,60 +2,59 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/wooden_top"
     android:gravity="center_vertical|center_horizontal"
     android:keepScreenOn="true"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@drawable/wooden_top">
 
     <RelativeLayout
         android:id="@+id/title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/black"
-        android:paddingBottom="25dp"
-        android:paddingTop="25dp" >
+        android:paddingBottom="5dp"
+        android:paddingTop="0dp" >
 
         <TextView
             style="@style/TitleFont"
             android:gravity="center"
-            android:text="@string/app_name" />
+            android:text="@string/app_name" android:textSize="55sp"/>
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/title"
-        android:background="@drawable/wooden_top"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical" >
 
         <Button
             android:id="@+id/btPlay"
             style="@style/GameButton"
-            android:layout_marginLeft="75dip"
-            android:layout_marginRight="75dip"
-            android:layout_marginTop="15dip"
+            android:layout_marginLeft="15dip"
+            android:layout_marginRight="15dip"
+            android:layout_marginTop="5dip"
             android:text="@string/Play"
-            android:textSize="70sp" >
+            android:textSize="35sp" >
         </Button>
 
         <Button
             android:id="@+id/btRules"
             style="@style/GameButton"
-            android:layout_marginBottom="15dip"
-            android:layout_marginLeft="85dip"
-            android:layout_marginRight="85dip"
-            android:layout_marginTop="15dip"
-            android:text="@string/Rules" >
+            android:layout_marginBottom="8dip"
+            android:layout_marginLeft="35dip"
+            android:layout_marginRight="35dip"
+            android:layout_marginTop="8dip"
+            android:text="@string/Rules" android:textSize="30sp">
         </Button>
 
         <Button
             android:id="@+id/btAbout"
             style="@style/GameButton"
-            android:layout_marginBottom="15dip"
-            android:layout_marginLeft="85dip"
-            android:layout_marginRight="85dip"
-            android:text="@string/About" >
+            android:layout_marginBottom="8dip"
+            android:layout_marginLeft="35dip"
+            android:layout_marginRight="35dip"
+            android:text="@string/About" android:textSize="30sp">
         </Button>
     </LinearLayout>
 

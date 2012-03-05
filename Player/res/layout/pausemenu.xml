@@ -8,10 +8,12 @@
     <TextView
         android:id="@+id/Paused"
         style="@style/GameButton"
-        android:layout_width="450dip"
+        android:layout_width="fill_parent"
 
        	android:text="@string/PauseActivity_title"
        	android:textSize="50sp" 
+       	android:layout_marginLeft="75dip"
+       	android:layout_marginRight="75dip"
        	android:textStyle="bold"
        	android:gravity="center_vertical|center_horizontal"/>
 </LinearLayout>
