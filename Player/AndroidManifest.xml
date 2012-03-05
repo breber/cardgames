@@ -4,9 +4,12 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="14"/>
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="14" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -14,22 +17,28 @@
         android:theme="@android:style/Theme.Black.NoTitleBar" >
         <activity
             android:name=".activities.MainMenu"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <activity android:name=".activities.RulesActivity" />
         <activity android:name=".activities.AboutActivity" />
-        <activity android:name=".activities.ConnectActivity" />
+        <activity android:name=".activities.ConnectActivity" 
+            android:screenOrientation="landscape"/>
         <activity android:name=".activities.ConnectionFailActivity" />
         <activity android:name=".activities.GameResultsActivity" />
         <activity android:name=".activities.PauseMenuActivity" />
         <activity android:name=".activities.QuitApplicationActivity" />
         <activity android:name=".activities.QuitGameActivity" />
         <activity android:name=".activities.ShowCardsActivity" />
+        <activity
+            android:name="cs309.a1.shared.bluetooth.DeviceListActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/select_device" />
     </application>
 
 </manifest>

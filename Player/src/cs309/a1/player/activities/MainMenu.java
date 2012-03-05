@@ -2,16 +2,17 @@ package cs309.a1.player.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import cs309.a1.player.R;
 
 public class MainMenu extends Activity {
-	
+
 	@Override
-	protected void onStart() {
-		super.onStart();
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
 		Button play = (Button) findViewById(R.id.btPlay);
@@ -38,7 +39,6 @@ public class MainMenu extends Activity {
 				startActivity(playButtonClick);
 			}
 		});
-
 	}
 
 }
