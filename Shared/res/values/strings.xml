@@ -39,9 +39,8 @@ The first player to successfully get rid of all of their cards wins the game. If
 To use this application properly, download the application titled “Crazy Eights Game Board” to the tablet that will serve as the game host.  Once this has been done, first select Create Game from the Main Menu of the tablet, and then select Join Game from the Main Menu on each player’s device, including this one.  Players should then choose the host tablet from the connection list that will appear on their screens.  Press the Start button on the host tablet’s connection screen when all players have been connected in order to start the game.</string>
     <string name="Draw">Draw</string>
     <string name="scanning">Scanning for Devices</string>
-    <string name="select_device">select a device to connect</string>
     <string name="no_devices_found">No devices found</string>
-    <string name="title_device_list">Devices List</string>
+    <string name="title_device_list">Device List</string>
     <string name="button_scan">Scan for devices</string>
     <string name="exit_game">Exit Game</string>
     <string name="main_menu">Main Menu</string>
@@ -49,6 +48,6 @@ To use this application properly, download the application titled “Crazy Eight
     <string name="reconnect">Reconnect</string>
     <string name="drop_player">Drop Player</string>
     <string name="player_lost">A player has been disconnected</string>
-    <string name="waiting">Waiting to reconnect...</string>
+    <string name="waiting">Waiting to reconnect&#8320;</string>
     <string name="winner">You Won!</string>
 </resources>

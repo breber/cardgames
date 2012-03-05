@@ -17,7 +17,7 @@
         <activity
             android:name=".activities.DeviceListActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/select_device" />
+            android:label="@string/title_device_list" />
     </application>
 
 </manifest>

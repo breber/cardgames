@@ -204,7 +204,7 @@ public class DeviceListActivity extends Activity {
 				}
 			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
 				// When discovery is finished, change the Activity title
-				setTitle(R.string.select_device);
+				setTitle(R.string.title_device_list);
 			}
 		}
 	};

@@ -39,7 +39,7 @@
         <activity
             android:name="cs309.a1.shared.activities.DeviceListActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/select_device" />
+            android:label="@string/title_device_list" />
     </application>
 
 </manifest>
