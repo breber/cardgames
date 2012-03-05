@@ -2,6 +2,7 @@ package cs309.a1.gameboard.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import cs309.a1.gameboard.R;
 
 public class GameboardActivity extends Activity {
@@ -9,8 +10,8 @@ public class GameboardActivity extends Activity {
 	private static final int QUIT_GAME = "QUIT_GAME".hashCode();
 
 	@Override
-	protected void onStart() {
-		super.onStart();
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gameboard);
 	}
 

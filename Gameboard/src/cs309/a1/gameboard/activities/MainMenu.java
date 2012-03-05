@@ -11,8 +11,8 @@ public class MainMenu extends Activity {
 
 //This will run at the start of the app
 	@Override
-	protected void onStart() {
-		super.onStart();
+	protected void onCreate(android.os.Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
 		Button play = (Button) findViewById(R.id.btPlay);
