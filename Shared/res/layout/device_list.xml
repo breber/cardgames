@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dip" />
+            android:layout_margin="10dip" />
 
         <ImageButton
             android:id="@+id/refreshDeviceList"
@@ -35,8 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dip"
-            android:background="@android:drawable/btn_star"
+            android:layout_margin="10dip"
+            android:background="@drawable/ic_menu_refresh"
             android:text=""
             android:visibility="gone" />
     </RelativeLayout>

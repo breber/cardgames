@@ -236,7 +236,7 @@ public class DeviceListActivity extends Activity {
 				deviceListProgress.setVisibility(View.GONE);
 				refreshDeviceListButton.setVisibility(View.VISIBLE);
 
-				if (mDevicesArrayAdapter.getCount() > 0) {
+				if (mDevicesArrayAdapter.getCount() == 0) {
 					noDevicesFound.setText(R.string.no_devices_found);
 				}
 			}
