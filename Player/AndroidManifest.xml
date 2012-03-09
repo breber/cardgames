@@ -33,8 +33,12 @@
         <activity android:name=".activities.ConnectionFailActivity" />
         <activity android:name=".activities.GameResultsActivity" />
         <activity android:name=".activities.PauseMenuActivity" />
-        <activity android:name=".activities.QuitApplicationActivity" />
-        <activity android:name=".activities.QuitGameActivity" />
+        <activity
+            android:name=".activities.QuitApplicationActivity"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+        <activity
+            android:name=".activities.QuitGameActivity"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
         <activity android:name=".activities.ShowCardsActivity" />
         <activity
             android:name="cs309.a1.shared.activities.DeviceListActivity"

@@ -25,11 +25,8 @@ public class ShowCardsActivity extends Activity{
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == QUIT_GAME) {
 			if (resultCode == RESULT_OK) {
-				// Start the Main Menu
-				Intent intent = new Intent(ShowCardsActivity.this, MainMenu.class);
-				startActivity(intent);
-
-				// Finish this activity
+				// Finish this activity - if everything goes right, we
+				// should be back at the main menu
 				setResult(RESULT_OK);
 				finish();
 			}

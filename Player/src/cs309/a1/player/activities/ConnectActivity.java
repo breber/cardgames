@@ -25,6 +25,8 @@ public class ConnectActivity extends Activity{
 			Intent showCards = new Intent(this, ShowCardsActivity.class);
 			startActivity(showCards);
 
+			setResult(RESULT_OK);
+			finish();
 		} else {
 			// The user cancelled out of the device list, so return them to the main menu
 			setResult(RESULT_CANCELED);
