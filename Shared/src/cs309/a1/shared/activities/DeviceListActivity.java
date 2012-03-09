@@ -110,16 +110,14 @@ public class DeviceListActivity extends Activity {
 
 			// If there are paired devices, add each one to the ArrayAdapter
 			if (pairedDevices.size() > 0) {
-				//TODO: move to strings.xml
-				mDevicesArrayAdapter.add(new ListSeparator("Connected Devices"));
+				mDevicesArrayAdapter.add(new ListSeparator(getResources().getString(R.string.connected_devices_separator)));
 
 				for (BluetoothDevice device : pairedDevices) {
 					mDevicesArrayAdapter.add(new DeviceListItem(device.getName(), device.getAddress()));
 				}
 			}
 
-			// TODO: move to strings.xml
-			mDevicesArrayAdapter.add(new ListSeparator("New Devices"));
+			mDevicesArrayAdapter.add(new ListSeparator(getResources().getString(R.string.new_devices_separator)));
 		}
 	}
 

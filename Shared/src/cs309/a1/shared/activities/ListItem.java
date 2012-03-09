@@ -16,5 +16,4 @@ public abstract class ListItem {
 	public static enum ItemType {
 		SEPARATOR, NOT_SEPARATOR;
 	}
-
 }

@@ -5,7 +5,7 @@
     android:orientation="vertical" 
     android:gravity="center_horizontal">
 
-    <TextView
+    <cs309.a1.shared.TextView
         android:id="@+id/informationTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,11 +14,10 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ScrollView   
-      	android:id="@+id/ScrollView01"  
       	android:layout_height="fill_parent"   
       	android:layout_width="fill_parent">  
       
-	    <TextView
+	    <cs309.a1.shared.TextView
 	        android:id="@+id/informationBody"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"

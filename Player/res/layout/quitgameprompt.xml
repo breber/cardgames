@@ -13,19 +13,18 @@
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical" >
 
-        <TextView
+        <cs309.a1.shared.TextView
             android:id="@+id/textView1"
             android:layout_width="416dp"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center_horizontal"
             android:text="@string/quit"
-            android:textStyle="bold"
-            android:textColor="@color/black"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="45sp" />
+            android:textColor="@color/black"
+            android:textSize="45sp"
+            android:textStyle="bold" />
 
         <LinearLayout
-            
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center_horizontal"

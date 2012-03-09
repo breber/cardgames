@@ -13,7 +13,7 @@
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical" >
 
-        <TextView
+        <cs309.a1.shared.TextView
             android:id="@+id/textView1"
             android:layout_width="416dp"
             android:layout_height="wrap_content"

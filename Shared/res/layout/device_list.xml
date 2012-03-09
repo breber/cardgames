@@ -15,7 +15,7 @@
         android:paddingBottom="5dp"
         android:paddingTop="0dp" >
 
-        <TextView
+        <cs309.a1.shared.TextView
             style="@style/TitleFont"
             android:gravity="center"
             android:text="@string/title_device_list"
@@ -57,7 +57,7 @@
             android:layout_marginRight="40dip"
             android:layout_marginTop="10dip" />
 
-        <TextView
+        <cs309.a1.shared.TextView
             android:id="@+id/noDevicesFoundText"
             style="@style/ListViewFont"
             android:layout_centerInParent="true"

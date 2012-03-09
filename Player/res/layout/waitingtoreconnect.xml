@@ -1,19 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>    
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="horizontal"
+    android:background="@drawable/wooden_top"
     android:gravity="center_vertical|center_horizontal"
-    android:background="@drawable/wooden_top">
-    <TextView
+    android:orientation="horizontal" >
+
+    <cs309.a1.shared.TextView
         android:id="@+id/waiting"
         style="@style/GameButton"
         android:layout_width="fill_parent"
+        android:layout_marginLeft="75dip"
+        android:layout_marginRight="75dip"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/waiting"
+        android:textSize="50sp"
+        android:textStyle="bold" />
 
-       	android:text="@string/waiting"
-       	android:textSize="50sp" 
-       	android:layout_marginLeft="75dip"
-       	android:layout_marginRight="75dip"
-       	android:textStyle="bold"
-       	android:gravity="center_vertical|center_horizontal"/>
 </LinearLayout>

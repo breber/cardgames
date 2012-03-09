@@ -17,7 +17,7 @@ public class ListSeparator extends ListItem {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.reber.agenda.ListItem#getType()
+	 * @see cs309.a1.shared.activities.ListItem#getType()
 	 */
 	@Override
 	public ItemType getType() {

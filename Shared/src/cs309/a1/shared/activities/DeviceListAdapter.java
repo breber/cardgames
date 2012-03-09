@@ -7,8 +7,6 @@ import android.widget.ListAdapter;
 /**
  * A specialized ListAdapter that allows us to show data in a ListView,
  * using a specific layout for each row.
- * 
- * @author brianreber
  */
 public class DeviceListAdapter extends ArrayAdapter<ListItem> implements ListAdapter {
 

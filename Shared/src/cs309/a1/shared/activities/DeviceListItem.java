@@ -1,7 +1,7 @@
 package cs309.a1.shared.activities;
 
 /**
- * A representation of an event in a user's calendar.
+ * A ListItem that will show a device's name and MAC address
  */
 public class DeviceListItem extends ListItem {
 
