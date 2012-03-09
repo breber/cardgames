@@ -28,7 +28,7 @@
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical" >
 
-        <Button
+        <cs309.a1.shared.Button
             android:id="@+id/btPlay"
             style="@style/GameButton"
             android:layout_marginLeft="15dip"
@@ -36,9 +36,9 @@
             android:layout_marginTop="5dip"
             android:text="@string/Play"
             android:textSize="35sp" >
-        </Button>
+        </cs309.a1.shared.Button>
 
-        <Button
+        <cs309.a1.shared.Button
             android:id="@+id/btRules"
             style="@style/GameButton"
             android:layout_marginBottom="8dip"
@@ -46,16 +46,16 @@
             android:layout_marginRight="35dip"
             android:layout_marginTop="8dip"
             android:text="@string/Rules" android:textSize="30sp">
-        </Button>
+        </cs309.a1.shared.Button>
 
-        <Button
+        <cs309.a1.shared.Button
             android:id="@+id/btAbout"
             style="@style/GameButton"
             android:layout_marginBottom="8dip"
             android:layout_marginLeft="35dip"
             android:layout_marginRight="35dip"
             android:text="@string/About" android:textSize="30sp">
-        </Button>
+        </cs309.a1.shared.Button>
     </LinearLayout>
 
 </RelativeLayout>

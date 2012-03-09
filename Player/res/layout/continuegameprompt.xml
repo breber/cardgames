@@ -31,7 +31,7 @@
             android:gravity="center_vertical|center_horizontal"
             android:orientation="horizontal" >
 
-            <Button
+            <cs309.a1.shared.Button
                 android:id="@+id/Reconnect"
                 style="@style/GameButtonBlack"
                 android:layout_width="255dip"
@@ -41,7 +41,7 @@
                 android:layout_marginTop="5dip"
                 android:text="@string/reconnect" />
 
-            <Button
+            <cs309.a1.shared.Button
                 android:id="@+id/Drop"
                 style="@style/GameButtonBlack"
                 android:layout_width="255dip"

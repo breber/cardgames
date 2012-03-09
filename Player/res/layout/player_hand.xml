@@ -14,7 +14,7 @@
     	android:gravity="left"
     	android:layout_marginTop="10dip">
 	    
-	  	<Button
+	  	<cs309.a1.shared.Button
 	        android:id="@+id/btDraw"
 	        style="@style/GameButton"
 	        android:layout_width="225dip"
@@ -35,7 +35,7 @@
     	android:gravity="right"
     	android:layout_marginTop="10dip">
 	    
-	  	<Button
+	  	<cs309.a1.shared.Button
 	        android:id="@+id/btPlay"
 	        style="@style/GameButton"
 	        android:layout_width="225dip"

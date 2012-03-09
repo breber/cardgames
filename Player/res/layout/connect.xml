@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:background="@drawable/wooden_top" >
     
-    <Button
+    <cs309.a1.shared.Button
         android:id="@+id/connectButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -15,6 +15,6 @@
         android:layout_marginRight="15dip"
         android:padding="15dip"
         android:text="@string/ConnectActivity_title" >
-    </Button>
+    </cs309.a1.shared.Button>
 
 </LinearLayout>

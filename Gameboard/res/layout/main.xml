@@ -29,34 +29,31 @@
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical" >
 
-        <Button
+        <cs309.a1.shared.Button
             android:id="@+id/btPlay"
             style="@style/GameButton"
             android:layout_marginLeft="75dip"
             android:layout_marginRight="75dip"
             android:layout_marginTop="15dip"
             android:text="@string/CreateGame"
-            android:textSize="70sp" >
-        </Button>
+            android:textSize="70sp" />
 
-        <Button
+        <cs309.a1.shared.Button
             android:id="@+id/btRules"
             style="@style/GameButton"
             android:layout_marginBottom="15dip"
             android:layout_marginLeft="85dip"
             android:layout_marginRight="85dip"
             android:layout_marginTop="15dip"
-            android:text="@string/Rules" >
-        </Button>
+            android:text="@string/Rules" />
 
-        <Button
+        <cs309.a1.shared.Button
             android:id="@+id/btAbout"
             style="@style/GameButton"
             android:layout_marginBottom="15dip"
             android:layout_marginLeft="85dip"
             android:layout_marginRight="85dip"
-            android:text="@string/About" >
-        </Button>
+            android:text="@string/About" />
     </LinearLayout>
 
 </RelativeLayout>

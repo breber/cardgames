@@ -30,7 +30,7 @@
             android:gravity="center_vertical|center_horizontal"
             android:orientation="horizontal" >
 
-            <Button
+            <cs309.a1.shared.Button
                 android:id="@+id/affirmative"
                 style="@style/GameButtonBlack"
                 android:layout_width="125dip"
@@ -40,7 +40,7 @@
                 android:layout_marginTop="5dip"
                 android:text="@string/yes" />
 
-            <Button
+            <cs309.a1.shared.Button
                 android:id="@+id/negative"
                 style="@style/GameButtonBlack"
                 android:layout_width="125dip"
