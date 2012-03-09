@@ -12,7 +12,7 @@ public class AboutActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.information);
 
-		TextView title = (TextView) findViewById(R.id.informationTitle);
+		TextView title = (TextView) findViewById(R.id.title);
 		title.setText(R.string.About);
 
 		TextView body = (TextView) findViewById(R.id.informationBody);

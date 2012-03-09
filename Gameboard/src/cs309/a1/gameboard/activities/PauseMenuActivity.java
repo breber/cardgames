@@ -12,7 +12,7 @@ public class PauseMenuActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pausemenu);
 
-		TextView title = (TextView) findViewById(R.id.informationTitle);
+		TextView title = (TextView) findViewById(R.id.title);
 		title.setText("Game Paused");
 	}
 

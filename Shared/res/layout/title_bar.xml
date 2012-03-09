@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/title_bar"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/black"
+    android:paddingBottom="5dp"
+    android:paddingTop="0dp" >
+
+    <cs309.a1.shared.TextView
+        android:id="@+id/title"
+        style="@style/TitleFont"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textSize="55sp" />
+
+</RelativeLayout>

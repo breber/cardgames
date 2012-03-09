@@ -2,18 +2,32 @@ package cs309.a1.player.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import cs309.a1.player.R;
 
-public class QuitGameActivity extends Activity{
+public class QuitGameActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.information);
+		setContentView(R.layout.quitgameprompt);
 
-		TextView title = (TextView) findViewById(R.id.informationTitle);
-		title.setText(R.string.QuitGameActivity_title);
+		Button affirmative = (Button) findViewById(R.id.affirmative);
+		affirmative.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				setResult(RESULT_OK);
+				finish();
+			}
+		});
+
+		Button negative = (Button) findViewById(R.id.negative);
+		negative.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				setResult(RESULT_CANCELED);
+				finish();
+			}
+		});
 	}
-
 }

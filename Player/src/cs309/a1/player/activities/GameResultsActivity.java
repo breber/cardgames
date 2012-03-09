@@ -11,7 +11,7 @@ public class GameResultsActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		TextView title = (TextView) findViewById(R.id.informationTitle);
+		TextView title = (TextView) findViewById(R.id.title);
 		title.setText(R.string.GameResultsActivity_title);
 	}
 }

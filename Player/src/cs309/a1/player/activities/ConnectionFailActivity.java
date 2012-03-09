@@ -13,7 +13,7 @@ public class ConnectionFailActivity extends Activity{
 
 		setContentView(R.layout.information);
 
-		TextView title = (TextView) findViewById(R.id.informationTitle);
+		TextView title = (TextView) findViewById(R.id.title);
 		title.setText(R.string.ConnectFailActivity_title);
 	}
 }
