@@ -26,5 +26,17 @@ public class TabletGame {
 	public void setDeck(Deck deck) {
 		this.gameDeck = deck;
 	}
+	//TODO 
+	//initialize function 
+	// this will get all the stuff ready to play game
+	//shuffle deck create cards and players etc. 
+	public void setup(){
+		//gameDeck.shuffle();
+		//hand out cards
+		//display stuff
+		//discard pile first one
+		//
+		
+	}
 		
 }
