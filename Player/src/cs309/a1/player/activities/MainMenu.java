@@ -23,6 +23,10 @@ public class MainMenu extends Activity {
 			public void onClick(View v) {
 				Intent ruleButtonClick = new Intent(MainMenu.this, RulesActivity.class);
 				startActivity(ruleButtonClick);
+				
+				/* Ashley's Debugging Purposes */
+				//Intent showCardsActivity = new Intent(MainMenu.this, ShowCardsActivity.class);
+				//startActivity(showCardsActivity);
 			}
 		});
 
