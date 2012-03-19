@@ -6,12 +6,14 @@ public class Card {
 	private String suit;
 	private int value;
 	private int resourceId;
+	private int idNum;
 	
-	public Card(String suit, int value, int resourceId) {
+	public Card(String suit, int value, int resourceId, int idNum) {
 		super();
 		this.suit = suit;
 		this.value = value;
 		this.resourceId = resourceId;
+		this.idNum = idNum;
 	}
 	
 	public String getSuit() {
@@ -32,8 +34,10 @@ public class Card {
 	public void setResourceId(int resourceId) {
 		this.resourceId = resourceId;
 	}
-		
-
-	
-
+	public int getIdNum() {
+		return idNum;
+	}
+	public void setIdNum(int idNum) {
+		this.idNum = idNum;
+	}
 }
