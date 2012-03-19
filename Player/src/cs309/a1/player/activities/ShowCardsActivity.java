@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import cs309.a1.player.R;
-import cs309.a1.shared.Card;
 
 public class ShowCardsActivity extends Activity{
 
