@@ -12,6 +12,8 @@ import cs309.a1.shared.Game;
 import cs309.a1.shared.Player;
 import cs309.a1.shared.Rules;
 
+import static cs309.a1.crazyeights.Constants.NUMBER_OF_CARDS_PER_HAND;
+
 public class CrazyEightsTabletGame implements Game{
 
 	private List<Player> players;
@@ -68,7 +70,7 @@ public class CrazyEightsTabletGame implements Game{
 	//shuffle deck create cards and players etc. 
 	public void setup(){
 		//shuffle the card ID's
-		//this.shuffle();
+		this.shuffleDeck();
 		
 		//deal the initial cards to all the players in the game
 		this.deal();
@@ -83,7 +85,7 @@ public class CrazyEightsTabletGame implements Game{
 		int i = 0;
 		int card;
 		int card2;
-		Card temp;
+		
 		Random generator = new Random();
 		while(i<10000){
 			card = generator.nextInt();
@@ -91,10 +93,7 @@ public class CrazyEightsTabletGame implements Game{
 			card = card%52;
 			card2 = card2%52;
 			
-			//swap
-			temp = deck[card];
-			deck[card] = deck[card2];
-			deck[card2] = temp;
+			swap(deck, card, card2);
 			
 		}
 		
@@ -102,12 +101,22 @@ public class CrazyEightsTabletGame implements Game{
 		iter = shuffledDeck.iterator();
 		
 	}
+	
+	private void swap(Card[] deck, int card, int card2){
+		Card temp;
+		
+		//swap
+		temp = deck[card];
+		deck[card] = deck[card2];
+		deck[card2] = temp;
+	}
 		
 	public void deal(){
 		int numberOfPlayers = players.size();
 		
-		//TODO: replace hard coded value with constant NUMBER_OF_CARDS_PER_HAND
-		for(int i = 0; i < 5; i++){
+		//Deal the given number of cards to each player
+		//NUMBER_OF_CARDS_PER_HAND can be found in cs309.a1.crazyeights
+		for(int i = 0; i < NUMBER_OF_CARDS_PER_HAND; i++){
 			for(int j = 0; j < numberOfPlayers; j++){
 				Player p = players.get(j);
 				p.addCard(iter.next());
