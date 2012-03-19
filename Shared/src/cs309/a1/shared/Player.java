@@ -7,6 +7,7 @@ public class Player {
 	
 	private List<Card> cards;
 	private int numCards;
+	private String name;
 	
 	public List<Card> getCards() {
 		return cards;
@@ -32,6 +33,14 @@ public class Player {
 	public void removeCard(Card card){
 		cards.remove(card);
 		numCards--;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }

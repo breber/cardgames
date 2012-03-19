@@ -2,6 +2,7 @@ package cs309.a1.crazyeights;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -19,8 +20,7 @@ public class CrazyEightsTabletGame implements Game{
 	private List<Player> players;
 	private Deck gameDeck;
 	private Rules rules;
-	
-	private Card[] deck;
+
 	private Iterator<Card> iter;
 	
 	private ArrayList<Card> shuffledDeck;
@@ -31,8 +31,7 @@ public class CrazyEightsTabletGame implements Game{
 		this.players = players;
 		this.gameDeck = gameDeck;
 		this.rules = rules;
-		deck = new Card[gameDeck.getCardIDs().size()];
-		gameDeck.getCardIDs().toArray(deck);
+		shuffledDeck = gameDeck.getCardIDs();
 	}
 	
 	public List<Player> getPlayers() {
@@ -90,52 +89,17 @@ public class CrazyEightsTabletGame implements Game{
 	}
 	
 	/**
-	 * This method will shuffle the deck of cards. This method will swap array positions
-	 * a 1000 times to shuffle the cards.
+	 * This method will shuffle the deck of cards using the Collections.shuffle() method.
 	 */
 	public void shuffleDeck(){
 		
-		//local variables that contain two array indicies
-		int i = 0;
-		int card;
-		int card2;
-		
 		//create a random number generator
 		Random generator = new Random();
-		while(i<10000){
-			
-			//generate two random numbers of array positions to swap
-			card = generator.nextInt();
-			card2 = generator.nextInt();
-			card = card%52;
-			card2 = card2%52;
-			
-			//call swap
-			swap(deck, card, card2);
-			
-		}
-		
-		//create a list of shuffled cards
-		shuffledDeck = new ArrayList<Card>(Arrays.asList(deck));
+		Collections.shuffle(shuffledDeck, generator);
 		iter = shuffledDeck.iterator();
 		
 	}
-	
-	/**
-	 * This method will swap two array locations
-	 * 
-	 * @param deck array of card objects from which to swap
-	 * @param card the first location in the array to swap
-	 * @param card2 the second location to swap
-	 */
-	private void swap(Card[] deck, int card, int card2){
-		Card temp;
-		
-		//swap
-		temp = deck[card];
-		deck[card] = deck[card2];
-		deck[card2] = temp;
-	}
+
 		
 	/**
 	 * This method will deal the initial hand to each player. Each player will receive 
@@ -162,12 +126,20 @@ public class CrazyEightsTabletGame implements Game{
 	public void discard(Player player, Card card){
 		//add the given card to the discard pile
 		discardPile.add(card);
+	}
+	
+	/**
+	 * This method will return true if the player has run out of cards.
+	 * @param player the player to check
+	 * @return true if the player has 0 cards and false otherwise
+	 */
+	public boolean isGameOver(Player player){
 		
-		//check to see if the player won
-		if(player.getCards().size() == 0){
-			//player won
-			//TODO
+		if(player.getNumCards() == 0){
+			return true;
 		}
+		
+		return false;
 	}
 	
 	/**
