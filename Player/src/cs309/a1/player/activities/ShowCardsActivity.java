@@ -3,7 +3,11 @@ package cs309.a1.player.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import cs309.a1.player.R;
+import cs309.a1.shared.Card;
 
 public class ShowCardsActivity extends Activity{
 
@@ -13,6 +17,11 @@ public class ShowCardsActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.player_hand);
+		addCard(R.drawable.clubs_2);
+		addCard(R.drawable.clubs_3);
+		addCard(R.drawable.clubs_4);
+		addCard(R.drawable.clubs_5);
+		addCard(R.drawable.clubs_6);
 	}
 
 	@Override
@@ -33,5 +42,12 @@ public class ShowCardsActivity extends Activity{
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+	void addCard(int resourceID) {
+		ImageView toAdd = new ImageView(this);
+		toAdd.setImageResource(resourceID);
+		LinearLayout ll = (LinearLayout) findViewById(R.id.playerCardContainer);
+		ll.addView(toAdd);
 	}
 }
