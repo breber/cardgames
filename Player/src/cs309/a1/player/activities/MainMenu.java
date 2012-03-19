@@ -10,6 +10,8 @@ import cs309.a1.player.R;
 
 public class MainMenu extends Activity {
 
+	private static final int QUIT_GAME = "QUIT_GAME".hashCode();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -45,4 +47,9 @@ public class MainMenu extends Activity {
 		});
 	}
 
+	@Override
+	public void onBackPressed() {
+		Intent intent = new Intent(this, QuitApplicationActivity.class);
+		startActivityForResult(intent, QUIT_GAME);
+	}
 }
