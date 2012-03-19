@@ -9,6 +9,8 @@ import android.widget.Button;
 
 public class MainMenu extends Activity {
 
+	private static final int QUIT_GAME = "QUIT_GAME".hashCode();
+	
 //This will run at the start of the app
 	@Override
 	protected void onCreate(android.os.Bundle savedInstanceState) {
@@ -43,6 +45,12 @@ public class MainMenu extends Activity {
 			}
 		});
 
+	}
+	
+	@Override
+	public void onBackPressed() {
+		Intent intent = new Intent(this, QuitApplicationActivity.class);
+		startActivityForResult(intent, QUIT_GAME);
 	}
 
 }

@@ -13,7 +13,7 @@ public class QuitGameActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.quitgameprompt);
-
+		
 		Button affirmative = (Button) findViewById(R.id.affirmative);
 		affirmative.setOnClickListener(new OnClickListener() {
 			@Override
