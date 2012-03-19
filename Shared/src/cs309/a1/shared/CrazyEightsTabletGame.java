@@ -1,18 +1,27 @@
 package cs309.a1.shared;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
-public class TabletGame {
+public class CrazyEightsTabletGame implements Game{
 
 	private List<Player> players;
 	private Deck gameDeck;
-	private List<Card> discardPile;
-	private CrazyEightGameRules rules;
+	private Card[] deck;
+	private ArrayList<Card> shuffledDeck;
+	private Iterator<Card> iter;
+	private ArrayList<Card> discardPile;
+	private Rules rules;
 
-	public TabletGame(List<Player> players, Deck gameDeck) {
+	public CrazyEightsTabletGame(List<Player> players, Deck gameDeck) {
 		super();
 		this.players = players;
 		this.gameDeck = gameDeck;
+		deck = new Card[gameDeck.getCardIDs().size()];
+		gameDeck.getCardIDs().toArray(deck);
 	}
 	
 	public List<Player> getPlayers() {
@@ -35,15 +44,15 @@ public class TabletGame {
 		return discardPile;
 	}
 
-	public void setDiscardPile(List<Card> discardPile) {
+	public void setDiscardPile(ArrayList<Card> discardPile) {
 		this.discardPile = discardPile;
 	}
 
-	public CrazyEightGameRules getRules() {
+	public Rules getRules() {
 		return rules;
 	}
 
-	public void setRules(CrazyEightGameRules rules) {
+	public void setRules(Rules rules) {
 		this.rules = rules;
 	}
 
@@ -52,7 +61,8 @@ public class TabletGame {
 	// this will get all the stuff ready to play game
 	//shuffle deck create cards and players etc. 
 	public void setup(){
-		//gameDeck.shuffle();
+		//shuffle the card ID's
+		//this.shuffle();
 		
 		//deal the initial cards to all the players in the game
 		this.deal();
@@ -63,8 +73,27 @@ public class TabletGame {
 		
 	}
 	
-	public void shuffleDeck(Deck gameDeck){
+	public void shuffleDeck(){
+		int i = 0;
+		int card;
+		int card2;
+		Card temp;
+		Random generator = new Random();
+		while(i<10000){
+			card = generator.nextInt();
+			card2 = generator.nextInt();
+			card = card%52;
+			card2 = card2%52;
+			
+			//swap
+			temp = deck[card];
+			deck[card] = deck[card2];
+			deck[card2] = temp;
+			
+		}
 		
+		shuffledDeck = new ArrayList<Card>(Arrays.asList(deck));
+		iter = shuffledDeck.iterator();
 		
 	}
 		
@@ -75,9 +104,7 @@ public class TabletGame {
 		for(int i = 0; i < 5; i++){
 			for(int j = 0; j < numberOfPlayers; j++){
 				Player p = players.get(j);
-				List<Card> cards = p.getCards();
-				//TODO
-				//p.addCard(cards, gameDeck.getTopCard());
+				p.addCard(iter.next());
 			}
 		}
 	}
@@ -95,7 +122,7 @@ public class TabletGame {
 	
 	public void draw(Player player){
 		//TODO
-		//player.getCards().add(gameDeck.getTopCard());
+		player.getCards().add(iter.next());
 		player.setNumCards(player.getNumCards() + 1);
 	}
 }

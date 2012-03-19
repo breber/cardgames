@@ -1,24 +1,23 @@
 package cs309.a1.shared;
 
-import android.graphics.Bitmap;
 
 public class Card {
 	
-	private int suit;
+	private String suit;
 	private int value;
-	private Bitmap cardImage;
+	private int resourceId;
 	
-	public Card(int suit, int value, Bitmap cardImage) {
+	public Card(String suit, int value, int resourceId) {
 		super();
 		this.suit = suit;
 		this.value = value;
-		this.cardImage = cardImage;
+		this.resourceId = resourceId;
 	}
 	
-	public int getSuit() {
+	public String getSuit() {
 		return suit;
 	}
-	public void setSuit(int suit) {
+	public void setSuit(String suit) {
 		this.suit = suit;
 	}
 	public int getValue() {
@@ -27,10 +26,14 @@ public class Card {
 	public void setValue(int value) {
 		this.value = value;
 	}
-	public Bitmap getCardImage() {
-		return cardImage;
+	public int getResourceId() {
+		return resourceId;
 	}
-	public void setCardImage(Bitmap cardImage) {
-		this.cardImage = cardImage;
+	public void setResourceId(int resourceId) {
+		this.resourceId = resourceId;
 	}
+		
+
+	
+
 }
