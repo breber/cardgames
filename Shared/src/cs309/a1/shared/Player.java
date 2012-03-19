@@ -4,20 +4,30 @@ import java.util.List;
 
 public class Player {
 	
-	List<Card> Cards;
-	int numCards;
+	private List<Card> cards;
+	private int numCards;
 	
 	public List<Card> getCards() {
-		return Cards;
+		return cards;
 	}
 	public void setCards(List<Card> cards) {
-		Cards = cards;
+		this.cards = cards;
 	}
 	public int getNumCards() {
 		return numCards;
 	}
 	public void setNumCards(int numCards) {
 		this.numCards = numCards;
+	}
+	
+	public void addCard(Card card){
+		cards.add(card);
+		numCards++;
+	}
+	
+	public void removeCard(Card card){
+		cards.remove(card);
+		numCards--;
 	}
 	
 }

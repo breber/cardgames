@@ -4,9 +4,16 @@ import android.graphics.Bitmap;
 
 public class Card {
 	
-	int suit;
-	int value;
-	Bitmap cardImage;
+	private int suit;
+	private int value;
+	private Bitmap cardImage;
+	
+	public Card(int suit, int value, Bitmap cardImage) {
+		super();
+		this.suit = suit;
+		this.value = value;
+		this.cardImage = cardImage;
+	}
 	
 	public int getSuit() {
 		return suit;
@@ -26,7 +33,4 @@ public class Card {
 	public void setCardImage(Bitmap cardImage) {
 		this.cardImage = cardImage;
 	}
-	
-	
-
 }
