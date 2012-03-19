@@ -10,16 +10,29 @@ public class Deck {
 	// game type
 	private CardGame gameName;
 	
+	/**
+	 * Constructor to create a deck for the given card name
+	 * @param name the name of the card game based on the enum value
+	 */
 	public Deck(CardGame name) {
 		this.gameName = name;
 		cardImages = new ArrayList<Card>();
 		fillArray();
 	}
 	
+	/**
+	 * This method will return an ArrayList representing all of the cars
+	 * in the deck for the given game
+	 * @return an ArrayList of card objects for the given value
+	 */
 	public ArrayList<Card> getCardIDs() {
 		return cardImages;
 	}
 	
+	/**
+	 * This method will fill the cardImages ArrayList with card objects for the
+	 * given game
+	 */
 	private void fillArray() {
 		
 		switch(gameName) {
