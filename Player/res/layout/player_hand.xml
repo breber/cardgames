@@ -14,9 +14,9 @@
     	android:gravity="left"
     	android:layout_marginTop="10dip">
 	    
-	  	<cs309.a1.shared.Button
+	  	<Button
 	        android:id="@+id/btDraw"
-	        style="@style/GameButton"
+	        android:layout_height="wrap_content"
 	        android:layout_width="225dip"
 	        android:layout_marginBottom="5dip"
 	        android:layout_marginLeft="5dip"
@@ -35,9 +35,9 @@
     	android:gravity="right"
     	android:layout_marginTop="10dip">
 	    
-	  	<cs309.a1.shared.Button
+	  	<Button
 	        android:id="@+id/btPlay"
-	        style="@style/GameButton"
+	        android:layout_height="wrap_content"
 	        android:layout_width="225dip"
 	        android:layout_marginBottom="5dip"
 	        android:layout_marginLeft="5dip"
@@ -48,5 +48,22 @@
         	android:textStyle="bold"
         	android:layout_gravity="left"/>
 	</LinearLayout>
+
+	<HorizontalScrollView
+	    android:id="@+id/cardScroll"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:layout_marginLeft="10dip"
+	    android:layout_marginRight="10dip" >
+	    
+	    <LinearLayout
+	        android:id="@+id/playerCardContainer"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal" >
+			
+	    </LinearLayout>
+	</HorizontalScrollView>
     
 </RelativeLayout>
