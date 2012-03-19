@@ -11,7 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 import cs309.a1.shared.Util;
 
-public class BluetoothClient {
+public class BluetoothClient extends BluetoothCommon {
 	private static final String TAG = BluetoothClient.class.getName();
 
 	private static BluetoothClient instance = null;
@@ -96,19 +96,12 @@ public class BluetoothClient {
 	 * If this Bluetooth device is connected, send the given object to the server
 	 * 
 	 * @param obj - Object to send
+	 * @param address - doesn't matter for the client
 	 * @return whether the message was sent or not
 	 */
-	public boolean write(Object obj) {
-		if (service.getState() != BluetoothConnectionService.STATE_CONNECTED) {
-			// TODO: we probably want to try and reconnect before just saying
-			// that we aren't connected...
-			return false;
-		}
-
-		// TODO: make this actually useful
-		service.write(obj.toString().getBytes());
-
-		return true;
+	@Override
+	public boolean write(Object obj, String ... address) {
+		return performWrite(service, obj);
 	}
 
 }

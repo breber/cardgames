@@ -87,7 +87,6 @@ public class DeviceListActivity extends Activity {
 
 		// Get the local Bluetooth adapter
 		mBtAdapter = BluetoothAdapter.getDefaultAdapter();
-		ensureDiscoverable();
 
 		if (!mBtAdapter.isEnabled()) {
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -153,18 +152,6 @@ public class DeviceListActivity extends Activity {
 
 		// Request discover from BluetoothAdapter
 		mBtAdapter.startDiscovery();
-	}
-
-	private void ensureDiscoverable() {
-		if (Util.isDebugBuild()) {
-			Log.d(TAG, "ensure discoverable");
-		}
-
-		if (mBtAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-			Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-			discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-			startActivity(discoverableIntent);
-		}
 	}
 
 	@Override
