@@ -1,10 +1,16 @@
-package cs309.a1.shared;
+package cs309.a1.crazyeights;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+
+import cs309.a1.shared.Card;
+import cs309.a1.shared.Deck;
+import cs309.a1.shared.Game;
+import cs309.a1.shared.Player;
+import cs309.a1.shared.Rules;
 
 public class CrazyEightsTabletGame implements Game{
 

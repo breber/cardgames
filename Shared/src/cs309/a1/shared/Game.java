@@ -1,5 +1,6 @@
 package cs309.a1.shared;
 
+
 public interface Game {
 
 	public void setup();
