@@ -3,12 +3,12 @@ package cs309.a1.shared;
 
 public class Card {
 	
-	private String suit;
+	private int suit;
 	private int value;
 	private int resourceId;
 	private int idNum;
 	
-	public Card(String suit, int value, int resourceId, int idNum) {
+	public Card(int suit, int value, int resourceId, int idNum) {
 		super();
 		this.suit = suit;
 		this.value = value;
@@ -16,10 +16,10 @@ public class Card {
 		this.idNum = idNum;
 	}
 	
-	public String getSuit() {
+	public int getSuit() {
 		return suit;
 	}
-	public void setSuit(String suit) {
+	public void setSuit(int suit) {
 		this.suit = suit;
 	}
 	public int getValue() {
