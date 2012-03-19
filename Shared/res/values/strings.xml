@@ -58,4 +58,5 @@ To use this application properly, download the application titled “Crazy Eight
     <string name="player_lost">A player has been disconnected</string>
     <string name="waiting">Waiting to reconnect&#8320;</string>
     <string name="winner">You Won!</string>
+    <string name="exit_application">Are you sure you want to quit the application?</string>
 </resources>
