@@ -42,6 +42,8 @@
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar.MinWidth" />
         <activity android:name=".activities.QuitGameActivity"
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar.MinWidth" />
+        <activity android:name=".activities.QuitApplicationActivity"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar.MinWidth" />
         <activity android:name=".activities.RulesActivity" />
     </application>
 
