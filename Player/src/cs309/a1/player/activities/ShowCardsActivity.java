@@ -1,5 +1,8 @@
 package cs309.a1.player.activities;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,18 +14,22 @@ import cs309.a1.shared.Card;
 public class ShowCardsActivity extends Activity{
 
 	private static final int QUIT_GAME = "QUIT_GAME".hashCode();
+	
+	private ArrayList<Card> cardHand;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.player_hand);
+		cardHand = new ArrayList<Card>();
 		addCard(new Card(0, 1, R.drawable.clubs_2, 1));
 		addCard(new Card(0, 2, R.drawable.clubs_3, 2));
-		addCard(new Card(0, 3, R.drawable.clubs_4, 3));
+		addCard(new Card(2, 5, R.drawable.hearts_6, 31));
 		addCard(new Card(0, 4, R.drawable.clubs_5, 4));
-		addCard(new Card(0, 5, R.drawable.clubs_6, 5));
+		addCard(new Card(3, 8, R.drawable.spades_9, 47));
 		addCard(new Card(0, 6, R.drawable.clubs_7, 6));
-		removeCard(3);
+		removeFromHand(2);
+		addCard(new Card(0, 2, R.drawable.clubs_3, 2));
 	}
 
 	@Override
@@ -45,26 +52,53 @@ public class ShowCardsActivity extends Activity{
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
-	void addCard(Card newCard) {
+	public void addCard(Card newCard) {
 		
-		// create ImageView to hold Card
-		ImageView toAdd = new ImageView(this);
-		toAdd.setImageResource(newCard.getResourceId());
-		toAdd.setId(newCard.getIdNum());
+		cardHand.add(newCard);
+		
+		Collections.sort(cardHand, new CompareIdNums());
+		
 		LinearLayout ll = (LinearLayout) findViewById(R.id.playerCardContainer);
-		
+		ll.removeAllViews();
 		// convert dip to pixels
 		final float dpsToPixScale = getApplicationContext().getResources().getDisplayMetrics().density;
 		int pixels = (int) (125 * dpsToPixScale + 0.5f);
-		
+					
 		// edit layout attributes
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(pixels, LinearLayout.LayoutParams.WRAP_CONTENT);
-		toAdd.setAdjustViewBounds(true);
-		ll.addView(toAdd, lp);
+		
+		for(int i = 0; i < cardHand.size(); i++) {
+		
+			// create ImageView to hold Card
+			ImageView toAdd = new ImageView(this);
+			toAdd.setImageResource(cardHand.get(i).getResourceId());
+			toAdd.setId(cardHand.get(i).getIdNum());
+			toAdd.setAdjustViewBounds(true);
+			ll.addView(toAdd, lp);
+		}
 	}
 	
-	void removeCard(int idNum) {
-		ImageView toRemove = (ImageView) findViewById(idNum);
-		toRemove.setVisibility(8); // set visibility attribute to GONE
+	public void removeFromHand(int idNum) {
+		
+		LinearLayout ll = (LinearLayout) findViewById(R.id.playerCardContainer);
+		ll.removeView((ImageView) findViewById(idNum));
+		
+		// remove card from list
+		Card current = cardHand.get(0);
+		int i = 0;
+		
+		while(current.getIdNum() != idNum) {
+			i++;
+			current = cardHand.get(i);
+		}
+		
+		cardHand.remove(current);
+	}
+	
+	private class CompareIdNums implements Comparator<Card> {
+		
+		public int compare(Card card1, Card card2) {
+			return card1.getIdNum() - card2.getIdNum();
+		}
 	}
 }
