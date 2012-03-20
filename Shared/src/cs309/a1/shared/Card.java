@@ -40,4 +40,20 @@ public class Card {
 	public void setIdNum(int idNum) {
 		this.idNum = idNum;
 	}
+	
+	@Override
+	public String toString(){
+		StringBuilder toReturn = new StringBuilder();
+		
+		toReturn.append(suit);
+		toReturn.append(" ");
+		toReturn.append(value);
+		toReturn.append(" ");
+		toReturn.append(resourceId);
+		toReturn.append(" ");
+		toReturn.append(idNum);
+		toReturn.append(" ");
+		
+		return toReturn.toString();
+	}
 }

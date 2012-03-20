@@ -3,6 +3,8 @@ package cs309.a1.shared;
 import java.util.ArrayList;
 import java.util.List;
 
+import bsh.StringUtil;
+
 
 public class Player {
 	
@@ -67,6 +69,17 @@ public class Player {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	@Override
+	public String toString(){
+		StringBuilder toReturn = new StringBuilder();
+		
+		for(int i = 0; i < cards.size(); i++){
+			toReturn.append(cards.get(i).toString());
+		}
+		
+		return toReturn.toString();
 	}
 	
 }

@@ -3,25 +3,58 @@ package cs309.a1.player.activities;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cs309.a1.player.R;
 import cs309.a1.shared.Card;
+import cs309.a1.shared.bluetooth.BluetoothConstants;
 
 public class ShowCardsActivity extends Activity{
 
 	private static final int QUIT_GAME = "QUIT_GAME".hashCode();
 	
 	private ArrayList<Card> cardHand;
+	
+	private BroadcastReceiver receiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			
+			String sender = intent.getStringExtra(BluetoothConstants.DEVICE_ID_KEY);
+			String object = intent.getStringExtra(BluetoothConstants.MESSAGE_RX_KEY);
+			Log.d("cs309", object);
+			//parse and recreate the objects
+			String delims = "[ ]";
+			String[] tokens = object.split(delims);
+			
+			for(int i = 0; i < tokens.length-1; i+=4){
+				int suit = Integer.parseInt(tokens[i]);
+				Log.d("cs309", tokens[i]);
+				int value = Integer.parseInt(tokens[i+1]);
+				Log.d("cs309", tokens[i+1]);
+				int resourceId = Integer.parseInt(tokens[i+2]);
+				Log.d("cs309", tokens[i+2]);
+				int id = Integer.parseInt(tokens[i+3]);
+				Log.d("cs309", tokens[i+3]);
+				
+				addCard(new Card(suit, value, resourceId, id));
+			}
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.player_hand);
 		cardHand = new ArrayList<Card>();
+		registerReceiver(receiver, new IntentFilter(BluetoothConstants.MESSAGE_RX_INTENT));
 	}
 
 	@Override
