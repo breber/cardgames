@@ -221,12 +221,10 @@ public class DeviceListActivity extends Activity {
 				BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
 				// If it's already paired, skip it, because it's been listed already
-				if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
-					// TODO: maybe check to see if there is a device that is currently in the list
-					//		 with the same MAC address
-					noDevicesFound.setVisibility(View.GONE);
-					mDevicesArrayAdapter.add(new DeviceListItem(device.getName(), device.getAddress()));
-				}
+				// TODO: maybe check to see if there is a device that is currently in the list
+				//		 with the same MAC address
+				noDevicesFound.setVisibility(View.GONE);
+				mDevicesArrayAdapter.add(new DeviceListItem(device.getName(), device.getAddress()));
 			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
 				// When discovery is finished, change the Activity title
 				setTitle(R.string.title_device_list);
