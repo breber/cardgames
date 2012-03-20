@@ -1,7 +1,5 @@
 package cs309.a1.gameboard.activities;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -27,51 +25,58 @@ public class ConnectActivity extends Activity {
 	private Context mContext;
 	private BluetoothAdapter mBluetoothAdapter;
 	private BluetoothServer mBluetoothServer;
-	
+
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			int tmpNumPlayers = mBluetoothServer.getConnectedDeviceCount();
-			if(numPlayers != tmpNumPlayers){
+			if (numPlayers != tmpNumPlayers) {
 				numPlayers = tmpNumPlayers;
 				updatePlayersConnected();
 			}
-			
-			
+
 		}
 	};
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.connect);
-		
-		ImageViews[0] = (ImageView) findViewById(R.id.ImageViewTablet); //tablet is imageview 0 rest are by player number
+
+		ImageViews[0] = (ImageView) findViewById(R.id.ImageViewTablet); // tablet
+		// is
+		// imageview
+		// 0
+		// rest
+		// are
+		// by
+		// player
+		// number
 		ImageViews[1] = (ImageView) findViewById(R.id.ImageViewP1);
 		ImageViews[2] = (ImageView) findViewById(R.id.ImageViewP2);
 		ImageViews[3] = (ImageView) findViewById(R.id.ImageViewP3);
 		ImageViews[4] = (ImageView) findViewById(R.id.ImageViewP4);
-		
 
 		mContext = this;
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT)); 
-		
+		registerReceiver(receiver, new IntentFilter(
+				BluetoothConstants.STATE_CHANGE_INTENT));
+
 		if (!mBluetoothAdapter.isEnabled()) {
-			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			Intent enableIntent = new Intent(
+					BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
 		} else {
 			startListeningForDevices();
 		}
-		
 
 		Button connectButton = (Button) findViewById(R.id.connectButton);
 		connectButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (canStartGame()) {
-					Intent i = new Intent(ConnectActivity.this, GameboardActivity.class);
+					Intent i = new Intent(ConnectActivity.this,
+							GameboardActivity.class);
 					startActivity(i);
 				}
 			}
@@ -90,9 +95,9 @@ public class ConnectActivity extends Activity {
 	}
 
 	private void startListeningForDevices() {
-		mBluetoothServer = BluetoothServer.getInstance(mContext);
+		mBluetoothServer = BluetoothServer.getInstance(this);
 		Util.ensureDiscoverable(mContext, mBluetoothAdapter);
-
+		mBluetoothServer.startListening();
 	}
 
 	@Override
@@ -103,19 +108,18 @@ public class ConnectActivity extends Activity {
 			super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
-	
-	private void updatePlayersConnected(){
+
+	private void updatePlayersConnected() {
 		int i;
-		//highlight the number of players that are connected
-		for(i = 1; i<=numPlayers; i++){ 
+		// highlight the number of players that are connected
+		for (i = 1; i <= numPlayers; i++) {
 			ImageViews[i].setImageResource(R.drawable.on_device);
 		}
-		
-		//grey out the other players
-		for(;i<=4;i++){
+
+		// grey out the other players
+		for (; i <= 4; i++) {
 			ImageViews[i].setImageResource(R.drawable.off_device);
 		}
-		
-		
+
 	}
 }
