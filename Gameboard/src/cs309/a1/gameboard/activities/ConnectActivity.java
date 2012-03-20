@@ -43,15 +43,8 @@ public class ConnectActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.connect);
 
-		ImageViews[0] = (ImageView) findViewById(R.id.ImageViewTablet); // tablet
-		// is
-		// imageview
-		// 0
-		// rest
-		// are
-		// by
-		// player
-		// number
+		ImageViews[0] = (ImageView) findViewById(R.id.ImageViewTablet); 
+		// tablet is imageview 0 rest are by player number
 		ImageViews[1] = (ImageView) findViewById(R.id.ImageViewP1);
 		ImageViews[2] = (ImageView) findViewById(R.id.ImageViewP2);
 		ImageViews[3] = (ImageView) findViewById(R.id.ImageViewP3);
