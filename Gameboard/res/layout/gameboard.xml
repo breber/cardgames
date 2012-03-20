@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:gravity="center_vertical|center_horizontal"
     android:keepScreenOn="true"
     android:orientation="horizontal" 
     android:background="@drawable/wooden_top">
-    
-    <cs309.a1.shared.Button
-        android:id="@+id/pauseButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dip"
-        android:layout_marginRight="15dip"
-        android:padding="15dip"
-        android:text="@string/pauseGame" />
 
-</LinearLayout>
+    <ImageButton
+        android:id="@+id/gameboard_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@null"
+        android:padding="5dip"
+        android:src="@drawable/pause_button" />
+
+</RelativeLayout>
