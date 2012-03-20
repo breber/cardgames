@@ -28,7 +28,6 @@ public class GameboardActivity extends Activity {
 		setContentView(R.layout.gameboard);
 		BluetoothServer bts = BluetoothServer.getInstance();
 		
-		
 		int numOfConnections = bts.getConnectedDeviceCount();
 		List<Player> players = new ArrayList<Player>();
 		List<String> devices = bts.getConnectedDevices();
@@ -42,7 +41,12 @@ public class GameboardActivity extends Activity {
 		
 		Rules rules = new CrazyEightGameRules();
 		Deck deck = new Deck(CRAZY_EIGHTS);
-		CrazyEightsTabletGame.getInstance(players, deck, rules);
+		Game game = CrazyEightsTabletGame.getInstance(players, deck, rules);
+		game.setup();
+		
+		for(int i = 0; i < players.size(); i++){
+			bts.write(players.get(i), players.get(i).getId());
+		}
 	}
 
 	@Override

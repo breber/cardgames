@@ -11,7 +11,6 @@ public class MainMenu extends Activity {
 
 	private static final int QUIT_GAME = "QUIT_GAME".hashCode();
 	
-//This will run at the start of the app
 	@Override
 	protected void onCreate(android.os.Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,7 +55,7 @@ public class MainMenu extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-		if(resultCode == QUIT_GAME && resultCode == RESULT_OK){
+		if(requestCode == QUIT_GAME && resultCode == RESULT_OK){
 			finish();
 		}
 	}
