@@ -10,8 +10,6 @@ public class Player {
 	private String name;
 	private String id;
 	
-	
-	
 	public Player(List<Card> cards, int numCards, String name, String id) {
 		super();
 		this.cards = cards;
@@ -19,6 +17,10 @@ public class Player {
 		this.name = name;
 		this.id = id;
 	}
+
+	public Player() {
+		super();
+	} 
 
 	public List<Card> getCards() {
 		return cards;
