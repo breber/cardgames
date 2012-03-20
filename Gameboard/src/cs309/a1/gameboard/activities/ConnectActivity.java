@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 import cs309.a1.gameboard.R;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
@@ -30,6 +31,11 @@ public class ConnectActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			int tmpNumPlayers = mBluetoothServer.getConnectedDeviceCount();
+			
+			if (Util.isDebugBuild()) {
+				Toast.makeText(mContext, "Bluetooth change. Players: " + tmpNumPlayers, Toast.LENGTH_LONG).show();
+			}
+			
 			if (numPlayers != tmpNumPlayers) {
 				numPlayers = tmpNumPlayers;
 				updatePlayersConnected();
