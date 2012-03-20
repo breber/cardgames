@@ -1,7 +1,8 @@
 package cs309.a1.crazyeights;
 
+import static cs309.a1.crazyeights.Constants.NUMBER_OF_CARDS_PER_HAND;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -12,9 +13,6 @@ import cs309.a1.shared.Deck;
 import cs309.a1.shared.Game;
 import cs309.a1.shared.Player;
 import cs309.a1.shared.Rules;
-import cs309.a1.shared.bluetooth.BluetoothServer;
-
-import static cs309.a1.crazyeights.Constants.NUMBER_OF_CARDS_PER_HAND;
 
 public class CrazyEightsTabletGame implements Game{
 
@@ -118,6 +116,20 @@ public class CrazyEightsTabletGame implements Game{
 		iter = shuffledDeck.iterator();
 		
 	}
+	
+	/**
+	 * 
+	 */
+	public void shuffleDiscardPile(){
+		//TODO
+		Random generator = new Random();
+		Collections.shuffle(discardPile, generator);
+		Card card = discardPile.remove(discardPile.size()-1);
+		shuffledDeck = discardPile;
+		discardPile.removeAll(discardPile);
+		discardPile.add(card);
+		iter = shuffledDeck.iterator();
+	}
 
 		
 	/**
@@ -144,6 +156,7 @@ public class CrazyEightsTabletGame implements Game{
 	 */
 	public void discard(Player player, Card card){
 		//add the given card to the discard pile
+		rules.checkCard(card, discardPile.get(discardPile.size()-1));
 		discardPile.add(card);
 	}
 	
@@ -168,5 +181,9 @@ public class CrazyEightsTabletGame implements Game{
 	public void draw(Player player){
 		player.getCards().add(iter.next());
 		player.setNumCards(player.getNumCards() + 1);
+		
+		if(shuffledDeck.size()==0){
+			shuffleDiscardPile();
+		}
 	}
 }
