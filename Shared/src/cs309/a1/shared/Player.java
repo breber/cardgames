@@ -10,6 +10,16 @@ public class Player {
 	private String name;
 	private String id;
 	
+	
+	
+	public Player(List<Card> cards, int numCards, String name, String id) {
+		super();
+		this.cards = cards;
+		this.numCards = numCards;
+		this.name = name;
+		this.id = id;
+	}
+
 	public List<Card> getCards() {
 		return cards;
 	}
