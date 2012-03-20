@@ -26,7 +26,7 @@ public class GameboardActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gameboard);
-		BluetoothServer bts = BluetoothServer.getInstance();
+		BluetoothServer bts = BluetoothServer.getInstance(this);
 		
 		int numOfConnections = bts.getConnectedDeviceCount();
 		List<Player> players = new ArrayList<Player>();
