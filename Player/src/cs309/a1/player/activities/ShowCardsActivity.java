@@ -22,14 +22,6 @@ public class ShowCardsActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.player_hand);
 		cardHand = new ArrayList<Card>();
-		addCard(new Card(0, 1, R.drawable.clubs_2, 1));
-		addCard(new Card(0, 2, R.drawable.clubs_3, 2));
-		addCard(new Card(2, 5, R.drawable.hearts_6, 31));
-		addCard(new Card(0, 4, R.drawable.clubs_5, 4));
-		addCard(new Card(3, 8, R.drawable.spades_9, 47));
-		addCard(new Card(0, 6, R.drawable.clubs_7, 6));
-		removeFromHand(2);
-		addCard(new Card(0, 2, R.drawable.clubs_3, 2));
 	}
 
 	@Override
