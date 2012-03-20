@@ -24,10 +24,7 @@ public class QuitApplicationActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				setResult(RESULT_OK);
-				Intent intent = new Intent(Intent.ACTION_MAIN);
-				intent.addCategory(Intent.CATEGORY_HOME);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(intent);
+				finish();
 			}
 		});
 
