@@ -55,7 +55,8 @@
 	    android:layout_height="wrap_content"
 	    android:layout_alignParentBottom="true"
 	    android:layout_marginLeft="10dip"
-	    android:layout_marginRight="10dip" >
+	    android:layout_marginRight="10dip" 
+	    android:layout_centerHorizontal="true" >
 	    
 	    <LinearLayout
 	        android:id="@+id/playerCardContainer"
