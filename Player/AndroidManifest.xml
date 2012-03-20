@@ -25,8 +25,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.RulesActivity" />
-        <activity android:name=".activities.AboutActivity" />
+        <activity 	
+            android:name=".activities.RulesActivity" 
+            android:screenOrientation="landscape" />
+        <activity 
+            android:name=".activities.AboutActivity" 
+            android:screenOrientation="landscape" />
         <activity
             android:name=".activities.ConnectActivity"
             android:screenOrientation="landscape" />
@@ -43,7 +47,8 @@
         <activity
             android:name="cs309.a1.shared.activities.DeviceListActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_device_list" />
+            android:label="@string/title_device_list"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>
