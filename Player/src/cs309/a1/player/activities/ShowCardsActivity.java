@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cs309.a1.player.R;
+import cs309.a1.shared.Card;
 
 public class ShowCardsActivity extends Activity{
 
@@ -15,11 +16,13 @@ public class ShowCardsActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.player_hand);
-		addCard(R.drawable.clubs_2);
-		addCard(R.drawable.clubs_3);
-		addCard(R.drawable.clubs_4);
-		addCard(R.drawable.clubs_5);
-		addCard(R.drawable.clubs_6);
+		addCard(new Card(0, 1, R.drawable.clubs_2, 1));
+		addCard(new Card(0, 2, R.drawable.clubs_3, 2));
+		addCard(new Card(0, 3, R.drawable.clubs_4, 3));
+		addCard(new Card(0, 4, R.drawable.clubs_5, 4));
+		addCard(new Card(0, 5, R.drawable.clubs_6, 5));
+		addCard(new Card(0, 6, R.drawable.clubs_7, 6));
+		removeCard(3);
 	}
 
 	@Override
@@ -42,10 +45,26 @@ public class ShowCardsActivity extends Activity{
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
-	void addCard(int resourceID) {
+	void addCard(Card newCard) {
+		
+		// create ImageView to hold Card
 		ImageView toAdd = new ImageView(this);
-		toAdd.setImageResource(resourceID);
+		toAdd.setImageResource(newCard.getResourceId());
+		toAdd.setId(newCard.getIdNum());
 		LinearLayout ll = (LinearLayout) findViewById(R.id.playerCardContainer);
-		ll.addView(toAdd);
+		
+		// convert dip to pixels
+		final float dpsToPixScale = getApplicationContext().getResources().getDisplayMetrics().density;
+		int pixels = (int) (125 * dpsToPixScale + 0.5f);
+		
+		// edit layout attributes
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(pixels, LinearLayout.LayoutParams.WRAP_CONTENT);
+		toAdd.setAdjustViewBounds(true);
+		ll.addView(toAdd, lp);
+	}
+	
+	void removeCard(int idNum) {
+		ImageView toRemove = (ImageView) findViewById(idNum);
+		toRemove.setVisibility(8); // set visibility attribute to GONE
 	}
 }
