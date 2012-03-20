@@ -52,4 +52,12 @@ public class MainMenu extends Activity {
 		Intent intent = new Intent(this, QuitApplicationActivity.class);
 		startActivityForResult(intent, QUIT_GAME);
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		if(resultCode == QUIT_GAME && resultCode == RESULT_OK){
+			finish();
+		}
+	}
 }
