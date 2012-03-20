@@ -4,12 +4,16 @@ import java.util.ArrayList;
 
 public class Deck {
 
-	// array of card image resource IDs
+	/**
+	 * Array of card image resource IDs
+	 */
 	private ArrayList<Card> cardImages;
-	
-	// game type
+
+	/**
+	 * game type
+	 */
 	private CardGame gameName;
-	
+
 	/**
 	 * Constructor to create a deck for the given card name
 	 * @param name the name of the card game based on the enum value
@@ -19,7 +23,7 @@ public class Deck {
 		cardImages = new ArrayList<Card>();
 		fillArray();
 	}
-	
+
 	/**
 	 * This method will return an ArrayList representing all of the cars
 	 * in the deck for the given game
@@ -28,15 +32,15 @@ public class Deck {
 	public ArrayList<Card> getCardIDs() {
 		return cardImages;
 	}
-	
+
 	/**
 	 * This method will fill the cardImages ArrayList with card objects for the
 	 * given game
 	 */
 	private void fillArray() {
-		
+
 		switch(gameName) {
-		
+
 		case CRAZY_EIGHTS:
 			cardImages.add(new Card(0, 0, R.drawable.clubs_a, 0));
 			cardImages.add(new Card(0, 1, R.drawable.clubs_2, 1));

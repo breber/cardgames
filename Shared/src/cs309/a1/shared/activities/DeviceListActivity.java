@@ -1,6 +1,7 @@
 package cs309.a1.shared.activities;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -36,7 +37,7 @@ public class DeviceListActivity extends Activity {
 	private static final int REQUEST_ENABLE_BT = 3;
 
 	// Member fields
-	private boolean displayCurrentlyConnected = false;
+	private List<String> deviceNames = new ArrayList<String>();
 	private TextView noDevicesFound;
 	private ProgressBar deviceListProgress;
 	private ImageButton refreshDeviceListButton;
@@ -63,7 +64,7 @@ public class DeviceListActivity extends Activity {
 				noDevicesFound.setVisibility(View.VISIBLE);
 				noDevicesFound.setText(R.string.scanning);
 
-				setupDeviceList();
+				mDevicesArrayAdapter.clear();
 				doDiscovery();
 			}
 		});
@@ -79,11 +80,11 @@ public class DeviceListActivity extends Activity {
 
 		// Register for broadcasts when a device is discovered
 		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		this.registerReceiver(mReceiver, filter);
+		registerReceiver(mReceiver, filter);
 
 		// Register for broadcasts when discovery has finished
 		filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-		this.registerReceiver(mReceiver, filter);
+		registerReceiver(mReceiver, filter);
 
 		// Get the local Bluetooth adapter
 		mBtAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -92,32 +93,8 @@ public class DeviceListActivity extends Activity {
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
 		} else {
-			setupDeviceList();
+			mDevicesArrayAdapter.clear();
 			doDiscovery();
-		}
-	}
-
-	/**
-	 * If we want to display the currently connected devices, add those to the listview
-	 * and then add a separator with the text "New Devices"
-	 */
-	private void setupDeviceList() {
-		mDevicesArrayAdapter.clear();
-
-		if (displayCurrentlyConnected) {
-			// Get a set of currently paired devices
-			Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
-
-			// If there are paired devices, add each one to the ArrayAdapter
-			if (pairedDevices.size() > 0) {
-				mDevicesArrayAdapter.add(new ListSeparator(getResources().getString(R.string.connected_devices_separator)));
-
-				for (BluetoothDevice device : pairedDevices) {
-					mDevicesArrayAdapter.add(new DeviceListItem(device.getName(), device.getAddress()));
-				}
-			}
-
-			mDevicesArrayAdapter.add(new ListSeparator(getResources().getString(R.string.new_devices_separator)));
 		}
 	}
 
@@ -131,7 +108,7 @@ public class DeviceListActivity extends Activity {
 		}
 
 		// Unregister broadcast listeners
-		this.unregisterReceiver(mReceiver);
+		unregisterReceiver(mReceiver);
 	}
 
 	/**
@@ -141,9 +118,6 @@ public class DeviceListActivity extends Activity {
 		if (Util.isDebugBuild()) {
 			Log.d(TAG, "doDiscovery()");
 		}
-
-		// Indicate scanning in the title
-		setTitle(R.string.scanning);
 
 		// If we're already discovering, stop it
 		if (mBtAdapter.isDiscovering()) {
@@ -156,7 +130,7 @@ public class DeviceListActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		// Cancel discovery because it's costly and we're about to connect
+		// Cancel discovery
 		mBtAdapter.cancelDiscovery();
 
 		setResult(RESULT_CANCELED);
@@ -173,12 +147,15 @@ public class DeviceListActivity extends Activity {
 		case REQUEST_ENABLE_BT:
 			// When the request to enable Bluetooth returns
 			if (resultCode == Activity.RESULT_OK) {
-				// Bluetooth is now enabled, so set up a chat session
-				setupDeviceList();
+				// Bluetooth is now enabled, so start discovering devices
+				mDevicesArrayAdapter.clear();
 				doDiscovery();
 			} else {
 				// User did not enable Bluetooth or an error occurred
-				Log.d(TAG, "BT not enabled");
+				if (Util.isDebugBuild()) {
+					Log.d(TAG, "BT not enabled");
+				}
+
 				finish();
 			}
 		}
@@ -207,8 +184,7 @@ public class DeviceListActivity extends Activity {
 	};
 
 	/**
-	 * The BroadcastReceiver that listens for discovered devices and changes the
-	 * title when discovery is finished
+	 * The BroadcastReceiver that listens for discovered devices and adds them to the listview
 	 */
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
@@ -220,15 +196,15 @@ public class DeviceListActivity extends Activity {
 				// Get the BluetoothDevice object from the Intent
 				BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
-				// If it's already paired, skip it, because it's been listed already
-				// TODO: maybe check to see if there is a device that is currently in the list
-				//		 with the same MAC address
-				noDevicesFound.setVisibility(View.GONE);
-				mDevicesArrayAdapter.add(new DeviceListItem(device.getName(), device.getAddress()));
+				// If we already have a device with the same name in the list, skip it
+				if (!deviceNames.contains(device.getName())) {
+					// Otherwise display the device in the list
+					deviceNames.add(device.getName());
+					noDevicesFound.setVisibility(View.GONE);
+					mDevicesArrayAdapter.add(new DeviceListItem(device.getName(), device.getAddress()));
+				}
 			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-				// When discovery is finished, change the Activity title
-				setTitle(R.string.title_device_list);
-
+				// Discovery is finished - hide the progress bar, and show the refresh button
 				deviceListProgress.setVisibility(View.GONE);
 				refreshDeviceListButton.setVisibility(View.VISIBLE);
 

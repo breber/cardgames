@@ -3,16 +3,14 @@ package cs309.a1.shared;
 import java.util.ArrayList;
 import java.util.List;
 
-import bsh.StringUtil;
-
 
 public class Player {
-	
+
 	private List<Card> cards;
 	private int numCards;
 	private String name;
 	private String id;
-	
+
 	public Player(List<Card> cards, int numCards, String name, String id) {
 		super();
 		this.cards = cards;
@@ -27,7 +25,7 @@ public class Player {
 		this.numCards = 0;
 		this.name = null;
 		this.id = null;
-	} 
+	}
 
 	public List<Card> getCards() {
 		return cards;
@@ -49,7 +47,7 @@ public class Player {
 		cards.add(card);
 		numCards++;
 	}
-	
+
 	public void removeCard(Card card){
 		cards.remove(card);
 		numCards--;
@@ -70,16 +68,16 @@ public class Player {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
 	public String toString(){
 		StringBuilder toReturn = new StringBuilder();
-		
+
 		for(int i = 0; i < cards.size(); i++){
 			toReturn.append(cards.get(i).toString());
 		}
-		
+
 		return toReturn.toString();
 	}
-	
+
 }
