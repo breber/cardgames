@@ -12,12 +12,14 @@ public class BluetoothConstants {
 	// Name for the SDP record when creating server socket
 	public static final String SOCKET_NAME = "BluetoothChat";
 
+
 	public static final int READ_MESSAGE  = 0;
 	public static final int WRITE_MESSAGE = 1;
-	public static final int TOAST_MESSAGE = 2;
-	public static final int STATE_MESSAGE = 3;
+	public static final int STATE_MESSAGE = 2;
+	public static final int CONNECTION_FAILED_MESSAGE = 3;
 
 
+	// TODO: rename these to be consistent (all start with the same prefix)
 	public static final String DEVICE_ID_KEY = "DEVICE_ID";
 	public static final String TOAST_MESSAGE_KEY = "TOAST_MESSAGE";
 	public static final String STATE_MESSAGE_KEY = "STATE";

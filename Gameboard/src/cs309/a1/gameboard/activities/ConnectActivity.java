@@ -31,11 +31,11 @@ public class ConnectActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			int tmpNumPlayers = mBluetoothServer.getConnectedDeviceCount();
-			
+
 			if (Util.isDebugBuild()) {
 				Toast.makeText(mContext, "Bluetooth change. Players: " + tmpNumPlayers, Toast.LENGTH_LONG).show();
 			}
-			
+
 			if (numPlayers != tmpNumPlayers) {
 				numPlayers = tmpNumPlayers;
 				updatePlayersConnected();
@@ -49,7 +49,7 @@ public class ConnectActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.connect);
 
-		ImageViews[0] = (ImageView) findViewById(R.id.ImageViewTablet); 
+		ImageViews[0] = (ImageView) findViewById(R.id.ImageViewTablet);
 		// tablet is imageview 0 rest are by player number
 		ImageViews[1] = (ImageView) findViewById(R.id.ImageViewP1);
 		ImageViews[2] = (ImageView) findViewById(R.id.ImageViewP2);
@@ -58,12 +58,10 @@ public class ConnectActivity extends Activity {
 
 		mContext = this;
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		registerReceiver(receiver, new IntentFilter(
-				BluetoothConstants.STATE_CHANGE_INTENT));
+		registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
 
 		if (!mBluetoothAdapter.isEnabled()) {
-			Intent enableIntent = new Intent(
-					BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
 		} else {
 			startListeningForDevices();
@@ -74,12 +72,19 @@ public class ConnectActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (canStartGame()) {
-					Intent i = new Intent(ConnectActivity.this,
-							GameboardActivity.class);
+					mBluetoothServer.stopListening();
+					Intent i = new Intent(ConnectActivity.this,	GameboardActivity.class);
 					startActivity(i);
 				}
 			}
 		});
+	}
+
+	@Override
+	protected void onDestroy() {
+		mBluetoothServer.stopListening();
+
+		super.onDestroy();
 	}
 
 	/**

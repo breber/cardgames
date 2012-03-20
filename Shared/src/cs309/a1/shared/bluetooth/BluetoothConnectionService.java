@@ -207,7 +207,7 @@ public class BluetoothConnectionService {
 		// TODO: should this send a state change to the UI?
 
 		// Send a failure message back to the Activity
-		Message msg = mHandler.obtainMessage(BluetoothConstants.TOAST_MESSAGE);
+		Message msg = mHandler.obtainMessage(BluetoothConstants.CONNECTION_FAILED_MESSAGE);
 		Bundle bundle = new Bundle();
 		bundle.putString(BluetoothConstants.TOAST_MESSAGE_KEY, "Unable to connect device");
 		bundle.putString(BluetoothConstants.DEVICE_ID_KEY, deviceAddress);
@@ -225,7 +225,7 @@ public class BluetoothConnectionService {
 		// TODO: should this send a state change to the UI?
 
 		// Send a failure message back to the Activity
-		Message msg = mHandler.obtainMessage(BluetoothConstants.TOAST_MESSAGE);
+		Message msg = mHandler.obtainMessage(BluetoothConstants.CONNECTION_FAILED_MESSAGE);
 		Bundle bundle = new Bundle();
 		bundle.putString(BluetoothConstants.TOAST_MESSAGE_KEY, "Device connection lost");
 		bundle.putString(BluetoothConstants.DEVICE_ID_KEY, deviceAddress);

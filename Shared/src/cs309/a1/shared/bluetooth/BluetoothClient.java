@@ -11,16 +11,48 @@ import android.util.Log;
 import android.widget.Toast;
 import cs309.a1.shared.Util;
 
+/**
+ * This Singleton class acts as a Client for a Bluetooth connection.
+ * 
+ * It connects to another Bluetooth device (running the server), and then
+ * communicates with it (by sending messages and receiving messages).
+ */
 public class BluetoothClient extends BluetoothCommon {
+	/**
+	 * The Logcat Debug tag
+	 */
 	private static final String TAG = BluetoothClient.class.getName();
 
+	/**
+	 * The Singleton instance of this class
+	 */
 	private static BluetoothClient instance = null;
 
-	private BluetoothConnectionService service;
+	/**
+	 * The BluetoothConnectionService associated with this client
+	 */
+	private BluetoothConnectionService mService;
+
+	/**
+	 * The BluetoothAdapter used to query Bluetooth information
+	 */
 	private BluetoothAdapter mBluetoothAdapter;
+
+	/**
+	 * The context of this thread
+	 */
 	private Context mContext;
+
+	/**
+	 * The MAC address of the device to connect to
+	 */
 	private String mMacAddress;
 
+	/**
+	 * The Handler to handle all messages coming from the BluetoothConnectionService
+	 * 
+	 * This should pretty much just pass the message on to the UI/GameLayer
+	 */
 	private Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -28,6 +60,7 @@ public class BluetoothClient extends BluetoothCommon {
 				Log.d(TAG, "handleMessage: " + msg.what);
 				Toast.makeText(mContext, "handleMessage: " + msg.what, Toast.LENGTH_LONG).show();
 			}
+
 			Bundle data = msg.getData();
 			switch (msg.what) {
 			case BluetoothConstants.STATE_MESSAGE:
@@ -43,19 +76,27 @@ public class BluetoothClient extends BluetoothCommon {
 				i1.putExtra(BluetoothConstants.DEVICE_ID_KEY, data.getString(BluetoothConstants.DEVICE_ID_KEY));
 				mContext.sendBroadcast(i1);
 				break;
-			case BluetoothConstants.TOAST_MESSAGE:
-				Toast.makeText(mContext, msg.getData().getString(BluetoothConstants.TOAST_MESSAGE_KEY), Toast.LENGTH_SHORT).show();
-				break;
 			}
 		}
 	};
 
+	/**
+	 * Create a new BluetoothClient
+	 * 
+	 * @param ctx
+	 */
 	private BluetoothClient(Context ctx) {
 		mContext = ctx;
-		service = new BluetoothConnectionService(mContext, mHandler);
+		mService = new BluetoothConnectionService(mContext, mHandler);
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 	}
 
+	/**
+	 * Gets the instance of the BluetoothClient
+	 * 
+	 * @param ctx the Context of this BluetoothClient
+	 * @return the BluetoothClient
+	 */
 	public static BluetoothClient getInstance(Context ctx) {
 		if (instance == null) {
 			instance = new BluetoothClient(ctx);
@@ -93,7 +134,7 @@ public class BluetoothClient extends BluetoothCommon {
 		setMacAddress(macAddress);
 
 		BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(macAddress);
-		service.connect(device);
+		mService.connect(device);
 	}
 
 	/**
@@ -105,7 +146,6 @@ public class BluetoothClient extends BluetoothCommon {
 	 */
 	@Override
 	public boolean write(Object obj, String ... address) {
-		return performWrite(service, obj);
+		return performWrite(mService, obj);
 	}
-
 }

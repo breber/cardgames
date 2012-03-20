@@ -13,23 +13,57 @@ import android.util.Log;
 import cs309.a1.shared.Util;
 
 /**
- * This thread runs while listening for incoming connections. It behaves
- * like a server-side client. It runs until a connection is accepted
- * (or until cancelled).
+ * This thread runs while listening for incoming connections. When it finds
+ * a new device that wants to connect, it will create a new BluetoothConnectionService
+ * for that device, and add it to the HashMap that was provided. It will run until
+ * someone tells it to stop.
  */
 public class AcceptThread extends Thread {
+	/**
+	 * The Logcat Debug tag
+	 */
 	private static final String TAG = AcceptThread.class.getName();
 
-	// The local server socket
-	private final BluetoothServerSocket mmServerSocket;
+	/**
+	 *  The local server socket
+	 */
+	private BluetoothServerSocket mmServerSocket;
+
+	/**
+	 * The BluetoothAdapter used to query Bluetooth information
+	 */
 	private final BluetoothAdapter mAdapter;
+
+	/**
+	 * The Handler that each BluetoothConnectionService will get
+	 */
+	private final Handler mHandler;
+
+	/**
+	 * A reference to a HashMap of MAC addresses to BluetoothConnectionServices
+	 * that is passed in by the calling server.
+	 */
 	private final HashMap<String, BluetoothConnectionService> mConnections;
+
+	/**
+	 * The context of this thread
+	 */
 	private Context mContext;
-	private Handler mHandler;
+
+	/**
+	 * When this turns false, don't try to find another connection
+	 */
 	private boolean continueChecking = true;
 
+	/**
+	 * Create a new AcceptThread
+	 * 
+	 * @param ctx The context of this thread
+	 * @param adapter The BluetoothAdapter to use for Bluetooth information
+	 * @param handler The handler to assign each BluetoothConnectionService
+	 * @param services A map of MAC addresses to BluetoothConnectionService
+	 */
 	public AcceptThread(Context ctx, BluetoothAdapter adapter, Handler handler, HashMap<String, BluetoothConnectionService> services) {
-		BluetoothServerSocket tmp = null;
 		mAdapter = adapter;
 		mConnections = services;
 		mContext = ctx;
@@ -37,11 +71,10 @@ public class AcceptThread extends Thread {
 
 		// Create a new listening server socket
 		try {
-			tmp = mAdapter.listenUsingRfcommWithServiceRecord(BluetoothConstants.SOCKET_NAME, BluetoothConstants.MY_UUID);
+			mmServerSocket = mAdapter.listenUsingRfcommWithServiceRecord(BluetoothConstants.SOCKET_NAME, BluetoothConstants.MY_UUID);
 		} catch (IOException e) {
 			Log.e(TAG, "Socket listen() failed", e);
 		}
-		mmServerSocket = tmp;
 	}
 
 	@Override
@@ -59,7 +92,7 @@ public class AcceptThread extends Thread {
 			serv.start();
 
 			// Listen to the server socket if we're not connected
-			while (serv.getState() != BluetoothConstants.STATE_CONNECTED) {
+			while (continueChecking && serv.getState() != BluetoothConstants.STATE_CONNECTED) {
 				try {
 					// This is a blocking call and will only return on a
 					// successful connection or an exception
@@ -72,22 +105,21 @@ public class AcceptThread extends Thread {
 
 				// If a connection was accepted
 				if (socket != null) {
-					Log.d(TAG, "the socket is not null! " + socket);
+					if (Util.isDebugBuild()) {
+						Log.d(TAG, "the socket is not null! " + socket);
+					}
 					synchronized (AcceptThread.this) {
-						Log.d(TAG, "AcceptThread.this --> state " + serv.getState());
 						switch (serv.getState()) {
 						case BluetoothConstants.STATE_LISTEN:
 						case BluetoothConstants.STATE_CONNECTING:
 							// Situation normal. Start the connected thread.
 							BluetoothDevice dev = socket.getRemoteDevice();
 							mConnections.put(dev.getAddress(), serv);
-							Log.d(TAG, "added connection to mConnections");
 							serv.connected(socket, dev);
 							break;
 						case BluetoothConstants.STATE_NONE:
 						case BluetoothConstants.STATE_CONNECTED:
-							// Either not ready or already connected. Terminate new
-							// socket.
+							// Either not ready or already connected. Terminate new socket.
 							try {
 								socket.close();
 							} catch (IOException e) {
@@ -97,27 +129,30 @@ public class AcceptThread extends Thread {
 						}
 					}
 				} else {
-					Log.d(TAG, "the socket was null :( " + socket);
+					if (Util.isDebugBuild()) {
+						Log.d(TAG, "the socket was null :( " + socket);
+					}
 				}
 			}
 		}
-
-		try {
-			mmServerSocket.close();
-		} catch (IOException e) {
-			Log.e(TAG, "Socket close() of server failed", e);
-		}
-
-		if (Util.isDebugBuild()) {
-			Log.i(TAG, "END mAcceptThread");
-		}
 	}
 
+	/**
+	 * Cancel the waiting for connections
+	 */
 	public void cancel() {
 		if (Util.isDebugBuild()) {
 			Log.d(TAG, "Socket cancel " + this);
 		}
 
+		// Change the loop variable to prevent the loop from continuing
 		continueChecking = false;
+
+		// Close the server socket
+		try {
+			mmServerSocket.close();
+		} catch (IOException e) {
+			Log.e(TAG, "Socket close() of server failed", e);
+		}
 	}
 }

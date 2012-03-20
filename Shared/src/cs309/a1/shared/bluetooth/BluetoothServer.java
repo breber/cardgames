@@ -46,9 +46,6 @@ public class BluetoothServer extends BluetoothCommon {
 				i1.putExtra(BluetoothConstants.DEVICE_ID_KEY, data.getString(BluetoothConstants.DEVICE_ID_KEY));
 				mContext.sendBroadcast(i1);
 				break;
-			case BluetoothConstants.TOAST_MESSAGE:
-				Toast.makeText(mContext, msg.getData().getString(BluetoothConstants.TOAST_MESSAGE_KEY), Toast.LENGTH_SHORT).show();
-				break;
 			}
 		}
 	};
@@ -72,8 +69,20 @@ public class BluetoothServer extends BluetoothCommon {
 	 * Start listening for Bluetooth Connections
 	 */
 	public void startListening() {
-		if (!mAcceptThread.isAlive()) {
-			mAcceptThread.start();
+		if (mAcceptThread == null) {
+			mAcceptThread = new AcceptThread(mContext, mAdapter, mHandler, services);
+		}
+
+		mAcceptThread.start();
+	}
+
+	/**
+	 * Stop listening for Bluetooth Connections
+	 */
+	public void stopListening() {
+		if (mAcceptThread != null) {
+			mAcceptThread.cancel();
+			mAcceptThread = null;
 		}
 	}
 
