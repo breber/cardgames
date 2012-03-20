@@ -17,7 +17,7 @@ public class TextView extends android.widget.TextView {
 	protected void onFinishInflate() {
 		super.onFinishInflate();
 
-		Typeface typeface = Typeface.createFromAsset(mContext.getAssets(), "helsinki.ttf");
-		setTypeface(typeface);
+		//Typeface typeface = Typeface.createFromAsset(mContext.getAssets(), "helsinki.ttf");
+		//setTypeface(typeface);
 	}
 }

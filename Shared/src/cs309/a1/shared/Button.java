@@ -16,7 +16,7 @@ public class Button extends android.widget.Button {
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
-		Typeface typeface = Typeface.createFromAsset(mContext.getAssets(), "helsinki.ttf");
-		setTypeface(typeface);
+		//Typeface typeface = Typeface.createFromAsset(mContext.getAssets(), "helsinki.ttf");
+		//setTypeface(typeface);
 	}
 }

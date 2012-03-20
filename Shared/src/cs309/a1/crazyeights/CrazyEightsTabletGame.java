@@ -12,11 +12,14 @@ import cs309.a1.shared.Deck;
 import cs309.a1.shared.Game;
 import cs309.a1.shared.Player;
 import cs309.a1.shared.Rules;
+import cs309.a1.shared.bluetooth.BluetoothServer;
 
 import static cs309.a1.crazyeights.Constants.NUMBER_OF_CARDS_PER_HAND;
 
 public class CrazyEightsTabletGame implements Game{
 
+	private static CrazyEightsTabletGame instance = null;
+	
 	private List<Player> players;
 	private Deck gameDeck;
 	private Rules rules;
@@ -66,6 +69,22 @@ public class CrazyEightsTabletGame implements Game{
 		this.rules = rules;
 	}
 
+	public static CrazyEightsTabletGame getInstance(List<Player> players, Deck deck, Rules rules) {
+		if (instance == null) {
+			instance = new CrazyEightsTabletGame(players, deck, rules);
+		}
+
+		return instance;
+	}
+	
+	public static CrazyEightsTabletGame getInstance() {
+		if (instance == null) {
+			throw new IllegalArgumentException();
+		}
+
+		return instance;
+	}
+	
 	//TODO 
 	//initialize function 
 	// this will get all the stuff ready to play game
@@ -147,7 +166,6 @@ public class CrazyEightsTabletGame implements Game{
 	 * @param player the player who chooses to draw the card
 	 */
 	public void draw(Player player){
-		//TODO
 		player.getCards().add(iter.next());
 		player.setNumCards(player.getNumCards() + 1);
 	}

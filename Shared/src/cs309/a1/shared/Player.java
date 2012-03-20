@@ -8,6 +8,7 @@ public class Player {
 	private List<Card> cards;
 	private int numCards;
 	private String name;
+	private String id;
 	
 	public List<Card> getCards() {
 		return cards;
@@ -41,6 +42,14 @@ public class Player {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 }
