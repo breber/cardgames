@@ -1,5 +1,6 @@
 package cs309.a1.shared;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -20,6 +21,10 @@ public class Player {
 
 	public Player() {
 		super();
+		this.cards = new ArrayList<Card>();
+		this.numCards = 0;
+		this.name = null;
+		this.id = null;
 	} 
 
 	public List<Card> getCards() {
