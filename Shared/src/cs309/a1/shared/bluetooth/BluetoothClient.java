@@ -26,6 +26,7 @@ public class BluetoothClient extends BluetoothCommon {
 		public void handleMessage(Message msg) {
 			if (Util.isDebugBuild()) {
 				Log.d(TAG, "handleMessage: " + msg.what);
+				Toast.makeText(mContext, "handleMessage: " + msg.what, Toast.LENGTH_LONG).show();
 			}
 			Bundle data = msg.getData();
 			switch (msg.what) {
@@ -37,7 +38,10 @@ public class BluetoothClient extends BluetoothCommon {
 				mContext.sendBroadcast(i);
 				break;
 			case BluetoothConstants.READ_MESSAGE:
-				// TODO: send a broadcast
+				Intent i1 = new Intent(BluetoothConstants.MESSAGE_RX_INTENT);
+				i1.putExtra(BluetoothConstants.MESSAGE_RX_KEY, data.getString(BluetoothConstants.MESSAGE_RX_KEY));
+				i1.putExtra(BluetoothConstants.DEVICE_ID_KEY, data.getString(BluetoothConstants.DEVICE_ID_KEY));
+				mContext.sendBroadcast(i1);
 				break;
 			case BluetoothConstants.TOAST_MESSAGE:
 				Toast.makeText(mContext, msg.getData().getString(BluetoothConstants.TOAST_MESSAGE_KEY), Toast.LENGTH_SHORT).show();

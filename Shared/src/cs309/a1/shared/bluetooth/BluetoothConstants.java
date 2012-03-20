@@ -5,6 +5,7 @@ import java.util.UUID;
 public class BluetoothConstants {
 
 	public static final String DEVICE_CONNECTED_INTENT = "cs309.a1.shared.bluetooth.DEVICE_CONNECTED_CHANGE";
+	public static final String MESSAGE_RX_INTENT = "cs309.a1.shared.bluetooth.MESSAGE_RX_CHANGE";
 	public static final String STATE_CHANGE_INTENT = "cs309.a1.shared.bluetooth.STATE_CHANGE";
 	public static final UUID MY_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
 
@@ -20,6 +21,7 @@ public class BluetoothConstants {
 	public static final String DEVICE_ID_KEY = "DEVICE_ID";
 	public static final String TOAST_MESSAGE_KEY = "TOAST_MESSAGE";
 	public static final String STATE_MESSAGE_KEY = "STATE";
+	public static final String MESSAGE_RX_KEY = "MSG";
 
 
 	// Constants that indicate the current connection state

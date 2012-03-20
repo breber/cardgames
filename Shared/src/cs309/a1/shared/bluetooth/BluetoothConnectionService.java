@@ -340,17 +340,17 @@ public class BluetoothConnectionService {
 				Log.i(TAG, "BEGIN mConnectedThread");
 			}
 			byte[] buffer = new byte[1024];
-			int bytes;
 
 			// Keep listening to the InputStream while connected
 			while (true) {
 				try {
 					// Read from the InputStream
-					bytes = mmInStream.read(buffer);
+					mmInStream.read(buffer);
 
 					// Send the obtained bytes to the UI Activity
-					Message msg = mHandler.obtainMessage(BluetoothConstants.READ_MESSAGE, bytes, -1, buffer);
+					Message msg = mHandler.obtainMessage(BluetoothConstants.READ_MESSAGE, -1, -1, null);
 					Bundle data = new Bundle();
+					data.putString(BluetoothConstants.MESSAGE_RX_KEY, new String(buffer));
 					data.putString(BluetoothConstants.DEVICE_ID_KEY, deviceAddress);
 					msg.setData(data);
 
