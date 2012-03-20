@@ -1,9 +1,10 @@
 package cs309.a1.shared.bluetooth;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.HashMap;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
@@ -22,12 +23,12 @@ public class AcceptThread extends Thread {
 	// The local server socket
 	private final BluetoothServerSocket mmServerSocket;
 	private final BluetoothAdapter mAdapter;
-	private final List<BluetoothConnectionService> mConnections;
+	private final HashMap<String, BluetoothConnectionService> mConnections;
 	private Context mContext;
 	private Handler mHandler;
 	private boolean continueChecking = true;
 
-	public AcceptThread(Context ctx, BluetoothAdapter adapter, Handler handler, List<BluetoothConnectionService> services) {
+	public AcceptThread(Context ctx, BluetoothAdapter adapter, Handler handler, HashMap<String, BluetoothConnectionService> services) {
 		BluetoothServerSocket tmp = null;
 		mAdapter = adapter;
 		mConnections = services;
@@ -55,13 +56,15 @@ public class AcceptThread extends Thread {
 			BluetoothConnectionService serv = new BluetoothConnectionService(mContext, mHandler);
 			BluetoothSocket socket = null;
 
+			serv.start();
+
 			// Listen to the server socket if we're not connected
 			while (serv.getState() != BluetoothConstants.STATE_CONNECTED) {
 				try {
 					// This is a blocking call and will only return on a
 					// successful connection or an exception
 					socket = mmServerSocket.accept();
-					Log.d(TAG, "mmServerSocket.accept() completed");
+					Log.d(TAG, "mmServerSocket.accept() completed " + socket);
 				} catch (IOException e) {
 					Log.e(TAG, "Socket accept() failed", e);
 					break;
@@ -69,14 +72,17 @@ public class AcceptThread extends Thread {
 
 				// If a connection was accepted
 				if (socket != null) {
+					Log.d(TAG, "the socket is not null! " + socket);
 					synchronized (AcceptThread.this) {
+						Log.d(TAG, "AcceptThread.this --> state " + serv.getState());
 						switch (serv.getState()) {
 						case BluetoothConstants.STATE_LISTEN:
 						case BluetoothConstants.STATE_CONNECTING:
 							// Situation normal. Start the connected thread.
-							mConnections.add(serv);
+							BluetoothDevice dev = socket.getRemoteDevice();
+							mConnections.put(dev.getAddress(), serv);
 							Log.d(TAG, "added connection to mConnections");
-							serv.connected(socket, socket.getRemoteDevice());
+							serv.connected(socket, dev);
 							break;
 						case BluetoothConstants.STATE_NONE:
 						case BluetoothConstants.STATE_CONNECTED:
@@ -90,6 +96,8 @@ public class AcceptThread extends Thread {
 							break;
 						}
 					}
+				} else {
+					Log.d(TAG, "the socket was null :( " + socket);
 				}
 			}
 		}

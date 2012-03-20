@@ -20,7 +20,6 @@ public class BluetoothServer extends BluetoothCommon {
 
 	private HashMap<String, BluetoothConnectionService> services;
 	private BluetoothAdapter mAdapter;
-	private List<BluetoothConnectionService> mList;
 	private AcceptThread mAcceptThread;
 	private Context mContext;
 
@@ -55,8 +54,7 @@ public class BluetoothServer extends BluetoothCommon {
 		mContext = ctx;
 		services = new HashMap<String, BluetoothConnectionService>();
 		mAdapter = BluetoothAdapter.getDefaultAdapter();
-		mList = new ArrayList<BluetoothConnectionService>();
-		mAcceptThread = new AcceptThread(mContext, mAdapter, mHandler, mList);
+		mAcceptThread = new AcceptThread(mContext, mAdapter, mHandler, services);
 	}
 
 	public static BluetoothServer getInstance(Context ctx) {
@@ -82,6 +80,7 @@ public class BluetoothServer extends BluetoothCommon {
 	 * @return the number of connected devices
 	 */
 	public int getConnectedDeviceCount() {
+		Log.d(TAG, "getConnectedDeviceCount = " + services.size());
 		if (services.size() == 0) {
 			return 0;
 		}
