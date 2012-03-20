@@ -11,7 +11,6 @@ import android.widget.Toast;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.activities.DeviceListActivity;
 import cs309.a1.shared.bluetooth.BluetoothClient;
-import cs309.a1.shared.bluetooth.BluetoothConnectionService;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
 
 public class ConnectActivity extends Activity {
@@ -30,7 +29,7 @@ public class ConnectActivity extends Activity {
 				Toast.makeText(mContext, "onReceive " + currentState, Toast.LENGTH_LONG).show();
 			}
 
-			if (currentState == BluetoothConnectionService.STATE_CONNECTED) {
+			if (currentState == BluetoothConstants.STATE_CONNECTED) {
 				// We connected just fine, so bring them to the ShowCardsActivity, and close
 				// this activity out.
 				dlg.dismiss();
@@ -39,7 +38,7 @@ public class ConnectActivity extends Activity {
 
 				ConnectActivity.this.setResult(RESULT_OK);
 				ConnectActivity.this.finish();
-			} else if (currentState == BluetoothConnectionService.STATE_LISTEN) {
+			} else if (currentState == BluetoothConstants.STATE_LISTEN) {
 				// If we make it back to listening state, we weren't able to connect,
 				// so bring them back to the device list
 				dlg.dismiss();
@@ -63,7 +62,11 @@ public class ConnectActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		unregisterReceiver(receiver);
+		try {
+			unregisterReceiver(receiver);
+		} catch (IllegalArgumentException e) {
+			// We didn't get far enough to register the receiver
+		}
 		super.onDestroy();
 	}
 
