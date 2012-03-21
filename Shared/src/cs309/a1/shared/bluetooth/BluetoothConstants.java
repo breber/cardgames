@@ -16,7 +16,6 @@ public class BluetoothConstants {
 	public static final int READ_MESSAGE  = 0;
 	public static final int WRITE_MESSAGE = 1;
 	public static final int STATE_MESSAGE = 2;
-	public static final int CONNECTION_FAILED_MESSAGE = 3;
 
 
 	// TODO: rename these to be consistent (all start with the same prefix)

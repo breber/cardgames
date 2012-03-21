@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 import cs309.a1.shared.Util;
 
 /**
@@ -58,7 +57,6 @@ public class BluetoothClient extends BluetoothCommon {
 		public void handleMessage(Message msg) {
 			if (Util.isDebugBuild()) {
 				Log.d(TAG, "handleMessage: " + msg.what);
-				Toast.makeText(mContext, "handleMessage: " + msg.what, Toast.LENGTH_LONG).show();
 			}
 
 			Bundle data = msg.getData();
