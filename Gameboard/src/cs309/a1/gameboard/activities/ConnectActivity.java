@@ -1,5 +1,8 @@
 package cs309.a1.gameboard.activities;
 
+import java.util.Iterator;
+import java.util.List;
+
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -13,7 +16,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 import cs309.a1.gameboard.R;
+import cs309.a1.shared.TextView;
 import cs309.a1.shared.Util;
+import cs309.a1.shared.bluetooth.BluetoothConnectionService;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.bluetooth.BluetoothServer;
 
@@ -78,6 +83,7 @@ public class ConnectActivity extends Activity {
 				}
 			}
 		});
+		
 	}
 
 	@Override
@@ -115,13 +121,23 @@ public class ConnectActivity extends Activity {
 
 	private void updatePlayersConnected() {
 		int i;
-		// highlight the number of players that are connected
-		for (i = 1; i <= numPlayers; i++) {
-			ImageViews[i].setImageResource(R.drawable.on_device);
+		mBluetoothServer.getConnectedDevices();
+		
+		if(numPlayers > 0){
+			ImageViews[1].setImageResource(R.drawable.on_device_p1);
 		}
-
+		if(numPlayers > 1){
+			ImageViews[2].setImageResource(R.drawable.on_device_p2);
+		}
+		if(numPlayers > 2){
+			ImageViews[3].setImageResource(R.drawable.on_device_p3);
+		}
+		if(numPlayers > 3){
+			ImageViews[4].setImageResource(R.drawable.on_device_p4);
+		}
+	
 		// grey out the other players
-		for (; i <= 4; i++) {
+		for (i=numPlayers+1; i <= 4; i++) {
 			ImageViews[i].setImageResource(R.drawable.off_device);
 		}
 
