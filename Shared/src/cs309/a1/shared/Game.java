@@ -8,5 +8,6 @@ public interface Game {
 	public void draw(Player player);
 	public void discard(Player player, Card card);
 	public void shuffleDeck();
+	public void dropPlayer(Player player);
 	
 }

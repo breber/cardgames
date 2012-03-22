@@ -187,4 +187,15 @@ public class CrazyEightsTabletGame implements Game{
 			shuffleDiscardPile();
 		}
 	}
+
+	/**
+	 * 
+	 */
+	public void dropPlayer(Player player) {
+		if(players.contains(player) && player != null){
+			//player is in the list of current players
+			players.remove(player);
+			discardPile.addAll(player.getCards());
+		}
+	}
 }

@@ -1,7 +1,16 @@
 package cs309.a1.shared;
 
+import static cs309.a1.crazyeights.Constants.ID;
+import static cs309.a1.crazyeights.Constants.RESOURCE_ID;
+import static cs309.a1.crazyeights.Constants.SUIT;
+import static cs309.a1.crazyeights.Constants.VALUE;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class Player {
@@ -73,31 +82,31 @@ public class Player {
 	public String toString() {
 		// Another possible implementation without having to come up
 		// with our own parsing code...see ShowCardsActivity.java for the decoding part...
-		//		try {
-		//			JSONArray arr = new JSONArray();
-		//			for (Card c : cards) {
-		//				JSONObject obj = new JSONObject();
-		//				obj.put("suit", c.getSuit());
-		//				obj.put("value", c.getValue());
-		//				obj.put("resourceId", c.getResourceId());
-		//				obj.put("id", c.getIdNum());
-		//
-		//				arr.put(obj);
-		//			}
-		//
-		//			return arr.toString();
-		//		} catch (JSONException e) {
-		//			e.printStackTrace();
-		//			return "";
-		//		}
+				try {
+					JSONArray arr = new JSONArray();
+					for (Card c : cards) {
+						JSONObject obj = new JSONObject();
+						obj.put(SUIT, c.getSuit());
+						obj.put(VALUE, c.getValue());
+						obj.put(RESOURCE_ID, c.getResourceId());
+						obj.put(ID, c.getIdNum());
+		
+						arr.put(obj);
+					}
+		
+					return arr.toString();
+				} catch (JSONException e) {
+					e.printStackTrace();
+					return "";
+				}
 
-		StringBuilder toReturn = new StringBuilder();
-
-		for(int i = 0; i < cards.size(); i++){
-			toReturn.append(cards.get(i).toString());
-		}
-
-		return toReturn.toString();
+//		StringBuilder toReturn = new StringBuilder();
+//
+//		for(int i = 0; i < cards.size(); i++){
+//			toReturn.append(cards.get(i).toString());
+//		}
+//
+//		return toReturn.toString();
 	}
 
 }

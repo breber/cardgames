@@ -1,8 +1,17 @@
 package cs309.a1.player.activities;
 
+import static cs309.a1.crazyeights.Constants.ID;
+import static cs309.a1.crazyeights.Constants.RESOURCE_ID;
+import static cs309.a1.crazyeights.Constants.SUIT;
+import static cs309.a1.crazyeights.Constants.VALUE;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -33,39 +42,39 @@ public class ShowCardsActivity extends Activity{
 
 			// Another possible implementation without having to come up
 			// with our own parsing code...see Player.java for the encoding part...
-			//			try {
-			//				// Another possible implementation without having to come up
-			//				// with our own parsing code...
-			//				JSONArray arr = new JSONArray(object);
-			//
-			//				for (int i = 0; i < arr.length(); i++) {
-			//					JSONObject obj = arr.getJSONObject(i);
-			//					int suit = obj.getInt("suit");
-			//					int value = obj.getInt("value");
-			//					int resourceId = obj.getInt("resourceId");
-			//					int id = obj.getInt("id");
-			//					addCard(new Card(suit, value, resourceId, id));
-			//				}
-			//			} catch (JSONException ex) {
-			//				ex.printStackTrace();
-			//			}
+						try {
+							// Another possible implementation without having to come up
+							// with our own parsing code...
+							JSONArray arr = new JSONArray(object);
+			
+							for (int i = 0; i < arr.length(); i++) {
+								JSONObject obj = arr.getJSONObject(i);
+								int suit = obj.getInt(SUIT);
+								int value = obj.getInt(VALUE);
+								int resourceId = obj.getInt(RESOURCE_ID);
+								int id = obj.getInt(ID);
+								addCard(new Card(suit, value, resourceId, id));
+							}
+						} catch (JSONException ex) {
+							ex.printStackTrace();
+						}
 
 			//parse and recreate the objects
-			String delims = "[ ]";
-			String[] tokens = object.split(delims);
-
-			for(int i = 0; i < tokens.length-1; i+=4){
-				int suit = Integer.parseInt(tokens[i]);
-				Log.d("cs309", tokens[i]);
-				int value = Integer.parseInt(tokens[i+1]);
-				Log.d("cs309", tokens[i+1]);
-				int resourceId = Integer.parseInt(tokens[i+2]);
-				Log.d("cs309", tokens[i+2]);
-				int id = Integer.parseInt(tokens[i+3]);
-				Log.d("cs309", tokens[i+3]);
-
-				addCard(new Card(suit, value, resourceId, id));
-			}
+//			String delims = "[ ]";
+//			String[] tokens = object.split(delims);
+//
+//			for(int i = 0; i < tokens.length-1; i+=4){
+//				int suit = Integer.parseInt(tokens[i]);
+//				Log.d("cs309", tokens[i]);
+//				int value = Integer.parseInt(tokens[i+1]);
+//				Log.d("cs309", tokens[i+1]);
+//				int resourceId = Integer.parseInt(tokens[i+2]);
+//				Log.d("cs309", tokens[i+2]);
+//				int id = Integer.parseInt(tokens[i+3]);
+//				Log.d("cs309", tokens[i+3]);
+//
+//				addCard(new Card(suit, value, resourceId, id));
+//			}
 		}
 	};
 
