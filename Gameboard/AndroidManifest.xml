@@ -24,7 +24,7 @@
         <activity
             android:name=".activities.MainMenu"
             android:label="@string/application_name"
-            android:screenOrientation="landscape" >
+           >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -59,4 +59,9 @@ To use this application properly, download the application titled “Crazy Eight
     <string name="waiting">Waiting to reconnect&#8320;</string>
     <string name="winner">You Won!</string>
     <string name="exit_application">Are you sure you want to quit the application?</string>
+    <string name="player_1">Player 1</string>
+    <string name="player_2">Player 2</string>
+    <string name="player_3">Player 3</string>
+    <string name="player_4">Player 4</string>
+    <string name="gameboard">Gameboard</string>
 </resources>
