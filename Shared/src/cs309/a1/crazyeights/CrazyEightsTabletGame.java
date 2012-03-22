@@ -33,6 +33,7 @@ public class CrazyEightsTabletGame implements Game{
 		this.gameDeck = gameDeck;
 		this.rules = rules;
 		shuffledDeck = gameDeck.getCardIDs();
+		discardPile = new ArrayList<Card>();
 	}
 	
 	public List<Player> getPlayers() {
@@ -83,11 +84,6 @@ public class CrazyEightsTabletGame implements Game{
 		return instance;
 	}
 	
-	//TODO 
-	//initialize function 
-	// this will get all the stuff ready to play game
-	//shuffle deck create cards and players etc. 
-	
 	/**
 	 * This method will setup the game by calling shuffleDeck, deal and setting up
 	 * the initial GUI state.
@@ -99,22 +95,20 @@ public class CrazyEightsTabletGame implements Game{
 		//deal the initial cards to all the players in the game
 		this.deal();
 		
-		//display stuff
 		//discard pile first one
-		//
+		discardPile.add(iter.next());
 		
+		//display stuff		
 	}
 	
 	/**
 	 * This method will shuffle the deck of cards using the Collections.shuffle() method.
 	 */
 	public void shuffleDeck(){
-		
 		//create a random number generator
 		Random generator = new Random();
 		Collections.shuffle(shuffledDeck, generator);
 		iter = shuffledDeck.iterator();
-		
 	}
 	
 	/**
@@ -122,13 +116,12 @@ public class CrazyEightsTabletGame implements Game{
 	 */
 	public void shuffleDiscardPile(){
 		//TODO
-		Random generator = new Random();
-		Collections.shuffle(discardPile, generator);
 		Card card = discardPile.remove(discardPile.size()-1);
-		shuffledDeck = discardPile;
+		//Make copy of discard pile to be new shuffled deck
+		shuffledDeck = (ArrayList<Card>) discardPile.clone();
 		discardPile.removeAll(discardPile);
 		discardPile.add(card);
-		iter = shuffledDeck.iterator();
+		this.shuffleDeck();
 	}
 
 		
@@ -138,6 +131,8 @@ public class CrazyEightsTabletGame implements Game{
 	 */
 	public void deal(){
 		int numberOfPlayers = players.size();
+		
+		//maybe error check here to make sure can deal more cards than in deck?
 		
 		//Deal the given number of cards to each player
 		//NUMBER_OF_CARDS_PER_HAND can be found in cs309.a1.crazyeights
@@ -156,8 +151,11 @@ public class CrazyEightsTabletGame implements Game{
 	 */
 	public void discard(Player player, Card card){
 		//add the given card to the discard pile
-		rules.checkCard(card, discardPile.get(discardPile.size()-1));
-		discardPile.add(card);
+		if(rules.checkCard(card, discardPile.get(discardPile.size()-1))){
+			discardPile.add(card);			
+		}else{
+			//do not allow.
+		}
 	}
 	
 	/**
@@ -179,9 +177,12 @@ public class CrazyEightsTabletGame implements Game{
 	 * @param player the player who chooses to draw the card
 	 */
 	public void draw(Player player){
-		player.getCards().add(iter.next());
+		if(!iter.hasNext()){
+			this.shuffleDiscardPile();
+			//maybe refresh gui or something here
+		}
+		player.getCards().add(iter.next());			
 		player.setNumCards(player.getNumCards() + 1);
-		
 		if(shuffledDeck.size()==0){
 			shuffleDiscardPile();
 		}
