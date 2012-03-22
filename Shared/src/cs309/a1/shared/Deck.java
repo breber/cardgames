@@ -35,7 +35,16 @@ public class Deck {
 
 	/**
 	 * This method will fill the cardImages ArrayList with card objects for the
-	 * given game
+	 * given game.
+	 * 
+	 * 0 - Clubs
+	 * 1 - Diamond
+	 * 2 - Heart
+	 * 3 - Spade
+	 * 4 - Joker
+	 * 
+	 * Each card has a number, 0-12 associated with it to represent which card it is.
+	 * Ace is number 0 and king is 12.
 	 */
 	private void fillArray() {
 

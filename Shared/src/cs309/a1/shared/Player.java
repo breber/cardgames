@@ -78,27 +78,30 @@ public class Player {
 		this.id = id;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public String toString() {
 		// Another possible implementation without having to come up
 		// with our own parsing code...see ShowCardsActivity.java for the decoding part...
-				try {
-					JSONArray arr = new JSONArray();
-					for (Card c : cards) {
-						JSONObject obj = new JSONObject();
-						obj.put(SUIT, c.getSuit());
-						obj.put(VALUE, c.getValue());
-						obj.put(RESOURCE_ID, c.getResourceId());
-						obj.put(ID, c.getIdNum());
-		
-						arr.put(obj);
-					}
-		
-					return arr.toString();
-				} catch (JSONException e) {
-					e.printStackTrace();
-					return "";
-				}
+		try {
+			JSONArray arr = new JSONArray();
+			for (Card c : cards) {
+				JSONObject obj = new JSONObject();
+				obj.put(SUIT, c.getSuit());
+				obj.put(VALUE, c.getValue());
+				obj.put(RESOURCE_ID, c.getResourceId());
+				obj.put(ID, c.getIdNum());
+
+				arr.put(obj);
+			}
+
+			return arr.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return "";
+		}
 
 //		StringBuilder toReturn = new StringBuilder();
 //

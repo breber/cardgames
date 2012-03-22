@@ -32,6 +32,9 @@ public class ShowCardsActivity extends Activity{
 
 	private ArrayList<Card> cardHand;
 
+	/**
+	 * 
+	 */
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -42,22 +45,22 @@ public class ShowCardsActivity extends Activity{
 
 			// Another possible implementation without having to come up
 			// with our own parsing code...see Player.java for the encoding part...
-						try {
-							// Another possible implementation without having to come up
-							// with our own parsing code...
-							JSONArray arr = new JSONArray(object);
-			
-							for (int i = 0; i < arr.length(); i++) {
-								JSONObject obj = arr.getJSONObject(i);
-								int suit = obj.getInt(SUIT);
-								int value = obj.getInt(VALUE);
-								int resourceId = obj.getInt(RESOURCE_ID);
-								int id = obj.getInt(ID);
-								addCard(new Card(suit, value, resourceId, id));
-							}
-						} catch (JSONException ex) {
-							ex.printStackTrace();
-						}
+			try {
+				// Another possible implementation without having to come up
+				// with our own parsing code...
+				JSONArray arr = new JSONArray(object);
+
+				for (int i = 0; i < arr.length(); i++) {
+					JSONObject obj = arr.getJSONObject(i);
+					int suit = obj.getInt(SUIT);
+					int value = obj.getInt(VALUE);
+					int resourceId = obj.getInt(RESOURCE_ID);
+					int id = obj.getInt(ID);
+					addCard(new Card(suit, value, resourceId, id));
+				}
+			} catch (JSONException ex) {
+				ex.printStackTrace();
+			}
 
 			//parse and recreate the objects
 //			String delims = "[ ]";
@@ -78,6 +81,9 @@ public class ShowCardsActivity extends Activity{
 		}
 	};
 
+	/**
+	 * 
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -86,18 +92,27 @@ public class ShowCardsActivity extends Activity{
 		registerReceiver(receiver, new IntentFilter(BluetoothConstants.MESSAGE_RX_INTENT));
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void onBackPressed() {
 		Intent intent = new Intent(this, QuitGameActivity.class);
 		startActivityForResult(intent, QUIT_GAME);
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	protected void onDestroy() {
 		// TODO: disconnect from bluetooth...
 		super.onDestroy();
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == QUIT_GAME) {
@@ -112,6 +127,10 @@ public class ShowCardsActivity extends Activity{
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	/**
+	 * 
+	 * @param newCard
+	 */
 	public void addCard(Card newCard) {
 
 		cardHand.add(newCard);
@@ -138,6 +157,10 @@ public class ShowCardsActivity extends Activity{
 		}
 	}
 
+	/**
+	 * 
+	 * @param idNum
+	 */
 	public void removeFromHand(int idNum) {
 
 		LinearLayout ll = (LinearLayout) findViewById(R.id.playerCardContainer);

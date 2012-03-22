@@ -41,6 +41,11 @@ public class Card {
 		this.idNum = idNum;
 	}
 	
+	/**
+	 * This is a custom toString method for the transfering of card data
+	 * 
+	 * @return a string representation of the card: "suit value resourceId idNum "
+	 */
 	@Override
 	public String toString(){
 		StringBuilder toReturn = new StringBuilder();

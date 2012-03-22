@@ -68,6 +68,13 @@ public class CrazyEightsTabletGame implements Game{
 		this.rules = rules;
 	}
 
+	/**
+	 * Create a new instance of the tablet game so that multiple classes are able to reference
+	 * the same card game and only one instance will be made available. This method uses the custom
+	 * constructor made in this class.
+	 * 
+	 * @return an instance of CrazyEightsTabletGame
+	 */
 	public static CrazyEightsTabletGame getInstance(List<Player> players, Deck deck, Rules rules) {
 		if (instance == null) {
 			instance = new CrazyEightsTabletGame(players, deck, rules);
@@ -76,6 +83,13 @@ public class CrazyEightsTabletGame implements Game{
 		return instance;
 	}
 	
+	/**
+	 * Create a new instance of the tablet game so that multiple classes are able to reference
+	 * the same card game and only one instance will be made available. This method uses the default
+	 * constructor.
+	 * 
+	 * @return an instance of CrazyEightsTabletGame
+	 */
 	public static CrazyEightsTabletGame getInstance() {
 		if (instance == null) {
 			throw new IllegalArgumentException();
@@ -107,12 +121,16 @@ public class CrazyEightsTabletGame implements Game{
 	public void shuffleDeck(){
 		//create a random number generator
 		Random generator = new Random();
+		
+		//shuffle the deck
 		Collections.shuffle(shuffledDeck, generator);
 		iter = shuffledDeck.iterator();
 	}
 	
 	/**
-	 * 
+	 * This method will shuffle the discard pile and replace the current draw
+	 * pile with the old discard pile. After this method call the shuffled deck
+	 * will only have the top card remaining.
 	 */
 	public void shuffleDiscardPile(){
 		//TODO
@@ -189,7 +207,8 @@ public class CrazyEightsTabletGame implements Game{
 	}
 
 	/**
-	 * 
+	 * This method will remove a player from the game
+	 * @param player the player to be dropped from the game
 	 */
 	public void dropPlayer(Player player) {
 		if(players.contains(player) && player != null){
