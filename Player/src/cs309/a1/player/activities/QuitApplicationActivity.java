@@ -1,7 +1,6 @@
 package cs309.a1.player.activities;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,7 +17,7 @@ public class QuitApplicationActivity extends Activity{
 
 		TextView body = (TextView) findViewById(R.id.textView1);
 		body.setText(R.string.exit_application);
-		
+
 		Button affirmative = (Button) findViewById(R.id.affirmative);
 		affirmative.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

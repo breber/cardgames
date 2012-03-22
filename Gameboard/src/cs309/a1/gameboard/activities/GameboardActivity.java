@@ -27,23 +27,23 @@ public class GameboardActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gameboard);
 		BluetoothServer bts = BluetoothServer.getInstance(this);
-		
+
 		int numOfConnections = bts.getConnectedDeviceCount();
 		List<Player> players = new ArrayList<Player>();
 		List<String> devices = bts.getConnectedDevices();
-		
+
 		for(int i = 0; i < numOfConnections; i++){
 			Player p = new Player();
 			p.setId(devices.get(i));
 			p.setName("Player "+i);
 			players.add(p);
 		}
-		
+
 		Rules rules = new CrazyEightGameRules();
 		Deck deck = new Deck(CRAZY_EIGHTS);
 		Game game = CrazyEightsTabletGame.getInstance(players, deck, rules);
 		game.setup();
-		
+
 		for(int i = 0; i < players.size(); i++){
 			bts.write(players.get(i), players.get(i).getId());
 		}
@@ -53,6 +53,12 @@ public class GameboardActivity extends Activity {
 	public void onBackPressed() {
 		Intent intent = new Intent(this, QuitGameActivity.class);
 		startActivityForResult(intent, QUIT_GAME);
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO: disconnect from bluetooth...
+		super.onDestroy();
 	}
 
 	@Override

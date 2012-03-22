@@ -70,7 +70,27 @@ public class Player {
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
+		// Another possible implementation without having to come up
+		// with our own parsing code...see ShowCardsActivity.java for the decoding part...
+		//		try {
+		//			JSONArray arr = new JSONArray();
+		//			for (Card c : cards) {
+		//				JSONObject obj = new JSONObject();
+		//				obj.put("suit", c.getSuit());
+		//				obj.put("value", c.getValue());
+		//				obj.put("resourceId", c.getResourceId());
+		//				obj.put("id", c.getIdNum());
+		//
+		//				arr.put(obj);
+		//			}
+		//
+		//			return arr.toString();
+		//		} catch (JSONException e) {
+		//			e.printStackTrace();
+		//			return "";
+		//		}
+
 		StringBuilder toReturn = new StringBuilder();
 
 		for(int i = 0; i < cards.size(); i++){

@@ -101,7 +101,7 @@ public class ConnectActivity extends Activity {
 	 * @return whether a game can be started or not
 	 */
 	private boolean canStartGame() {
-		return mBluetoothServer.getConnectedDeviceCount() > 1;
+		return mBluetoothServer.getConnectedDeviceCount() > 0; // TODO: should be 2, changed to 1 for testing...
 	}
 
 	private void startListeningForDevices() {
