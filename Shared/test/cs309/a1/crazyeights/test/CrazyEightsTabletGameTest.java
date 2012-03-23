@@ -59,9 +59,33 @@ public class CrazyEightsTabletGameTest {
 	 * Test the number of players in the game
 	 */
 	@Test 
-	public void testNumberOfPlayers(){
+	public void testNumberOfPlayersTwo(){
 		setupGame();
 		assertEquals("Testing number of players.", 2, game.getPlayers().size());
+	}
+	
+	/**
+	 * Test the number of players in the game
+	 */
+	@Test 
+	public void testNumberOfPlayersThree(){
+		Player player3 = new Player();
+		players.add(player3);
+		setupGame();
+		assertEquals("Testing number of players.", 3, game.getPlayers().size());
+	}
+	
+	/**
+	 * Test the number of players in the game
+	 */
+	@Test 
+	public void testNumberOfPlayersFour(){
+		Player player3 = new Player();
+		Player player4 = new Player();
+		players.add(player3);
+		players.add(player4);
+		setupGame();
+		assertEquals("Testing number of players.", 4, game.getPlayers().size());
 	}
 	
 	/**
@@ -74,12 +98,36 @@ public class CrazyEightsTabletGameTest {
 	}
 	
 	/**
-	 * Test the size of the shuffled deck after the deal
+	 * Test the size of the shuffled deck after the deal with two players
 	 */
 	@Test 
-	public void testShuffleDeckSize(){
+	public void testShuffleDeckSizeTwoPlayers(){
 		setupGame();
 		assertEquals("Testing size of the shuffled deck.", 43, game.getShuffledDeck().size());
+	}
+	
+	/**
+	 * Test the size of the shuffled deck after the deal with three players
+	 */
+	@Test 
+	public void testShuffleDeckSizeThreePlayers(){
+		Player player3 = new Player();
+		players.add(player3);
+		setupGame();
+		assertEquals("Testing size of the shuffled deck.", 38, game.getShuffledDeck().size());
+	}
+	
+	/**
+	 * Test the size of the shuffled deck after the deal with four players
+	 */
+	@Test 
+	public void testShuffleDeckSizeFourPlayers(){
+		Player player3 = new Player();
+		Player player4 = new Player();
+		players.add(player3);
+		players.add(player4);
+		setupGame();
+		assertEquals("Testing size of the shuffled deck.", 33, game.getShuffledDeck().size());
 	}
 	
 	/**
@@ -104,7 +152,7 @@ public class CrazyEightsTabletGameTest {
 	 * Test the iterator of the shuffled deck
 	 */
 	@Test
-	public void testIterNext(){
+	public void testIterNextAndRemove(){
 		setupGame();
 		iter.next();
 		iter.remove();
@@ -190,10 +238,10 @@ public class CrazyEightsTabletGameTest {
 	}
 	
 	/**
-	 * Test the deal method of the game
+	 * Test the deal method of the game with two players
 	 */
 	@Test 
-	public void testDeal(){
+	public void testDealTwoPlayers(){
 		setupGame();
 		Player p = game.getPlayers().get(0);
 		Player p2 = game.getPlayers().get(1);
@@ -204,6 +252,63 @@ public class CrazyEightsTabletGameTest {
 		assertEquals("Testing size of player 2's hand", 5, p2.getNumCards());
 		assertEquals("Testing size of the discard pile", 1, game.getDiscardPile().size());
 		assertEquals("Testing size of the shuffled deck", 43, game.getShuffledDeck().size());
+		
+	}
+	
+	/**
+	 * Test the deal method of the game with three players
+	 */
+	@Test 
+	public void testDealThreePlayers(){
+		
+		Player player3 = new Player();
+		players.add(player3);
+		
+		Player p = game.getPlayers().get(0);
+		Player p2 = game.getPlayers().get(1);
+		Player p3 = game.getPlayers().get(2);
+		
+		setupGame();
+		
+		assertEquals("Testing size of player 1's hand", 5, p.getCards().size());
+		assertEquals("Testing size of player 1's hand", 5, p.getNumCards());
+		assertEquals("Testing size of player 2'a hand", 5, p2.getCards().size());
+		assertEquals("Testing size of player 2's hand", 5, p2.getNumCards());
+		assertEquals("Testing size of player 3'a hand", 5, p3.getCards().size());
+		assertEquals("Testing size of player 3's hand", 5, p3.getNumCards());
+		assertEquals("Testing size of the discard pile", 1, game.getDiscardPile().size());
+		assertEquals("Testing size of the shuffled deck", 38, game.getShuffledDeck().size());
+		
+	}
+	
+	/**
+	 * Test the deal method of the game with four players
+	 */
+	@Test 
+	public void testDealFourPlayers(){
+		
+		Player player3 = new Player();
+		Player player4 = new Player();
+		players.add(player3);
+		players.add(player4);
+		
+		Player p = game.getPlayers().get(0);
+		Player p2 = game.getPlayers().get(1);
+		Player p3 = game.getPlayers().get(2);
+		Player p4 = game.getPlayers().get(3);
+		
+		setupGame();
+		
+		assertEquals("Testing size of player 1's hand", 5, p.getCards().size());
+		assertEquals("Testing size of player 1's hand", 5, p.getNumCards());
+		assertEquals("Testing size of player 2'a hand", 5, p2.getCards().size());
+		assertEquals("Testing size of player 2's hand", 5, p2.getNumCards());
+		assertEquals("Testing size of player 3's hand", 5, p3.getCards().size());
+		assertEquals("Testing size of player 3's hand", 5, p3.getNumCards());
+		assertEquals("Testing size of player 4'a hand", 5, p4.getCards().size());
+		assertEquals("Testing size of player 4's hand", 5, p4.getNumCards());
+		assertEquals("Testing size of the discard pile", 1, game.getDiscardPile().size());
+		assertEquals("Testing size of the shuffled deck", 33, game.getShuffledDeck().size());
 		
 	}
 	
