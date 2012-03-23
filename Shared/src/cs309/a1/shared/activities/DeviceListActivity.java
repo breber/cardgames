@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import cs309.a1.shared.R;
+import cs309.a1.shared.SoundManager;
 import cs309.a1.shared.Util;
 
 /**
@@ -82,6 +83,7 @@ public class DeviceListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.device_list);
+		
 
 		noDevicesFound = (TextView) findViewById(R.id.noDevicesFoundText);
 		noDevicesFound.setText(R.string.scanning);

@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 import cs309.a1.player.R;
+import cs309.a1.shared.SoundManager;
+import cs309.a1.shared.Util;
 
 public class MainMenu extends Activity {
 
@@ -20,15 +23,21 @@ public class MainMenu extends Activity {
 		Button play = (Button) findViewById(R.id.btPlay);
 		Button about = (Button) findViewById(R.id.btAbout);
 		Button rules = (Button) findViewById(R.id.btRules);
-
+		
+		//initialize the sounds
+		SoundManager.initSounds(getApplicationContext());
+		
+		
 		rules.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent ruleButtonClick = new Intent(MainMenu.this, RulesActivity.class);
 				startActivity(ruleButtonClick);
 				
 				/* Ashley's Debugging Purposes */
-				//Intent showCardsActivity = new Intent(MainMenu.this, ShowCardsActivity.class);
-				//startActivity(showCardsActivity);
+				//if (Util.isDebugBuild() && User.isAshley()) {
+					//Intent showCardsActivity = new Intent(MainMenu.this, ShowCardsActivity.class);
+					//startActivity(showCardsActivity);
+				//}
 			}
 		});
 
@@ -45,6 +54,7 @@ public class MainMenu extends Activity {
 				startActivity(playButtonClick);
 			}
 		});
+
 	}
 
 	@Override

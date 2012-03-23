@@ -3,7 +3,9 @@ package cs309.a1.player.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 import cs309.a1.player.R;
+import cs309.a1.shared.SoundManager;
 
 public class RulesActivity extends Activity {
 
@@ -12,6 +14,9 @@ public class RulesActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.information);
 
+		//This is a test of the SoundManager
+		SoundManager.playMusic();
+		
 		TextView title = (TextView) findViewById(R.id.title);
 		title.setText(R.string.Rules);
 
