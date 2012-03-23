@@ -87,6 +87,7 @@ public class ConnectActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
+		unregisterReceiver(receiver);
 		mBluetoothServer.stopListening();
 
 		super.onDestroy();

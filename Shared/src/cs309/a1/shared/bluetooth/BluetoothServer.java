@@ -68,7 +68,7 @@ public class BluetoothServer extends BluetoothCommon {
 				// When the state of the Bluetooth connection has changed
 				// let all the listeners know that this has happened
 				Intent i = new Intent(BluetoothConstants.STATE_CHANGE_INTENT);
-				i.putExtra(BluetoothConstants.KEY_STATE_MESSAGE, data.getString(BluetoothConstants.KEY_STATE_MESSAGE));
+				i.putExtra(BluetoothConstants.KEY_STATE_MESSAGE, data.getInt(BluetoothConstants.KEY_STATE_MESSAGE));
 				i.putExtra(BluetoothConstants.KEY_DEVICE_ID, data.getString(BluetoothConstants.KEY_DEVICE_ID));
 				mContext.sendBroadcast(i);
 				break;
