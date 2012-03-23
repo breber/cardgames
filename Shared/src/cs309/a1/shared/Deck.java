@@ -32,6 +32,20 @@ public class Deck {
 	public ArrayList<Card> getCardIDs() {
 		return cardImages;
 	}
+	
+	public int getCardBackID() {
+		
+		int cardId = 0;
+		
+		switch(gameName) {
+		
+		case CRAZY_EIGHTS:
+			cardId = R.drawable.back_blue_1;
+			break;
+		}
+		
+		return cardId;
+	}
 
 	/**
 	 * This method will fill the cardImages ArrayList with card objects for the
@@ -105,7 +119,6 @@ public class Deck {
 			cardImages.add(new Card(3, 12, R.drawable.spades_k, 51));
 			cardImages.add(new Card(4, 0, R.drawable.joker_b, 52));
 			cardImages.add(new Card(4, 1, R.drawable.joker_r, 53));
-			cardImages.add(new Card(5, 0, R.drawable.back_blue_1, 54));
 			break;
 		}
 	}
