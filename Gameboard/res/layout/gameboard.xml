@@ -6,6 +6,88 @@
     android:orientation="horizontal" 
     android:background="@drawable/wooden_top">
 
+    <LinearLayout
+        android:id="@+id/player3"
+        android:orientation="horizontal"
+		android:gravity="top|center_horizontal"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_centerHorizontal="true" >
+		
+		<ImageView
+		    android:src="@drawable/back_blue_1"
+		    android:layout_width="125dip"
+		    android:layout_height="wrap_content"
+		    android:adjustViewBounds="true" />
+		<ImageView
+		    android:src="@drawable/back_blue_1"
+		    android:layout_width="125dip"
+		    android:layout_height="wrap_content"
+		    android:adjustViewBounds="true" />
+		
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/player1"
+        android:orientation="horizontal"
+        android:gravity="bottom" 
+        android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_alignParentBottom="true" >
+		
+        <ImageView
+		    android:src="@drawable/back_blue_1"
+		    android:layout_width="125dip"
+		    android:layout_height="wrap_content"
+		    android:adjustViewBounds="true" />
+		<ImageView
+		    android:src="@drawable/back_blue_1"
+		    android:layout_width="125dip"
+		    android:layout_height="wrap_content"
+		    android:adjustViewBounds="true" />
+		
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:id="@+id/player2"
+        android:orientation="vertical"
+        android:gravity="right"        
+        android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_centerVertical="true"
+		android:layout_alignParentRight="true" />
+    
+    <LinearLayout 
+        android:id="@+id/player4"
+        android:orientation="vertical"
+        android:gravity="left"        
+        android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_centerVertical="true"
+		android:layout_alignParentLeft="true" />
+    
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" >
+        
+        <ImageView
+		    android:src="@drawable/back_blue_1"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:adjustViewBounds="true"
+		    android:paddingRight="100dip" />
+		<ImageView
+		    android:src="@drawable/clubs_3"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:adjustViewBounds="true" />
+    </LinearLayout>
+	
     <ImageButton
         android:id="@+id/gameboard_pause"
         android:layout_width="wrap_content"
