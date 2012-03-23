@@ -1,8 +1,5 @@
 package cs309.a1.gameboard.activities;
 
-import java.util.Iterator;
-import java.util.List;
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -16,9 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 import cs309.a1.gameboard.R;
-import cs309.a1.shared.TextView;
 import cs309.a1.shared.Util;
-import cs309.a1.shared.bluetooth.BluetoothConnectionService;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.bluetooth.BluetoothServer;
 
@@ -80,10 +75,14 @@ public class ConnectActivity extends Activity {
 					mBluetoothServer.stopListening();
 					Intent i = new Intent(ConnectActivity.this,	GameboardActivity.class);
 					startActivity(i);
+
+					// Finish this activity so we can't get back here when pressing the back button
+					setResult(RESULT_OK);
+					finish();
 				}
 			}
 		});
-		
+
 	}
 
 	@Override
@@ -101,7 +100,7 @@ public class ConnectActivity extends Activity {
 	 * @return whether a game can be started or not
 	 */
 	private boolean canStartGame() {
-		return mBluetoothServer.getConnectedDeviceCount() > 0; // TODO: should be 2, changed to 1 for testing...
+		return mBluetoothServer.getConnectedDeviceCount() > 0; // TODO: should be 1, changed to 0 for testing...
 	}
 
 	private void startListeningForDevices() {
@@ -122,7 +121,7 @@ public class ConnectActivity extends Activity {
 	private void updatePlayersConnected() {
 		int i;
 		mBluetoothServer.getConnectedDevices();
-		
+
 		if(numPlayers > 0){
 			ImageViews[1].setImageResource(R.drawable.on_device_p1);
 		}
@@ -135,7 +134,7 @@ public class ConnectActivity extends Activity {
 		if(numPlayers > 3){
 			ImageViews[4].setImageResource(R.drawable.on_device_p4);
 		}
-	
+
 		// grey out the other players
 		for (i=numPlayers+1; i <= 4; i++) {
 			ImageViews[i].setImageResource(R.drawable.off_device);

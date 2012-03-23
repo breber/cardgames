@@ -57,7 +57,8 @@ public class GameboardActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		// TODO: disconnect from bluetooth...
+		BluetoothServer.getInstance(this).disconnect();
+
 		super.onDestroy();
 	}
 
@@ -70,7 +71,8 @@ public class GameboardActivity extends Activity {
 				startActivity(intent);
 
 				// Finish this activity
-				finishActivity(RESULT_OK);
+				setResult(RESULT_OK);
+				finish();
 			}
 		}
 
