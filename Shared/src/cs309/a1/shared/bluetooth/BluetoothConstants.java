@@ -18,11 +18,11 @@ public class BluetoothConstants {
 	public static final int STATE_MESSAGE = 2;
 
 
-	// TODO: rename these to be consistent (all start with the same prefix)
-	public static final String DEVICE_ID_KEY = "DEVICE_ID";
-	public static final String TOAST_MESSAGE_KEY = "TOAST_MESSAGE";
-	public static final String STATE_MESSAGE_KEY = "STATE";
-	public static final String MESSAGE_RX_KEY = "MSG";
+	// The keys for the "map" that is Intent messages/Handler messages
+	public static final String KEY_DEVICE_ID = "DEVICE_ID";
+	public static final String KEY_TOAST_MESSAGE = "TOAST_MESSAGE";
+	public static final String KEY_STATE_MESSAGE = "STATE";
+	public static final String KEY_MESSAGE_RX = "MSG";
 
 
 	// Constants that indicate the current connection state

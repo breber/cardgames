@@ -14,7 +14,7 @@ public class Util {
 	public static final String TAG_GENERIC = "CR8S";
 
 	/**
-	 * CHecks whether this is a debug build or not.
+	 * Checks whether this is a debug build or not.
 	 * 
 	 * This toggles different logging capabilities
 	 * 
@@ -37,7 +37,7 @@ public class Util {
 
 		if (btAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
 			Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-			discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+			discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 5000);
 			ctx.startActivity(discoverableIntent);
 		}
 	}

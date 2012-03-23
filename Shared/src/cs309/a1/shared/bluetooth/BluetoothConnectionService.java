@@ -30,23 +30,23 @@ public class BluetoothConnectionService {
 	 * The BluetoothAdapter used to query Bluetooth information
 	 */
 	private final BluetoothAdapter mAdapter;
-	
+
 	/**
 	 * The Handler to post messages to when something changes in this service
 	 */
 	private final Handler mHandler;
-	
+
 	/**
 	 * The Thread that handles the process of starting a connection
 	 */
 	private ConnectThread mConnectThread;
-	
+
 	/**
 	 * The Thread that handles the sending/receiving of data once
 	 * a connection has been established
 	 */
 	private ConnectedThread mConnectedThread;
-	
+
 	/**
 	 * The current state of this Bluetooth connection
 	 * 
@@ -86,8 +86,8 @@ public class BluetoothConnectionService {
 		// Send a message to the Handler letting them know the state has been updated
 		Message msg = mHandler.obtainMessage(BluetoothConstants.STATE_MESSAGE, -1, -1);
 		Bundle bundle = new Bundle();
-		bundle.putInt(BluetoothConstants.STATE_MESSAGE_KEY, state);
-		bundle.putString(BluetoothConstants.DEVICE_ID_KEY, deviceAddress);
+		bundle.putInt(BluetoothConstants.KEY_STATE_MESSAGE, state);
+		bundle.putString(BluetoothConstants.KEY_DEVICE_ID, deviceAddress);
 		msg.setData(bundle);
 		msg.sendToTarget();
 	}
@@ -152,7 +152,7 @@ public class BluetoothConnectionService {
 		// Start the thread to connect with the given device
 		mConnectThread = new ConnectThread(device);
 		mConnectThread.start();
-		
+
 		setState(BluetoothConstants.STATE_CONNECTING);
 	}
 
@@ -223,7 +223,7 @@ public class BluetoothConnectionService {
 	public void write(byte[] out) {
 		// Create temporary object
 		ConnectedThread r;
-		
+
 		// Synchronize a copy of the ConnectedThread
 		synchronized (this) {
 			if (mState != BluetoothConstants.STATE_CONNECTED) {
@@ -232,7 +232,7 @@ public class BluetoothConnectionService {
 
 			r = mConnectedThread;
 		}
-		
+
 		// Perform the write unsynchronized
 		r.write(out);
 	}
@@ -243,9 +243,21 @@ public class BluetoothConnectionService {
 	 * succeeds or fails.
 	 */
 	private class ConnectThread extends Thread {
+		/**
+		 * The BluetoothSocket this connection will be opened on
+		 */
 		private final BluetoothSocket mmSocket;
+
+		/**
+		 * The BluetoothDevice this connection will be with
+		 */
 		private final BluetoothDevice mmDevice;
 
+		/**
+		 * Create a new ConnectThread with the given device
+		 * 
+		 * @param device the device to try and connect to
+		 */
 		public ConnectThread(BluetoothDevice device) {
 			mmDevice = device;
 			BluetoothSocket tmp = null;
@@ -260,12 +272,15 @@ public class BluetoothConnectionService {
 			mmSocket = tmp;
 		}
 
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			if (Util.isDebugBuild()) {
 				Log.i(TAG, "BEGIN mConnectThread");
 			}
-			
+
 			setName("ConnectThread-" + mmDevice.getAddress());
 
 			// Always cancel discovery because it will slow down a connection
@@ -288,7 +303,7 @@ public class BluetoothConnectionService {
 				// Restart this service, therefore updating the state and letting
 				// the UI know that the connection failed
 				BluetoothConnectionService.this.start();
-				
+
 				return;
 			}
 
@@ -301,6 +316,9 @@ public class BluetoothConnectionService {
 			connected(mmSocket, mmDevice);
 		}
 
+		/**
+		 * Cancel the current operation
+		 */
 		public void cancel() {
 			try {
 				mmSocket.close();
@@ -315,14 +333,31 @@ public class BluetoothConnectionService {
 	 * It handles all incoming and outgoing transmissions.
 	 */
 	private class ConnectedThread extends Thread {
+		/**
+		 * The BluetoothSocket that messages are sent/received on
+		 */
 		private final BluetoothSocket mmSocket;
+
+		/**
+		 * The InputStream to read messages from
+		 */
 		private final InputStream mmInStream;
+
+		/**
+		 * The OutputStream to write messages to
+		 */
 		private final OutputStream mmOutStream;
 
+		/**
+		 * Create a new ConnectedThread with the given socket
+		 * 
+		 * @param socket the socket to use for this thread
+		 */
 		public ConnectedThread(BluetoothSocket socket) {
 			if (Util.isDebugBuild()) {
 				Log.d(TAG, "create ConnectedThread");
 			}
+
 			mmSocket = socket;
 			InputStream tmpIn = null;
 			OutputStream tmpOut = null;
@@ -339,15 +374,18 @@ public class BluetoothConnectionService {
 			mmOutStream = tmpOut;
 		}
 
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			if (Util.isDebugBuild()) {
 				Log.i(TAG, "BEGIN mConnectedThread");
 			}
-			
+
 			byte[] buffer = new byte[1024];
 			int bytes;
-			
+
 			// Keep listening to the InputStream while connected
 			while (true) {
 				try {
@@ -357,13 +395,13 @@ public class BluetoothConnectionService {
 					// Send the obtained bytes to the UI Activity
 					Message msg = mHandler.obtainMessage(BluetoothConstants.READ_MESSAGE, -1, -1, null);
 					Bundle data = new Bundle();
-					data.putString(BluetoothConstants.MESSAGE_RX_KEY, new String(buffer, 0, bytes));
-					data.putString(BluetoothConstants.DEVICE_ID_KEY, deviceAddress);
+					data.putString(BluetoothConstants.KEY_MESSAGE_RX, new String(buffer, 0, bytes));
+					data.putString(BluetoothConstants.KEY_DEVICE_ID, deviceAddress);
 					msg.setData(data);
 					msg.sendToTarget();
 				} catch (IOException e) {
 					Log.e(TAG, "disconnected", e);
-					
+
 					// Start the service over to restart listening mode
 					BluetoothConnectionService.this.start();
 					break;
@@ -372,8 +410,9 @@ public class BluetoothConnectionService {
 		}
 
 		/**
-		 * Write to the connected OutStream.
-		 * @param buffer  The bytes to write
+		 * Write to the connected OutStream
+		 * 
+		 * @param buffer The bytes to write
 		 */
 		public void write(byte[] buffer) {
 			try {
@@ -386,6 +425,9 @@ public class BluetoothConnectionService {
 			}
 		}
 
+		/**
+		 * Cancel the current operation
+		 */
 		public void cancel() {
 			try {
 				mmSocket.close();

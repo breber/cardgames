@@ -83,8 +83,7 @@ public class Player {
 	 */
 	@Override
 	public String toString() {
-		// Another possible implementation without having to come up
-		// with our own parsing code...see ShowCardsActivity.java for the decoding part...
+		// Encode the cards into a JSONArray
 		try {
 			JSONArray arr = new JSONArray();
 			for (Card c : cards) {
@@ -102,14 +101,5 @@ public class Player {
 			e.printStackTrace();
 			return "";
 		}
-
-//		StringBuilder toReturn = new StringBuilder();
-//
-//		for(int i = 0; i < cards.size(); i++){
-//			toReturn.append(cards.get(i).toString());
-//		}
-//
-//		return toReturn.toString();
 	}
-
 }

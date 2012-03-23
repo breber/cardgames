@@ -77,6 +77,9 @@ public class AcceptThread extends Thread {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
 	public void run() {
 		if (Util.isDebugBuild()) {

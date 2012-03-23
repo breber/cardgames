@@ -65,13 +65,13 @@ public class BluetoothClient extends BluetoothCommon {
 				// When the state of the Bluetooth connection has changed
 				// let all the listeners know that this has happened
 				Intent i = new Intent(BluetoothConstants.STATE_CHANGE_INTENT);
-				i.putExtra(BluetoothConstants.STATE_MESSAGE_KEY, data.getInt(BluetoothConstants.STATE_MESSAGE_KEY));
+				i.putExtra(BluetoothConstants.KEY_STATE_MESSAGE, data.getInt(BluetoothConstants.KEY_STATE_MESSAGE));
 				mContext.sendBroadcast(i);
 				break;
 			case BluetoothConstants.READ_MESSAGE:
 				Intent i1 = new Intent(BluetoothConstants.MESSAGE_RX_INTENT);
-				i1.putExtra(BluetoothConstants.MESSAGE_RX_KEY, data.getString(BluetoothConstants.MESSAGE_RX_KEY));
-				i1.putExtra(BluetoothConstants.DEVICE_ID_KEY, data.getString(BluetoothConstants.DEVICE_ID_KEY));
+				i1.putExtra(BluetoothConstants.KEY_MESSAGE_RX, data.getString(BluetoothConstants.KEY_MESSAGE_RX));
+				i1.putExtra(BluetoothConstants.KEY_DEVICE_ID, data.getString(BluetoothConstants.KEY_DEVICE_ID));
 				mContext.sendBroadcast(i1);
 				break;
 			}
@@ -136,9 +136,16 @@ public class BluetoothClient extends BluetoothCommon {
 	}
 
 	/**
+	 * Terminate the Bluetooth connection
+	 */
+	public void disconnect() {
+		mService.stop();
+	}
+
+	/**
 	 * If this Bluetooth device is connected, send the given object to the server
 	 * 
-	 * @param obj - Object to send
+	 * @param obj - String to send
 	 * @param address - doesn't matter for the client
 	 * @return whether the message was sent or not
 	 */

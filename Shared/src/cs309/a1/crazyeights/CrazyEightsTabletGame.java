@@ -17,16 +17,16 @@ import cs309.a1.shared.Rules;
 public class CrazyEightsTabletGame implements Game{
 
 	private static CrazyEightsTabletGame instance = null;
-	
+
 	private List<Player> players;
 	private Deck gameDeck;
 	private Rules rules;
 
 	private Iterator<Card> iter;
-	
+
 	private ArrayList<Card> shuffledDeck;
 	private ArrayList<Card> discardPile;
-	
+
 	public CrazyEightsTabletGame(List<Player> players, Deck gameDeck, Rules rules) {
 		super();
 		this.players = players;
@@ -35,15 +35,15 @@ public class CrazyEightsTabletGame implements Game{
 		shuffledDeck = gameDeck.getCardIDs();
 		discardPile = new ArrayList<Card>();
 	}
-	
+
 	public List<Player> getPlayers() {
 		return players;
 	}
-	
+
 	public void setPlayers(List<Player> players) {
 		this.players = players;
 	}
-		
+
 	public Deck getGameDeck() {
 		return gameDeck;
 	}
@@ -67,7 +67,7 @@ public class CrazyEightsTabletGame implements Game{
 	public void setRules(Rules rules) {
 		this.rules = rules;
 	}
-	
+
 
 	public ArrayList<Card> getShuffledDeck() {
 		return shuffledDeck;
@@ -92,7 +92,7 @@ public class CrazyEightsTabletGame implements Game{
 
 		return instance;
 	}
-	
+
 	/**
 	 * Create a new instance of the tablet game so that multiple classes are able to reference
 	 * the same card game and only one instance will be made available. This method uses the default
@@ -107,37 +107,39 @@ public class CrazyEightsTabletGame implements Game{
 
 		return instance;
 	}
-	
+
 	/**
 	 * This method will setup the game by calling shuffleDeck, deal and setting up
 	 * the initial GUI state.
 	 */
+	@Override
 	public void setup(){
 		//shuffle the card ID's
 		this.shuffleDeck();
-		
+
 		//deal the initial cards to all the players in the game
 		this.deal();
-		
+
 		//discard pile first one
 		discardPile.add(iter.next());
 		iter.remove();
-		
-		//display stuff		
+
+		//display stuff
 	}
-	
+
 	/**
 	 * This method will shuffle the deck of cards using the Collections.shuffle() method.
 	 */
+	@Override
 	public void shuffleDeck(){
 		//create a random number generator
 		Random generator = new Random();
-		
+
 		//shuffle the deck
 		Collections.shuffle(shuffledDeck, generator);
 		iter = shuffledDeck.iterator();
 	}
-	
+
 	/**
 	 * This method will shuffle the discard pile and replace the current draw
 	 * pile with the old discard pile. After this method call the shuffled deck
@@ -145,6 +147,8 @@ public class CrazyEightsTabletGame implements Game{
 	 */
 	public void shuffleDiscardPile(){
 		//TODO
+		// Is this what we want? Collections.copy(shuffledDeck, discardPile);
+
 		Card card = discardPile.remove(discardPile.size()-1);
 		//Make copy of discard pile to be new shuffled deck
 		shuffledDeck.addAll((ArrayList<Card>) discardPile.clone());
@@ -153,16 +157,17 @@ public class CrazyEightsTabletGame implements Game{
 		this.shuffleDeck();
 	}
 
-		
+
 	/**
-	 * This method will deal the initial hand to each player. Each player will receive 
+	 * This method will deal the initial hand to each player. Each player will receive
 	 * a certain number of cards based on a constant.
 	 */
+	@Override
 	public void deal(){
 		int numberOfPlayers = players.size();
-		
+
 		//maybe error check here to make sure can deal more cards than in deck?
-		
+
 		//Deal the given number of cards to each player
 		//NUMBER_OF_CARDS_PER_HAND can be found in cs309.a1.crazyeights
 		for(int i = 0; i < NUMBER_OF_CARDS_PER_HAND; i++){
@@ -173,47 +178,49 @@ public class CrazyEightsTabletGame implements Game{
 			}
 		}
 	}
-	
+
 	/**
 	 * This method allows a player to discard a card object on the discard pile
 	 * @param player the player who is going to make the discard
 	 * @param card the card the player chooses to discard
 	 */
+	@Override
 	public void discard(Player player, Card card){
 		//add the given card to the discard pile
 		//if(rules.checkCard(card, discardPile.get(discardPile.size()-1))){
-			discardPile.add(card);	
-			player.getCards().remove(card);
-			player.setNumCards(player.getNumCards() - 1);
+		discardPile.add(card);
+		player.getCards().remove(card);
+		player.setNumCards(player.getNumCards() - 1);
 		//}else{
-			//do not allow.
+		//do not allow.
 		//}
 	}
-	
+
 	/**
 	 * This method will return true if the player has run out of cards.
 	 * @param player the player to check
 	 * @return true if the player has 0 cards and false otherwise
 	 */
 	public boolean isGameOver(Player player){
-		
+
 		if(player.getNumCards() == 0){
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * This method will allow the player to draw a card from the draw pile
 	 * @param player the player who chooses to draw the card
 	 */
+	@Override
 	public void draw(Player player){
 		if(!iter.hasNext()){
 			this.shuffleDiscardPile();
 			//maybe refresh gui or something here
 		}
-		player.getCards().add(iter.next());	
+		player.getCards().add(iter.next());
 		iter.remove();
 		player.setNumCards(player.getNumCards() + 1);
 		if(shuffledDeck.size()==0){
@@ -225,13 +232,14 @@ public class CrazyEightsTabletGame implements Game{
 	 * This method will remove a player from the game
 	 * @param player the player to be dropped from the game
 	 */
+	@Override
 	public void dropPlayer(Player player) {
 		if(players.contains(player) && player != null){
 			List<Card> cards= player.getCards();
-			
+
 			//player is in the list of current players
 			players.remove(player);
-			
+
 			//add all of the players cards to the discard pile
 			discardPile.addAll(cards);
 

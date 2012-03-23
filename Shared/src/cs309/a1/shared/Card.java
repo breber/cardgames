@@ -1,21 +1,28 @@
 package cs309.a1.shared;
 
+import static cs309.a1.crazyeights.Constants.ID;
+import static cs309.a1.crazyeights.Constants.RESOURCE_ID;
+import static cs309.a1.crazyeights.Constants.SUIT;
+import static cs309.a1.crazyeights.Constants.VALUE;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class Card {
-	
+
 	private int suit;
 	private int value;
 	private int resourceId;
 	private int idNum;
-	
+
 	public Card(int suit, int value, int resourceId, int idNum) {
-		super();
 		this.suit = suit;
 		this.value = value;
 		this.resourceId = resourceId;
 		this.idNum = idNum;
 	}
-	
+
 	public int getSuit() {
 		return suit;
 	}
@@ -40,25 +47,26 @@ public class Card {
 	public void setIdNum(int idNum) {
 		this.idNum = idNum;
 	}
-	
+
 	/**
 	 * This is a custom toString method for the transfering of card data
 	 * 
-	 * @return a string representation of the card: "suit value resourceId idNum "
+	 * @return a JSON string representation of the card including suit, value, resourceId, idNum
 	 */
 	@Override
 	public String toString(){
-		StringBuilder toReturn = new StringBuilder();
-		
-		toReturn.append(suit);
-		toReturn.append(" ");
-		toReturn.append(value);
-		toReturn.append(" ");
-		toReturn.append(resourceId);
-		toReturn.append(" ");
-		toReturn.append(idNum);
-		toReturn.append(" ");
-		
-		return toReturn.toString();
+		// Encode the cards into a JSONArray
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put(SUIT, getSuit());
+			obj.put(VALUE, getValue());
+			obj.put(RESOURCE_ID, getResourceId());
+			obj.put(ID, getIdNum());
+
+			return obj.toString();
+		} catch (JSONException ex) {
+			ex.printStackTrace();
+			return "";
+		}
 	}
 }

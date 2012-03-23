@@ -28,7 +28,6 @@ public abstract class BluetoothCommon {
 			return false;
 		}
 
-		// TODO: make this actually useful
 		service.write(obj.toString().getBytes());
 
 		return true;

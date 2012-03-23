@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.widget.Toast;
+import cs309.a1.player.R;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.activities.DeviceListActivity;
 import cs309.a1.shared.bluetooth.BluetoothClient;
@@ -23,7 +24,7 @@ public class ConnectActivity extends Activity {
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			int currentState = intent.getIntExtra(BluetoothConstants.STATE_MESSAGE_KEY, -1);
+			int currentState = intent.getIntExtra(BluetoothConstants.KEY_STATE_MESSAGE, -1);
 
 			if (Util.isDebugBuild()) {
 				Toast.makeText(mContext, "onReceive " + currentState, Toast.LENGTH_LONG).show();
@@ -52,6 +53,7 @@ public class ConnectActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.player_hand);
 
 		mContext = this;
 

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -24,26 +25,59 @@ import cs309.a1.shared.R;
 import cs309.a1.shared.Util;
 
 /**
- * This Activity appears as a dialog. It lists any paired devices and devices
- * detected in the area after discovery. When a device is chosen by the user,
- * the MAC address of the device is sent back to the parent Activity in the
- * result Intent.
+ * This Activity lists all devices that are discoverable, or paired and
+ * in range. The user can then select which device they want to connect
+ * to, and the address of that device is returned in the result Intent
  */
 public class DeviceListActivity extends Activity {
+	/**
+	 * The Logcat Debug tag
+	 */
 	private static final String TAG = DeviceListActivity.class.getName();
 
-	// Return Intent extra
+	/**
+	 * Return Intent extra
+	 */
 	public static String EXTRA_DEVICE_ADDRESS = "deviceAddress";
+
+	/**
+	 * The request code for the Bluetooth Enable intent
+	 */
 	private static final int REQUEST_ENABLE_BT = 3;
 
-	// Member fields
+	/**
+	 * A list of Device names that are currently added to the DeviceListAdapter
+	 */
 	private List<String> deviceNames = new ArrayList<String>();
-	private TextView noDevicesFound;
-	private ProgressBar deviceListProgress;
-	private ImageButton refreshDeviceListButton;
-	private BluetoothAdapter mBtAdapter;
-	private DeviceListAdapter mDevicesArrayAdapter;
 
+	/**
+	 * The TextView resource that contains the text "No Devices Found"
+	 */
+	private TextView noDevicesFound;
+
+	/**
+	 * The ProgressBar that indicates that we are currently searching for devices
+	 */
+	private ProgressBar deviceListProgress;
+
+	/**
+	 * The Button that allows the user to refresh the list of devices
+	 */
+	private ImageButton refreshDeviceListButton;
+
+	/**
+	 * The BluetoothAdapter used to query Bluetooth information
+	 */
+	private BluetoothAdapter mBtAdapter;
+
+	/**
+	 * The ArrayAdapter that is displayed in the ListView
+	 */
+	private ArrayAdapter<DeviceListItem> mDevicesArrayAdapter;
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -71,7 +105,7 @@ public class DeviceListActivity extends Activity {
 
 		// Initialize array adapters. One for already paired devices and
 		// one for newly discovered devices
-		mDevicesArrayAdapter = new DeviceListAdapter(this, R.layout.device_name);
+		mDevicesArrayAdapter = new ArrayAdapter<DeviceListItem>(this, R.layout.device_name);
 
 		// Find and set up the ListView for paired devices
 		ListView devicesListView = (ListView) findViewById(R.id.devices);
@@ -89,19 +123,22 @@ public class DeviceListActivity extends Activity {
 		// Get the local Bluetooth adapter
 		mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
+		// If Bluetooth isn't currently enabled, request that it be enabled
 		if (!mBtAdapter.isEnabled()) {
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
 		} else {
+			// Otherwise start discovering devices
 			mDevicesArrayAdapter.clear();
 			doDiscovery();
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onDestroy()
+	 */
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
-
 		// Make sure we're not doing discovery anymore
 		if (mBtAdapter != null) {
 			mBtAdapter.cancelDiscovery();
@@ -109,6 +146,8 @@ public class DeviceListActivity extends Activity {
 
 		// Unregister broadcast listeners
 		unregisterReceiver(mReceiver);
+
+		super.onDestroy();
 	}
 
 	/**
@@ -128,6 +167,10 @@ public class DeviceListActivity extends Activity {
 		mBtAdapter.startDiscovery();
 	}
 
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onBackPressed()
+	 */
 	@Override
 	public void onBackPressed() {
 		// Cancel discovery
@@ -137,6 +180,10 @@ public class DeviceListActivity extends Activity {
 		finish();
 	}
 
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (Util.isDebugBuild()) {
@@ -156,6 +203,8 @@ public class DeviceListActivity extends Activity {
 					Log.d(TAG, "BT not enabled");
 				}
 
+				// Indicate that the user cancelled the Activity, and finish the Activity
+				setResult(RESULT_CANCELED);
 				finish();
 			}
 		}
@@ -170,7 +219,7 @@ public class DeviceListActivity extends Activity {
 			// Cancel discovery because it's costly and we're about to connect
 			mBtAdapter.cancelDiscovery();
 
-			DeviceListItem item = (DeviceListItem) mDevicesArrayAdapter.getItem(arg2);
+			DeviceListItem item = mDevicesArrayAdapter.getItem(arg2);
 			String address = item.getDeviceMacAddress();
 
 			// Create the result Intent and include the MAC address
@@ -208,6 +257,7 @@ public class DeviceListActivity extends Activity {
 				deviceListProgress.setVisibility(View.GONE);
 				refreshDeviceListButton.setVisibility(View.VISIBLE);
 
+				// If there are no devices, show the "No Devices" message
 				if (mDevicesArrayAdapter.getCount() == 0) {
 					noDevicesFound.setText(R.string.no_devices_found);
 				}
@@ -215,3 +265,4 @@ public class DeviceListActivity extends Activity {
 		}
 	};
 }
+

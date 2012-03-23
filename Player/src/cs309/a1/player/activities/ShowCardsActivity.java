@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cs309.a1.player.R;
 import cs309.a1.shared.Card;
+import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
 
 public class ShowCardsActivity extends Activity{
@@ -39,15 +40,16 @@ public class ShowCardsActivity extends Activity{
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
-			String sender = intent.getStringExtra(BluetoothConstants.DEVICE_ID_KEY);
-			String object = intent.getStringExtra(BluetoothConstants.MESSAGE_RX_KEY);
-			Log.d("cs309", object);
+			String sender = intent.getStringExtra(BluetoothConstants.KEY_DEVICE_ID);
+			String object = intent.getStringExtra(BluetoothConstants.KEY_MESSAGE_RX);
+
+			if (Util.isDebugBuild()) {
+				Log.d("cs309", object);
+			}
 
 			// Another possible implementation without having to come up
 			// with our own parsing code...see Player.java for the encoding part...
 			try {
-				// Another possible implementation without having to come up
-				// with our own parsing code...
 				JSONArray arr = new JSONArray(object);
 
 				for (int i = 0; i < arr.length(); i++) {
@@ -61,23 +63,6 @@ public class ShowCardsActivity extends Activity{
 			} catch (JSONException ex) {
 				ex.printStackTrace();
 			}
-
-			//parse and recreate the objects
-//			String delims = "[ ]";
-//			String[] tokens = object.split(delims);
-//
-//			for(int i = 0; i < tokens.length-1; i+=4){
-//				int suit = Integer.parseInt(tokens[i]);
-//				Log.d("cs309", tokens[i]);
-//				int value = Integer.parseInt(tokens[i+1]);
-//				Log.d("cs309", tokens[i+1]);
-//				int resourceId = Integer.parseInt(tokens[i+2]);
-//				Log.d("cs309", tokens[i+2]);
-//				int id = Integer.parseInt(tokens[i+3]);
-//				Log.d("cs309", tokens[i+3]);
-//
-//				addCard(new Card(suit, value, resourceId, id));
-//			}
 		}
 	};
 
