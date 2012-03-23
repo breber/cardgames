@@ -2,6 +2,8 @@ package cs309.a1.shared;
 
 import java.util.ArrayList;
 
+import cs309.a1.crazyeights.CrazyEightsCardTranslator;
+
 public class Deck {
 
 	/**
@@ -32,18 +34,18 @@ public class Deck {
 	public ArrayList<Card> getCardIDs() {
 		return cardImages;
 	}
-	
+
 	public int getCardBackID() {
-		
+
 		int cardId = 0;
-		
+
 		switch(gameName) {
-		
+
 		case CRAZY_EIGHTS:
 			cardId = R.drawable.back_blue_1;
 			break;
 		}
-		
+
 		return cardId;
 	}
 
@@ -120,6 +122,20 @@ public class Deck {
 			cardImages.add(new Card(4, 0, R.drawable.joker_b, 52));
 			cardImages.add(new Card(4, 1, R.drawable.joker_r, 53));
 			break;
+		}
+	}
+
+	/**
+	 * Get the CardTranslator for the given game.
+	 * 
+	 * @param game the game to get the translator for
+	 * @return the CardTranslator that will properly return the
+	 * resource id for the right cards.
+	 */
+	public static CardTranslator getCardTranslatorForGame(CardGame game) {
+		switch(game) {
+		case CRAZY_EIGHTS: return new CrazyEightsCardTranslator();
+		default: return null;
 		}
 	}
 }
