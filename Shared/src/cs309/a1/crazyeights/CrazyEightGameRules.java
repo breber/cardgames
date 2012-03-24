@@ -7,12 +7,19 @@ import cs309.a1.crazyeights.Constants;
 public class CrazyEightGameRules implements Rules{
 	
 	public boolean checkCard(Card cardPlayed, Card onDiscard){
+		//TODO need way to know what color the 8 changed it to
+		
 		//joker and 8 are always accepted
 		if(cardPlayed.getSuit() == Constants.SUIT_JOKER || cardPlayed.getValue() == 8){
 			return true;
+		}
+		//anything can be played on a joker
+		if(onDiscard.getSuit() == Constants.SUIT_JOKER){
+			return true;
+		}
 			
 		//must match suit or value
-		}else if(cardPlayed.getSuit() == onDiscard.getSuit() 
+		if(cardPlayed.getSuit() == onDiscard.getSuit() 
 				 || cardPlayed.getValue() == onDiscard.getValue() ){
 			return true;
 		}
