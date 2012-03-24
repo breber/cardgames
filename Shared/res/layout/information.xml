@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:gravity="center_horizontal">
+    android:background="@drawable/wooden_top"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
 
     <include
         android:id="@+id/title_ref"
@@ -11,19 +12,22 @@
         android:layout_height="wrap_content"
         layout="@layout/title_bar" />
 
-    <ScrollView   
-      	android:layout_height="fill_parent"   
-      	android:layout_width="fill_parent">  
-      
-	    <cs309.a1.shared.TextView
-	        android:id="@+id/informationBody"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:scrollbars="vertical"
-	        android:text="@string/Information_about"
-	        android:padding="15dip"
-	        android:textAppearance="?android:attr/textAppearanceMedium" />
-	    
-	</ScrollView>
+    <ScrollView
+        style="@style/GameButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dip"
+        android:layout_marginLeft="40dip"
+        android:layout_marginRight="40dip"
+        android:layout_marginTop="10dip" >
+
+        <cs309.a1.shared.TextView
+            android:id="@+id/informationBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Information_about"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black" />
+    </ScrollView>
 
 </LinearLayout>

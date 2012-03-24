@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 import cs309.a1.gameboard.R;
+import cs309.a1.shared.TextView;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.bluetooth.BluetoothServer;
@@ -66,6 +67,11 @@ public class ConnectActivity extends Activity {
 		} else {
 			startListeningForDevices();
 		}
+
+		// Display this device's name so that users know which device to connect
+		// to on their own device.
+		TextView tv = (TextView) findViewById(R.id.myName);
+		tv.setText(getResources().getString(R.string.deviceName) + "\n" + mBluetoothAdapter.getName());
 
 		Button connectButton = (Button) findViewById(R.id.connectButton);
 		connectButton.setOnClickListener(new OnClickListener() {

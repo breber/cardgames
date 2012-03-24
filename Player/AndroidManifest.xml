@@ -25,25 +25,36 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity 	
-            android:name=".activities.RulesActivity" 
+        <activity
+            android:name=".activities.RulesActivity"
             android:screenOrientation="landscape" />
-        <activity 
-            android:name=".activities.AboutActivity" 
+        <activity
+            android:name=".activities.AboutActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activities.ConnectActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".activities.ConnectionFailActivity" />
-        <activity android:name=".activities.GameResultsActivity" />
-        <activity android:name=".activities.PauseMenuActivity" />
+        <activity
+            android:name=".activities.ConnectionFailActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+        <activity
+            android:name=".activities.GameResultsActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.PauseMenuActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
         <activity
             android:name=".activities.QuitApplicationActivity"
+            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
         <activity
             android:name=".activities.QuitGameActivity"
+            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
-        <activity android:name=".activities.ShowCardsActivity"
+        <activity
+            android:name=".activities.ShowCardsActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name="cs309.a1.shared.activities.DeviceListActivity"

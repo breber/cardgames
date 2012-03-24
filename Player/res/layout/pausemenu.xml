@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@drawable/wooden_top"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:gravity="center_vertical|center_horizontal"
     android:orientation="horizontal" >
 
     <cs309.a1.shared.TextView
-        android:id="@+id/Paused"
-        style="@style/GameButton"
-        android:layout_width="fill_parent"
-        android:layout_marginLeft="75dip"
-        android:layout_marginRight="75dip"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="@string/PauseActivity_title"
-        android:textSize="50sp"
-        android:textStyle="bold" />
+        android:id="@+id/paused"
+        style="@style/popupStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/PauseActivity_title" />
 
 </LinearLayout>

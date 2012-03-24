@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cs309.a1.crazyeights.CrazyEightGameRules;
@@ -25,6 +26,7 @@ import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothServer;
 
 public class GameboardActivity extends Activity {
+	private static final String TAG = GameboardActivity.class.getName();
 
 	private static final int QUIT_GAME = "QUIT_GAME".hashCode();
 	private static Game game = null;
@@ -52,6 +54,11 @@ public class GameboardActivity extends Activity {
 		game.setup();
 
 		for (int i = 0; i < players.size(); i++) {
+			if (Util.isDebugBuild()) {
+				Log.d(TAG, "Player" + i + ": " + players.get(i));
+			}
+
+			// TODO: sometimes this is giving an empty string...
 			bts.write(players.get(i), players.get(i).getId());
 		}
 
@@ -76,7 +83,7 @@ public class GameboardActivity extends Activity {
 			}
 		} else {
 			// Otherwise just show the back of the cards for all players
-			for (int i = 1; i < 15; i++) {
+			for (int i = 1; i < 5 * 5; i++) {
 				placeCard(i % 5, new Card(5, 0, R.drawable.back_blue_1, 54));
 			}
 

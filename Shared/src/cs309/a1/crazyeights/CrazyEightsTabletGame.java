@@ -8,13 +8,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import android.util.Log;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.Deck;
 import cs309.a1.shared.Game;
 import cs309.a1.shared.Player;
 import cs309.a1.shared.Rules;
+import cs309.a1.shared.Util;
 
 public class CrazyEightsTabletGame implements Game{
+	private static final String TAG = CrazyEightsTabletGame.class.getName();
 
 	private static CrazyEightsTabletGame instance = null;
 
@@ -158,6 +161,10 @@ public class CrazyEightsTabletGame implements Game{
 		//add to the shuffled deck in case there are still some cards left that are unaccounted for
 		Collections.copy(shuffledDeck, discardPile);
 
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "shuffleDiscardPile: shuffledDeck: " + shuffledDeck.size() + " - discardPile: " + discardPile.size());
+		}
+
 		//remove all the cards from the discard pile
 		discardPile.removeAll(discardPile);
 
@@ -177,6 +184,10 @@ public class CrazyEightsTabletGame implements Game{
 	public void deal(){
 		int numberOfPlayers = players.size();
 
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "deal: numberOfPlayers: " + numberOfPlayers);
+		}
+
 		//maybe error check here to make sure can deal more cards than in deck?
 
 		//Deal the given number of cards to each player
@@ -191,6 +202,13 @@ public class CrazyEightsTabletGame implements Game{
 
 				//remove the last card returned by iter.next()
 				iter.remove();
+			}
+		}
+
+		if (Util.isDebugBuild()) {
+			for (Player p : players) {
+				Log.d(TAG, "deal: player[" + p.getId() + "] has " + p.getNumCards() + " cards");
+				Log.d(TAG, "      player[" + p.getId() + "]: " + p);
 			}
 		}
 	}

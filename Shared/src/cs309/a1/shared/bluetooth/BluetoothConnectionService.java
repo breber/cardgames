@@ -280,25 +280,40 @@ public class BluetoothConnectionService {
 			if (Util.isDebugBuild()) {
 				Log.i(TAG, "BEGIN mConnectThread");
 			}
+			int timesTried = 0;
 
 			setName("ConnectThread-" + mmDevice.getAddress());
 
 			// Always cancel discovery because it will slow down a connection
 			mAdapter.cancelDiscovery();
 
-			// Make a connection to the BluetoothSocket
-			try {
-				// This is a blocking call and will only return on a
-				// successful connection or an exception
-				mmSocket.connect();
-			} catch (IOException e) {
-				Log.e(TAG, "IOException", e);
-				// Close the socket
+			while (timesTried != -1 && timesTried < 3) {
+				// Make a connection to the BluetoothSocket
 				try {
-					mmSocket.close();
-				} catch (IOException e2) {
-					Log.e(TAG, "unable to close() socket during connection failure", e2);
+					// This is a blocking call and will only return on a
+					// successful connection or an exception
+					mmSocket.connect();
+
+					// Set timesTried to -1 indicating we were successful
+					timesTried = -1;
+				} catch (IOException e) {
+					Log.e(TAG, "IOException", e);
+					// Close the socket
+					try {
+						mmSocket.close();
+					} catch (IOException e2) {
+						Log.e(TAG, "unable to close() socket during connection failure", e2);
+					}
+
+					// Try a few times to connect
+					Log.w(TAG, "Unsuccessful attempt to connect: " + timesTried);
+					timesTried++;
 				}
+			}
+
+			// We failed connecting too many times
+			if (timesTried != -1) {
+				Log.w(TAG, "Connection initiation failed. Restarting service");
 
 				// Restart this service, therefore updating the state and letting
 				// the UI know that the connection failed
