@@ -109,10 +109,6 @@ public class GameboardActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == QUIT_GAME) {
 			if (resultCode == RESULT_OK) {
-				// Start the Main Menu
-				Intent intent = new Intent(GameboardActivity.this, MainMenu.class);
-				startActivity(intent);
-
 				// Finish this activity
 				setResult(RESULT_OK);
 				finish();
