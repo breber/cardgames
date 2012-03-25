@@ -36,6 +36,7 @@ import cs309.a1.shared.Rules;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothClient;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
+import cs309.a1.shared.bluetooth.BluetoothServer;
 
 /**
  *
@@ -67,6 +68,8 @@ public class ShowCardsActivity extends Activity{
 	private Rules gameRules;
 	
 	private boolean isTurn;
+	
+	BluetoothClient btc;
 
 	/**
 	 * The BroadcastReceiver for handling messages from the Bluetooth connection
@@ -131,6 +134,8 @@ public class ShowCardsActivity extends Activity{
 		registerReceiver(receiver, new IntentFilter(BluetoothConstants.MESSAGE_RX_INTENT));
 		registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
 		
+		btc = BluetoothClient.getInstance(this);
+		
 		Button play = (Button) findViewById(R.id.btPlayCard);
 		Button draw = (Button) findViewById(R.id.btDrawCard);
 		
@@ -144,7 +149,7 @@ public class ShowCardsActivity extends Activity{
 				
 				if(isTurn && gameRules.checkCard(cardSelected, cardOnDiscard)){
 					//play card
-					
+					//btc.write(cardSelected, address)
 					removeFromHand(cardSelected.getIdNum());
 					
 					if (Util.isDebugBuild()) {
@@ -262,9 +267,7 @@ public class ShowCardsActivity extends Activity{
 			//we could remove it from the hand below and place it so
 			ScaleAnimation scale = new ScaleAnimation((float)1.2, (float)1.2, (float)1.2, (float)1.2);
 			scale.scaleCurrentDuration((float) 5);
-			//v.draw(canvas);
-			//v.setScaleX((float) 1.2);
-			//v.setScaleY((float) 1.2);
+		
 			v.startAnimation(scale);
 			int i;
 			for(i=0; i < cardHand.size(); i++){
