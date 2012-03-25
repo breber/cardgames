@@ -44,6 +44,7 @@ public class CrazyEightsTabletGameTest {
 		rules = new CrazyEightGameRules();
 		
 		game = new CrazyEightsTabletGame(players, deck, rules);
+		
 	}
 	
 	/**
