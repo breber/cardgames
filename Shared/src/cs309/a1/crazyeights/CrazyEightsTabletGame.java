@@ -288,4 +288,12 @@ public class CrazyEightsTabletGame implements Game{
 			cards.removeAll(cards);
 		}
 	}
+	
+	/**
+	 * This method will return the last card added to the discard pile
+	 * @return a Card object representing the last card added to the discard pile
+	 */
+	public Card getDiscardPileTop(){
+		return discardPile.get(discardPile.size()-1);
+	}
 }
