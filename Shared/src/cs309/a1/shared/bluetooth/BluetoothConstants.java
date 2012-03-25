@@ -23,6 +23,7 @@ public class BluetoothConstants {
 	public static final String KEY_TOAST_MESSAGE = "TOAST_MESSAGE";
 	public static final String KEY_STATE_MESSAGE = "STATE";
 	public static final String KEY_MESSAGE_RX = "MSG";
+	public static final String KEY_MESSAGE_TYPE = "MSG_TYPE";
 
 
 	// Constants that indicate the current connection state
