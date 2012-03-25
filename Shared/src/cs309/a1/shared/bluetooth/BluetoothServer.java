@@ -180,7 +180,7 @@ public class BluetoothServer extends BluetoothCommon {
 	 * @see cs309.a1.shared.bluetooth.BluetoothCommon#write(java.lang.Object, java.lang.String[])
 	 */
 	@Override
-	public boolean write(Object obj, String ... address) {
+	public boolean write(int messageType, Object obj, String ... address) {
 		boolean retVal = true;
 
 		// If the caller didn't provide any addresses, send the message to all

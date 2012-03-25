@@ -16,22 +16,11 @@ import org.json.JSONObject;
 public class Player {
 
 	private List<Card> cards;
-	private int numCards;
 	private String name;
 	private String id;
 
-	public Player(List<Card> cards, int numCards, String name, String id) {
-		super();
-		this.cards = cards;
-		this.numCards = numCards;
-		this.name = name;
-		this.id = id;
-	}
-
 	public Player() {
-		super();
 		this.cards = new ArrayList<Card>();
-		this.numCards = 0;
 		this.name = null;
 		this.id = null;
 	}
@@ -40,26 +29,16 @@ public class Player {
 		return cards;
 	}
 
-	public void setCards(List<Card> cards) {
-		this.cards = cards;
-	}
-
 	public int getNumCards() {
-		return numCards;
-	}
-
-	public void setNumCards(int numCards) {
-		this.numCards = numCards;
+		return cards.size();
 	}
 
 	public void addCard(Card card){
 		cards.add(card);
-		numCards++;
 	}
 
 	public void removeCard(Card card){
 		cards.remove(card);
-		numCards--;
 	}
 
 	public String getName() {

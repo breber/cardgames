@@ -8,11 +8,12 @@ public abstract class BluetoothCommon {
 	/**
 	 * Write an object to the given addresses
 	 * 
+	 * @param messageType the type of message this is
 	 * @param obj the object to write
 	 * @param address the addresses to write it to
 	 * @return whether the message was written or not
 	 */
-	abstract boolean write(Object obj, String ... address);
+	abstract boolean write(int messageType, Object obj, String ... address);
 
 	/**
 	 * Perform a write operation

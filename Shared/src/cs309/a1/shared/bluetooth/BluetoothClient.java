@@ -145,12 +145,13 @@ public class BluetoothClient extends BluetoothCommon {
 	/**
 	 * If this Bluetooth device is connected, send the given object to the server
 	 * 
+	 * @param messageType - the type of message this is
 	 * @param obj - String to send
 	 * @param address - doesn't matter for the client
 	 * @return whether the message was sent or not
 	 */
 	@Override
-	public boolean write(Object obj, String ... address) {
+	public boolean write(int messageType, Object obj, String ... address) {
 		return performWrite(mService, obj);
 	}
 }

@@ -31,7 +31,6 @@ public class CrazyEightsTabletGame implements Game{
 	private ArrayList<Card> discardPile;
 
 	public CrazyEightsTabletGame(List<Player> players, Deck gameDeck, Rules rules) {
-		super();
 		this.players = players;
 		this.gameDeck = gameDeck;
 		this.rules = rules;
@@ -89,9 +88,7 @@ public class CrazyEightsTabletGame implements Game{
 	 * @return an instance of CrazyEightsTabletGame
 	 */
 	public static CrazyEightsTabletGame getInstance(List<Player> players, Deck deck, Rules rules) {
-		if (instance == null) {
-			instance = new CrazyEightsTabletGame(players, deck, rules);
-		}
+		instance = new CrazyEightsTabletGame(players, deck, rules);
 
 		return instance;
 	}
@@ -175,30 +172,35 @@ public class CrazyEightsTabletGame implements Game{
 		this.shuffleDeck();
 	}
 
-
 	/**
 	 * This method will deal the initial hand to each player. Each player will receive
 	 * a certain number of cards based on a constant.
 	 */
 	@Override
 	public void deal(){
-		int numberOfPlayers = players.size();
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "deal: numberOfPlayers: " + players.size());
+		}
 
 		if (Util.isDebugBuild()) {
-			Log.d(TAG, "deal: numberOfPlayers: " + numberOfPlayers);
+			for (Player p : players) {
+				Log.d(TAG, "pre deal: player[" + p.getId() + "] has " + p.getNumCards() + " cards");
+				Log.d(TAG, "          player[" + p.getId() + "]: " + p);
+			}
 		}
 
 		//maybe error check here to make sure can deal more cards than in deck?
 
 		//Deal the given number of cards to each player
 		//NUMBER_OF_CARDS_PER_HAND can be found in cs309.a1.crazyeights
-		for(int i = 0; i < NUMBER_OF_CARDS_PER_HAND; i++){
-			for(int j = 0; j < numberOfPlayers; j++){
-				//get a player
-				Player p = players.get(j);
-
+		for (int i = 0; i < NUMBER_OF_CARDS_PER_HAND; i++){
+			for (Player p : players) {
 				//give them a card
 				p.addCard(iter.next());
+
+				if (Util.isDebugBuild()) {
+					Log.d(TAG, "p.addCard: player[" + p.getId() + "] has " + p.getNumCards() + " cards");
+				}
 
 				//remove the last card returned by iter.next()
 				iter.remove();
@@ -207,8 +209,8 @@ public class CrazyEightsTabletGame implements Game{
 
 		if (Util.isDebugBuild()) {
 			for (Player p : players) {
-				Log.d(TAG, "deal: player[" + p.getId() + "] has " + p.getNumCards() + " cards");
-				Log.d(TAG, "      player[" + p.getId() + "]: " + p);
+				Log.d(TAG, "postdeal: player[" + p.getId() + "] has " + p.getNumCards() + " cards");
+				Log.d(TAG, "          player[" + p.getId() + "]: " + p);
 			}
 		}
 	}
@@ -223,8 +225,7 @@ public class CrazyEightsTabletGame implements Game{
 		//add the given card to the discard pile
 		//if(rules.checkCard(card, discardPile.get(discardPile.size()-1))){
 		discardPile.add(card);
-		player.getCards().remove(card);
-		player.setNumCards(player.getNumCards() - 1);
+		player.removeCard(card);
 		//}else{
 		//do not allow.
 		//}
@@ -238,7 +239,7 @@ public class CrazyEightsTabletGame implements Game{
 	public boolean isGameOver(Player player){
 
 		//check to see if the player has any cards left
-		if(player.getNumCards() == 0){
+		if (player.getNumCards() == 0) {
 			return true;
 		}
 
@@ -257,16 +258,13 @@ public class CrazyEightsTabletGame implements Game{
 		}
 
 		//get a card out of the shuffled pile and add to the players hand
-		player.getCards().add(iter.next());
+		player.addCard(iter.next());
 
 		//remove the last card returned by iter.next()
 		iter.remove();
 
-		//increase the number of cards the player has
-		player.setNumCards(player.getNumCards() + 1);
-
 		//shuffle the deck if the player drew the last card
-		if(shuffledDeck.size()==0){
+		if (shuffledDeck.isEmpty()) {
 			shuffleDiscardPile();
 		}
 	}
@@ -277,8 +275,8 @@ public class CrazyEightsTabletGame implements Game{
 	 */
 	@Override
 	public void dropPlayer(Player player) {
-		if(players.contains(player) && player != null){
-			List<Card> cards= player.getCards();
+		if (players.contains(player) && player != null) {
+			List<Card> cards = player.getCards();
 
 			//player is in the list of current players
 			players.remove(player);
@@ -288,7 +286,6 @@ public class CrazyEightsTabletGame implements Game{
 
 			//remove all of the cards from the players hand and set the number of cards to 0
 			cards.removeAll(cards);
-			player.setNumCards(0);
 		}
 	}
 }

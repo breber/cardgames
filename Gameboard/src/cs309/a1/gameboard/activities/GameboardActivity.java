@@ -102,8 +102,8 @@ public class GameboardActivity extends Activity {
 				Log.d(TAG, "Player" + i + ": " + players.get(i));
 			}
 
-			// TODO: sometimes this is giving an empty string...
-			bts.write(players.get(i), players.get(i).getId());
+			// TODO: message type shouldn't be hard coded
+			bts.write(0, players.get(i), players.get(i).getId());
 		}
 
 		// If it is a debug build, show the cards face up so that we can
