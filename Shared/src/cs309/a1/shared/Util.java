@@ -21,7 +21,7 @@ public class Util {
 	 * @return whether this is a production build or not
 	 */
 	public static boolean isDebugBuild() {
-		return true;
+		return false;
 	}
 
 	/**

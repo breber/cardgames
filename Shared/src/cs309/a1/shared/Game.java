@@ -10,5 +10,6 @@ public interface Game {
 	public void shuffleDeck();
 	public void dropPlayer(Player player);
 	public Card getDiscardPileTop();
+	public int getNumPlayers();
 
 }
