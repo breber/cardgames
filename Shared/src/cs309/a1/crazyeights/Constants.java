@@ -14,6 +14,19 @@ public class Constants {
 	public static final String VALUE = "value";
 	public static final String RESOURCE_ID = "resourceid";
 	public static final String ID = "id";
+	public static final String MESSAGE_TYPE = "messagetype";
+	
+	//these are bluetooth message types that can be sent by the GameBoard
+	public static final int SETUP = 0;
+	public static final int IS_TURN = 1;
+	public static final int WINNER = 2;
+	public static final int LOSER = 3;
+	
+	//these are bluetooth messages types that can be sent by Player
+	public static final int PLAY_CARD = 4;
+	public static final int DRAW_CARD = 5;
+	public static final int PLAY_EIGHT = 6;
+	
 	
 
 }
