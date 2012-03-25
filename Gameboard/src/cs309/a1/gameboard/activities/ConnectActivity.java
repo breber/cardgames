@@ -41,7 +41,6 @@ public class ConnectActivity extends Activity {
 				numPlayers = tmpNumPlayers;
 				updatePlayersConnected();
 			}
-
 		}
 	};
 
@@ -73,8 +72,8 @@ public class ConnectActivity extends Activity {
 		TextView tv = (TextView) findViewById(R.id.myName);
 		tv.setText(getResources().getString(R.string.deviceName) + "\n" + mBluetoothAdapter.getName());
 
-		Button connectButton = (Button) findViewById(R.id.connectButton);
-		connectButton.setOnClickListener(new OnClickListener() {
+		Button startButton = (Button) findViewById(R.id.startButton);
+		startButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (canStartGame()) {
@@ -147,5 +146,13 @@ public class ConnectActivity extends Activity {
 			ImageViews[i].setImageResource(R.drawable.off_device);
 		}
 
+		// Update the state of the button so that it changes colors when there
+		// are enough players
+		Button b = (Button) findViewById(R.id.startButton);
+		if (canStartGame()) {
+			b.setEnabled(true);
+		} else {
+			b.setEnabled(false);
+		}
 	}
 }

@@ -178,6 +178,12 @@ public class GameboardActivity extends Activity {
 				setResult(RESULT_OK);
 				finish();
 			}
+		} else if (requestCode == DISCONNECTED) {
+			if (requestCode == RESULT_OK) {
+				// TODO: DROP PLAYER
+			} else {
+				// TODO: CONNECT DIFFERENT PLAYER
+			}
 		}
 		
 		if (requestCode == EXIT_GAME) {

@@ -87,13 +87,16 @@
         android:text="@string/deviceName" />
 
     <cs309.a1.shared.Button
-        android:id="@+id/connectButton"
+        android:id="@+id/startButton"
         style="@style/GameButtonBlack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_margin="15dip"
+        android:background="@drawable/statebutton"
+        android:textColor="@color/statecolor"
+        android:enabled="false"
         android:padding="15dip"
         android:text="@string/start" />
 
