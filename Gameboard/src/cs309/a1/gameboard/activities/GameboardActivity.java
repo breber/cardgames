@@ -15,6 +15,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cs309.a1.crazyeights.CrazyEightGameRules;
@@ -30,6 +34,9 @@ import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.bluetooth.BluetoothServer;
 
 public class GameboardActivity extends Activity {
+	
+	private static final int EXIT_GAME = "EXIT_GAME".hashCode();
+	
 	/**
 	 * The Logcat Debug tag
 	 */
@@ -72,8 +79,19 @@ public class GameboardActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gameboard);
+		
+		ImageButton pause = (ImageButton) findViewById(R.id.gameboard_pause);
+		
+		pause.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent pauseButtonClick = new Intent(GameboardActivity.this, PauseMenuActivity.class);
+				startActivityForResult(pauseButtonClick, EXIT_GAME);
+			}
+		});
 
 		// Register the receiver for message/state change intents
 		registerReceiver(receiver, new IntentFilter(BluetoothConstants.MESSAGE_RX_INTENT));
@@ -162,6 +180,14 @@ public class GameboardActivity extends Activity {
 				finish();
 			}
 		}
+		
+		if (requestCode == EXIT_GAME) {
+			if (resultCode == RESULT_OK) {
+				// Finish this activity
+				setResult(RESULT_OK);
+				finish();
+			}
+		}
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -221,5 +247,6 @@ public class GameboardActivity extends Activity {
 			draw.setImageResource(newCard.getResourceId());
 		}
 	}
+
 
 }

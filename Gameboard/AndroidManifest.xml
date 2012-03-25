@@ -49,8 +49,7 @@
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
         <activity
             android:name=".activities.PauseMenuActivity"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+            android:screenOrientation="landscape"/>
         <activity
             android:name=".activities.QuitAppicationActivity"
             android:screenOrientation="landscape"

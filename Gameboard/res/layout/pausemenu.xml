@@ -12,13 +12,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/black"
-        android:paddingBottom="5dp"
-        android:paddingTop="0dp" >
+        android:paddingBottom="25dp"
+        android:paddingTop="25dp" >
 
         <cs309.a1.shared.TextView
             style="@style/TitleFont"
             android:gravity="center"
-            android:text="@string/PauseActivity_title" android:textSize="55sp"/>
+            android:text="@string/PauseActivity_title"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -31,37 +31,28 @@
         <cs309.a1.shared.Button
             android:id="@+id/btResume"
             style="@style/GameButton"
-            android:layout_marginLeft="15dip"
-            android:layout_marginRight="15dip"
-            android:layout_marginTop="5dip"
+            android:layout_marginLeft="75dip"
+            android:layout_marginRight="75dip"
+            android:layout_marginTop="15dip"
             android:text="@string/resume"
-            android:textSize="35sp" />
+            android:textSize="70sp" />
 
         <cs309.a1.shared.Button
             android:id="@+id/btRules"
             style="@style/GameButton"
-            android:layout_marginBottom="8dip"
-            android:layout_marginLeft="35dip"
-            android:layout_marginRight="35dip"
-            android:layout_marginTop="8dip"
-            android:text="@string/Rules" android:textSize="30sp"/>
+            android:layout_marginBottom="15dip"
+            android:layout_marginLeft="85dip"
+            android:layout_marginRight="85dip"
+            android:layout_marginTop="15dip"
+            android:text="@string/Rules"/>
 
         <cs309.a1.shared.Button
             android:id="@+id/btMainMenu"
             style="@style/GameButton"
-            android:layout_marginBottom="8dip"
-            android:layout_marginLeft="35dip"
-            android:layout_marginRight="35dip"
-            android:text="@string/main_menu" android:textSize="30sp"/>
-        
-        <cs309.a1.shared.Button
-            android:id="@+id/btExitGame"
-            style="@style/GameButton"
-            android:layout_marginBottom="8dip"
-            android:layout_marginLeft="35dip"
-            android:layout_marginRight="35dip"
-            android:text="@string/exit_game"
-            android:textSize="30sp"/>
+            android:layout_marginBottom="15dip"
+            android:layout_marginLeft="85dip"
+            android:layout_marginRight="85dip"
+            android:text="@string/main_menu"/>
         
     </LinearLayout>
 
