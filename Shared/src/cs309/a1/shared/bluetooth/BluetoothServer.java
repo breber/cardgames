@@ -74,6 +74,7 @@ public class BluetoothServer extends BluetoothCommon {
 				break;
 			case BluetoothConstants.READ_MESSAGE:
 				Intent i1 = new Intent(BluetoothConstants.MESSAGE_RX_INTENT);
+				i1.putExtra(BluetoothConstants.KEY_MESSAGE_TYPE, data.getInt(BluetoothConstants.KEY_MESSAGE_TYPE));
 				i1.putExtra(BluetoothConstants.KEY_MESSAGE_RX, data.getString(BluetoothConstants.KEY_MESSAGE_RX));
 				i1.putExtra(BluetoothConstants.KEY_DEVICE_ID, data.getString(BluetoothConstants.KEY_DEVICE_ID));
 				mContext.sendBroadcast(i1);
@@ -187,7 +188,7 @@ public class BluetoothServer extends BluetoothCommon {
 		// connected devices
 		if (address.length == 0) {
 			for (BluetoothConnectionService service : services.values()) {
-				if (!performWrite(service, obj)) {
+				if (!performWrite(service, messageType, obj)) {
 					retVal = false;
 				}
 			}
@@ -197,7 +198,7 @@ public class BluetoothServer extends BluetoothCommon {
 				BluetoothConnectionService service = services.get(addr);
 
 				if (service != null) {
-					if (!performWrite(service, obj)) {
+					if (!performWrite(service, messageType, obj)) {
 						retVal = false;
 					}
 				}

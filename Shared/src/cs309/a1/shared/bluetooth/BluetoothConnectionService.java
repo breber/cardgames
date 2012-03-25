@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -407,10 +410,13 @@ public class BluetoothConnectionService {
 					// Read from the InputStream
 					bytes = mmInStream.read(buffer);
 
+					JSONObject obj = new JSONObject(new String(buffer, 0, bytes));
+
 					// Send the obtained bytes to the UI Activity
 					Message msg = mHandler.obtainMessage(BluetoothConstants.READ_MESSAGE, -1, -1, null);
 					Bundle data = new Bundle();
-					data.putString(BluetoothConstants.KEY_MESSAGE_RX, new String(buffer, 0, bytes));
+					data.putInt(BluetoothConstants.KEY_MESSAGE_TYPE, obj.getInt(BluetoothConstants.KEY_MESSAGE_TYPE));
+					data.putString(BluetoothConstants.KEY_MESSAGE_RX, obj.get(BluetoothConstants.KEY_MSG_DATA).toString());
 					data.putString(BluetoothConstants.KEY_DEVICE_ID, deviceAddress);
 					msg.setData(data);
 					msg.sendToTarget();
@@ -420,6 +426,8 @@ public class BluetoothConnectionService {
 					// Start the service over to restart listening mode
 					BluetoothConnectionService.this.start();
 					break;
+				} catch (JSONException e) {
+					e.printStackTrace();
 				}
 			}
 		}

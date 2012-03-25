@@ -25,6 +25,9 @@ public class BluetoothConstants {
 	public static final String KEY_MESSAGE_RX = "MSG";
 	public static final String KEY_MESSAGE_TYPE = "MSG_TYPE";
 
+	// The data key for message send/receive - protected
+	// because only Bluetooth needs to know about it
+	protected static final String KEY_MSG_DATA = "DATA";
 
 	// Constants that indicate the current connection state
 	public static final int STATE_NONE = 0;       // we're doing nothing

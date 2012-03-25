@@ -70,6 +70,7 @@ public class BluetoothClient extends BluetoothCommon {
 				break;
 			case BluetoothConstants.READ_MESSAGE:
 				Intent i1 = new Intent(BluetoothConstants.MESSAGE_RX_INTENT);
+				i1.putExtra(BluetoothConstants.KEY_MESSAGE_TYPE, data.getInt(BluetoothConstants.KEY_MESSAGE_TYPE));
 				i1.putExtra(BluetoothConstants.KEY_MESSAGE_RX, data.getString(BluetoothConstants.KEY_MESSAGE_RX));
 				i1.putExtra(BluetoothConstants.KEY_DEVICE_ID, data.getString(BluetoothConstants.KEY_DEVICE_ID));
 				mContext.sendBroadcast(i1);
@@ -152,6 +153,6 @@ public class BluetoothClient extends BluetoothCommon {
 	 */
 	@Override
 	public boolean write(int messageType, Object obj, String ... address) {
-		return performWrite(mService, obj);
+		return performWrite(mService, messageType, obj);
 	}
 }
