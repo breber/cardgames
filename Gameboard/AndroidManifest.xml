@@ -23,39 +23,49 @@
         android:theme="@android:style/Theme.Black.NoTitleBar" >
         <activity
             android:name=".activities.MainMenu"
-            android:label="@string/application_name"
-           >
+            android:label="@string/application_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.AboutActivity" 
-            android:screenOrientation="landscape"/>
-        <activity android:name=".activities.ConnectActivity" 
-            android:screenOrientation="landscape"/>
-        <activity android:name=".activities.ConnectionFailActivity" 
-            android:screenOrientation="landscape"/>
-        <activity android:name=".activities.GameboardActivity" 
-            android:screenOrientation="landscape"/>
-        <activity android:name=".activities.GameResultsActivity" 
-            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".activities.AboutActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.ConnectActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.ConnectionFailActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+        <activity
+            android:name=".activities.GameboardActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.GameResultsActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
         <activity
             android:name=".activities.PauseMenuActivity"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar.MinWidth" 
-            android:screenOrientation="landscape"/>
-        <activity android:name=".activities.QuitAppicationActivity"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar.MinWidth" 
-            android:screenOrientation="landscape"/>
-        <activity android:name=".activities.QuitGameActivity"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar.MinWidth" 
-            android:screenOrientation="landscape"/>
-        <activity android:name=".activities.QuitApplicationActivity"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar.MinWidth" 
-            android:screenOrientation="landscape"/>
-        <activity android:name=".activities.RulesActivity" 
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+        <activity
+            android:name=".activities.QuitAppicationActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+        <activity
+            android:name=".activities.QuitGameActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+        <activity
+            android:name=".activities.QuitApplicationActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+        <activity
+            android:name=".activities.RulesActivity"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

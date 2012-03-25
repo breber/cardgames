@@ -6,7 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -23,18 +26,59 @@ import cs309.a1.shared.Game;
 import cs309.a1.shared.Player;
 import cs309.a1.shared.Rules;
 import cs309.a1.shared.Util;
+import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.bluetooth.BluetoothServer;
 
 public class GameboardActivity extends Activity {
+	/**
+	 * The Logcat Debug tag
+	 */
 	private static final String TAG = GameboardActivity.class.getName();
 
-	private static final int QUIT_GAME = "QUIT_GAME".hashCode();
+	/**
+	 * The request code to keep track of the "Are you sure you want to quit" activity
+	 */
+	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
+
+	/**
+	 * The request code to keep track of the "You have been disconnected" activity
+	 */
+	private static final int DISCONNECTED = Math.abs("DISCONNECTED".hashCode());
+
 	private static Game game = null;
+
+	/**
+	 * The BroadcastReceiver for handling messages from the Bluetooth connection
+	 */
+	private BroadcastReceiver receiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+
+			if (BluetoothConstants.MESSAGE_RX_INTENT.equals(action)) {
+				// TODO: handle the message
+			} else if (BluetoothConstants.STATE_CHANGE_INTENT.equals(action)) {
+				// Handle a state change
+				int newState = intent.getIntExtra(BluetoothConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_NONE);
+
+				// If the new state is anything but connected, display the "You have been disconnected" screen
+				if (newState != BluetoothConstants.STATE_CONNECTED) {
+					Intent i = new Intent(GameboardActivity.this, ConnectionFailActivity.class);
+					startActivityForResult(i, DISCONNECTED);
+				}
+			}
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gameboard);
+
+		// Register the receiver for message/state change intents
+		registerReceiver(receiver, new IntentFilter(BluetoothConstants.MESSAGE_RX_INTENT));
+		registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
+
 		BluetoothServer bts = BluetoothServer.getInstance(this);
 
 		int numOfConnections = bts.getConnectedDeviceCount();
@@ -100,7 +144,11 @@ public class GameboardActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
+		// Disconnect Bluetooth connection
 		BluetoothServer.getInstance(this).disconnect();
+
+		// Unregister the receiver
+		unregisterReceiver(receiver);
 
 		super.onDestroy();
 	}
