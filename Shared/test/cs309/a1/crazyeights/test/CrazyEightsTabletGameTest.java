@@ -1,8 +1,7 @@
 package cs309.a1.crazyeights.test;
 
-import static cs309.a1.shared.CardGame.CRAZY_EIGHTS;
 import static cs309.a1.crazyeights.Constants.NUMBER_OF_CARDS_PER_HAND;
-
+import static cs309.a1.shared.CardGame.CRAZY_EIGHTS;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -354,7 +353,7 @@ public class CrazyEightsTabletGameTest {
 		
 		game.shuffleDiscardPile();
 		assertEquals("Testing size of the discard pile", 1, game.getDiscardPile().size());
-		assertEquals("Testing size of the shuffled deck", 43, game.getShuffledDeck().size());
+		assertEquals("Testing size of the shuffled deck", 40, game.getShuffledDeck().size());
 		
 	}
 	
