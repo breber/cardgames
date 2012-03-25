@@ -405,6 +405,37 @@ public class CrazyEightsTabletGameTest {
 		assertEquals("Testing size of players", 1, game.getPlayers().size());		
 	}
 	
+	@Test
+	public void getTopOfDiscardPile(){
+		setupGame();
+		Player p = game.getPlayers().get(0);
+		
+		Card c = p.getCards().get(0);
+		
+		game.discard(p, c);
+		
+		assertEquals("Testing discard pile top", c, game.getDiscardPileTop());
+		
+	}
+	
+	@Test
+	public void getNumPlayersTest(){
+		setup();
+		
+		assertEquals("Testing number of players", 2, game.getNumPlayers());
+	}
+	
+	@Test
+	public void testDropGetNumPlayers(){
+		setup();
+		
+		Player p = game.getPlayers().get(0);
+		
+		game.dropPlayer(p);
+		
+		assertEquals("Testing number of players", 1, game.getNumPlayers());
+		
+	}
 	
 	/**
 	 * Tear down

@@ -296,4 +296,12 @@ public class CrazyEightsTabletGame implements Game{
 	public Card getDiscardPileTop(){
 		return discardPile.get(discardPile.size()-1);
 	}
+	
+	/**
+	 * This method will return the number of players in the present game
+	 * @return an integer representing the number of players
+	 */
+	public int getNumPlayers(){
+		return players.size();
+	}
 }
