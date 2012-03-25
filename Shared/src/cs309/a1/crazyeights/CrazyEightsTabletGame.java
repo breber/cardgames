@@ -222,13 +222,8 @@ public class CrazyEightsTabletGame implements Game{
 	 */
 	@Override
 	public void discard(Player player, Card card){
-		//add the given card to the discard pile
-		//if(rules.checkCard(card, discardPile.get(discardPile.size()-1))){
 		discardPile.add(card);
 		player.removeCard(card);
-		//}else{
-		//do not allow.
-		//}
 	}
 
 	/**
