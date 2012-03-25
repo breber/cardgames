@@ -15,7 +15,7 @@
     	android:layout_marginTop="10dip">
 	    
 	  	<cs309.a1.shared.Button
-	        android:id="@+id/btDraw"
+	        android:id="@+id/btDrawCard"
 	        style="@style/GameButton"
 	        android:layout_width="225dip"
 	        android:layout_marginBottom="5dip"
@@ -36,7 +36,7 @@
     	android:layout_marginTop="10dip">
 	    
 	  	<cs309.a1.shared.Button
-	        android:id="@+id/btPlay"
+	        android:id="@+id/btPlayCard"
 	        style="@style/GameButton"
 	        android:layout_width="225dip"
 	        android:layout_marginBottom="5dip"

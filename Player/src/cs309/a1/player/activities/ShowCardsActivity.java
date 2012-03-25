@@ -19,12 +19,20 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.animation.ScaleAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+import cs309.a1.crazyeights.CrazyEightGameRules;
 import cs309.a1.crazyeights.CrazyEightsCardTranslator;
 import cs309.a1.player.R;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.CardTranslator;
+import cs309.a1.shared.Rules;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothClient;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
@@ -48,7 +56,17 @@ public class ShowCardsActivity extends Activity{
 	 */
 	private static final int DISCONNECTED = Math.abs("DISCONNECTED".hashCode());
 
+	private SimpleOnGestureListener gestureDetector;
+	
 	private ArrayList<Card> cardHand;
+	
+	private Card cardSelected;
+	
+	private Card cardOnDiscard;
+	
+	private Rules gameRules;
+	
+	private boolean isTurn;
 
 	/**
 	 * The BroadcastReceiver for handling messages from the Bluetooth connection
@@ -105,10 +123,37 @@ public class ShowCardsActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.player_hand);
 		cardHand = new ArrayList<Card>();
+		
+		//check which game we are playing then set rules
+		gameRules = new CrazyEightGameRules();
 
 		// Register the receiver for message/state change intents
 		registerReceiver(receiver, new IntentFilter(BluetoothConstants.MESSAGE_RX_INTENT));
 		registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
+		
+		Button play = (Button) findViewById(R.id.btPlayCard);
+		Button draw = (Button) findViewById(R.id.btDrawCard);
+		
+		
+		play.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				if (Util.isDebugBuild()) {
+					Toast.makeText(getApplicationContext(), "Play Pressed", 100);
+					isTurn=true;
+				}
+				
+				if(isTurn && gameRules.checkCard(cardSelected, cardOnDiscard)){
+					//play card
+					
+					removeFromHand(cardSelected.getIdNum());
+					
+					if (Util.isDebugBuild()) {
+						Toast.makeText(getApplicationContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), 100);
+					}
+				}
+				
+			}
+		});
 	}
 
 	/* (non-Javadoc)
@@ -177,6 +222,7 @@ public class ShowCardsActivity extends Activity{
 			toAdd.setImageResource(cardHand.get(i).getResourceId());
 			toAdd.setId(cardHand.get(i).getIdNum());
 			toAdd.setAdjustViewBounds(true);
+			toAdd.setOnLongClickListener(new MyLongClickListener()); //this is a private class below
 			ll.addView(toAdd, lp);
 		}
 	}
@@ -207,5 +253,31 @@ public class ShowCardsActivity extends Activity{
 		public int compare(Card card1, Card card2) {
 			return card1.getIdNum() - card2.getIdNum();
 		}
+	}
+	
+	private class MyLongClickListener implements View.OnLongClickListener {
+
+		public boolean onLongClick(View v) {
+			//so this means they just selected the card. 
+			//we could remove it from the hand below and place it so
+			ScaleAnimation scale = new ScaleAnimation((float)1.2, (float)1.2, (float)1.2, (float)1.2);
+			scale.scaleCurrentDuration((float) 5);
+			//v.draw(canvas);
+			//v.setScaleX((float) 1.2);
+			//v.setScaleY((float) 1.2);
+			v.startAnimation(scale);
+			int i;
+			for(i=0; i < cardHand.size(); i++){
+				if(cardHand.get(i).getIdNum() == v.getId()){
+					cardSelected= cardHand.get(i);
+				}
+			}
+			if (Util.isDebugBuild()) {
+				cardOnDiscard = cardSelected;
+			}
+			
+			return false;
+		}
+				
 	}
 }

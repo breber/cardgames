@@ -7,6 +7,9 @@ import cs309.a1.crazyeights.Constants;
 public class CrazyEightGameRules implements Rules{
 	
 	public boolean checkCard(Card cardPlayed, Card onDiscard){
+		if(cardPlayed == null || onDiscard == null){
+			return false;
+		}
 		//TODO need way to know what color the 8 changed it to
 		
 		//joker and 8 are always accepted
