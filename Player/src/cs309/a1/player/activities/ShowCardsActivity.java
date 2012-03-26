@@ -4,6 +4,7 @@ import static cs309.a1.crazyeights.Constants.ID;
 import static cs309.a1.crazyeights.Constants.SUIT;
 import static cs309.a1.crazyeights.Constants.VALUE;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,6 +28,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import cs309.a1.crazyeights.Constants;
 import cs309.a1.crazyeights.CrazyEightGameRules;
 import cs309.a1.crazyeights.CrazyEightsCardTranslator;
 import cs309.a1.player.R;
@@ -36,7 +38,6 @@ import cs309.a1.shared.Rules;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothClient;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
-import cs309.a1.shared.bluetooth.BluetoothServer;
 
 /**
  *
@@ -67,7 +68,7 @@ public class ShowCardsActivity extends Activity{
 	
 	private Rules gameRules;
 	
-	private boolean isTurn;
+	private boolean isTurn = false;
 	
 	BluetoothClient btc;
 
@@ -86,25 +87,59 @@ public class ShowCardsActivity extends Activity{
 				CardTranslator ct = new CrazyEightsCardTranslator();
 
 				String object = intent.getStringExtra(BluetoothConstants.KEY_MESSAGE_RX);
-
+				int messageType = intent.getIntExtra(BluetoothConstants.KEY_MESSAGE_TYPE, -1);
+				
 				if (Util.isDebugBuild()) {
 					Log.d(TAG, object);
 				}
 
-				// Parse the Message if it was a card
-				try {
-					JSONArray arr = new JSONArray(object);
-
-					for (int i = 0; i < arr.length(); i++) {
-						JSONObject obj = arr.getJSONObject(i);
-						int suit = obj.getInt(SUIT);
-						int value = obj.getInt(VALUE);
-						int id = obj.getInt(ID);
-						addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
-					}
-				} catch (JSONException ex) {
-					ex.printStackTrace();
+				switch(messageType){
+					case Constants.SETUP: 
+						// Parse the Message if it was the original setup
+						try {
+							JSONArray arr = new JSONArray(object);
+							arr.getJSONObject(0);
+							for (int i = 0; i < arr.length(); i++) {
+								JSONObject obj = arr.getJSONObject(i);
+								int suit = obj.getInt(SUIT);
+								int value = obj.getInt(VALUE);
+								int id = obj.getInt(ID);
+								addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+							}
+						} catch (JSONException ex) {
+							ex.printStackTrace();
+						}
+						break;
+					case Constants.IS_TURN:
+						try {
+							JSONObject obj = new JSONObject(object);
+							int suit = obj.getInt(SUIT);
+							int value = obj.getInt(VALUE);
+							int id = obj.getInt(ID);
+							cardOnDiscard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
+						} catch (JSONException ex) {
+							ex.printStackTrace();
+						}
+						isTurn = true;
+						break;
+					case Constants.CARD_DRAWN:
+						try {
+							JSONObject obj = new JSONObject(object);
+							int suit = obj.getInt(SUIT);
+							int value = obj.getInt(VALUE);
+							int id = obj.getInt(ID);
+							addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+						} catch (JSONException ex) {
+							ex.printStackTrace();
+						}
+						break;
+					case Constants.WINNER:
+						
+					case Constants.LOSER:
+						
+				
 				}
+				
 			} else if (BluetoothConstants.STATE_CHANGE_INTENT.equals(action)) {
 				// Handle a state change
 				int newState = intent.getIntExtra(BluetoothConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_NONE);
@@ -143,17 +178,22 @@ public class ShowCardsActivity extends Activity{
 		play.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (Util.isDebugBuild()) {
-					Toast.makeText(getApplicationContext(), "Play Pressed", 100);
+					Toast.makeText(getBaseContext(), "Play Pressed", 100);
 					isTurn=true;
 				}
 				
 				if(isTurn && gameRules.checkCard(cardSelected, cardOnDiscard)){
 					//play card
-					//btc.write(cardSelected, address)
+					if(cardSelected.getValue() == 8){
+						btc.write(Constants.PLAY_EIGHT, cardSelected, null);
+					}else{
+						btc.write(Constants.PLAY_CARD, cardSelected, null);
+						Toast.makeText(getApplicationContext(), "playing : " + cardSelected.getValue(), Toast.LENGTH_SHORT).show();
+					}
 					removeFromHand(cardSelected.getIdNum());
 					
 					if (Util.isDebugBuild()) {
-						Toast.makeText(getApplicationContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), 100);
+						Toast.makeText(getBaseContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), 100);
 					}
 				}
 				
@@ -275,11 +315,14 @@ public class ShowCardsActivity extends Activity{
 					cardSelected= cardHand.get(i);
 				}
 			}
+			
+			//please take out once bluetooth is working with receiving card on discard
+			//TODO
 			if (Util.isDebugBuild()) {
-				cardOnDiscard = cardSelected;
+				//cardOnDiscard = cardSelected;
 			}
 			
-			return false;
+			return true;
 		}
 				
 	}
