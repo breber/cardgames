@@ -14,23 +14,39 @@ import cs309.a1.shared.activities.DeviceListActivity;
 import cs309.a1.shared.bluetooth.BluetoothClient;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
 
+/**
+ * The Activity that initiates the device list, and then
+ * waits for the Bluetooth connection to be made, and finally
+ * waits for the game to begin before moving on to display
+ * the user's hand.
+ */
 public class ConnectActivity extends Activity {
 
+	/**
+	 * The request code to handle the result of the device list Activity
+	 */
 	private static int DEVICE_LIST_RESULT = Math.abs(DeviceListActivity.class.getName().hashCode());
 
-	private Context mContext;
-
+	/**
+	 * Indicates whether the game is ready to start (a Bluetooth connection has been established)
+	 */
 	private boolean readyToStart = false;
 
+	/**
+	 * The BroadcastReceiver that handles state change messages
+	 * from the Bluetooth module.
+	 */
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			int currentState = intent.getIntExtra(BluetoothConstants.KEY_STATE_MESSAGE, -1);
 
 			if (Util.isDebugBuild()) {
-				Toast.makeText(mContext, "onReceive " + currentState, Toast.LENGTH_LONG).show();
+				Toast.makeText(ConnectActivity.this, "onReceive " + currentState, Toast.LENGTH_LONG).show();
 			}
 
+			// If the Bluetooth state is connected, update the message displayed,
+			// and register a new receiver to handle the game initiation message
 			if (currentState == BluetoothConstants.STATE_CONNECTED) {
 				readyToStart = true;
 
@@ -40,22 +56,28 @@ public class ConnectActivity extends Activity {
 				// Register the receiver for receiving messages from Bluetooth
 				registerReceiver(gameStartReceiver, new IntentFilter(BluetoothConstants.MESSAGE_RX_INTENT));
 			} else if (currentState == BluetoothConstants.STATE_LISTEN) {
+				// If we went back to the listen state, display the device list
+				// because we are no longer connected like we used to be
+				readyToStart = false;
+
 				Intent showDeviceList = new Intent(ConnectActivity.this, DeviceListActivity.class);
 				startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
 			}
 		}
 	};
 
-
+	/**
+	 * The BroadcastReceiver that handles the game initiation message
+	 * from the Bluetooth module
+	 */
 	private BroadcastReceiver gameStartReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			int messageType = intent.getIntExtra(BluetoothConstants.KEY_MESSAGE_TYPE, 0);
 
-			if (Util.isDebugBuild()) {
-				Toast.makeText(mContext, "messageType = " + messageType, Toast.LENGTH_SHORT).show();
-			}
-
+			// If we have a Bluetooth connection, and this message is indicating
+			// that the game has been initiated by the tablet, start the ShowCardsActivity
+			// and finish this Activity.
 			if (readyToStart && messageType == BluetoothConstants.MSG_TYPE_INIT) {
 				// We connected just fine, so bring them to the ShowCardsActivity, and close
 				// this activity out.
@@ -64,24 +86,33 @@ public class ConnectActivity extends Activity {
 
 				ConnectActivity.this.setResult(RESULT_OK);
 				ConnectActivity.this.finish();
+			} else {
+				if (Util.isDebugBuild()) {
+					Toast.makeText(ConnectActivity.this, "messageType: " + messageType, Toast.LENGTH_SHORT).show();
+				}
 			}
 		}
 	};
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.connect);
-
-		mContext = this;
 
 		// Show the device list
 		Intent showDeviceList = new Intent(this, DeviceListActivity.class);
 		startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onDestroy()
+	 */
 	@Override
 	protected void onDestroy() {
+		// Unregister all the receivers we may have registered
 		try {
 			unregisterReceiver(receiver);
 		} catch (IllegalArgumentException e) {
@@ -96,13 +127,19 @@ public class ConnectActivity extends Activity {
 		super.onDestroy();
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == DEVICE_LIST_RESULT && resultCode != RESULT_CANCELED) {
+			// We are coming back from the device list, and it wasn't cancelled, so
+			// grab the MAC address from the result intent, and start connection
 			String macAddress = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
 			BluetoothClient client = BluetoothClient.getInstance(getApplicationContext());
 			client.connect(macAddress);
 
+			// Start listening for connection state changes
 			registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
 		} else {
 			// The user cancelled out of the device list, so return them to the main menu

@@ -49,6 +49,7 @@ To use this application properly, download the application titled “Crazy Eight
     
     <!-- Connect Screen Handheld -->
     <string name="connecting">Connecting&#8230;</string>
+    <string name="waitingForGame">Waiting for game to begin&#8230;</string>
     
     <!-- Connect Devices -->
     <string name="start">Start</string>

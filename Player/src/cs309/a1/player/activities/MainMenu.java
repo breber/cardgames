@@ -11,7 +11,7 @@ import cs309.a1.shared.SoundManager;
 
 public class MainMenu extends Activity {
 
-	private static final int QUIT_GAME = "QUIT_GAME".hashCode();
+	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

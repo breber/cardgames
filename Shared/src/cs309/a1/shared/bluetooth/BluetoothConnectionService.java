@@ -290,7 +290,7 @@ public class BluetoothConnectionService {
 			// Always cancel discovery because it will slow down a connection
 			mAdapter.cancelDiscovery();
 
-			while (timesTried != -1 && timesTried < 3) {
+			while (timesTried != -1 && timesTried < 5) {
 				// Make a connection to the BluetoothSocket
 				try {
 					// This is a blocking call and will only return on a
