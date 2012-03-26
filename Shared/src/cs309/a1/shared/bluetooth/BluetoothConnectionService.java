@@ -442,9 +442,6 @@ public class BluetoothConnectionService {
 		public void write(byte[] buffer) {
 			try {
 				mmOutStream.write(buffer);
-
-				// Share the sent message back to the UI Activity
-				mHandler.obtainMessage(BluetoothConstants.WRITE_MESSAGE, -1, -1, buffer).sendToTarget();
 			} catch (IOException e) {
 				Log.e(TAG, "Exception during write", e);
 			}

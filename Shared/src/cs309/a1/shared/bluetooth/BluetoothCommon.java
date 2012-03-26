@@ -29,9 +29,8 @@ public abstract class BluetoothCommon {
 	 * @return whether the message was written or not
 	 */
 	protected boolean performWrite(BluetoothConnectionService service, int messageType, Object obj) {
+		// If we aren't connected, return false
 		if (service.getState() != BluetoothConstants.STATE_CONNECTED) {
-			// TODO: we probably want to try and reconnect before just saying
-			// that we aren't connected...
 			return false;
 		}
 
