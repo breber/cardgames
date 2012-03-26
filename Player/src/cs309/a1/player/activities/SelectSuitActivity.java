@@ -3,6 +3,7 @@ package cs309.a1.player.activities;
 import static cs309.a1.crazyeights.Constants.SUIT_CLUBS;
 import static cs309.a1.crazyeights.Constants.SUIT_DIAMONDS;
 import static cs309.a1.crazyeights.Constants.SUIT_HEARTS;
+import static cs309.a1.crazyeights.Constants.SUIT_SPADES;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,7 +21,7 @@ public class SelectSuitActivity extends Activity{
 		Button spade = (Button) findViewById(R.id.Spades);
 		spade.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				setResult(SUIT_DIAMONDS);
+				setResult(SUIT_SPADES);
 				finish();
 			}
 		});
