@@ -195,12 +195,13 @@ public class CrazyEightsTabletGameTest {
 		assertEquals("Testing size of the discard pile", 1, game.getDiscardPile().size());
 		assertEquals("Testing size of the shuffled deck", 43, game.getShuffledDeck().size());
 		
-		game.draw(p);
+		Card c = game.draw(p);
 		
 		assertEquals("Testing size of players hand", 6, p.getCards().size());
 		assertEquals("Testing size of players hand", 6, p.getNumCards());
 		assertEquals("Testing size of the discard pile", 1, game.getDiscardPile().size());
 		assertEquals("Testing size of the shuffled deck", 42, game.getShuffledDeck().size());
+		assertEquals("Testing card returned", c, p.getCards().get(5));
 	}
 	
 	/**
