@@ -10,7 +10,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.ParcelUuid;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import cs309.a1.shared.R;
 import cs309.a1.shared.Util;
+import cs309.a1.shared.bluetooth.BluetoothConstants;
 
 /**
  * This Activity lists all devices that are discoverable, or paired and
@@ -245,9 +248,16 @@ public class DeviceListActivity extends Activity {
 			if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 				// Get the BluetoothDevice object from the Intent
 				BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+				boolean display = true;
+
+				// If we are running SDK version 15 or higher, check to see if the remote
+				// device is running a server using the UUID we specified.
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+					display = checkUuids(device);
+				}
 
 				// If we already have a device with the same name in the list, skip it
-				if (!deviceNames.contains(device.getName())) {
+				if (!deviceNames.contains(device.getName()) && display) {
 					// Otherwise display the device in the list
 					deviceNames.add(device.getName());
 					noDevicesFound.setVisibility(View.GONE);
@@ -265,5 +275,32 @@ public class DeviceListActivity extends Activity {
 			}
 		}
 	};
+
+	/**
+	 * SDK version 15 and higher have the ability to get a remote
+	 * device's UUIDs for the Bluetooth services it is running. We
+	 * will check to see if they are running the server before we add
+	 * them to the list if we have that capability.
+	 * 
+	 * @param dev the remote Bluetooth device
+	 * @return whether they have a service running on BluetoothConstants.MY_UUID
+	 */
+	private boolean checkUuids(BluetoothDevice dev) {
+		for (ParcelUuid uuid : dev.getUuids()) {
+			if (BluetoothConstants.MY_UUID.equals(uuid.getUuid())) {
+				if (Util.isDebugBuild()) {
+					Log.d(TAG, "checkUuids: match found for UUID " + BluetoothConstants.MY_UUID);
+				}
+
+				return true;
+			}
+		}
+
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "checkUuids: no match found for UUID " + BluetoothConstants.MY_UUID);
+		}
+
+		return false;
+	}
 }
 
