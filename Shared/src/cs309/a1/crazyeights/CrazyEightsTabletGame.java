@@ -246,14 +246,15 @@ public class CrazyEightsTabletGame implements Game{
 	 * @param player the player who chooses to draw the card
 	 */
 	@Override
-	public void draw(Player player){
+	public Card draw(Player player){
 		if(!iter.hasNext()){
 			this.shuffleDiscardPile();
 			//maybe refresh gui or something here
 		}
 
+		Card card = iter.next();
 		//get a card out of the shuffled pile and add to the players hand
-		player.addCard(iter.next());
+		player.addCard(card);
 
 		//remove the last card returned by iter.next()
 		iter.remove();
@@ -262,6 +263,8 @@ public class CrazyEightsTabletGame implements Game{
 		if (shuffledDeck.isEmpty()) {
 			shuffleDiscardPile();
 		}
+		
+		return card;
 	}
 
 	/**
