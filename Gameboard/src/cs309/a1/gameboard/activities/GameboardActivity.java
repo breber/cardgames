@@ -172,12 +172,12 @@ public class GameboardActivity extends Activity {
 		game = CrazyEightsTabletGame.getInstance(players, deck, rules);
 		game.setup();
 
-		for (int i = 0; i < players.size(); i++) {
+		for (Player p : players) {
 			if (Util.isDebugBuild()) {
-				Log.d(TAG, "Player" + i + ": " + players.get(i));
+				Log.d(TAG, p.getName() + ": " + p);
 			}
 
-			bts.write(Constants.SETUP, players.get(i), players.get(i).getId());
+			bts.write(Constants.SETUP, p, p.getId());
 		}
 
 		// If it is a debug build, show the cards face up so that we can

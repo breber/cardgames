@@ -110,6 +110,8 @@ public class ShowCardsActivity extends Activity{
 						} catch (JSONException ex) {
 							ex.printStackTrace();
 						}
+						setButtonsEnabled(false);
+						isTurn=false;
 						break;
 					case Constants.IS_TURN:
 						
