@@ -84,7 +84,6 @@
 		    android:paddingRight="100dip" />
 		<ImageView
 		    android:id="@+id/discardpile"
-		    android:src="@drawable/clubs_3"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:adjustViewBounds="true" />

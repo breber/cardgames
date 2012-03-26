@@ -43,9 +43,9 @@ import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.bluetooth.BluetoothServer;
 
 public class GameboardActivity extends Activity {
-	
+
 	private static final int EXIT_GAME = "EXIT_GAME".hashCode();
-	
+
 	/**
 	 * The Logcat Debug tag
 	 */
@@ -60,20 +60,20 @@ public class GameboardActivity extends Activity {
 	 * The request code to keep track of the "You have been disconnected" activity
 	 */
 	private static final int DISCONNECTED = Math.abs("DISCONNECTED".hashCode());
-	
+
 	private BluetoothServer bts;
-	
+
 	List<Player> players;
 
 	private static Game game = null;
-	
+
 	CardTranslator ct = new CrazyEightsCardTranslator();
-	
-	
+
+
 	/**
 	 * This will be 0 to 3 to indicate the spot in the players array for the player currently taking their turn
 	 */
-	private int whoseTurn = 0; 
+	private int whoseTurn = 0;
 
 	/**
 	 * The BroadcastReceiver for handling messages from the Bluetooth connection
@@ -87,32 +87,32 @@ public class GameboardActivity extends Activity {
 				String object = intent.getStringExtra(BluetoothConstants.KEY_MESSAGE_RX);
 				int messageType = intent.getIntExtra(BluetoothConstants.KEY_MESSAGE_TYPE, -1);
 				Card tmpCard = new Card(Constants.SUIT_JOKER, 0, ct.getResourceForCardWithId(52), 52);
-				
+
 				switch(messageType){
-					case Constants.PLAY_CARD: 
-						try {
-							JSONObject obj = new JSONObject(object);
-							int suit = obj.getInt(SUIT);
-							int value = obj.getInt(VALUE);
-							int id = obj.getInt(ID);
-							tmpCard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
-							Toast.makeText(getApplicationContext(), "playing : " + tmpCard.getValue(), Toast.LENGTH_SHORT).show();
-							game.discard(players.get(whoseTurn), tmpCard);
-						} catch (JSONException ex) {
-							ex.printStackTrace();
-						}
-						placeCard(0, tmpCard);
-						advanceTurn();
-						break;
-					case Constants.PLAY_EIGHT:
-						
-						advanceTurn();
-						break;
-					case Constants.DRAW_CARD:
-						drawCard();
-						
-						advanceTurn();
-						break; 
+				case Constants.PLAY_CARD:
+					try {
+						JSONObject obj = new JSONObject(object);
+						int suit = obj.getInt(SUIT);
+						int value = obj.getInt(VALUE);
+						int id = obj.getInt(ID);
+						tmpCard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
+						Toast.makeText(getApplicationContext(), "playing : " + tmpCard.getValue(), Toast.LENGTH_SHORT).show();
+						game.discard(players.get(whoseTurn), tmpCard);
+					} catch (JSONException ex) {
+						ex.printStackTrace();
+					}
+					placeCard(0, tmpCard);
+					advanceTurn();
+					break;
+				case Constants.PLAY_EIGHT:
+
+					advanceTurn();
+					break;
+				case Constants.DRAW_CARD:
+					drawCard();
+
+					advanceTurn();
+					break;
 				}
 				// TODO: handle the message
 			} else if (BluetoothConstants.STATE_CHANGE_INTENT.equals(action)) {
@@ -130,12 +130,12 @@ public class GameboardActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gameboard);
-		
+
 		ImageButton pause = (ImageButton) findViewById(R.id.gameboard_pause);
-		
+
 		pause.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -151,7 +151,7 @@ public class GameboardActivity extends Activity {
 		bts = BluetoothServer.getInstance(this);
 
 		int numOfConnections = bts.getConnectedDeviceCount();
-		players = new ArrayList<Player>(); 
+		players = new ArrayList<Player>();
 		List<String> devices = bts.getConnectedDevices();
 
 		for (int i = 0; i < numOfConnections; i++){
@@ -193,6 +193,8 @@ public class GameboardActivity extends Activity {
 				placeCard(i, new Card(5, 0, R.drawable.back_blue_1, 54));
 				placeCard(i, new Card(5, 0, R.drawable.back_blue_1, 54));
 			}
+
+			placeCard(0, game.getDiscardPileTop());
 		} else {
 			// Otherwise just show the back of the cards for all players
 			for (int i = 1; i < 5 * 5; i++) {
@@ -201,7 +203,7 @@ public class GameboardActivity extends Activity {
 
 			placeCard(0, game.getDiscardPileTop());
 		}
-		
+
 		advanceTurn();
 	}
 
@@ -237,7 +239,7 @@ public class GameboardActivity extends Activity {
 				// TODO: CONNECT DIFFERENT PLAYER
 			}
 		}
-		
+
 		if (requestCode == EXIT_GAME) {
 			if (resultCode == RESULT_OK) {
 				// Finish this activity
@@ -304,26 +306,26 @@ public class GameboardActivity extends Activity {
 			draw.setImageResource(newCard.getResourceId());
 		}
 	}
-	
+
 	private void advanceTurn(){
 		int numPlayers = game.getNumPlayers();
-		
+
 		if(whoseTurn<numPlayers-1){
 			whoseTurn++;
 		}else{
 			whoseTurn = 0;
 		}
-		
+
 		Card onDiscard = game.getDiscardPileTop();
 		bts.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn).getId());
 	}
-	
+
 	/**
 	 * This draws a card in the tablet game instance and sends that card to the player
 	 */
 	private void drawCard(){
 		Card tmpCard = game.draw(players.get(whoseTurn));
-		bts.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());		
+		bts.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
 	}
 
 }
