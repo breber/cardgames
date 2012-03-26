@@ -13,7 +13,7 @@ public class CrazyEightGameRules implements Rules{
 		//TODO need way to know what color the 8 changed it to
 		
 		//joker and 8 are always accepted
-		if(cardPlayed.getSuit() == Constants.SUIT_JOKER || cardPlayed.getValue() == 8){
+		if(cardPlayed.getSuit() == Constants.SUIT_JOKER || cardPlayed.getValue() == 7){ //this 7 is the card value of an 8
 			return true;
 		}
 		//anything can be played on a joker

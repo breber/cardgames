@@ -109,7 +109,7 @@ public class GameboardActivity extends Activity {
 						advanceTurn();
 						break;
 					case Constants.DRAW_CARD:
-						
+						drawCard();
 						
 						advanceTurn();
 						break; 
@@ -151,7 +151,7 @@ public class GameboardActivity extends Activity {
 		bts = BluetoothServer.getInstance(this);
 
 		int numOfConnections = bts.getConnectedDeviceCount();
-		players = new ArrayList<Player>();
+		players = new ArrayList<Player>(); 
 		List<String> devices = bts.getConnectedDevices();
 
 		for (int i = 0; i < numOfConnections; i++){
@@ -316,6 +316,14 @@ public class GameboardActivity extends Activity {
 		
 		Card onDiscard = game.getDiscardPileTop();
 		bts.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn).getId());
+	}
+	
+	/**
+	 * This draws a card in the tablet game instance and sends that card to the player
+	 */
+	private void drawCard(){
+		Card tmpCard = game.draw(players.get(whoseTurn));
+		bts.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());		
 	}
 
 }

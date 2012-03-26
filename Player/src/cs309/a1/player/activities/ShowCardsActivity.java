@@ -111,6 +111,7 @@ public class ShowCardsActivity extends Activity{
 						}
 						break;
 					case Constants.IS_TURN:
+						
 						try {
 							JSONObject obj = new JSONObject(object);
 							int suit = obj.getInt(SUIT);
@@ -120,6 +121,7 @@ public class ShowCardsActivity extends Activity{
 						} catch (JSONException ex) {
 							ex.printStackTrace();
 						}
+						setButtonsEnabled(true);
 						isTurn = true;
 						break;
 					case Constants.CARD_DRAWN:
@@ -174,6 +176,17 @@ public class ShowCardsActivity extends Activity{
 		Button play = (Button) findViewById(R.id.btPlayCard);
 		Button draw = (Button) findViewById(R.id.btDrawCard);
 		
+		setButtonsEnabled(false);
+				
+		draw.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				if(isTurn){
+					btc.write(Constants.DRAW_CARD, null, null);
+					setButtonsEnabled(false);
+					isTurn=false;
+				}
+			}
+		});
 		
 		play.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -184,17 +197,21 @@ public class ShowCardsActivity extends Activity{
 				
 				if(isTurn && gameRules.checkCard(cardSelected, cardOnDiscard)){
 					//play card
-					if(cardSelected.getValue() == 8){
-						btc.write(Constants.PLAY_EIGHT, cardSelected, null);
-					}else{
+					
+					//TODO this is commented out because the 8 is not yet fully implemented
+					/*if(cardSelected.getValue() == 8){ 
+						//btc.write(Constants.PLAY_EIGHT, cardSelected, null);
+					}else{*/
 						btc.write(Constants.PLAY_CARD, cardSelected, null);
 						Toast.makeText(getApplicationContext(), "playing : " + cardSelected.getValue(), Toast.LENGTH_SHORT).show();
-					}
+					//}
 					removeFromHand(cardSelected.getIdNum());
 					
 					if (Util.isDebugBuild()) {
 						Toast.makeText(getBaseContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), 100);
 					}
+					setButtonsEnabled(false);
+					isTurn=false;
 				}
 				
 			}
@@ -292,6 +309,14 @@ public class ShowCardsActivity extends Activity{
 
 		cardHand.remove(current);
 	}
+	
+	private void setButtonsEnabled(boolean isEnabled){
+		Button play = (Button) findViewById(R.id.btPlayCard);
+		Button draw = (Button) findViewById(R.id.btDrawCard);
+		
+		play.setEnabled(isEnabled);
+		draw.setEnabled(isEnabled);
+	}
 
 	//TODO: should this be moved to like the Util class, since it just compares generic cards?
 	private class CompareIdNums implements Comparator<Card> {
@@ -299,6 +324,7 @@ public class ShowCardsActivity extends Activity{
 			return card1.getIdNum() - card2.getIdNum();
 		}
 	}
+	
 	
 	private class MyLongClickListener implements View.OnLongClickListener {
 
