@@ -1,7 +1,6 @@
 package cs309.a1.player.activities;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +19,6 @@ public class ConnectActivity extends Activity {
 
 	private Context mContext;
 
-	private ProgressDialog dlg;
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -33,17 +31,12 @@ public class ConnectActivity extends Activity {
 			if (currentState == BluetoothConstants.STATE_CONNECTED) {
 				// We connected just fine, so bring them to the ShowCardsActivity, and close
 				// this activity out.
-				dlg.dismiss();
 				Intent showCards = new Intent(ConnectActivity.this, ShowCardsActivity.class);
 				startActivity(showCards);
 
 				ConnectActivity.this.setResult(RESULT_OK);
 				ConnectActivity.this.finish();
 			} else if (currentState == BluetoothConstants.STATE_LISTEN) {
-				// If we make it back to listening state, we weren't able to connect,
-				// so bring them back to the device list
-				dlg.dismiss();
-
 				Intent showDeviceList = new Intent(ConnectActivity.this, DeviceListActivity.class);
 				startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
 			}
@@ -53,7 +46,7 @@ public class ConnectActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.player_hand);
+		setContentView(R.layout.connect);
 
 		mContext = this;
 
@@ -75,10 +68,6 @@ public class ConnectActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == DEVICE_LIST_RESULT && resultCode != RESULT_CANCELED) {
-			dlg = new ProgressDialog(mContext);
-			dlg.setMessage("Waiting for connection...");
-			dlg.show();
-
 			String macAddress = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
 			BluetoothClient client = BluetoothClient.getInstance(getApplicationContext());
 			client.connect(macAddress);

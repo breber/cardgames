@@ -47,6 +47,9 @@ To use this application properly, download the application titled “Crazy Eight
     <string name="new_devices_separator">New Devices</string>
     <string name="connected_devices_separator">Connected Devices</string>
     
+    <!-- Connect Screen Handheld -->
+    <string name="connecting">Connecting&#8230;</string>
+    
     <!-- Connect Devices -->
     <string name="start">Start</string>
     <string name="deviceName">Device Name: </string>
