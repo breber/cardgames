@@ -54,6 +54,10 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
         <activity
+            android:name=".activities.SelectSuitActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+        <activity
             android:name=".activities.ShowCardsActivity"
             android:screenOrientation="landscape" />
         <activity

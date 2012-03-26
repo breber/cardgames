@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayout1"
+    style="@style/GameButton"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical" >
+
+    <cs309.a1.shared.TextView
+        android:id="@+id/textView1"
+        android:layout_width="616dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/selectsuit"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black"
+        android:textSize="45sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical" >
+
+        <cs309.a1.shared.Button
+            android:id="@+id/Hearts"
+            style="@style/GameButtonBlack"
+            android:layout_width="325dip"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:text="@string/Hearts" />
+
+        <cs309.a1.shared.Button
+            android:id="@+id/Spades"
+            style="@style/GameButtonBlack"
+            android:layout_width="325dip"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:text="@string/Spades" />
+        
+        <cs309.a1.shared.Button
+            android:id="@+id/Clubs"
+            style="@style/GameButtonBlack"
+            android:layout_width="325dip"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:text="@string/Clubs" />
+        
+        <cs309.a1.shared.Button
+            android:id="@+id/Diamonds"
+            style="@style/GameButtonBlack"
+            android:layout_width="325dip"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:text="@string/Diamonds" />
+    </LinearLayout>
+
+</LinearLayout>
