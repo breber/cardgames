@@ -16,6 +16,12 @@ public class Card {
 	private int resourceId;
 	private int idNum;
 
+	/**
+	 * @param suit
+	 * @param value
+	 * @param resourceId
+	 * @param idNum
+	 */
 	public Card(int suit, int value, int resourceId, int idNum) {
 		this.suit = suit;
 		this.value = value;

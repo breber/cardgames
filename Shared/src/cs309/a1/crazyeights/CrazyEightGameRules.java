@@ -16,6 +16,12 @@ public class CrazyEightGameRules implements Rules{
 		if(cardPlayed.getSuit() == Constants.SUIT_JOKER || cardPlayed.getValue() == 7){ //this 7 is the card value of an 8
 			return true;
 		}
+		
+		//8 is played and suit is correct
+		if(onDiscard.getValue() ==7 && onDiscard.getSuit() == cardPlayed.getSuit()){
+			return true;
+		}
+		
 		//anything can be played on a joker
 		if(onDiscard.getSuit() == Constants.SUIT_JOKER){
 			return true;

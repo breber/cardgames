@@ -43,9 +43,9 @@ import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.bluetooth.BluetoothServer;
 
 public class GameboardActivity extends Activity {
-
+	
 	private static final int EXIT_GAME = "EXIT_GAME".hashCode();
-
+	
 	/**
 	 * The Logcat Debug tag
 	 */
@@ -60,20 +60,22 @@ public class GameboardActivity extends Activity {
 	 * The request code to keep track of the "You have been disconnected" activity
 	 */
 	private static final int DISCONNECTED = Math.abs("DISCONNECTED".hashCode());
-
+	
 	private BluetoothServer bts;
-
+	
 	List<Player> players;
 
 	private static Game game = null;
-
+	
 	CardTranslator ct = new CrazyEightsCardTranslator();
-
-
+	
+	private int suitChosen = 0;
+	
+	
 	/**
 	 * This will be 0 to 3 to indicate the spot in the players array for the player currently taking their turn
 	 */
-	private int whoseTurn = 0;
+	private int whoseTurn = 0; 
 
 	/**
 	 * The BroadcastReceiver for handling messages from the Bluetooth connection
@@ -86,34 +88,38 @@ public class GameboardActivity extends Activity {
 			if (BluetoothConstants.MESSAGE_RX_INTENT.equals(action)) {
 				String object = intent.getStringExtra(BluetoothConstants.KEY_MESSAGE_RX);
 				int messageType = intent.getIntExtra(BluetoothConstants.KEY_MESSAGE_TYPE, -1);
-				Card tmpCard = new Card(Constants.SUIT_JOKER, 0, ct.getResourceForCardWithId(52), 52);
-
+				
 				switch(messageType){
-				case Constants.PLAY_CARD:
-					try {
-						JSONObject obj = new JSONObject(object);
-						int suit = obj.getInt(SUIT);
-						int value = obj.getInt(VALUE);
-						int id = obj.getInt(ID);
-						tmpCard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
-						Toast.makeText(getApplicationContext(), "playing : " + tmpCard.getValue(), Toast.LENGTH_SHORT).show();
-						game.discard(players.get(whoseTurn), tmpCard);
-					} catch (JSONException ex) {
-						ex.printStackTrace();
-					}
-					placeCard(0, tmpCard);
-					advanceTurn();
-					break;
-				case Constants.PLAY_EIGHT:
-
-					advanceTurn();
-					break;
-				case Constants.DRAW_CARD:
-					drawCard();
-
-					advanceTurn();
-					break;
+					case Constants.PLAY_CARD: 
+						discardReceivedCard(object);
+						advanceTurn();
+						break;
+					case Constants.PLAY_EIGHT_C:
+						suitChosen = Constants.SUIT_CLUBS;
+						discardReceivedCard(object);
+						advanceTurn();
+						break;
+					case Constants.PLAY_EIGHT_D:
+						suitChosen = Constants.SUIT_DIAMONDS;
+						discardReceivedCard(object);
+						advanceTurn();
+						break;
+					case Constants.PLAY_EIGHT_H:
+						suitChosen = Constants.SUIT_HEARTS;
+						discardReceivedCard(object);
+						advanceTurn();
+						break;
+					case Constants.PLAY_EIGHT_S:
+						suitChosen = Constants.SUIT_SPADES;
+						discardReceivedCard(object);
+						advanceTurn();
+						break;
+					case Constants.DRAW_CARD:
+						drawCard();
+						advanceTurn();
+						break; 
 				}
+				
 				// TODO: handle the message
 			} else if (BluetoothConstants.STATE_CHANGE_INTENT.equals(action)) {
 				// Handle a state change
@@ -130,12 +136,12 @@ public class GameboardActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gameboard);
-
+		
 		ImageButton pause = (ImageButton) findViewById(R.id.gameboard_pause);
-
+		
 		pause.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -151,7 +157,7 @@ public class GameboardActivity extends Activity {
 		bts = BluetoothServer.getInstance(this);
 
 		int numOfConnections = bts.getConnectedDeviceCount();
-		players = new ArrayList<Player>();
+		players = new ArrayList<Player>(); 
 		List<String> devices = bts.getConnectedDevices();
 
 		for (int i = 0; i < numOfConnections; i++){
@@ -203,7 +209,7 @@ public class GameboardActivity extends Activity {
 
 			placeCard(0, game.getDiscardPileTop());
 		}
-
+		
 		advanceTurn();
 	}
 
@@ -239,7 +245,7 @@ public class GameboardActivity extends Activity {
 				// TODO: CONNECT DIFFERENT PLAYER
 			}
 		}
-
+		
 		if (requestCode == EXIT_GAME) {
 			if (resultCode == RESULT_OK) {
 				// Finish this activity
@@ -306,26 +312,66 @@ public class GameboardActivity extends Activity {
 			draw.setImageResource(newCard.getResourceId());
 		}
 	}
-
+	
 	private void advanceTurn(){
+		if(game.isGameOver(players.get(whoseTurn))){
+			declareWinner(whoseTurn);
+		}
+		
 		int numPlayers = game.getNumPlayers();
-
+		
 		if(whoseTurn<numPlayers-1){
 			whoseTurn++;
 		}else{
 			whoseTurn = 0;
 		}
-
+		
 		Card onDiscard = game.getDiscardPileTop();
+		if(onDiscard.getValue() == 7){
+			onDiscard = new Card(suitChosen, onDiscard.getValue(), onDiscard.getResourceId(), onDiscard.getIdNum());			
+		}
 		bts.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn).getId());
 	}
-
+	
+	private void declareWinner(int whoWon){
+		
+		for(int i = 0; i<game.getNumPlayers(); i++){
+			if(i==whoWon){
+				bts.write(Constants.WINNER, null, players.get(i).getId());
+			}else{
+				bts.write(Constants.LOSER, null, players.get(i).getId());
+			}
+		}
+		//TODO start ending activity
+	}
+	
 	/**
 	 * This draws a card in the tablet game instance and sends that card to the player
 	 */
 	private void drawCard(){
 		Card tmpCard = game.draw(players.get(whoseTurn));
-		bts.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
+		bts.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());		
+	}
+	
+	/**
+	 * This will take in the received card and discard it
+	 * @param object
+	 */
+	private void discardReceivedCard(String object){
+		Card tmpCard = new Card(0,0,0,0);
+		try {
+			JSONObject obj = new JSONObject(object);
+			int suit = obj.getInt(SUIT);
+			int value = obj.getInt(VALUE);
+			int id = obj.getInt(ID);
+			tmpCard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
+			Toast.makeText(getApplicationContext(), "playing : " + tmpCard.getValue(), Toast.LENGTH_SHORT).show();
+			game.discard(players.get(whoseTurn), tmpCard);
+		} catch (JSONException ex) {
+			ex.printStackTrace();
+		}
+		placeCard(0, tmpCard);
+		
 	}
 
 }

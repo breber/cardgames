@@ -26,7 +26,10 @@ public class Constants {
 	//these are bluetooth messages types that can be sent by Player
 	public static final int PLAY_CARD = 5;
 	public static final int DRAW_CARD = 6;
-	public static final int PLAY_EIGHT = 7;
+	public static final int PLAY_EIGHT_C = 7;
+	public static final int PLAY_EIGHT_D = 8;
+	public static final int PLAY_EIGHT_H = 9;
+	public static final int PLAY_EIGHT_S = 10;
 	
 	
 

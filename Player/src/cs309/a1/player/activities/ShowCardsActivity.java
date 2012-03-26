@@ -4,7 +4,6 @@ import static cs309.a1.crazyeights.Constants.ID;
 import static cs309.a1.crazyeights.Constants.SUIT;
 import static cs309.a1.crazyeights.Constants.VALUE;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,6 +43,10 @@ import cs309.a1.shared.bluetooth.BluetoothConstants;
  */
 public class ShowCardsActivity extends Activity{
 	/**
+	 * intent code for choosing suit
+	 */
+	private static final int CHOOSE_SUIT = Math.abs("CHOOSE_SUIT".hashCode()); 
+	/**
 	 * The Logcat Debug tag
 	 */
 	private static final String TAG = ShowCardsActivity.class.getName();
@@ -58,8 +61,6 @@ public class ShowCardsActivity extends Activity{
 	 */
 	private static final int DISCONNECTED = Math.abs("DISCONNECTED".hashCode());
 
-	private SimpleOnGestureListener gestureDetector;
-	
 	private ArrayList<Card> cardHand;
 	
 	private Card cardSelected;
@@ -136,10 +137,15 @@ public class ShowCardsActivity extends Activity{
 						}
 						break;
 					case Constants.WINNER:
-						
+						Intent Winner = new Intent(ShowCardsActivity.this, GameResultsActivity.class);
+						Winner.putExtra(GameResultsActivity.IS_WINNER, true);
+						startActivityForResult(Winner, QUIT_GAME);
+						break;
 					case Constants.LOSER:
-						
-				
+						Intent Loser = new Intent(ShowCardsActivity.this, GameResultsActivity.class);
+						Loser.putExtra(GameResultsActivity.IS_WINNER, false);
+						startActivityForResult(Loser, QUIT_GAME);
+						break;
 				}
 				
 			} else if (BluetoothConstants.STATE_CHANGE_INTENT.equals(action)) {
@@ -189,31 +195,26 @@ public class ShowCardsActivity extends Activity{
 		});
 		
 		play.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				if (Util.isDebugBuild()) {
-					Toast.makeText(getBaseContext(), "Play Pressed", 100);
-					isTurn=true;
-				}
-				
+			public void onClick(View v) {			
 				if(isTurn && gameRules.checkCard(cardSelected, cardOnDiscard)){
 					//play card
-					
-					//TODO this is commented out because the 8 is not yet fully implemented
-					/*if(cardSelected.getValue() == 8){ 
-						//btc.write(Constants.PLAY_EIGHT, cardSelected, null);
-					}else{*/
-						btc.write(Constants.PLAY_CARD, cardSelected, null);
+					if(cardSelected.getValue() == 7){ 
+						Intent selectSuit = new Intent(ShowCardsActivity.this, SelectSuitActivity.class);
+						startActivityForResult(selectSuit, CHOOSE_SUIT);
+						//go to the onactivityresult to finish this turn
+					}else{
+						btc.write(Constants.PLAY_CARD, cardSelected);
 						Toast.makeText(getApplicationContext(), "playing : " + cardSelected.getValue(), Toast.LENGTH_SHORT).show();
-					//}
-					removeFromHand(cardSelected.getIdNum());
-					
-					if (Util.isDebugBuild()) {
-						Toast.makeText(getBaseContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), 100);
+						removeFromHand(cardSelected.getIdNum());
+						
+						if (Util.isDebugBuild()) {
+							Toast.makeText(getBaseContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), 100);
+						}
+						
+						setButtonsEnabled(false);
+						isTurn=false;
 					}
-					setButtonsEnabled(false);
-					isTurn=false;
 				}
-				
 			}
 		});
 	}
@@ -253,6 +254,27 @@ public class ShowCardsActivity extends Activity{
 			finish();
 		} else if (requestCode == DISCONNECTED) {
 			// TODO: handle the intent result from the disconnected activity
+		}else if (requestCode == CHOOSE_SUIT){
+			switch(resultCode){
+				case Constants.SUIT_CLUBS:
+					btc.write(Constants.PLAY_EIGHT_C, cardSelected, null);
+					break;
+				case Constants.SUIT_DIAMONDS:
+					btc.write(Constants.PLAY_EIGHT_D, cardSelected, null);
+					break;
+				case Constants.SUIT_HEARTS:
+					btc.write(Constants.PLAY_EIGHT_H, cardSelected, null);	
+					break;
+				case Constants.SUIT_SPADES:
+					btc.write(Constants.PLAY_EIGHT_S, cardSelected, null);
+					break;
+			}
+			removeFromHand(cardSelected.getIdNum());
+			if (Util.isDebugBuild()) {
+				Toast.makeText(getBaseContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), 100);
+			}
+			setButtonsEnabled(false);
+			isTurn=false;
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);

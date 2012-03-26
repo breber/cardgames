@@ -11,5 +11,6 @@ public interface Game {
 	public void dropPlayer(Player player);
 	public Card getDiscardPileTop();
 	public int getNumPlayers();
+	public boolean isGameOver(Player player);
 
 }

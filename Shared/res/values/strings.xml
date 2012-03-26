@@ -76,4 +76,5 @@ To use this application properly, download the application titled “Crazy Eight
     <string name="Clubs">Clubs</string>
     <string name="selectsuit">Please select a suit</string>
     <string name="Diamonds">Diamonds</string>
+    <string name="loser">You Are A Loser</string>
 </resources>
