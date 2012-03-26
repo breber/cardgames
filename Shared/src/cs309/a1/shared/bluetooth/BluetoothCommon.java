@@ -3,6 +3,9 @@ package cs309.a1.shared.bluetooth;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+import cs309.a1.shared.Util;
+
 /**
  * Common methods for Bluetooth Client and Server
  */
@@ -41,10 +44,16 @@ public abstract class BluetoothCommon {
 			// }
 
 			JSONObject json = new JSONObject();
-			json.put(BluetoothConstants.KEY_MSG_DATA, obj.toString());
+			if (obj != null) {
+				json.put(BluetoothConstants.KEY_MSG_DATA, obj.toString());
+			}
 			json.put(BluetoothConstants.KEY_MESSAGE_TYPE, messageType);
 
 			service.write(json.toString().getBytes());
+
+			if (Util.isDebugBuild()) {
+				Log.d(BluetoothConstants.TAG, "msg: " + json.toString());
+			}
 		} catch (JSONException e) {
 			// If we encounter a JSON error, just send the message without the
 			// message type parameter

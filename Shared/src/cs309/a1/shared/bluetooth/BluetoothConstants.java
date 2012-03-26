@@ -4,6 +4,8 @@ import java.util.UUID;
 
 public class BluetoothConstants {
 
+	public static final String TAG = BluetoothConstants.class.getName();
+
 	public static final String DEVICE_CONNECTED_INTENT = "cs309.a1.shared.bluetooth.DEVICE_CONNECTED_CHANGE";
 	public static final String MESSAGE_RX_INTENT = "cs309.a1.shared.bluetooth.MESSAGE_RX_CHANGE";
 	public static final String STATE_CHANGE_INTENT = "cs309.a1.shared.bluetooth.STATE_CHANGE";
@@ -16,6 +18,9 @@ public class BluetoothConstants {
 	public static final int READ_MESSAGE  = 0;
 	public static final int WRITE_MESSAGE = 1;
 	public static final int STATE_MESSAGE = 2;
+
+	// The message
+	public static final int MSG_TYPE_INIT = Integer.MAX_VALUE;
 
 
 	// The keys for the "map" that is Intent messages/Handler messages

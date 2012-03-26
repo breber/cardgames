@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.widget.Toast;
 import cs309.a1.player.R;
+import cs309.a1.shared.TextView;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.activities.DeviceListActivity;
 import cs309.a1.shared.bluetooth.BluetoothClient;
@@ -19,6 +20,8 @@ public class ConnectActivity extends Activity {
 
 	private Context mContext;
 
+	private boolean readyToStart = false;
+
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -29,6 +32,31 @@ public class ConnectActivity extends Activity {
 			}
 
 			if (currentState == BluetoothConstants.STATE_CONNECTED) {
+				readyToStart = true;
+
+				TextView tv = (TextView) findViewById(R.id.connectingText);
+				tv.setText(getResources().getString(R.string.waitingForGame));
+
+				// Register the receiver for receiving messages from Bluetooth
+				registerReceiver(gameStartReceiver, new IntentFilter(BluetoothConstants.MESSAGE_RX_INTENT));
+			} else if (currentState == BluetoothConstants.STATE_LISTEN) {
+				Intent showDeviceList = new Intent(ConnectActivity.this, DeviceListActivity.class);
+				startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
+			}
+		}
+	};
+
+
+	private BroadcastReceiver gameStartReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			int messageType = intent.getIntExtra(BluetoothConstants.KEY_MESSAGE_TYPE, 0);
+
+			if (Util.isDebugBuild()) {
+				Toast.makeText(mContext, "messageType = " + messageType, Toast.LENGTH_SHORT).show();
+			}
+
+			if (readyToStart && messageType == BluetoothConstants.MSG_TYPE_INIT) {
 				// We connected just fine, so bring them to the ShowCardsActivity, and close
 				// this activity out.
 				Intent showCards = new Intent(ConnectActivity.this, ShowCardsActivity.class);
@@ -36,9 +64,6 @@ public class ConnectActivity extends Activity {
 
 				ConnectActivity.this.setResult(RESULT_OK);
 				ConnectActivity.this.finish();
-			} else if (currentState == BluetoothConstants.STATE_LISTEN) {
-				Intent showDeviceList = new Intent(ConnectActivity.this, DeviceListActivity.class);
-				startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
 			}
 		}
 	};
@@ -59,6 +84,12 @@ public class ConnectActivity extends Activity {
 	protected void onDestroy() {
 		try {
 			unregisterReceiver(receiver);
+		} catch (IllegalArgumentException e) {
+			// We didn't get far enough to register the receiver
+		}
+
+		try {
+			unregisterReceiver(gameStartReceiver);
 		} catch (IllegalArgumentException e) {
 			// We didn't get far enough to register the receiver
 		}

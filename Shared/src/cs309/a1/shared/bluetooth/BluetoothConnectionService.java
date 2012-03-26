@@ -416,7 +416,9 @@ public class BluetoothConnectionService {
 					Message msg = mHandler.obtainMessage(BluetoothConstants.READ_MESSAGE, -1, -1, null);
 					Bundle data = new Bundle();
 					data.putInt(BluetoothConstants.KEY_MESSAGE_TYPE, obj.getInt(BluetoothConstants.KEY_MESSAGE_TYPE));
-					data.putString(BluetoothConstants.KEY_MESSAGE_RX, obj.get(BluetoothConstants.KEY_MSG_DATA).toString());
+					if (obj.has(BluetoothConstants.KEY_MSG_DATA)) {
+						data.putString(BluetoothConstants.KEY_MESSAGE_RX, obj.get(BluetoothConstants.KEY_MSG_DATA).toString());
+					}
 					data.putString(BluetoothConstants.KEY_DEVICE_ID, deviceAddress);
 					msg.setData(data);
 					msg.sendToTarget();

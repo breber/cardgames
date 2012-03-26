@@ -78,6 +78,10 @@ public class ConnectActivity extends Activity {
 			public void onClick(View v) {
 				if (canStartGame()) {
 					mBluetoothServer.stopListening();
+
+					// Send a message to all connected devices saying that the game is beginning
+					mBluetoothServer.write(BluetoothConstants.MSG_TYPE_INIT, null);
+
 					Intent i = new Intent(ConnectActivity.this,	GameboardActivity.class);
 					startActivity(i);
 
