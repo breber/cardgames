@@ -48,15 +48,15 @@
         <activity
             android:name=".activities.QuitApplicationActivity"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+            android:theme="@style/Theme.Transparent"/>
         <activity
             android:name=".activities.QuitGameActivity"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+            android:theme="@style/Theme.Transparent"/>
         <activity
             android:name=".activities.SelectSuitActivity"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+            android:theme="@style/Theme.Transparent"/>
         <activity
             android:name=".activities.ShowCardsActivity"
             android:screenOrientation="landscape" />
