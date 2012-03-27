@@ -24,8 +24,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ImageView;import android.widget.LinearLayout;
 import android.widget.Toast;
 import cs309.a1.crazyeights.Constants;
 import cs309.a1.crazyeights.CrazyEightGameRules;
@@ -66,6 +65,18 @@ public class GameboardActivity extends Activity {
 	List<Player> players;
 
 	private static Game game = null;
+	
+	private static final int MAX_DISPLAYED = 13;
+	
+	private static final int MAX_DIS_SIDES = 7;
+	
+	private int player1cards;
+	
+	private int player2cards;
+	
+	private int player3cards;
+	
+	private int player4cards;
 	
 	CardTranslator ct = new CrazyEightsCardTranslator();
 	
@@ -261,6 +272,7 @@ public class GameboardActivity extends Activity {
 
 		LinearLayout ll;
 		LinearLayout.LayoutParams lp;
+		int handSize;
 
 		// convert dip to pixels
 		final float dpsToPixScale = getApplicationContext().getResources().getDisplayMetrics().density;
@@ -275,41 +287,201 @@ public class GameboardActivity extends Activity {
 		// if Player 1 or Player 3
 		else if(location == 1 || location == 3) {
 
-			if(location == 1) ll = (LinearLayout) findViewById(R.id.player1ll);
-			else ll = (LinearLayout) findViewById(R.id.player3ll);
-
-			lp = new LinearLayout.LayoutParams(pixels, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-			ImageView toAdd = new ImageView(this);
-			toAdd.setImageResource(newCard.getResourceId());
-			toAdd.setId(newCard.getIdNum());
-			toAdd.setAdjustViewBounds(true);
-			ll.addView(toAdd, lp);
+			if(location == 1) {
+				ll = (LinearLayout) findViewById(R.id.player1ll);
+				handSize = ++player1cards;
+			}
+			else {
+				ll = (LinearLayout) findViewById(R.id.player3ll);
+				handSize = ++player3cards;
+			}
+			
+			if(handSize == 1) {
+				lp = new LinearLayout.LayoutParams(pixels, LinearLayout.LayoutParams.WRAP_CONTENT);
+	
+				ImageView toAdd = new ImageView(this);
+				toAdd.setImageResource(newCard.getResourceId());
+				if(location == 1) toAdd.setId(handSize);
+				else toAdd.setId(2*MAX_DISPLAYED + handSize);
+				toAdd.setAdjustViewBounds(true);
+				ll.addView(toAdd, lp);
+			}
+			
+			else if(handSize <= MAX_DISPLAYED) {
+				
+				Bitmap verticalCard = BitmapFactory.decodeResource(getResources(), newCard.getResourceId());
+				Matrix tempMatrix = new Matrix();
+				
+				if(location == 3) {
+					Bitmap halfCard = Bitmap.createBitmap(verticalCard, verticalCard.getWidth()/2, 0, verticalCard.getWidth()/2, verticalCard.getHeight(), tempMatrix, true);
+					ImageView toAdd = new ImageView(this);
+					toAdd.setId(2*MAX_DISPLAYED + handSize);
+					toAdd.setImageBitmap(halfCard);
+		
+					lp = new LinearLayout.LayoutParams(pixels/2, LinearLayout.LayoutParams.WRAP_CONTENT);
+					toAdd.setAdjustViewBounds(true);
+					ll.addView(toAdd, lp);
+				}
+				
+				else {
+					Bitmap horCard = Bitmap.createBitmap(verticalCard, 0, 0, verticalCard.getWidth()/2, verticalCard.getHeight(), tempMatrix, true);
+					ll.removeAllViews();
+					for(int i = 1; i < handSize; i++) {
+						ImageView toAdd = new ImageView(this);
+						toAdd.setId(i+1);
+						toAdd.setImageBitmap(horCard);
+			
+						lp = new LinearLayout.LayoutParams(pixels/2, LinearLayout.LayoutParams.WRAP_CONTENT);
+						toAdd.setAdjustViewBounds(true);
+						ll.addView(toAdd, lp);
+					}
+					
+					ImageView toAdd = new ImageView(this);
+					toAdd.setId(1);
+					toAdd.setImageResource(newCard.getResourceId());
+		
+					lp = new LinearLayout.LayoutParams(pixels, LinearLayout.LayoutParams.WRAP_CONTENT);
+					toAdd.setAdjustViewBounds(true);
+					ll.addView(toAdd, lp);
+				}
+			}
+			
+			else {
+				//TODO: display counter of cards not shown
+			}
 		}
 
 		// if Player 2 or Player 4
 		else if(location == 2 || location == 4) {
 
-			if(location == 2) ll = (LinearLayout) findViewById(R.id.player2ll);
-			else ll = (LinearLayout) findViewById(R.id.player4ll);
+			if(location == 2) {
+				ll = (LinearLayout) findViewById(R.id.player2ll);
+				handSize = ++player2cards;
+			}
+			else {
+				ll = (LinearLayout) findViewById(R.id.player4ll);
+				handSize = ++player4cards;
+			}
+			
+			if(handSize == 1) {
 
-			// rotate vertical card image 90 degrees
-			Bitmap verticalCard = BitmapFactory.decodeResource(getResources(), newCard.getResourceId());
-			Matrix tempMatrix = new Matrix();
-			tempMatrix.postRotate(90);
-			Bitmap horCard = Bitmap.createBitmap(verticalCard, 0, 0, verticalCard.getWidth(), verticalCard.getHeight(), tempMatrix, true);
-
-			ImageView toAdd = new ImageView(this);
-			toAdd.setImageBitmap(horCard);
-
-			lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, pixels);
-			toAdd.setAdjustViewBounds(true);
-			ll.addView(toAdd, lp);
+				// rotate vertical card image 90 degrees
+				Bitmap verticalCard = BitmapFactory.decodeResource(getResources(), newCard.getResourceId());
+				Matrix tempMatrix = new Matrix();
+				tempMatrix.postRotate(90);
+				Bitmap horCard = Bitmap.createBitmap(verticalCard, 0, 0, verticalCard.getWidth(), verticalCard.getHeight(), tempMatrix, true);
+	
+				ImageView toAdd = new ImageView(this);
+				if(location == 2) toAdd.setId(MAX_DISPLAYED + handSize);
+				else toAdd.setId(3*MAX_DISPLAYED + handSize);
+				toAdd.setImageBitmap(horCard);
+	
+				lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, pixels);
+				toAdd.setAdjustViewBounds(true);
+				ll.addView(toAdd, lp);
+			}
+			
+			else if(handSize <= MAX_DIS_SIDES) {
+				
+				Bitmap horCard;
+				
+				Bitmap verticalCard = BitmapFactory.decodeResource(getResources(), newCard.getResourceId());
+				double conversion = verticalCard.getHeight()*(((double)pixels/(double)verticalCard.getWidth()));
+				
+				Matrix tempMatrix = new Matrix();
+				tempMatrix.postRotate(90);
+				
+				if(location == 4) {
+					horCard = Bitmap.createBitmap(verticalCard, 0, 0, verticalCard.getWidth()/2, verticalCard.getHeight(), tempMatrix, true);
+					ll.removeAllViews();
+					for(int i = 1; i < handSize; i++) {
+						ImageView toAdd = new ImageView(this);
+						toAdd.setId(3*MAX_DISPLAYED + i+1);
+						toAdd.setImageBitmap(horCard);
+			
+						lp = new LinearLayout.LayoutParams((int)conversion, LinearLayout.LayoutParams.WRAP_CONTENT);
+						toAdd.setAdjustViewBounds(true);
+						ll.addView(toAdd, lp);
+					}
+					
+					Bitmap verticalCard2 = BitmapFactory.decodeResource(getResources(), newCard.getResourceId());
+					Matrix tempMatrix2 = new Matrix();
+					tempMatrix2.postRotate(90);
+					Bitmap horCard2 = Bitmap.createBitmap(verticalCard2, 0, 0, verticalCard2.getWidth(), verticalCard2.getHeight(), tempMatrix2, true);
+					
+					ImageView toAdd = new ImageView(this);
+					toAdd.setId(3*MAX_DISPLAYED + 1);
+					toAdd.setImageBitmap(horCard2);
+		
+					lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, pixels);
+					toAdd.setAdjustViewBounds(true);
+					ll.addView(toAdd, lp);
+				}
+				else {
+					horCard = Bitmap.createBitmap(verticalCard, verticalCard.getWidth()/2, 0, verticalCard.getWidth()/2, verticalCard.getHeight(), tempMatrix, true);
+					ImageView toAdd = new ImageView(this);
+					toAdd.setId(MAX_DISPLAYED + handSize);
+					toAdd.setImageBitmap(horCard);
+		
+					lp = new LinearLayout.LayoutParams((int)conversion, LinearLayout.LayoutParams.WRAP_CONTENT);
+					toAdd.setAdjustViewBounds(true);
+					ll.addView(toAdd, lp);
+				}
+			}
+			
+			else {
+				//TODO: display counter of cards not shown
+			}
 		}
 
 		else {
 			ImageView draw = (ImageView) findViewById(R.id.drawpile);
 			draw.setImageResource(newCard.getResourceId());
+		}
+	}
+	
+	void removeCard(int location) {
+		
+		LinearLayout ll;
+		int handSize;
+		
+		if(location == 1) {
+			ll = (LinearLayout) findViewById(R.id.player1ll);
+			handSize = --player1cards;
+			if(handSize < MAX_DISPLAYED) {
+				if(handSize == 0) {
+					ll.removeView(findViewById(1));
+				}
+				else {
+					ll.removeView(findViewById(handSize + 1));
+				}
+			}
+		}
+		else if(location == 2) {
+			ll = (LinearLayout) findViewById(R.id.player2ll);
+			handSize = --player2cards;
+			if(handSize < MAX_DIS_SIDES) {
+				ll.removeView(findViewById(MAX_DISPLAYED +handSize+1));
+			}
+		}
+		else if(location == 3) {
+			ll = (LinearLayout) findViewById(R.id.player3ll);
+			handSize = --player3cards;
+			if(handSize < MAX_DISPLAYED) {
+				ll.removeView(findViewById(2*MAX_DISPLAYED + handSize+1));
+			}
+		}
+		else {
+			ll = (LinearLayout) findViewById(R.id.player4ll);
+			handSize = --player4cards;
+			if(handSize < MAX_DIS_SIDES) {
+				if(handSize == 0) {
+					ll.removeView(findViewById(3*MAX_DISPLAYED + 1));
+				}
+				else {
+					ll.removeView(findViewById(3*MAX_DISPLAYED + handSize + 1));
+				}
+			}
 		}
 	}
 	
@@ -373,5 +545,4 @@ public class GameboardActivity extends Activity {
 		placeCard(0, tmpCard);
 		
 	}
-
 }
