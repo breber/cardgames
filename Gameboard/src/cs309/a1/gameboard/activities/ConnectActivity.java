@@ -73,6 +73,7 @@ public class ConnectActivity extends Activity {
 		tv.setText(getResources().getString(R.string.deviceName) + "\n" + mBluetoothAdapter.getName());
 
 		Button startButton = (Button) findViewById(R.id.startButton);
+		startButton.setEnabled(false);
 		startButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

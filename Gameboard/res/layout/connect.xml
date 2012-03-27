@@ -96,7 +96,6 @@
         android:layout_margin="15dip"
         android:background="@drawable/statebutton"
         android:textColor="@color/statecolor"
-        android:enabled="false"
         android:padding="15dip"
         android:text="@string/start" />
 
