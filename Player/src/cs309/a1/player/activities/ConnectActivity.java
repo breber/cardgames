@@ -81,8 +81,6 @@ public class ConnectActivity extends Activity {
 			if (readyToStart && messageType == BluetoothConstants.MSG_TYPE_INIT) {
 				// We connected just fine, so bring them to the ShowCardsActivity, and close
 				// this activity out.
-				Intent showCards = new Intent(ConnectActivity.this, ShowCardsActivity.class);
-				startActivity(showCards);
 
 				ConnectActivity.this.setResult(RESULT_OK);
 				ConnectActivity.this.finish();

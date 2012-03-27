@@ -48,7 +48,7 @@ public class MainMenu extends Activity {
 
 		play.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Intent playButtonClick = new Intent(MainMenu.this, ConnectActivity.class);
+				Intent playButtonClick = new Intent(MainMenu.this, ShowCardsActivity.class);
 				startActivity(playButtonClick);
 			}
 		});

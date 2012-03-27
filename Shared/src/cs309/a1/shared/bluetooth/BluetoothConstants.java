@@ -34,12 +34,12 @@ public class BluetoothConstants {
 	 * The UUID of the Bluetooth port that the server will be listening on and the client
 	 * will be connecting from.
 	 */
-	public static final UUID MY_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
+	public static final UUID MY_UUID = UUID.fromString("9d6b7fe4-d2cd-37f9-950b-0aad096c2d57");
 
 	/**
 	 *  Name for the SDP record when creating server socket
 	 */
-	public static final String SOCKET_NAME = "BluetoothChat";
+	public static final String SOCKET_NAME = "CrazyEights";
 
 	/**
 	 * The constant used internally from the BluetoothConnectionService

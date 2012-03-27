@@ -19,7 +19,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.ScaleAnimation;
@@ -43,13 +42,19 @@ import cs309.a1.shared.bluetooth.BluetoothConstants;
  */
 public class ShowCardsActivity extends Activity{
 	/**
-	 * intent code for choosing suit
-	 */
-	private static final int CHOOSE_SUIT = Math.abs("CHOOSE_SUIT".hashCode()); 
-	/**
 	 * The Logcat Debug tag
 	 */
 	private static final String TAG = ShowCardsActivity.class.getName();
+
+	/**
+	 * intent code for choosing suit
+	 */
+	private static final int CHOOSE_SUIT = Math.abs("CHOOSE_SUIT".hashCode());
+
+	/**
+	 * The request code to keep track of the connect device activity
+	 */
+	private static final int CONNECT_DEVICE = Math.abs("CONNECT_DEVICE".hashCode());
 
 	/**
 	 * The request code to keep track of the "Are you sure you want to quit" activity
@@ -62,15 +67,15 @@ public class ShowCardsActivity extends Activity{
 	private static final int DISCONNECTED = Math.abs("DISCONNECTED".hashCode());
 
 	private ArrayList<Card> cardHand;
-	
+
 	private Card cardSelected;
-	
+
 	private Card cardOnDiscard;
-	
+
 	private Rules gameRules;
-	
+
 	private boolean isTurn = false;
-	
+
 	BluetoothClient btc;
 
 	/**
@@ -89,67 +94,67 @@ public class ShowCardsActivity extends Activity{
 
 				String object = intent.getStringExtra(BluetoothConstants.KEY_MESSAGE_RX);
 				int messageType = intent.getIntExtra(BluetoothConstants.KEY_MESSAGE_TYPE, -1);
-				
+
 				if (Util.isDebugBuild()) {
-					Log.d(TAG, object);
+					Log.d(TAG, "message: " + object);
 				}
 
 				switch(messageType){
-					case Constants.SETUP: 
-						// Parse the Message if it was the original setup
-						try {
-							JSONArray arr = new JSONArray(object);
-							arr.getJSONObject(0);
-							for (int i = 0; i < arr.length(); i++) {
-								JSONObject obj = arr.getJSONObject(i);
-								int suit = obj.getInt(SUIT);
-								int value = obj.getInt(VALUE);
-								int id = obj.getInt(ID);
-								addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
-							}
-						} catch (JSONException ex) {
-							ex.printStackTrace();
-						}
-						setButtonsEnabled(false);
-						isTurn=false;
-						break;
-					case Constants.IS_TURN:
-						
-						try {
-							JSONObject obj = new JSONObject(object);
-							int suit = obj.getInt(SUIT);
-							int value = obj.getInt(VALUE);
-							int id = obj.getInt(ID);
-							cardOnDiscard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
-						} catch (JSONException ex) {
-							ex.printStackTrace();
-						}
-						setButtonsEnabled(true);
-						isTurn = true;
-						break;
-					case Constants.CARD_DRAWN:
-						try {
-							JSONObject obj = new JSONObject(object);
+				case Constants.SETUP:
+					// Parse the Message if it was the original setup
+					try {
+						JSONArray arr = new JSONArray(object);
+						arr.getJSONObject(0);
+						for (int i = 0; i < arr.length(); i++) {
+							JSONObject obj = arr.getJSONObject(i);
 							int suit = obj.getInt(SUIT);
 							int value = obj.getInt(VALUE);
 							int id = obj.getInt(ID);
 							addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
-						} catch (JSONException ex) {
-							ex.printStackTrace();
 						}
-						break;
-					case Constants.WINNER:
-						Intent Winner = new Intent(ShowCardsActivity.this, GameResultsActivity.class);
-						Winner.putExtra(GameResultsActivity.IS_WINNER, true);
-						startActivityForResult(Winner, QUIT_GAME);
-						break;
-					case Constants.LOSER:
-						Intent Loser = new Intent(ShowCardsActivity.this, GameResultsActivity.class);
-						Loser.putExtra(GameResultsActivity.IS_WINNER, false);
-						startActivityForResult(Loser, QUIT_GAME);
-						break;
+					} catch (JSONException ex) {
+						ex.printStackTrace();
+					}
+					setButtonsEnabled(false);
+					isTurn=false;
+					break;
+				case Constants.IS_TURN:
+
+					try {
+						JSONObject obj = new JSONObject(object);
+						int suit = obj.getInt(SUIT);
+						int value = obj.getInt(VALUE);
+						int id = obj.getInt(ID);
+						cardOnDiscard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
+					} catch (JSONException ex) {
+						ex.printStackTrace();
+					}
+					setButtonsEnabled(true);
+					isTurn = true;
+					break;
+				case Constants.CARD_DRAWN:
+					try {
+						JSONObject obj = new JSONObject(object);
+						int suit = obj.getInt(SUIT);
+						int value = obj.getInt(VALUE);
+						int id = obj.getInt(ID);
+						addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+					} catch (JSONException ex) {
+						ex.printStackTrace();
+					}
+					break;
+				case Constants.WINNER:
+					Intent Winner = new Intent(ShowCardsActivity.this, GameResultsActivity.class);
+					Winner.putExtra(GameResultsActivity.IS_WINNER, true);
+					startActivityForResult(Winner, QUIT_GAME);
+					break;
+				case Constants.LOSER:
+					Intent Loser = new Intent(ShowCardsActivity.this, GameResultsActivity.class);
+					Loser.putExtra(GameResultsActivity.IS_WINNER, false);
+					startActivityForResult(Loser, QUIT_GAME);
+					break;
 				}
-				
+
 			} else if (BluetoothConstants.STATE_CHANGE_INTENT.equals(action)) {
 				// Handle a state change
 				int newState = intent.getIntExtra(BluetoothConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_NONE);
@@ -171,36 +176,35 @@ public class ShowCardsActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.player_hand);
 		cardHand = new ArrayList<Card>();
-		
+
 		//check which game we are playing then set rules
 		gameRules = new CrazyEightGameRules();
 
 		// Register the receiver for message/state change intents
 		registerReceiver(receiver, new IntentFilter(BluetoothConstants.MESSAGE_RX_INTENT));
-		registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
-		
+
 		btc = BluetoothClient.getInstance(this);
-		
+
 		Button play = (Button) findViewById(R.id.btPlayCard);
 		Button draw = (Button) findViewById(R.id.btDrawCard);
-		
+
 		setButtonsEnabled(false);
-				
+
 		draw.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
 				if(isTurn){
-					btc.write(Constants.DRAW_CARD, null, null);
+					btc.write(Constants.DRAW_CARD, null);
 					setButtonsEnabled(false);
 					isTurn=false;
 				}
 			}
 		});
-		
+
 		play.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {			
+			public void onClick(View v) {
 				if(isTurn && gameRules.checkCard(cardSelected, cardOnDiscard)){
 					//play card
-					if(cardSelected.getValue() == 7){ 
+					if(cardSelected.getValue() == 7){
 						Intent selectSuit = new Intent(ShowCardsActivity.this, SelectSuitActivity.class);
 						startActivityForResult(selectSuit, CHOOSE_SUIT);
 						//go to the onactivityresult to finish this turn
@@ -208,17 +212,22 @@ public class ShowCardsActivity extends Activity{
 						btc.write(Constants.PLAY_CARD, cardSelected);
 						Toast.makeText(getApplicationContext(), "playing : " + cardSelected.getValue(), Toast.LENGTH_SHORT).show();
 						removeFromHand(cardSelected.getIdNum());
-						
+
 						if (Util.isDebugBuild()) {
 							Toast.makeText(getBaseContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), 100);
 						}
-						
+
 						setButtonsEnabled(false);
 						isTurn=false;
 					}
 				}
 			}
 		});
+
+		// Start the connection screen from here so that we can register the message receive
+		// broadcast receiver so that we don't miss any messages
+		Intent i = new Intent(this, ConnectActivity.class);
+		startActivityForResult(i, CONNECT_DEVICE);
 	}
 
 	/* (non-Javadoc)
@@ -256,20 +265,31 @@ public class ShowCardsActivity extends Activity{
 			finish();
 		} else if (requestCode == DISCONNECTED) {
 			// TODO: handle the intent result from the disconnected activity
-		}else if (requestCode == CHOOSE_SUIT){
+		} else if (requestCode == CONNECT_DEVICE) {
+			// TODO: does anything need to be done when coming back from the device connection activity?
+
+			// If the user cancelled the device list, then bring them back to the main menu
+			if (resultCode == RESULT_CANCELED) {
+				setResult(RESULT_CANCELED);
+				finish();
+			} else {
+				// Register the state change receiver
+				registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
+			}
+		} else if (requestCode == CHOOSE_SUIT) {
 			switch(resultCode){
-				case Constants.SUIT_CLUBS:
-					btc.write(Constants.PLAY_EIGHT_C, cardSelected, null);
-					break;
-				case Constants.SUIT_DIAMONDS:
-					btc.write(Constants.PLAY_EIGHT_D, cardSelected, null);
-					break;
-				case Constants.SUIT_HEARTS:
-					btc.write(Constants.PLAY_EIGHT_H, cardSelected, null);	
-					break;
-				case Constants.SUIT_SPADES:
-					btc.write(Constants.PLAY_EIGHT_S, cardSelected, null);
-					break;
+			case Constants.SUIT_CLUBS:
+				btc.write(Constants.PLAY_EIGHT_C, cardSelected);
+				break;
+			case Constants.SUIT_DIAMONDS:
+				btc.write(Constants.PLAY_EIGHT_D, cardSelected);
+				break;
+			case Constants.SUIT_HEARTS:
+				btc.write(Constants.PLAY_EIGHT_H, cardSelected);
+				break;
+			case Constants.SUIT_SPADES:
+				btc.write(Constants.PLAY_EIGHT_S, cardSelected);
+				break;
 			}
 			removeFromHand(cardSelected.getIdNum());
 			if (Util.isDebugBuild()) {
@@ -333,11 +353,11 @@ public class ShowCardsActivity extends Activity{
 
 		cardHand.remove(current);
 	}
-	
+
 	private void setButtonsEnabled(boolean isEnabled){
 		Button play = (Button) findViewById(R.id.btPlayCard);
 		Button draw = (Button) findViewById(R.id.btDrawCard);
-		
+
 		play.setEnabled(isEnabled);
 		draw.setEnabled(isEnabled);
 	}
@@ -348,16 +368,16 @@ public class ShowCardsActivity extends Activity{
 			return card1.getIdNum() - card2.getIdNum();
 		}
 	}
-	
-	
+
+
 	private class MyLongClickListener implements View.OnLongClickListener {
 
 		public boolean onLongClick(View v) {
-			//so this means they just selected the card. 
+			//so this means they just selected the card.
 			//we could remove it from the hand below and place it so
 			ScaleAnimation scale = new ScaleAnimation((float)1.2, (float)1.2, (float)1.2, (float)1.2);
-			scale.scaleCurrentDuration((float) 5);
-		
+			scale.scaleCurrentDuration(5);
+
 			v.startAnimation(scale);
 			int i;
 			for(i=0; i < cardHand.size(); i++){
@@ -365,15 +385,15 @@ public class ShowCardsActivity extends Activity{
 					cardSelected= cardHand.get(i);
 				}
 			}
-			
+
 			//please take out once bluetooth is working with receiving card on discard
 			//TODO
 			if (Util.isDebugBuild()) {
 				//cardOnDiscard = cardSelected;
 			}
-			
+
 			return true;
 		}
-				
+
 	}
 }
