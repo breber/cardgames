@@ -8,4 +8,26 @@
 
 To use this application properly, download the application titled “Crazy Eights Player” to the devices that each player will be using.  Once this has been done, first select Create Game from the Main Menu of this application, and then select Join Game from the Main Menu on each player’s device.  Players should then choose this device from the connection list that will appear on their screens.  Press the Start button on this device’s connection screen when all players have been connected in order to start the game.</string>
 
+    <!-- Connect Devices -->
+    <string name="start">Start</string>
+    <string name="deviceName">Device Name: </string>
+
+    <!-- Gameboard Activity -->
+    <string name="player_1">Player 1</string>
+    <string name="player_2">Player 2</string>
+    <string name="player_3">Player 3</string>
+    <string name="player_4">Player 4</string>
+
+    <!-- Disconnected Player -->
+    <string name="reconnect">Reconnect</string>
+    <string name="drop_player">Drop Player</string>
+    <string name="player_lost">A player has been disconnected</string>
+
+    <!-- Pause Activity -->
+    <string name="resume">Resume</string>
+    
+    <!-- Game Results Activity -->
+    <string name="gameResultsTitle">Game Over</string>
+    <string name="exitGame">Exit Game</string>
+
 </resources>

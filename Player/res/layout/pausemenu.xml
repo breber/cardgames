@@ -10,6 +10,6 @@
         style="@style/popupStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/PauseActivity_title" />
+        android:text="@string/pauseGameTitle" />
 
 </LinearLayout>

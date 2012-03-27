@@ -18,7 +18,7 @@
         <cs309.a1.shared.TextView
             style="@style/TitleFont"
             android:gravity="center"
-            android:text="@string/winner"
+            android:text="@string/gameResultsTitle"
             android:textSize="55sp" />
     </RelativeLayout>
 
@@ -45,7 +45,7 @@
             android:layout_marginBottom="8dip"
             android:layout_marginLeft="35dip"
             android:layout_marginRight="35dip"
-            android:text="@string/exit_game"
+            android:text="@string/exitGame"
             android:textSize="30sp" />
     </LinearLayout>
 

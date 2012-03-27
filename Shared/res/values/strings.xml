@@ -2,14 +2,15 @@
 <resources>
 
     <string name="app_name">Crazy Eights</string>
-    
+
     <!-- Main Menu -->
     <string name="Play">Play</string>
     <string name="CreateGame">Create Game</string>
     <string name="Rules">Rules</string>
     <string name="About">About</string>
-    
+
     <!-- Rules Activity -->
+    <string name="rulesActivityTitle">Rules</string>
     <string name="game_rules_text">The basic game of Crazy Eights is played with a standard deck of 52 cards. Each player will be dealt five cards and the rest of the cards will be put into a draw pile which is placed face down on the playing table. After the cards are dealt, one card will be taken from and placed next to the draw pile face up. This will serve as the discard pile.
 
 The game will start with player 1 and continue in a counterclockwise fashion around the table. During each turn a player will either need to play a pile from his/her hand or select one card from the draw pile.
@@ -23,62 +24,30 @@ Basic Game Play:\n
 \n
 
 The first player to successfully get rid of all of their cards wins the game. If at any point in the game the draw pile is empty, all of the cards from the discard pile except for the top card will be re-shuffled to form a new draw pile.</string>
+
+    <!-- About Activity -->
+    <string name="aboutActivityTitle">About</string>
+    <string name="about_text">Generic About Text to be overridden by Player and Gameboard project</string>
+
+    <!-- Pause Menu Activity -->
+    <string name="pauseGameTitle">Pause</string>
     
-    
-    <string name="ConnectActivity_title">Connect to Devices</string>
-    <string name="ConnectFailActivity_title">Connection Failure</string>
-    <string name="PauseActivity_title">Paused</string>
-    <string name="QuitApplicationActivity_title">Quit</string>
-    <string name="QuitGameActivity_title">Quit</string>
-    <string name="ShowCardsActivity_title">Your Cards</string>
-    <string name="pauseGame">Pause</string>
+    <!-- Quit Application Activity-->
+    <string name="exit_application">Are you sure you want to quit the application?</string>
+
+    <!-- Quit Game Activity -->
     <string name="quit">Are you sure you want to quit the current game?</string>
+    
+    <!-- Generic Strings -->
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="cancel">Cancel</string>
-    
-    <string name="Draw">Draw</string>
-    
+    <string name="main_menu">Main Menu</string>
+
     <!-- Device List -->
     <string name="scanning">Scanning for Devices</string>
     <string name="no_devices_found">No devices found</string>
     <string name="title_device_list">Device List</string>
     <string name="button_scan">Scan for devices</string>
-    <string name="new_devices_separator">New Devices</string>
-    <string name="connected_devices_separator">Connected Devices</string>
-    
-    <!-- Connect Screen Handheld -->
-    <string name="connecting">Connecting&#8230;</string>
-    <string name="waitingForGame">Waiting for game to begin&#8230;</string>
-    
-    <!-- Connect Devices -->
-    <string name="start">Start</string>
-    <string name="deviceName">Device Name: </string>
-    
-    <!-- Disconnected Player -->
-    <string name="reconnect">Reconnect</string>
-    <string name="drop_player">Drop Player</string>
-    <string name="player_lost">A player has been disconnected</string>
-    
-    <!-- Game Results -->
-    <string name="winner">You Won!</string>
-    <string name="loser">You Lost :(</string>
-    
-    
-    <string name="exit_game">Exit Game</string>
-    <string name="main_menu">Main Menu</string>
-    <string name="resume">Resume</string>
-    <string name="waiting">Waiting to reconnect&#8230;</string>
-    <string name="exit_application">Are you sure you want to quit the application?</string>
-    <string name="player_1">Player 1</string>
-    <string name="player_2">Player 2</string>
-    <string name="player_3">Player 3</string>
-    <string name="player_4">Player 4</string>
-    <string name="gameboard">Gameboard</string>
-    <string name="Spades">Spades</string>
-    <string name="Hearts">Hearts</string>
-    <string name="Clubs">Clubs</string>
-    <string name="selectsuit">Please select a suit</string>
-    <string name="Diamonds">Diamonds</string>
-    
+
 </resources>

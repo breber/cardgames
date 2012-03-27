@@ -20,7 +20,7 @@ public class AboutActivity extends Activity {
 
 		// Update the title to "About"
 		TextView title = (TextView) findViewById(R.id.title);
-		title.setText(R.string.About);
+		title.setText(R.string.aboutActivityTitle);
 
 		// Update the body text to the about text
 		TextView body = (TextView) findViewById(R.id.informationBody);

@@ -24,7 +24,7 @@ public class RulesActivity extends Activity {
 
 		// Update the title to "Rules"
 		TextView title = (TextView) findViewById(R.id.title);
-		title.setText(R.string.Rules);
+		title.setText(R.string.rulesActivityTitle);
 
 		// Update the body text to the Rules
 		TextView body = (TextView) findViewById(R.id.informationBody);

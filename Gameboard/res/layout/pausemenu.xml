@@ -18,7 +18,7 @@
         <cs309.a1.shared.TextView
             style="@style/TitleFont"
             android:gravity="center"
-            android:text="@string/PauseActivity_title"/>
+            android:text="@string/pauseGameTitle"/>
     </RelativeLayout>
 
     <LinearLayout
