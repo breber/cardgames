@@ -58,6 +58,10 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.Transparent"/>
         <activity
+            android:name=".activities.EnterNameActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.Transparent"/>
+        <activity
             android:name=".activities.ShowCardsActivity"
             android:screenOrientation="landscape" />
         <activity
