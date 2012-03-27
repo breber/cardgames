@@ -264,7 +264,10 @@ public class ShowCardsActivity extends Activity{
 			setResult(RESULT_OK);
 			finish();
 		} else if (requestCode == DISCONNECTED) {
-			// TODO: handle the intent result from the disconnected activity
+			// Whatever result we get from the disconnected activity,
+			// just finish this activity since they will need to reconnect anyways.
+			setResult(RESULT_CANCELED);
+			finish();
 		} else if (requestCode == CONNECT_DEVICE) {
 			// TODO: does anything need to be done when coming back from the device connection activity?
 

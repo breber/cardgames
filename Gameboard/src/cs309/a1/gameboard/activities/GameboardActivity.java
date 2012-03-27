@@ -43,12 +43,15 @@ import cs309.a1.shared.bluetooth.BluetoothServer;
 
 public class GameboardActivity extends Activity {
 	
-	private static final int EXIT_GAME = "EXIT_GAME".hashCode();
-	
 	/**
 	 * The Logcat Debug tag
 	 */
 	private static final String TAG = GameboardActivity.class.getName();
+	
+	/**
+	 * The request code to keep track of the Pause Menu activity
+	 */
+	private static final int PAUSE_GAME = Math.abs("PAUSE_GAME".hashCode());
 
 	/**
 	 * The request code to keep track of the "Are you sure you want to quit" activity
@@ -157,7 +160,7 @@ public class GameboardActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent pauseButtonClick = new Intent(GameboardActivity.this, PauseMenuActivity.class);
-				startActivityForResult(pauseButtonClick, EXIT_GAME);
+				startActivityForResult(pauseButtonClick, PAUSE_GAME);
 			}
 		});
 
@@ -243,26 +246,20 @@ public class GameboardActivity extends Activity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == QUIT_GAME) {
-			if (resultCode == RESULT_OK) {
-				// Finish this activity
-				setResult(RESULT_OK);
-				finish();
-			}
+		if (requestCode == QUIT_GAME && resultCode == RESULT_OK) {
+			// Finish this activity
+			setResult(RESULT_OK);
+			finish();
 		} else if (requestCode == DISCONNECTED) {
 			if (requestCode == RESULT_OK) {
 				// TODO: DROP PLAYER
 			} else {
 				// TODO: CONNECT DIFFERENT PLAYER
 			}
-		}
-		
-		if (requestCode == EXIT_GAME) {
-			if (resultCode == RESULT_OK) {
-				// Finish this activity
-				setResult(RESULT_OK);
-				finish();
-			}
+		} else if (requestCode == PAUSE_GAME && resultCode == RESULT_CANCELED) {
+			// Finish this activity
+			setResult(RESULT_OK);
+			finish();
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);

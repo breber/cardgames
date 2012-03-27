@@ -11,13 +11,18 @@ import cs309.a1.player.R;
  */
 public class ConnectionFailActivity extends Activity{
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.waitingtoreconnect);
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onBackPressed()
+	 */
 	@Override
 	public void onBackPressed() {
 		setResult(RESULT_CANCELED);

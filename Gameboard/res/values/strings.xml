@@ -3,4 +3,9 @@
 
     <string name="application_name">Crazy 8\'s Gameboard</string>
 
+    <!-- About Activity -->
+    <string name="about_text">This 2-4 player game requires one Android tablet per game and one Android device per player, all of which should have Bluetooth capabilities.  The tablet will serve as the game board, and each of the player’s devices will contain their hands of cards.  The tablet will connect to each of the devices via Bluetooth, and it will handle all logic and communication between these devices.  
+
+To use this application properly, download the application titled “Crazy Eights Player” to the devices that each player will be using.  Once this has been done, first select Create Game from the Main Menu of this application, and then select Join Game from the Main Menu on each player’s device.  Players should then choose this device from the connection list that will appear on their screens.  Press the Start button on this device’s connection screen when all players have been connected in order to start the game.</string>
+
 </resources>

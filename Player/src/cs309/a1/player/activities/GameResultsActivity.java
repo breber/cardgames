@@ -9,46 +9,54 @@ import android.widget.Button;
 import android.widget.TextView;
 import cs309.a1.player.R;
 
+/**
+ * The activity that is displayed on the client when the game finishes.
+ * It will tell the user whether they won or lost.
+ */
 public class GameResultsActivity extends Activity{
-	private static final int MAIN_MENU = Math.abs("MAIN_MENU".hashCode());
-	
+	/**
+	 * The Intent extra indicating whether the user
+	 * won the game or lost the game.
+	 */
 	public static final String IS_WINNER = "iswinner";
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		setContentView(R.layout.winlose);
+		
 		TextView title = (TextView) findViewById(R.id.title);
 		Intent isWinner = getIntent();
-		if(isWinner.getBooleanExtra(IS_WINNER, false)){
+		
+		// Update the title to display the proper title
+		if (isWinner.getBooleanExtra(IS_WINNER, false)) {
 			title.setText(R.string.winner);
-			
-		}else{
-			title.setText(R.string.GameResultsActivity_title);
-			
+		} else {
+			title.setText(R.string.loser);
 		}
 		
-		setContentView(R.layout.winlose);
-				
+		// Add a handler to the Main Menu button
 		Button mainMenu = (Button) findViewById(R.id.btMainMenu);
-
 		mainMenu.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Intent mainMenu = new Intent(GameResultsActivity.this, QuitGameActivity.class);
-				startActivityForResult(mainMenu, MAIN_MENU);
+				// When they click the main menu button, finish this activity,
+				// which will allow the ShowCardsActivity to finish leaving them back
+				// at the MainMenu
+				setResult(RESULT_OK);
+				finish();
 			}
 		});
-
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onBackPressed()
+	 */
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == MAIN_MENU && resultCode == RESULT_OK) {
-			setResult(RESULT_OK);
-			finish();
-		}
+	public void onBackPressed() {
+		setResult(RESULT_OK);
+		finish();
 	}
-
 }
-	
-	
