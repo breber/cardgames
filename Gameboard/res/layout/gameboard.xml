@@ -7,65 +7,129 @@
     android:background="@drawable/wooden_top">
 
     <LinearLayout
-        android:id="@+id/player3ll"
-        android:orientation="horizontal"
-		android:gravity="top|center_horizontal"
-		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
-		android:layout_centerHorizontal="true" >
-		<!--  
-		<ImageView
-		    android:src="@drawable/back_blue_1"
-		    android:layout_width="125dip"
+        	android:orientation="vertical"
+        	android:gravity="top|center_horizontal"
+        	android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_centerHorizontal="true" >
+	    <LinearLayout
+	        android:id="@+id/player3ll"
+	        android:orientation="horizontal"
+			android:gravity="top|center_horizontal"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content" >
+			<!--  
+			<ImageView
+			    android:src="@drawable/back_blue_1"
+			    android:layout_width="125dip"
+			    android:layout_height="wrap_content"
+			    android:adjustViewBounds="true" />
+			<ImageView
+			    android:src="@drawable/back_blue_1"
+			    android:layout_width="125dip"
+			    android:layout_height="wrap_content"
+			    android:adjustViewBounds="true" />-->
+		</LinearLayout>
+		<TextView
+		    android:id="@+id/player3text"
+		    android:text="Player 3" 
+		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:adjustViewBounds="true" />
-		<ImageView
-		    android:src="@drawable/back_blue_1"
-		    android:layout_width="125dip"
-		    android:layout_height="wrap_content"
-		    android:adjustViewBounds="true" />-->
-		
+		    android:textColor="#ffffff"
+		    android:textSize="50sp"
+		    android:textStyle="bold"
+		    android:gravity="bottom|center_horizontal"
+		    android:rotation="180"
+		    android:padding="10sp" />
 	</LinearLayout>
 	
     <LinearLayout 
-        android:id="@+id/player1ll"
-        android:orientation="horizontal"
-        android:gravity="bottom" 
-        android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
+        android:orientation="vertical"
+	    android:gravity="bottom|center_horizontal" 
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"
 		android:layout_centerHorizontal="true"
-		android:layout_alignParentBottom="true" >
-		<!--  
-        <ImageView
-		    android:src="@drawable/back_blue_1"
-		    android:layout_width="125dip"
+		android:layout_alignParentBottom="true">
+		<TextView
+		    android:id="@+id/player1text"
+		    android:text="Player 1" 
+		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:adjustViewBounds="true" />
-		<ImageView
-		    android:src="@drawable/back_blue_1"
-		    android:layout_width="125dip"
-		    android:layout_height="wrap_content"
-		    android:adjustViewBounds="true" />-->
-		
+		    android:textColor="#ffffff"
+		    android:textSize="50sp"
+		    android:textStyle="bold"
+		    android:gravity="top|center_horizontal"
+		    android:paddingBottom="10sp" />
+	    <LinearLayout 
+	        android:id="@+id/player1ll"
+	        android:orientation="horizontal"
+	        android:gravity="bottom" 
+	        android:layout_height="wrap_content"
+			android:layout_width="wrap_content" >
+			<!--  
+	        <ImageView
+			    android:src="@drawable/back_blue_1"
+			    android:layout_width="125dip"
+			    android:layout_height="wrap_content"
+			    android:adjustViewBounds="true" />
+			<ImageView
+			    android:src="@drawable/back_blue_1"
+			    android:layout_width="125dip"
+			    android:layout_height="wrap_content"
+			    android:adjustViewBounds="true" />-->
+			
+	    </LinearLayout>
     </LinearLayout>
     
-    <LinearLayout 
-        android:id="@+id/player2ll"
-        android:orientation="vertical"
-        android:gravity="right"        
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+	    android:gravity="right|center_vertical"        
+	    android:layout_height="fill_parent"
 		android:layout_width="wrap_content"
 		android:layout_centerVertical="true"
-		android:layout_alignParentRight="true" />
+		android:layout_alignParentRight="true" >
+	    <TextView
+		    android:id="@+id/player2text"
+		    android:text="Player 2" 
+		    android:layout_width="wrap_content"
+		    android:layout_height="fill_parent"
+		    android:textColor="#ffffff"
+		    android:textSize="50sp"
+		    android:textStyle="bold"
+		    android:rotation="270"
+		    android:gravity="left|center_vertical" />
+	    <LinearLayout 
+	        android:id="@+id/player2ll"
+	        android:orientation="vertical"
+	        android:gravity="right"        
+	        android:layout_height="wrap_content"
+			android:layout_width="wrap_content" />
+    </LinearLayout>
     
-    <LinearLayout 
-        android:id="@+id/player4ll"
-        android:orientation="vertical"
-        android:gravity="left"        
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+	    android:gravity="left|center_vertical"        
+	    android:layout_height="fill_parent"
 		android:layout_width="wrap_content"
 		android:layout_centerVertical="true"
-		android:layout_alignParentLeft="true" />
+		android:layout_alignParentLeft="true" >
+	    <LinearLayout 
+	        android:id="@+id/player4ll"
+	        android:orientation="vertical"
+	        android:gravity="left"        
+	        android:layout_height="wrap_content"
+			android:layout_width="wrap_content" />
+	    <TextView
+		    android:id="@+id/player4text"
+		    android:text="Player 4" 
+		    android:layout_width="wrap_content"
+		    android:layout_height="fill_parent"
+		    android:textColor="#ffffff"
+		    android:textSize="50sp"
+		    android:textStyle="bold"
+		    android:rotation="90"
+		    android:gravity="left|center_vertical" /> 
+    </LinearLayout>
     
     <LinearLayout
         android:orientation="horizontal"
