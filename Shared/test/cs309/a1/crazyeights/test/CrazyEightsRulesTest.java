@@ -105,7 +105,7 @@ public class CrazyEightsRulesTest {
 	@Test
 	public void testValidDiscardEight(){
 		discardTop = new Card(1, 0, 12, 0);
-		toDiscard = new Card(0, 8, 15, 9);
+		toDiscard = new Card(0, 7, 15, 9);
 		
 		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
 	}
@@ -113,7 +113,7 @@ public class CrazyEightsRulesTest {
 	@Test
 	public void testValidDiscardEight2(){
 		discardTop = new Card(1, 0, 12, 0);
-		toDiscard = new Card(1, 8, 15, 9);
+		toDiscard = new Card(0, 7, 15, 9);
 		
 		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
 	}
@@ -121,7 +121,7 @@ public class CrazyEightsRulesTest {
 	@Test
 	public void testValidDiscardEight3(){
 		discardTop = new Card(1, 0, 12, 0);
-		toDiscard = new Card(2, 8, 15, 9);
+		toDiscard = new Card(2, 7, 15, 9);
 		
 		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
 	}
@@ -129,7 +129,7 @@ public class CrazyEightsRulesTest {
 	@Test
 	public void testValidDiscardEight4(){
 		discardTop = new Card(1, 0, 12, 0);
-		toDiscard = new Card(3, 8, 15, 9);
+		toDiscard = new Card(3, 7, 15, 9);
 		
 		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
 	}

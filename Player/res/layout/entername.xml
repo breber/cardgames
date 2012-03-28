@@ -28,12 +28,12 @@
             <EditText
                 android:id="@+id/name"
                 android:layout_width="600dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dip"
                 android:layout_weight="1"
                 android:inputType="textPersonName" />
             
             <cs309.a1.shared.Button
-                android:id="@+id/Hearts"
+                android:id="@+id/ok"
                 style="@style/GameButtonBlack"
                 android:layout_width="95dip"
                 android:layout_height="wrap_content"
