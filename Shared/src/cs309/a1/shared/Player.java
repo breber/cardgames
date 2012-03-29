@@ -38,7 +38,12 @@ public class Player {
 	}
 
 	public void removeCard(Card card){
-		cards.remove(card);
+		for(Card c : cards){
+			if(c.getIdNum() == card.getIdNum()){
+				cards.remove(c);
+				return;
+			}
+		}
 	}
 
 	public String getName() {
