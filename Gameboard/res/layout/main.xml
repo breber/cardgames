@@ -25,7 +25,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/title"
-        android:background="@drawable/wooden_top"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical" >
 

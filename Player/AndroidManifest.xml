@@ -14,11 +14,12 @@
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/application_name"
-        android:theme="@android:style/Theme.Black.NoTitleBar" >
+        android:theme="@style/Theme.CrazyEights" >
         <activity
             android:name=".activities.MainMenu"
             android:label="@string/application_name"
-            android:screenOrientation="landscape" >
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.CrazyEights" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,49 +28,54 @@
         </activity>
         <activity
             android:name=".activities.RulesActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.CrazyEights" />
         <activity
             android:name=".activities.AboutActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.CrazyEights" />
         <activity
             android:name=".activities.ConnectActivity"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+            android:theme="@style/Theme.CrazyEights.Dialog" />
         <activity
             android:name=".activities.ConnectionFailActivity"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+            android:theme="@style/Theme.CrazyEights.Dialog" />
         <activity
             android:name=".activities.GameResultsActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.CrazyEights" />
         <activity
             android:name=".activities.PauseMenuActivity"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+            android:theme="@style/Theme.CrazyEights.Dialog" />
         <activity
             android:name=".activities.QuitApplicationActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.Transparent" />
+            android:theme="@style/Theme.CrazyEights.Dialog" />
         <activity
             android:name=".activities.QuitGameActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.Transparent" />
+            android:theme="@style/Theme.CrazyEights.Dialog" />
         <activity
             android:name=".activities.SelectSuitActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.Transparent" />
+            android:theme="@style/Theme.CrazyEights.Dialog" />
         <activity
             android:name=".activities.EnterNameActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.Transparent" />
+            android:theme="@style/Theme.CrazyEights.Dialog" />
         <activity
             android:name=".activities.ShowCardsActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.CrazyEights" />
         <activity
             android:name="cs309.a1.shared.activities.DeviceListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_device_list"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.CrazyEights" />
     </application>
 
 </manifest>

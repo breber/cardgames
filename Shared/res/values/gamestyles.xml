@@ -44,8 +44,18 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Theme.CrazyEights" parent="@android:style/Theme.DeviceDefault">
-        <item name="android:background">@drawable/wooden_top</item>
+    <style name="Theme.CrazyEights" parent="@android:style/Theme.Black.NoTitleBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.CrazyEights.Dialog" parent="@android:style/Theme.DeviceDefault.Dialog.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
     </style>
 
 </resources>

@@ -18,7 +18,7 @@
         <cs309.a1.shared.TextView
             style="@style/TitleFont"
             android:gravity="center"
-            android:text="@string/pauseGameTitle"/>
+            android:text="@string/pauseGameTitle" />
     </RelativeLayout>
 
     <LinearLayout
@@ -44,7 +44,7 @@
             android:layout_marginLeft="85dip"
             android:layout_marginRight="85dip"
             android:layout_marginTop="15dip"
-            android:text="@string/Rules"/>
+            android:text="@string/Rules" />
 
         <cs309.a1.shared.Button
             android:id="@+id/btMainMenu"
@@ -52,8 +52,7 @@
             android:layout_marginBottom="15dip"
             android:layout_marginLeft="85dip"
             android:layout_marginRight="85dip"
-            android:text="@string/main_menu"/>
-        
+            android:text="@string/main_menu" />
     </LinearLayout>
 
 </RelativeLayout>
