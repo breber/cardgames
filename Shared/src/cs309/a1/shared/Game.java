@@ -1,5 +1,7 @@
 package cs309.a1.shared;
 
+import java.util.List;
+
 
 public interface Game {
 
@@ -12,5 +14,6 @@ public interface Game {
 	public Card getDiscardPileTop();
 	public int getNumPlayers();
 	public boolean isGameOver(Player player);
+	public List<Player> getPlayers();
 
 }

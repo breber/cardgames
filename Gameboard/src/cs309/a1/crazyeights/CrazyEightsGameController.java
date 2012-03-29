@@ -143,8 +143,6 @@ public class CrazyEightsGameController implements GameController {
 					advanceTurn();
 					break;
 				case Constants.DRAW_CARD:
-					Toast.makeText(gameContext, "player:" + (whoseTurn+1) + " has "+players.get(whoseTurn).getCards().size()+" cards.", Toast.LENGTH_LONG);
-
 					drawCard();
 					advanceTurn();
 					break; 
@@ -162,10 +160,14 @@ public class CrazyEightsGameController implements GameController {
 		
 		if(game.isGameOver(players.get(whoseTurn))){
 			declareWinner(whoseTurn);
-			//Toast.makeText(gameContext, "player:" + (whoseTurn+1) + " WON!!!!", Toast.LENGTH_LONG);
+			Toast.makeText(gameContext, "player:" + (whoseTurn+1) + " WON!!!!", Toast.LENGTH_SHORT).show();
+		}
+		if(game.isGameOver(game.getPlayers().get(whoseTurn)) ){
+			declareWinner(whoseTurn);
+			Toast.makeText(gameContext, "player:" + (whoseTurn+1) + " WINNER!  !!", Toast.LENGTH_SHORT).show();
 		}
 			
-		Toast.makeText(gameContext.getApplicationContext(), "player "+players.get(whoseTurn).getCards().size()+" cards.", Toast.LENGTH_LONG).show();
+		Toast.makeText(gameContext.getApplicationContext(), "player "+game.getPlayers().get(whoseTurn).getCards().size()+" cards.", Toast.LENGTH_SHORT).show();
 		
 		int numPlayers = game.getNumPlayers();
 		
@@ -222,6 +224,7 @@ public class CrazyEightsGameController implements GameController {
 			
 			gameContext.removeCard(whoseTurn+1);
 			game.discard(players.get(whoseTurn), tmpCard);
+			
 		} catch (JSONException ex) {
 			ex.printStackTrace();
 		}
