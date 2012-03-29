@@ -22,6 +22,9 @@ To use this application properly, download the application titled “Crazy Eight
     <string name="Clubs">Clubs</string>
     <string name="Diamonds">Diamonds</string>
 
+    <!-- Pause Activity -->
+    <string name="gamePaused">Paused</string>
+    
     <!-- Disconnected Activity -->
     <string name="waiting">Waiting to reconnect…</string>
 
@@ -29,7 +32,7 @@ To use this application properly, download the application titled “Crazy Eight
     <string name="winner">You Won!</string>
     <string name="loser">You Lost :(</string>
     
-	<!--     Enter Name Activity -->
+	<!-- Enter Name Activity -->
 	<string name="enter_name">Please enter your name</string>
 	<string name="ok">OK</string>
 

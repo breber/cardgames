@@ -90,13 +90,13 @@ public class DeviceListActivity extends Activity {
 		noDevicesFound = (TextView) findViewById(R.id.noDevicesFoundText);
 		noDevicesFound.setText(R.string.scanning);
 
-		deviceListProgress = (ProgressBar) findViewById(R.id.deviceListProgress);
-		refreshDeviceListButton = (ImageButton) findViewById(R.id.refreshDeviceList);
+		deviceListProgress = (ProgressBar) findViewById(R.id.titleProgress);
+		refreshDeviceListButton = (ImageButton) findViewById(R.id.titleRefreshButton);
 
 		refreshDeviceListButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				refreshDeviceListButton.setVisibility(View.GONE);
+				refreshDeviceListButton.setVisibility(View.INVISIBLE);
 				deviceListProgress.setVisibility(View.VISIBLE);
 
 				noDevicesFound.setVisibility(View.VISIBLE);
@@ -169,6 +169,9 @@ public class DeviceListActivity extends Activity {
 
 		// Request discover from BluetoothAdapter
 		mBtAdapter.startDiscovery();
+
+		refreshDeviceListButton.setVisibility(View.INVISIBLE);
+		deviceListProgress.setVisibility(View.VISIBLE);
 	}
 
 
@@ -260,12 +263,12 @@ public class DeviceListActivity extends Activity {
 				if (!deviceNames.contains(device.getName()) && display) {
 					// Otherwise display the device in the list
 					deviceNames.add(device.getName());
-					noDevicesFound.setVisibility(View.GONE);
+					noDevicesFound.setVisibility(View.INVISIBLE);
 					mDevicesArrayAdapter.add(new DeviceListItem(device.getName(), device.getAddress()));
 				}
 			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
 				// Discovery is finished - hide the progress bar, and show the refresh button
-				deviceListProgress.setVisibility(View.GONE);
+				deviceListProgress.setVisibility(View.INVISIBLE);
 				refreshDeviceListButton.setVisibility(View.VISIBLE);
 
 				// If there are no devices, show the "No Devices" message
