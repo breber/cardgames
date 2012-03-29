@@ -193,6 +193,19 @@ public class ShowCardsActivity extends Activity{
 			ll.addView(toAdd, lp);
 		}
 	}
+	
+	/**
+	 * this will remove all cards from cardhand and from the screen
+	 * used for refreshing the player and syncing with game board
+	 */
+	public void removeAllCards() {
+		//this removes all cards from card 
+		while(cardHand.size()>0){
+			cardHand.remove(cardHand.get(0));
+		}
+		LinearLayout ll = (LinearLayout) findViewById(R.id.playerCardContainer);
+		ll.removeAllViews();
+	}
 
 	/**
 	 * Removes card from player's hand

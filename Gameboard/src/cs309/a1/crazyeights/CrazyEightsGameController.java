@@ -2,18 +2,23 @@ package cs309.a1.crazyeights;
 
 import static cs309.a1.crazyeights.Constants.ID;
 import static cs309.a1.crazyeights.Constants.NUMBER_OF_CARDS_PER_HAND;
+import static cs309.a1.crazyeights.Constants.RESOURCE_ID;
 import static cs309.a1.crazyeights.Constants.SUIT;
 import static cs309.a1.crazyeights.Constants.VALUE;
 import static cs309.a1.shared.CardGame.CRAZY_EIGHTS;
 
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import cs309.a1.gameboard.R;
 import cs309.a1.gameboard.activities.GameResultsActivity;
@@ -56,12 +61,24 @@ public class CrazyEightsGameController implements GameController {
 	 */
 	private int whoseTurn = 0; 
 	
+	private ImageButton refreshButton;
 	
 	
-	public CrazyEightsGameController(GameboardActivity context, BluetoothServer btsGiven, List<Player> playersGiven) {
+	
+	public CrazyEightsGameController(GameboardActivity context, BluetoothServer btsGiven, List<Player> playersGiven, ImageButton refreshGiven) {
 		gameContext = context;
 		bts = btsGiven;
 		players = playersGiven;
+		refreshButton = refreshGiven;
+		
+		refreshButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				v.setEnabled(false);
+				refreshPlayers();
+				v.setEnabled(true);
+			}
+		});
 		
 		Deck deck = new Deck(CRAZY_EIGHTS);
 		Rules rules = new CrazyEightGameRules();
@@ -93,10 +110,11 @@ public class CrazyEightsGameController implements GameController {
 				i++;
 			}
 
-			for (; i < 5; i++) {
+			//not needed only need to place cards for players
+			/*for (; i < 5; i++) {
 				for(int j = 0; j<NUMBER_OF_CARDS_PER_HAND; j++)
 				gameContext.placeCard(i, new Card(5, 0, R.drawable.back_blue_1, 54));
-			}
+			}*/
 
 			gameContext.placeCard(0, game.getDiscardPileTop());
 		} else {
@@ -146,6 +164,9 @@ public class CrazyEightsGameController implements GameController {
 					drawCard();
 					advanceTurn();
 					break; 
+				case Constants.REFRESH:
+					refreshPlayers();
+					break;
 			}
 
 		}
@@ -231,4 +252,49 @@ public class CrazyEightsGameController implements GameController {
 		gameContext.placeCard(0, tmpCard);
 		
 	}
+	
+	private void refreshPlayers(){
+		
+		Player pTurn = players.get(whoseTurn);
+		
+		for (Player p : players) {
+			if (Util.isDebugBuild()) {
+				Log.d(TAG, p.getName() + " refreshed : " + p);
+			}
+			try {
+				JSONArray arr = new JSONArray();
+				JSONObject refreshInfo = new JSONObject();
+				refreshInfo.put(Constants.TURN, pTurn.equals(p));
+				//Maybe add more refresh info here
+				
+				arr.put(refreshInfo);
+				
+				//TODO BRIAN do I need to do this if I am going to have an array with 
+				//     a refresh object then an array of cards
+				//     or can I just do arr.put(players)   ? doing arr.put(arr2) essentially
+				for (Card c : p.getCards()) {
+					JSONObject obj = new JSONObject();
+					obj.put(SUIT, c.getSuit());
+					obj.put(VALUE, c.getValue());
+					obj.put(RESOURCE_ID, c.getResourceId());
+					obj.put(ID, c.getIdNum());
+
+					arr.put(obj);
+				}
+
+				arr.toString();
+				bts.write(Constants.REFRESH, arr.toString(), p.getId());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
+			
+		}
+	}
+	
 }
+
+
+
+
+

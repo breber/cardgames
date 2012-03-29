@@ -3,6 +3,7 @@ package cs309.a1.crazyeights;
 import static cs309.a1.crazyeights.Constants.ID;
 import static cs309.a1.crazyeights.Constants.SUIT;
 import static cs309.a1.crazyeights.Constants.VALUE;
+import static cs309.a1.crazyeights.Constants.*;
 
 import java.util.ArrayList;
 
@@ -94,7 +95,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 			}
 	
 			switch(messageType){
-			case Constants.SETUP:
+			case SETUP:
 				// Parse the Message if it was the original setup
 				try {
 					JSONArray arr = new JSONArray(object);
@@ -112,7 +113,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 				setButtonsEnabled(false);
 				isTurn=false;
 				break;
-			case Constants.IS_TURN:
+			case IS_TURN:
 	
 				try {
 					JSONObject obj = new JSONObject(object);
@@ -126,7 +127,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 				setButtonsEnabled(true);
 				isTurn = true;
 				break;
-			case Constants.CARD_DRAWN:
+			case CARD_DRAWN:
 				try {
 					JSONObject obj = new JSONObject(object);
 					int suit = obj.getInt(SUIT);
@@ -137,14 +138,35 @@ public class CrazyEightsPlayerController implements PlayerController {
 					ex.printStackTrace();
 				}
 				break;
-				
-				//these need to be in the activity
-			case Constants.WINNER:
+			case REFRESH:
+				// Parse the refresh Message 
+				try {
+					JSONArray arr = new JSONArray(object);
+					JSONObject refreshInfo = arr.getJSONObject(0);
+					isTurn = refreshInfo.getBoolean(Constants.TURN);
+					//if add more refresh info add more here
+					
+					playerContext.removeAllCards();
+					
+					for (int i = 1; i < arr.length(); i++) {
+						JSONObject obj = arr.getJSONObject(i);
+						int suit = obj.getInt(SUIT);
+						int value = obj.getInt(VALUE);
+						int id = obj.getInt(ID);
+						playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+					}
+				} catch (JSONException ex) {
+					ex.printStackTrace();
+				}
+				setButtonsEnabled(isTurn);
+				cardSelected=null;
+				break;
+			case WINNER:
 				Intent Winner = new Intent(playerContext, GameResultsActivity.class);
 				Winner.putExtra(GameResultsActivity.IS_WINNER, true);
 				playerContext.startActivityForResult(Winner, QUIT_GAME);
 				break;
-			case Constants.LOSER:
+			case LOSER:
 				Intent Loser = new Intent(playerContext, GameResultsActivity.class);
 				Loser.putExtra(GameResultsActivity.IS_WINNER, false);
 				playerContext.startActivityForResult(Loser, QUIT_GAME);

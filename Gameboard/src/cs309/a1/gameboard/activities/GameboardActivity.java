@@ -151,9 +151,11 @@ public class GameboardActivity extends Activity {
 			p.setName("Player "+i);
 			players.add(p);
 		}
+		
+		ImageButton refresh = (ImageButton) findViewById(R.id.gameboard_refresh);
 
 		//the GameController now handles the setup of the game.
-		gameController = new CrazyEightsGameController(this, bts, players);
+		gameController = new CrazyEightsGameController(this, bts, players, refresh);
 		ct = new CrazyEightsCardTranslator();
 	}
 	
