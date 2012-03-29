@@ -56,16 +56,34 @@ public class GameboardActivity extends Activity {
 	
 	List<Player> players;
 	
+	/**
+	 * The maximum number of cards to be displayed on longest sides of tablet
+	 */
 	private static final int MAX_DISPLAYED = 13;
 	
+	/**
+	 * The maximum number of cards to be displayed on shortest sides of tablet
+	 */
 	private static final int MAX_DIS_SIDES = 7;
 	
+	/**
+	 * The number of cards in player 1's hand
+	 */
 	private int player1cards;
 	
+	/**
+	 * The number of cards in player 2's hand
+	 */
 	private int player2cards;
 	
+	/**
+	 * The number of cards in player 3's hand
+	 */
 	private int player3cards;
 	
+	/**
+	 * The number of cards in player 4's hand
+	 */
 	private int player4cards;
 	
 	CardTranslator ct;

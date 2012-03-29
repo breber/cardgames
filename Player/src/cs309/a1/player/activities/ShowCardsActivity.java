@@ -44,6 +44,9 @@ public class ShowCardsActivity extends Activity{
 	 */
 	private static final int DISCONNECTED = Math.abs("DISCONNECTED".hashCode());
 
+	/**
+	 * List of cards in player's hand
+	 */
 	private ArrayList<Card> cardHand;
 
 	BluetoothClient btc;
