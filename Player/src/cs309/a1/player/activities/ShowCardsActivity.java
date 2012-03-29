@@ -2,7 +2,6 @@ package cs309.a1.player.activities;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -19,6 +18,7 @@ import cs309.a1.shared.Card;
 import cs309.a1.shared.PlayerController;
 import cs309.a1.shared.bluetooth.BluetoothClient;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
+import cs309.a1.shared.Util;
 
 /**
  *
@@ -167,7 +167,7 @@ public class ShowCardsActivity extends Activity{
 
 		cardHand.add(newCard);
 
-		Collections.sort(cardHand, new CompareIdNums());
+		Collections.sort(cardHand, new Util.CompareIdNums());
 
 		LinearLayout ll = (LinearLayout) findViewById(R.id.playerCardContainer);
 		ll.removeAllViews();
@@ -209,13 +209,6 @@ public class ShowCardsActivity extends Activity{
 		}
 
 		cardHand.remove(current);
-	}
-
-	//TODO: should this be moved to like the Util class, since it just compares generic cards?
-	private class CompareIdNums implements Comparator<Card> {
-		public int compare(Card card1, Card card2) {
-			return card1.getIdNum() - card2.getIdNum();
-		}
 	}
 
 }

@@ -1,5 +1,7 @@
 package cs309.a1.shared;
 
+import java.util.Comparator;
+
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
@@ -41,5 +43,13 @@ public class Util {
 			ctx.startActivity(discoverableIntent);
 		}
 	}
-
+	
+	/**
+	 * Comparator for sorting cards in ascending order based on ID number
+	 */
+	public static class CompareIdNums implements Comparator<Card> {
+		public int compare(Card card1, Card card2) {
+			return card1.getIdNum() - card2.getIdNum();
+		}
+	}
 }
