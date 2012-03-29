@@ -169,9 +169,10 @@ public class CrazyEightsPlayerController implements PlayerController {
 						playerContext.removeFromHand(cardSelected.getIdNum());
 
 						if (Util.isDebugBuild()) {
-							Toast.makeText(playerContext.getBaseContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), 100);
+							Toast.makeText(playerContext.getApplicationContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), Toast.LENGTH_SHORT);
 						}
-
+						
+						cardSelected=null;
 						setButtonsEnabled(false);
 						isTurn=false;
 					}
@@ -199,9 +200,6 @@ public class CrazyEightsPlayerController implements PlayerController {
 	public void handleActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		if (requestCode == CHOOSE_SUIT) {
-			
-			//handleActivityResult(requestCode, resultCode, data);
-			//TODO add to player controller
 			switch(resultCode){
 			case Constants.SUIT_CLUBS:
 				btc.write(Constants.PLAY_EIGHT_C, cardSelected);
@@ -218,8 +216,10 @@ public class CrazyEightsPlayerController implements PlayerController {
 			}
 			playerContext.removeFromHand(cardSelected.getIdNum());
 			if (Util.isDebugBuild()) {
-				Toast.makeText(playerContext.getBaseContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), 100);
+				Toast.makeText(playerContext.getApplicationContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), 100);
 			}
+			
+			cardSelected=null;
 			setButtonsEnabled(false);
 			isTurn=false;
 		}
