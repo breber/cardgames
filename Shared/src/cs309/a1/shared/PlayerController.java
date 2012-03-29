@@ -9,11 +9,28 @@ import android.view.View.OnLongClickListener;
 
 public interface PlayerController {
 
-	public BroadcastReceiver getBroadcastReceiver();
+	/**
+	 * @param context
+	 * @param intent
+	 */
 	public void handleBroadcastReceive(Context context, Intent intent);
+	/**
+	 * @return
+	 */
 	public View.OnClickListener getPlayOnClickListener();
+	/**
+	 * @return
+	 */
 	public View.OnClickListener getDrawOnClickListener();
+	/**
+	 * @return
+	 */
 	public OnLongClickListener getCardLongClickListener();
+	/**
+	 * @param requestCode
+	 * @param resultCode
+	 * @param data
+	 */
 	public void handleActivityResult(int requestCode, int resultCode, Intent data);
 	
 }

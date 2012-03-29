@@ -1,16 +1,8 @@
 package cs309.a1.player.activities;
 
-import static cs309.a1.crazyeights.Constants.ID;
-import static cs309.a1.crazyeights.Constants.SUIT;
-import static cs309.a1.crazyeights.Constants.VALUE;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -18,22 +10,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
-import cs309.a1.crazyeights.Constants;
-import cs309.a1.crazyeights.CrazyEightGameRules;
-import cs309.a1.crazyeights.CrazyEightsCardTranslator;
+import cs309.a1.crazyeights.CrazyEightsPlayerController;
 import cs309.a1.player.R;
 import cs309.a1.shared.Card;
-import cs309.a1.shared.CardTranslator;
-import cs309.a1.shared.Rules;
-import cs309.a1.shared.Util;
+import cs309.a1.shared.PlayerController;
 import cs309.a1.shared.bluetooth.BluetoothClient;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
 
@@ -45,11 +28,6 @@ public class ShowCardsActivity extends Activity{
 	 * The Logcat Debug tag
 	 */
 	private static final String TAG = ShowCardsActivity.class.getName();
-
-	/**
-	 * intent code for choosing suit
-	 */
-	private static final int CHOOSE_SUIT = Math.abs("CHOOSE_SUIT".hashCode());
 
 	/**
 	 * The request code to keep track of the connect device activity
@@ -68,15 +46,9 @@ public class ShowCardsActivity extends Activity{
 
 	private ArrayList<Card> cardHand;
 
-	private Card cardSelected;
-
-	private Card cardOnDiscard;
-
-	private Rules gameRules;
-
-	private boolean isTurn = false;
-
 	BluetoothClient btc;
+	
+	private PlayerController playerController;
 
 	/**
 	 * The BroadcastReceiver for handling messages from the Bluetooth connection
@@ -85,77 +57,11 @@ public class ShowCardsActivity extends Activity{
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-
-			if (BluetoothConstants.MESSAGE_RX_INTENT.equals(action)) {
-
-				// TODO: we want to get this based on the current game, not
-				// always the CrazyEights version
-				CardTranslator ct = new CrazyEightsCardTranslator();
-
-				String object = intent.getStringExtra(BluetoothConstants.KEY_MESSAGE_RX);
-				int messageType = intent.getIntExtra(BluetoothConstants.KEY_MESSAGE_TYPE, -1);
-
-				if (Util.isDebugBuild()) {
-					Log.d(TAG, "message: " + object);
-				}
-
-				switch(messageType){
-				case Constants.SETUP:
-					// Parse the Message if it was the original setup
-					try {
-						JSONArray arr = new JSONArray(object);
-						arr.getJSONObject(0);
-						for (int i = 0; i < arr.length(); i++) {
-							JSONObject obj = arr.getJSONObject(i);
-							int suit = obj.getInt(SUIT);
-							int value = obj.getInt(VALUE);
-							int id = obj.getInt(ID);
-							addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
-						}
-					} catch (JSONException ex) {
-						ex.printStackTrace();
-					}
-					setButtonsEnabled(false);
-					isTurn=false;
-					break;
-				case Constants.IS_TURN:
-
-					try {
-						JSONObject obj = new JSONObject(object);
-						int suit = obj.getInt(SUIT);
-						int value = obj.getInt(VALUE);
-						int id = obj.getInt(ID);
-						cardOnDiscard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
-					} catch (JSONException ex) {
-						ex.printStackTrace();
-					}
-					setButtonsEnabled(true);
-					isTurn = true;
-					break;
-				case Constants.CARD_DRAWN:
-					try {
-						JSONObject obj = new JSONObject(object);
-						int suit = obj.getInt(SUIT);
-						int value = obj.getInt(VALUE);
-						int id = obj.getInt(ID);
-						addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
-					} catch (JSONException ex) {
-						ex.printStackTrace();
-					}
-					break;
-				case Constants.WINNER:
-					Intent Winner = new Intent(ShowCardsActivity.this, GameResultsActivity.class);
-					Winner.putExtra(GameResultsActivity.IS_WINNER, true);
-					startActivityForResult(Winner, QUIT_GAME);
-					break;
-				case Constants.LOSER:
-					Intent Loser = new Intent(ShowCardsActivity.this, GameResultsActivity.class);
-					Loser.putExtra(GameResultsActivity.IS_WINNER, false);
-					startActivityForResult(Loser, QUIT_GAME);
-					break;
-				}
-
-			} else if (BluetoothConstants.STATE_CHANGE_INTENT.equals(action)) {
+			
+			//give it up to the player controller to deal with
+			playerController.handleBroadcastReceive(context, intent);
+			
+			if (BluetoothConstants.STATE_CHANGE_INTENT.equals(action)) {
 				// Handle a state change
 				int newState = intent.getIntExtra(BluetoothConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_NONE);
 
@@ -175,54 +81,21 @@ public class ShowCardsActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.player_hand);
+		
 		cardHand = new ArrayList<Card>();
 
 		//check which game we are playing then set rules
-		gameRules = new CrazyEightGameRules();
-
+		
 		// Register the receiver for message/state change intents
 		registerReceiver(receiver, new IntentFilter(BluetoothConstants.MESSAGE_RX_INTENT));
 
 		btc = BluetoothClient.getInstance(this);
-
 		Button play = (Button) findViewById(R.id.btPlayCard);
 		Button draw = (Button) findViewById(R.id.btDrawCard);
-
-		setButtonsEnabled(false);
-
-		draw.setOnClickListener(new OnClickListener(){
-			public void onClick(View v) {
-				if(isTurn){
-					btc.write(Constants.DRAW_CARD, null);
-					setButtonsEnabled(false);
-					isTurn=false;
-				}
-			}
-		});
-
-		play.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				if(isTurn && gameRules.checkCard(cardSelected, cardOnDiscard)){
-					//play card
-					if(cardSelected.getValue() == 7){
-						Intent selectSuit = new Intent(ShowCardsActivity.this, SelectSuitActivity.class);
-						startActivityForResult(selectSuit, CHOOSE_SUIT);
-						//go to the onactivityresult to finish this turn
-					}else{
-						btc.write(Constants.PLAY_CARD, cardSelected);
-						Toast.makeText(getApplicationContext(), "playing : " + cardSelected.getValue(), Toast.LENGTH_SHORT).show();
-						removeFromHand(cardSelected.getIdNum());
-
-						if (Util.isDebugBuild()) {
-							Toast.makeText(getBaseContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), 100);
-						}
-
-						setButtonsEnabled(false);
-						isTurn=false;
-					}
-				}
-			}
-		});
+		
+		//TODO if crazyeights
+		playerController = (PlayerController) new CrazyEightsPlayerController(this,play,draw,btc, cardHand);
+		
 
 		// Start the connection screen from here so that we can register the message receive
 		// broadcast receiver so that we don't miss any messages
@@ -249,6 +122,7 @@ public class ShowCardsActivity extends Activity{
 
 		// Unregister the receiver
 		unregisterReceiver(receiver);
+		//unregisterReceiver(playerController.getBroadcastReceiver());
 
 		super.onDestroy();
 	}
@@ -279,29 +153,9 @@ public class ShowCardsActivity extends Activity{
 				// Register the state change receiver
 				registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
 			}
-		} else if (requestCode == CHOOSE_SUIT) {
-			switch(resultCode){
-			case Constants.SUIT_CLUBS:
-				btc.write(Constants.PLAY_EIGHT_C, cardSelected);
-				break;
-			case Constants.SUIT_DIAMONDS:
-				btc.write(Constants.PLAY_EIGHT_D, cardSelected);
-				break;
-			case Constants.SUIT_HEARTS:
-				btc.write(Constants.PLAY_EIGHT_H, cardSelected);
-				break;
-			case Constants.SUIT_SPADES:
-				btc.write(Constants.PLAY_EIGHT_S, cardSelected);
-				break;
-			}
-			removeFromHand(cardSelected.getIdNum());
-			if (Util.isDebugBuild()) {
-				Toast.makeText(getBaseContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), 100);
-			}
-			setButtonsEnabled(false);
-			isTurn=false;
-		}
-
+		} 
+		
+		playerController.handleActivityResult(requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
@@ -309,7 +163,7 @@ public class ShowCardsActivity extends Activity{
 	 * 
 	 * @param newCard
 	 */
-	private void addCard(Card newCard) {
+	public void addCard(Card newCard) {
 
 		cardHand.add(newCard);
 
@@ -331,7 +185,7 @@ public class ShowCardsActivity extends Activity{
 			toAdd.setImageResource(cardHand.get(i).getResourceId());
 			toAdd.setId(cardHand.get(i).getIdNum());
 			toAdd.setAdjustViewBounds(true);
-			toAdd.setOnLongClickListener(new MyLongClickListener()); //this is a private class below
+			toAdd.setOnLongClickListener(playerController.getCardLongClickListener());
 			ll.addView(toAdd, lp);
 		}
 	}
@@ -340,7 +194,7 @@ public class ShowCardsActivity extends Activity{
 	 * 
 	 * @param idNum
 	 */
-	private void removeFromHand(int idNum) {
+	public void removeFromHand(int idNum) {
 
 		LinearLayout ll = (LinearLayout) findViewById(R.id.playerCardContainer);
 		ll.removeView(findViewById(idNum));
@@ -357,14 +211,6 @@ public class ShowCardsActivity extends Activity{
 		cardHand.remove(current);
 	}
 
-	private void setButtonsEnabled(boolean isEnabled){
-		Button play = (Button) findViewById(R.id.btPlayCard);
-		Button draw = (Button) findViewById(R.id.btDrawCard);
-
-		play.setEnabled(isEnabled);
-		draw.setEnabled(isEnabled);
-	}
-
 	//TODO: should this be moved to like the Util class, since it just compares generic cards?
 	private class CompareIdNums implements Comparator<Card> {
 		public int compare(Card card1, Card card2) {
@@ -372,31 +218,4 @@ public class ShowCardsActivity extends Activity{
 		}
 	}
 
-
-	private class MyLongClickListener implements View.OnLongClickListener {
-
-		public boolean onLongClick(View v) {
-			//so this means they just selected the card.
-			//we could remove it from the hand below and place it so
-			ScaleAnimation scale = new ScaleAnimation((float)1.2, (float)1.2, (float)1.2, (float)1.2);
-			scale.scaleCurrentDuration(5);
-
-			v.startAnimation(scale);
-			int i;
-			for(i=0; i < cardHand.size(); i++){
-				if(cardHand.get(i).getIdNum() == v.getId()){
-					cardSelected= cardHand.get(i);
-				}
-			}
-
-			//please take out once bluetooth is working with receiving card on discard
-			//TODO
-			if (Util.isDebugBuild()) {
-				//cardOnDiscard = cardSelected;
-			}
-
-			return true;
-		}
-
-	}
 }
