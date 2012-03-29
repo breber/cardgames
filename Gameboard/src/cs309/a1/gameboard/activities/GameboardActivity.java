@@ -178,7 +178,13 @@ public class GameboardActivity extends Activity {
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-
+	
+	/**
+	 * Places a card in the specified location on the game board
+	 * 
+	 * @param location Location to place the card
+	 * @param newCard Card to be placed on the game board
+	 */
 	public void placeCard(int location, Card newCard) {
 
 		LinearLayout ll;
@@ -207,6 +213,7 @@ public class GameboardActivity extends Activity {
 				handSize = ++player3cards;
 			}
 			
+			// create full-sized card image if first card in hand
 			if(handSize == 1) {
 				lp = new LinearLayout.LayoutParams(pixels, LinearLayout.LayoutParams.WRAP_CONTENT);
 	
@@ -218,11 +225,13 @@ public class GameboardActivity extends Activity {
 				ll.addView(toAdd, lp);
 			}
 			
+			// create half-sized card image to add to hand if current card count is less than display limit
 			else if(handSize <= MAX_DISPLAYED) {
 				
 				Bitmap verticalCard = BitmapFactory.decodeResource(getResources(), newCard.getResourceId());
 				Matrix tempMatrix = new Matrix();
 				
+				// if player 3, add new image to linear layout of player 3's hand
 				if(location == 3) {
 					Bitmap halfCard = Bitmap.createBitmap(verticalCard, verticalCard.getWidth()/2, 0, verticalCard.getWidth()/2, verticalCard.getHeight(), tempMatrix, true);
 					ImageView toAdd = new ImageView(this);
@@ -234,6 +243,7 @@ public class GameboardActivity extends Activity {
 					ll.addView(toAdd, lp);
 				}
 				
+				// if player 1, remove and re-add all views so new card displays in correct order
 				else {
 					Bitmap horCard = Bitmap.createBitmap(verticalCard, 0, 0, verticalCard.getWidth()/2, verticalCard.getHeight(), tempMatrix, true);
 					ll.removeAllViews();
@@ -274,6 +284,7 @@ public class GameboardActivity extends Activity {
 				handSize = ++player4cards;
 			}
 			
+			// create full-sized horizontal card if first card in hand
 			if(handSize == 1) {
 
 				// rotate vertical card image 90 degrees
@@ -292,6 +303,7 @@ public class GameboardActivity extends Activity {
 				ll.addView(toAdd, lp);
 			}
 			
+			// create horizontal half-cards to display if maximum display count has not been reached
 			else if(handSize <= MAX_DIS_SIDES) {
 				
 				Bitmap horCard;
@@ -302,6 +314,7 @@ public class GameboardActivity extends Activity {
 				Matrix tempMatrix = new Matrix();
 				tempMatrix.postRotate(90);
 				
+				// if player 4, remove all views and re-add to player 4's linear layout to display in correct order
 				if(location == 4) {
 					horCard = Bitmap.createBitmap(verticalCard, 0, 0, verticalCard.getWidth()/2, verticalCard.getHeight(), tempMatrix, true);
 					ll.removeAllViews();
@@ -328,6 +341,8 @@ public class GameboardActivity extends Activity {
 					toAdd.setAdjustViewBounds(true);
 					ll.addView(toAdd, lp);
 				}
+				
+				// if player 2, add new card view to player 2's linear layout
 				else {
 					horCard = Bitmap.createBitmap(verticalCard, verticalCard.getWidth()/2, 0, verticalCard.getWidth()/2, verticalCard.getHeight(), tempMatrix, true);
 					ImageView toAdd = new ImageView(this);
@@ -344,18 +359,25 @@ public class GameboardActivity extends Activity {
 				//TODO: display counter of cards not shown
 			}
 		}
-
+		
+		// set draw pile image
 		else {
 			ImageView draw = (ImageView) findViewById(R.id.drawpile);
 			draw.setImageResource(newCard.getResourceId());
 		}
 	}
 	
+	/**
+	 * Removes a card from specified location on the game board
+	 * 
+	 * @param location Location from which card should be removed
+	 */
 	public void removeCard(int location) {
 		
 		LinearLayout ll;
 		int handSize;
 		
+		// remove card from player 1's hand
 		if(location == 1) {
 			ll = (LinearLayout) findViewById(R.id.player1ll);
 			handSize = --player1cards;
@@ -368,6 +390,8 @@ public class GameboardActivity extends Activity {
 				}
 			}
 		}
+		
+		// remove card from player 2's hand
 		else if(location == 2) {
 			ll = (LinearLayout) findViewById(R.id.player2ll);
 			handSize = --player2cards;
@@ -375,6 +399,8 @@ public class GameboardActivity extends Activity {
 				ll.removeView(findViewById(MAX_DISPLAYED +handSize+1));
 			}
 		}
+		
+		// remove card from player 3's hand
 		else if(location == 3) {
 			ll = (LinearLayout) findViewById(R.id.player3ll);
 			handSize = --player3cards;
@@ -382,6 +408,8 @@ public class GameboardActivity extends Activity {
 				ll.removeView(findViewById(2*MAX_DISPLAYED + handSize+1));
 			}
 		}
+		
+		// remove card from player 4's hand
 		else {
 			ll = (LinearLayout) findViewById(R.id.player4ll);
 			handSize = --player4cards;

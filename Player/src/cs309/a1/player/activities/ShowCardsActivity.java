@@ -160,8 +160,9 @@ public class ShowCardsActivity extends Activity{
 	}
 
 	/**
+	 * Adds and displays a card in the player's hand
 	 * 
-	 * @param newCard
+	 * @param newCard Card to be added to the hand
 	 */
 	public void addCard(Card newCard) {
 
@@ -191,8 +192,9 @@ public class ShowCardsActivity extends Activity{
 	}
 
 	/**
+	 * Removes card from player's hand
 	 * 
-	 * @param idNum
+	 * @param idNum ID number of the card to be removed
 	 */
 	public void removeFromHand(int idNum) {
 
