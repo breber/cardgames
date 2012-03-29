@@ -6,17 +6,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import cs309.a1.gameboard.R;
+import cs309.a1.shared.TextView;
 
 /**
- * The activity that is displayed on the client when the game finishes.
- * It will tell the user whether they won or lost.
+ * The activity that is displayed on the tablet when the game finishes.
+ * It will tell the users who won.
  */
 public class GameResultsActivity extends Activity{
 	/**
-	 * The Intent extra indicating whether the user
-	 * won the game or lost the game.
+	 * The Intent extra indicating which user won the game
 	 */
-	public static final String IS_WINNER = "iswinner";
+	public static final String WINNER_NUMBER = "whowon";
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -25,13 +25,31 @@ public class GameResultsActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.winlose);
-		
-		// TODO: display who won
-		// TODO: do we want to remove the "Exit Game" button?
-		
+
+		int winner = getIntent().getIntExtra(WINNER_NUMBER, 0);
+
+		// Display who won in the title bar
+		TextView title = (TextView) findViewById(R.id.gameResultsTitle);
+		title.setText(getResources().getString(R.string.playerNWon).replace("%n", winner + ""));
+
 		// Add a handler to the Main Menu button
 		Button mainMenu = (Button) findViewById(R.id.btMainMenu);
 		mainMenu.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// When they click the main menu button, finish this activity,
+				// which will allow the ShowCardsActivity to finish leaving them back
+				// at the MainMenu
+				setResult(RESULT_OK);
+				finish();
+			}
+		});
+
+		// TODO: do we want this button?
+		// Add a handler to the Exit Game button
+		Button exitGame = (Button) findViewById(R.id.btExit);
+		exitGame.setOnClickListener(new OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				// When they click the main menu button, finish this activity,
 				// which will allow the ShowCardsActivity to finish leaving them back
@@ -41,7 +59,7 @@ public class GameResultsActivity extends Activity{
 			}
 		});
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onBackPressed()
 	 */

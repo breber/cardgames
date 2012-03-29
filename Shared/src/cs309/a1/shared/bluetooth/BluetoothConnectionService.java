@@ -236,6 +236,10 @@ public class BluetoothConnectionService {
 			r = mConnectedThread;
 		}
 
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "msgsent: " + new String(out));
+		}
+
 		// Perform the write unsynchronized
 		r.write(out);
 	}
@@ -411,6 +415,10 @@ public class BluetoothConnectionService {
 					bytes = mmInStream.read(buffer);
 
 					JSONObject obj = new JSONObject(new String(buffer, 0, bytes));
+
+					if (Util.isDebugBuild()) {
+						Log.d(TAG, "msgrx: " + obj.toString());
+					}
 
 					// Send the obtained bytes to the UI Activity
 					Message msg = mHandler.obtainMessage(BluetoothConstants.READ_MESSAGE, -1, -1, null);

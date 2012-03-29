@@ -11,6 +11,7 @@ To use this application properly, download the application titled “Crazy Eight
     <!-- Connect Devices -->
     <string name="start">Start</string>
     <string name="deviceName">Device Name: </string>
+    <string name="connecting">Connecting&#8230;</string>
 
     <!-- Gameboard Activity -->
     <string name="player_1">Player 1</string>
@@ -28,6 +29,7 @@ To use this application properly, download the application titled “Crazy Eight
     
     <!-- Game Results Activity -->
     <string name="gameResultsTitle">Game Over</string>
+    <string name="playerNWon">Player %n Wins!</string>
     <string name="exitGame">Exit Game</string>
 
 </resources>

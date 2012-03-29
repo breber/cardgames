@@ -16,6 +16,7 @@
         android:paddingTop="0dp" >
 
         <cs309.a1.shared.TextView
+            android:id="@+id/gameResultsTitle"
             style="@style/TitleFont"
             android:gravity="center"
             android:text="@string/gameResultsTitle"

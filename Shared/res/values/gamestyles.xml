@@ -35,13 +35,17 @@
         <item name="android:textSize">45sp</item>
         <item name="android:typeface">normal</item>
     </style>
-    
+
     <style name="popupStyle" parent="@style/GameButton">
         <item name="android:gravity">center</item>
         <item name="android:paddingLeft">50dip</item>
         <item name="android:paddingRight">50dip</item>
         <item name="android:textSize">50sp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Theme.CrazyEights" parent="@android:style/Theme.DeviceDefault">
+        <item name="android:background">@drawable/wooden_top</item>
     </style>
 
 </resources>

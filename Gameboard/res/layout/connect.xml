@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/wooden_top"
     android:keepScreenOn="true"
     android:orientation="horizontal" >
 
@@ -21,11 +20,26 @@
             android:gravity="center"
             android:orientation="horizontal" >
 
-            <ImageView
-                android:id="@+id/ImageViewP3"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/off_device" />
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/connectDeviceP3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:src="@drawable/off_device" />
+
+                <cs309.a1.shared.TextView
+                    android:id="@+id/connectDeviceP3TextView"
+                    style="@style/ConnectPlayerFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/player_3"
+                    android:visibility="invisible" />
+            </RelativeLayout>
         </TableRow>
 
         <TableRow
@@ -36,26 +50,69 @@
             android:gravity="center"
             android:orientation="horizontal" >
 
-            <ImageView
-                android:id="@+id/ImageViewP4"
+            <RelativeLayout
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:layout_weight=".33"
-                android:src="@drawable/off_device" />
+                android:layout_weight=".33" >
 
-            <ImageView
-                android:id="@+id/ImageViewTablet"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight=".33"
-                android:src="@drawable/on_device_tablet" />
+                <ImageView
+                    android:id="@+id/connectDeviceP4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:src="@drawable/off_device" />
 
-            <ImageView
-                android:id="@+id/ImageViewP2"
+                <cs309.a1.shared.TextView
+                    android:id="@+id/connectDeviceP4TextView"
+                    style="@style/ConnectPlayerFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/player_4"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:layout_weight=".33"
-                android:src="@drawable/off_device" />
+                android:layout_weight=".33" >
+
+                <ImageView
+                    android:id="@+id/connectDeviceTablet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:src="@drawable/on_device" />
+
+                <cs309.a1.shared.TextView
+                    style="@style/ConnectPlayerFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/connecting" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight=".33" >
+
+                <ImageView
+                    android:id="@+id/connectDeviceP2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:src="@drawable/off_device" />
+
+                <cs309.a1.shared.TextView
+                    android:id="@+id/connectDeviceP2TextView"
+                    style="@style/ConnectPlayerFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/player_2"
+                    android:visibility="invisible" />
+            </RelativeLayout>
         </TableRow>
 
         <TableRow
@@ -66,12 +123,26 @@
             android:gravity="center"
             android:orientation="horizontal" >
 
-            <ImageView
-                android:id="@+id/ImageViewP1"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:src="@drawable/off_device" />
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/connectDeviceP1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:src="@drawable/off_device" />
+
+                <cs309.a1.shared.TextView
+                    android:id="@+id/connectDeviceP1TextView"
+                    style="@style/ConnectPlayerFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/player_1"
+                    android:visibility="invisible" />
+            </RelativeLayout>
         </TableRow>
     </TableLayout>
 
@@ -95,8 +166,8 @@
         android:layout_alignParentTop="true"
         android:layout_margin="15dip"
         android:background="@drawable/statebutton"
-        android:textColor="@color/statecolor"
         android:padding="15dip"
-        android:text="@string/start" />
+        android:text="@string/start"
+        android:textColor="@color/statecolor" />
 
 </RelativeLayout>

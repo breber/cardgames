@@ -18,52 +18,90 @@ import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.bluetooth.BluetoothServer;
 
+/**
+ * This Activity will show how many players are connected, and
+ * will allow them to start the game if there are enough players.
+ */
 public class ConnectActivity extends Activity {
+	/**
+	 * The request code to keep track of the Bluetooth request enable intent
+	 */
+	private static final int REQUEST_ENABLE_BT = Math.abs("REQUEST_BLUETOOTH".hashCode());
 
-	private static final int REQUEST_ENABLE_BT = 10;
-	private int numPlayers = 0;
-	private ImageView[] ImageViews = new ImageView[5];
+	/**
+	 * An array of ImageViews. These are the "tablet" images that light up when a player
+	 * has connected and is waiting for the game to begin.
+	 */
+	private ImageView[] playerImageViews = new ImageView[4];
 
-	private Context mContext;
+	/**
+	 * An array of TextViews.  These are the labels inside the ImageViews that will have
+	 * the names of the players.
+	 */
+	private TextView[] playerTextViews = new TextView[4];
+
+	/**
+	 * A reference to the BluetoothAdapter. This allows us to check if Bluetooth is enabled.
+	 */
 	private BluetoothAdapter mBluetoothAdapter;
+
+	/**
+	 * A reference to the BluetoothServer that allows us to keep track of how many devices
+	 * are currently connected to this device.
+	 */
 	private BluetoothServer mBluetoothServer;
 
+	/**
+	 * The BroadcastReceiver that handles state change messages from the Bluetooth module
+	 */
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			int tmpNumPlayers = mBluetoothServer.getConnectedDeviceCount();
+			// Get the number of players connected
+			int numPlayers = mBluetoothServer.getConnectedDeviceCount();
 
 			if (Util.isDebugBuild()) {
-				Toast.makeText(mContext, "Bluetooth change. Players: " + tmpNumPlayers, Toast.LENGTH_LONG).show();
+				Toast.makeText(ConnectActivity.this, "Bluetooth change. Players: " + numPlayers, Toast.LENGTH_LONG).show();
 			}
 
-			if (numPlayers != tmpNumPlayers) {
-				numPlayers = tmpNumPlayers;
-				updatePlayersConnected();
-			}
+			// Update the UI to indicate how many players are connected
+			updatePlayersConnected();
 		}
 	};
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.connect);
 
-		ImageViews[0] = (ImageView) findViewById(R.id.ImageViewTablet);
-		// tablet is imageview 0 rest are by player number
-		ImageViews[1] = (ImageView) findViewById(R.id.ImageViewP1);
-		ImageViews[2] = (ImageView) findViewById(R.id.ImageViewP2);
-		ImageViews[3] = (ImageView) findViewById(R.id.ImageViewP3);
-		ImageViews[4] = (ImageView) findViewById(R.id.ImageViewP4);
-
-		mContext = this;
-		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		// Register the BroadcastReceiver for receiving state change messages from
+		// the Bluetooth module
 		registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
 
+		// Get the ImageView and TextView references so that we can display different
+		// states for connected/disconnected devices
+		playerImageViews[0] = (ImageView) findViewById(R.id.connectDeviceP1);
+		playerImageViews[1] = (ImageView) findViewById(R.id.connectDeviceP2);
+		playerImageViews[2] = (ImageView) findViewById(R.id.connectDeviceP3);
+		playerImageViews[3] = (ImageView) findViewById(R.id.connectDeviceP4);
+
+		playerTextViews[0] = (TextView) findViewById(R.id.connectDeviceP1TextView);
+		playerTextViews[1] = (TextView) findViewById(R.id.connectDeviceP2TextView);
+		playerTextViews[2] = (TextView) findViewById(R.id.connectDeviceP3TextView);
+		playerTextViews[3] = (TextView) findViewById(R.id.connectDeviceP4TextView);
+
+
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+		// If Bluetooth isn't enabled, request that it be enabled
 		if (!mBluetoothAdapter.isEnabled()) {
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
 		} else {
+			// Bluetooth is already enabled, so put ourselves in listening mode
 			startListeningForDevices();
 		}
 
@@ -72,6 +110,7 @@ public class ConnectActivity extends Activity {
 		TextView tv = (TextView) findViewById(R.id.myName);
 		tv.setText(getResources().getString(R.string.deviceName) + "\n" + mBluetoothAdapter.getName());
 
+		// Set up the start button
 		Button startButton = (Button) findViewById(R.id.startButton);
 		startButton.setEnabled(false);
 		startButton.setOnClickListener(new OnClickListener() {
@@ -83,6 +122,7 @@ public class ConnectActivity extends Activity {
 					// Send a message to all connected devices saying that the game is beginning
 					mBluetoothServer.write(BluetoothConstants.MSG_TYPE_INIT, null);
 
+					// Start the Gameboard activity
 					Intent i = new Intent(ConnectActivity.this,	GameboardActivity.class);
 					startActivity(i);
 
@@ -95,6 +135,9 @@ public class ConnectActivity extends Activity {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onDestroy()
+	 */
 	@Override
 	protected void onDestroy() {
 		unregisterReceiver(receiver);
@@ -108,20 +151,34 @@ public class ConnectActivity extends Activity {
 	 * 
 	 * - There needs to be at least 2 devices connected
 	 * 
+	 * - If this is a debug build, allow just one connection
+	 * 
 	 * @return whether a game can be started or not
 	 */
 	private boolean canStartGame() {
-		return mBluetoothServer.getConnectedDeviceCount() > 0; // TODO: should be 1, changed to 0 for testing...
+		if (Util.isDebugBuild()) {
+			return mBluetoothServer.getConnectedDeviceCount() > 0;
+		} else {
+			return mBluetoothServer.getConnectedDeviceCount() > 1;
+		}
 	}
 
+	/**
+	 * Start the Bluetooth server listening for connections.
+	 */
 	private void startListeningForDevices() {
 		mBluetoothServer = BluetoothServer.getInstance(this);
-		Util.ensureDiscoverable(mContext, mBluetoothAdapter);
+		Util.ensureDiscoverable(this, mBluetoothAdapter);
 		mBluetoothServer.startListening();
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// If we are coming back from the Bluetooth Enable request, and
+		// it was successful, start listening for device connections
 		if (resultCode == RESULT_OK && requestCode == REQUEST_ENABLE_BT) {
 			startListeningForDevices();
 		} else {
@@ -129,26 +186,21 @@ public class ConnectActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Update the image views for the players indicating which ones
+	 * are currently connected.
+	 */
 	private void updatePlayersConnected() {
-		int i;
-		mBluetoothServer.getConnectedDevices();
+		int numPlayers = mBluetoothServer.getConnectedDevices().size();
 
-		if(numPlayers > 0){
-			ImageViews[1].setImageResource(R.drawable.on_device_p1);
-		}
-		if(numPlayers > 1){
-			ImageViews[2].setImageResource(R.drawable.on_device_p2);
-		}
-		if(numPlayers > 2){
-			ImageViews[3].setImageResource(R.drawable.on_device_p3);
-		}
-		if(numPlayers > 3){
-			ImageViews[4].setImageResource(R.drawable.on_device_p4);
-		}
-
-		// grey out the other players
-		for (i=numPlayers+1; i <= 4; i++) {
-			ImageViews[i].setImageResource(R.drawable.off_device);
+		for (int i = 0; i < 4; i++) {
+			if (i < numPlayers) {
+				playerImageViews[i].setImageResource(R.drawable.on_device);
+				playerTextViews[i].setVisibility(View.VISIBLE);
+			} else {
+				playerImageViews[i].setImageResource(R.drawable.off_device);
+				playerTextViews[i].setVisibility(View.INVISIBLE);
+			}
 		}
 
 		// Update the state of the button so that it changes colors when there

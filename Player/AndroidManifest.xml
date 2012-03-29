@@ -33,7 +33,8 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".activities.ConnectActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
         <activity
             android:name=".activities.ConnectionFailActivity"
             android:screenOrientation="landscape"
@@ -48,19 +49,19 @@
         <activity
             android:name=".activities.QuitApplicationActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.Transparent"/>
+            android:theme="@style/Theme.Transparent" />
         <activity
             android:name=".activities.QuitGameActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.Transparent"/>
+            android:theme="@style/Theme.Transparent" />
         <activity
             android:name=".activities.SelectSuitActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.Transparent"/>
+            android:theme="@style/Theme.Transparent" />
         <activity
             android:name=".activities.EnterNameActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.Transparent"/>
+            android:theme="@style/Theme.Transparent" />
         <activity
             android:name=".activities.ShowCardsActivity"
             android:screenOrientation="landscape" />
