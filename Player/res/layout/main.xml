@@ -23,26 +23,26 @@
         <cs309.a1.shared.Button
             android:id="@+id/btPlay"
             style="@style/MainMenuLargerButton"
-            android:layout_marginLeft="15dip"
-            android:layout_marginRight="15dip"
-            android:layout_marginTop="5dip"
+            android:layout_marginLeft="@dimen/mainMenuLargeButtonPadding"
+            android:layout_marginRight="@dimen/mainMenuLargeButtonPadding"
+            android:layout_marginTop="@dimen/mainMenuButtonSpacing"
             android:text="@string/Play" />
 
         <cs309.a1.shared.Button
             android:id="@+id/btRules"
             style="@style/MainMenuSmallerButton"
-            android:layout_marginBottom="8dip"
-            android:layout_marginLeft="35dip"
-            android:layout_marginRight="35dip"
-            android:layout_marginTop="8dip"
+            android:layout_marginBottom="@dimen/mainMenuButtonSpacing"
+            android:layout_marginLeft="@dimen/mainMenuSmallButtonPadding"
+            android:layout_marginRight="@dimen/mainMenuSmallButtonPadding"
+            android:layout_marginTop="@dimen/mainMenuButtonSpacing"
             android:text="@string/Rules" />
 
         <cs309.a1.shared.Button
             android:id="@+id/btAbout"
             style="@style/MainMenuSmallerButton"
-            android:layout_marginBottom="8dip"
-            android:layout_marginLeft="35dip"
-            android:layout_marginRight="35dip"
+            android:layout_marginBottom="@dimen/mainMenuButtonSpacing"
+            android:layout_marginLeft="@dimen/mainMenuSmallButtonPadding"
+            android:layout_marginRight="@dimen/mainMenuSmallButtonPadding"
             android:text="@string/About" />
     </LinearLayout>
 

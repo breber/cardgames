@@ -30,7 +30,7 @@
 			    android:layout_height="wrap_content"
 			    android:adjustViewBounds="true" />-->
 		</LinearLayout>
-		<TextView
+		<cs309.a1.shared.TextView
 		    android:id="@+id/player3text"
 		    android:text="@string/player_3" 
 		    android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
 	    android:layout_width="wrap_content"
 		android:layout_centerHorizontal="true"
 		android:layout_alignParentBottom="true">
-		<TextView
+		<cs309.a1.shared.TextView
 		    android:id="@+id/player1text"
 		    android:text="@string/player_1" 
 		    android:layout_width="wrap_content"
@@ -88,7 +88,7 @@
 		android:layout_width="wrap_content"
 		android:layout_centerVertical="true"
 		android:layout_alignParentRight="true" >
-	    <TextView
+	    <cs309.a1.shared.TextView
 		    android:id="@+id/player2text"
 		    android:text="@string/player_2" 
 		    android:layout_width="wrap_content"
@@ -119,7 +119,7 @@
 	        android:gravity="left"        
 	        android:layout_height="wrap_content"
 			android:layout_width="wrap_content" />
-	    <TextView
+	    <cs309.a1.shared.TextView
 		    android:id="@+id/player4text"
 		    android:text="@string/player_4" 
 		    android:layout_width="wrap_content"

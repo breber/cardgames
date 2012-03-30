@@ -5,6 +5,9 @@
     <dimen name="titlePaddingTopBottom">30dip</dimen>
     <dimen name="mainMenuSmallButtonText">45sp</dimen>
     <dimen name="mainMenuLargeButtonText">70sp</dimen>
+    <dimen name="mainMenuSmallButtonPadding">85dip</dimen>
+    <dimen name="mainMenuLargeButtonPadding">75dip</dimen>
+    <dimen name="mainMenuButtonSpacing">15dip</dimen>
     <dimen name="popupMarginLeftRight">100dip</dimen>
 
 </resources>
