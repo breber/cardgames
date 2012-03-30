@@ -50,7 +50,7 @@
         <activity
             android:name=".activities.GameResultsActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.CrazyEights.Dialog" />
+            android:theme="@style/Theme.CrazyEights" />
         <activity
             android:name=".activities.PauseMenuActivity"
             android:screenOrientation="landscape"

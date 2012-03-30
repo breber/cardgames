@@ -29,7 +29,7 @@ public class GameResultsActivity extends Activity{
 		int winner = getIntent().getIntExtra(WINNER_NUMBER, 0);
 
 		// Display who won in the title bar
-		TextView title = (TextView) findViewById(R.id.gameResultsTitle);
+		TextView title = (TextView) findViewById(R.id.title);
 		title.setText(getResources().getString(R.string.playerNWon).replace("%n", winner + ""));
 
 		// Add a handler to the Main Menu button

@@ -32,10 +32,12 @@
         <cs309.a1.shared.TextView
             android:id="@+id/noDevicesFoundText"
             style="@style/ListViewFont"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
             android:text="@string/no_devices_found"
-            android:textSize="35sp" />
+            android:textSize="@dimen/mainMenuLargeButtonText" />
     </RelativeLayout>
 
 </LinearLayout>

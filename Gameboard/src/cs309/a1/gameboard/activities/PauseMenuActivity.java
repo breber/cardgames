@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import cs309.a1.gameboard.R;
+import cs309.a1.shared.TextView;
 
 /**
  * This is the Pause Menu. It will be started when a user
@@ -25,7 +26,11 @@ public class PauseMenuActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pausemenu);
-		
+
+		// Update the title of the view
+		TextView tv = (TextView) findViewById(R.id.title);
+		tv.setText(R.string.pauseGameTitle);
+
 		// Set up the button handler for the rules button
 		Button rules = (Button) findViewById(R.id.btRules);
 		rules.setOnClickListener(new OnClickListener() {
@@ -35,16 +40,17 @@ public class PauseMenuActivity extends Activity {
 				startActivity(ruleButtonClick);
 			}
 		});
-		
+
 		// Set up the button handler for the "resume" button
 		Button resume = (Button) findViewById(R.id.btResume);
 		resume.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				setResult(RESULT_OK);
 				finish();
 			}
 		});
-		
+
 		// Set up the handler for the "Main menu" button
 		Button mainMenu = (Button) findViewById(R.id.btMainMenu);
 		mainMenu.setOnClickListener(new OnClickListener() {
@@ -57,7 +63,7 @@ public class PauseMenuActivity extends Activity {
 		});
 
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
 	 */

@@ -22,11 +22,11 @@ public class QuitApplicationActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.quitgameprompt);
+		setContentView(R.layout.prompt_dialog);
 
 		// Update the title to the prompt "Are you sure you want to 
 		// exit the application?"
-		TextView body = (TextView) findViewById(R.id.quitGameTitle);
+		TextView body = (TextView) findViewById(R.id.promptDialogTitle);
 		body.setText(R.string.exit_application);
 
 		// Add handlers to the affirmative and negative buttons

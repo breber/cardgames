@@ -7,47 +7,34 @@
     android:keepScreenOn="true"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/title"
+    <include
+        android:id="@+id/title_ref"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/black"
-        android:paddingBottom="5dp"
-        android:paddingTop="0dp" >
-
-        <cs309.a1.shared.TextView
-            android:id="@+id/gameResultsTitle"
-            style="@style/TitleFont"
-            android:gravity="center"
-            android:text="@string/gameResultsTitle"
-            android:textSize="55sp" />
-    </RelativeLayout>
+        layout="@layout/title_bar" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/title"
+        android:layout_below="@+id/title_ref"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical" >
 
         <cs309.a1.shared.Button
             android:id="@+id/btMainMenu"
-            style="@style/GameButton"
-            android:layout_marginBottom="8dip"
-            android:layout_marginLeft="35dip"
-            android:layout_marginRight="35dip"
-            android:layout_marginTop="8dip"
-            android:text="@string/main_menu"
-            android:textSize="30sp" />
+            style="@style/MainMenuSmallerButton"
+            android:layout_marginBottom="15dip"
+            android:layout_marginLeft="85dip"
+            android:layout_marginRight="85dip"
+            android:text="@string/main_menu" />
 
         <cs309.a1.shared.Button
             android:id="@+id/btExit"
-            style="@style/GameButton"
-            android:layout_marginBottom="8dip"
-            android:layout_marginLeft="35dip"
-            android:layout_marginRight="35dip"
-            android:text="@string/exitGame"
-            android:textSize="30sp" />
+            style="@style/MainMenuSmallerButton"
+            android:layout_marginBottom="15dip"
+            android:layout_marginLeft="85dip"
+            android:layout_marginRight="85dip"
+            android:text="@string/exitGame" />
     </LinearLayout>
 
 </RelativeLayout>

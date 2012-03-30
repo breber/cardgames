@@ -50,7 +50,7 @@ public class ConnectActivity extends Activity {
 			if (currentState == BluetoothConstants.STATE_CONNECTED) {
 				readyToStart = true;
 
-				TextView tv = (TextView) findViewById(R.id.connectingText);
+				TextView tv = (TextView) findViewById(R.id.progressDialogText);
 				tv.setText(getResources().getString(R.string.waitingForGame));
 
 				// Register the receiver for receiving messages from Bluetooth
@@ -98,7 +98,11 @@ public class ConnectActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.connect);
+		setContentView(R.layout.progress_dialog);
+
+		// Update the text in the Progress Dialog
+		TextView tv = (TextView) findViewById(R.id.progressDialogText);
+		tv.setText(R.string.connecting);
 
 		// Show the device list
 		Intent showDeviceList = new Intent(this, DeviceListActivity.class);

@@ -25,8 +25,8 @@
             android:id="@+id/informationBody"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/about_text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/black" />
     </ScrollView>
 

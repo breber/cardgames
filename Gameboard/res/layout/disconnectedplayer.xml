@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/GameButton"
-    android:layout_width="wrap_content"
+    style="@style/popupStyle"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical|center_horizontal"
+    android:layout_gravity="center"
+    android:layout_marginLeft="@dimen/popupMarginLeftRight"
+    android:layout_marginRight="@dimen/popupMarginLeftRight"
     android:orientation="vertical" >
 
     <cs309.a1.shared.TextView
-        android:layout_width="416dp"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="@string/player_lost"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/black"
-        android:textSize="45sp"
-        android:textStyle="bold" />
-
-    <LinearLayout
+        style="@style/popupTitleTextLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/player_lost" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical|center_horizontal"
+        android:measureWithLargestChild="true"
         android:orientation="horizontal" >
 
         <cs309.a1.shared.Button

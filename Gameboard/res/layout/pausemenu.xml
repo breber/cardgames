@@ -2,44 +2,35 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/wooden_top"
     android:gravity="center_vertical|center_horizontal"
     android:keepScreenOn="true"
-    android:orientation="vertical" 
-    android:background="@drawable/wooden_top">
+    android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/title"
+    <include
+        android:id="@+id/title_ref"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/black"
-        android:paddingBottom="25dp"
-        android:paddingTop="25dp" >
-
-        <cs309.a1.shared.TextView
-            style="@style/TitleFont"
-            android:gravity="center"
-            android:text="@string/pauseGameTitle" />
-    </RelativeLayout>
+        layout="@layout/title_bar" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/title"
+        android:layout_below="@+id/title_ref"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical" >
 
         <cs309.a1.shared.Button
             android:id="@+id/btResume"
-            style="@style/GameButton"
+            style="@style/MainMenuLargerButton"
             android:layout_marginLeft="75dip"
             android:layout_marginRight="75dip"
             android:layout_marginTop="15dip"
-            android:text="@string/resume"
-            android:textSize="70sp" />
+            android:text="@string/resume" />
 
         <cs309.a1.shared.Button
             android:id="@+id/btRules"
-            style="@style/GameButton"
+            style="@style/MainMenuSmallerButton"
             android:layout_marginBottom="15dip"
             android:layout_marginLeft="85dip"
             android:layout_marginRight="85dip"
@@ -48,7 +39,7 @@
 
         <cs309.a1.shared.Button
             android:id="@+id/btMainMenu"
-            style="@style/GameButton"
+            style="@style/MainMenuSmallerButton"
             android:layout_marginBottom="15dip"
             android:layout_marginLeft="85dip"
             android:layout_marginRight="85dip"

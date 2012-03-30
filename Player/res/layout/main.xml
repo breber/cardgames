@@ -22,34 +22,28 @@
 
         <cs309.a1.shared.Button
             android:id="@+id/btPlay"
-            style="@style/GameButton"
+            style="@style/MainMenuLargerButton"
             android:layout_marginLeft="15dip"
             android:layout_marginRight="15dip"
             android:layout_marginTop="5dip"
-            android:text="@string/Play"
-            android:textSize="35sp" >
-        </cs309.a1.shared.Button>
+            android:text="@string/Play" />
 
         <cs309.a1.shared.Button
             android:id="@+id/btRules"
-            style="@style/GameButton"
+            style="@style/MainMenuSmallerButton"
             android:layout_marginBottom="8dip"
             android:layout_marginLeft="35dip"
             android:layout_marginRight="35dip"
             android:layout_marginTop="8dip"
-            android:text="@string/Rules"
-            android:textSize="30sp" >
-        </cs309.a1.shared.Button>
+            android:text="@string/Rules" />
 
         <cs309.a1.shared.Button
             android:id="@+id/btAbout"
-            style="@style/GameButton"
+            style="@style/MainMenuSmallerButton"
             android:layout_marginBottom="8dip"
             android:layout_marginLeft="35dip"
             android:layout_marginRight="35dip"
-            android:text="@string/About"
-            android:textSize="30sp" >
-        </cs309.a1.shared.Button>
+            android:text="@string/About" />
     </LinearLayout>
 
 </RelativeLayout>
