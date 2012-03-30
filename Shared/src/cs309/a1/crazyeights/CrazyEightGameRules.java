@@ -6,6 +6,13 @@ import cs309.a1.crazyeights.Constants;
 
 public class CrazyEightGameRules implements Rules{
 	
+	/**
+	 * This method will check to see if a play is valid
+	 * 
+	 * @param cardPlayed the card which is trying to be discarded by a player
+	 * @param onDiscard the last card discarded in the game
+	 * @return true if the card played on the discard pile is valid else false
+	 */
 	public boolean checkCard(Card cardPlayed, Card onDiscard){
 		if(cardPlayed == null || onDiscard == null){
 			return false;

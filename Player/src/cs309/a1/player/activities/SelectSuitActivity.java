@@ -13,11 +13,16 @@ import cs309.a1.player.R;
 
 public class SelectSuitActivity extends Activity{
 	
+	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.selectsuit);
 		
+		//set the listener for the spade button
 		Button spade = (Button) findViewById(R.id.Spades);
 		spade.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -25,6 +30,8 @@ public class SelectSuitActivity extends Activity{
 				finish();
 			}
 		});
+		
+		//set the listener for the heart button
 		Button heart = (Button) findViewById(R.id.Hearts);
 		heart.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -33,6 +40,7 @@ public class SelectSuitActivity extends Activity{
 			}
 		});
 		
+		//set the listener for the club button
 		Button club = (Button) findViewById(R.id.Clubs);
 		club.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -41,6 +49,7 @@ public class SelectSuitActivity extends Activity{
 			}
 		});
 		
+		//set the listener for the diamond button
 		Button diamond = (Button) findViewById(R.id.Diamonds);
 		diamond.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

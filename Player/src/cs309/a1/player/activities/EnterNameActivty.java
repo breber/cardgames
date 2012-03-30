@@ -18,6 +18,7 @@ public class EnterNameActivty extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.entername);
 		
+		//create button for the view
 		Button ok = (Button) findViewById(R.id.ok);
 		ok.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

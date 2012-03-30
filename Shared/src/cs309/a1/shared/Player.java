@@ -37,6 +37,12 @@ public class Player {
 		cards.add(card);
 	}
 
+	/**
+	 * This method will remove a card from a players hand by object matching using a loop
+	 * that checks every card in the players hand
+	 * 
+	 * @param card the card to be removed from the players hand
+	 */
 	public void removeCard(Card card){
 		for(Card c : cards){
 			if(c.getIdNum() == card.getIdNum()){
@@ -63,7 +69,10 @@ public class Player {
 	}
 
 	/**
+	 * This toString() method will override the default toString() method. This will return a 
+	 * JSON object that is in the form of a string which will be easy for decoding
 	 * 
+	 * @return a string representation of a player object
 	 */
 	@Override
 	public String toString() {

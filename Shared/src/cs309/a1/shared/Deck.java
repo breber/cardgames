@@ -35,6 +35,11 @@ public class Deck {
 		return cardImages;
 	}
 
+	/**
+	 * This method is used to retrieve the back of a card image
+	 * 
+	 * @return the id of the image representing the back of a card
+	 */
 	public int getCardBackID() {
 
 		int cardId = 0;
