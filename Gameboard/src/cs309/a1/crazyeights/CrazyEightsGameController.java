@@ -174,25 +174,15 @@ public class CrazyEightsGameController implements GameController {
 	}
 	
 	private void advanceTurn(){
-		if(players.get(whoseTurn).getCards().size() ==0){
-			//Toast.makeText(gameContext, "TEST!" + (whoseTurn+1) + " WON!!!!", Toast.LENGTH_LONG);
-			declareWinner(whoseTurn);
-		}
-		
 		if(game.isGameOver(players.get(whoseTurn))){
 			declareWinner(whoseTurn);
-			Toast.makeText(gameContext, "player:" + (whoseTurn+1) + " WON!!!!", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(gameContext, "player:" + (whoseTurn+1) + " WON!!!!", Toast.LENGTH_SHORT).show();
 		}
-		if(game.isGameOver(game.getPlayers().get(whoseTurn)) ){
-			declareWinner(whoseTurn);
-			Toast.makeText(gameContext, "player:" + (whoseTurn+1) + " WINNER!  !!", Toast.LENGTH_SHORT).show();
-		}
-			
+		
+		//for debugging to see number of cards
 		Toast.makeText(gameContext.getApplicationContext(), "player "+game.getPlayers().get(whoseTurn).getCards().size()+" cards.", Toast.LENGTH_SHORT).show();
-		
-		int numPlayers = game.getNumPlayers();
-		
-		if(whoseTurn<numPlayers-1){
+				
+		if(whoseTurn < game.getNumPlayers()-1){
 			whoseTurn++;
 		}else{
 			whoseTurn = 0;
