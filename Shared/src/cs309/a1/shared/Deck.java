@@ -70,7 +70,6 @@ public class Deck {
 	private void fillArray() {
 
 		switch(gameName) {
-
 		case CRAZY_EIGHTS:
 			cardImages.add(new Card(0, 0, R.drawable.clubs_a, 0));
 			cardImages.add(new Card(0, 1, R.drawable.clubs_2, 1));
@@ -139,8 +138,10 @@ public class Deck {
 	 */
 	public static CardTranslator getCardTranslatorForGame(CardGame game) {
 		switch(game) {
-		case CRAZY_EIGHTS: return new CrazyEightsCardTranslator();
-		default: return null;
+		case CRAZY_EIGHTS:
+			return new CrazyEightsCardTranslator();
+		default:
+			return null;
 		}
 	}
 }

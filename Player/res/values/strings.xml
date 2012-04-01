@@ -9,8 +9,8 @@
 To use this application properly, download the application titled “Crazy Eights Game Board” to the tablet that will serve as the game host.  Once this has been done, first select Create Game from the Main Menu of the tablet, and then select Join Game from the Main Menu on each player’s device, including this one.  Players should then choose the host tablet from the connection list that will appear on their screens.  Press the Start button on the host tablet’s connection screen when all players have been connected in order to start the game.</string>
 
     <!-- Connect Screen Handheld -->
-    <string name="connecting">Connecting…</string>
-    <string name="waitingForGame">Waiting for game to begin…</string>
+    <string name="connecting">Connecting&#8230;</string>
+    <string name="waitingForGame">Waiting for game to begin&#8230;</string>
 
     <!-- Show Cards Activity -->
     <string name="Draw">Draw</string>
@@ -26,7 +26,7 @@ To use this application properly, download the application titled “Crazy Eight
     <string name="gamePaused">Paused</string>
     
     <!-- Disconnected Activity -->
-    <string name="waiting">Waiting to reconnect…</string>
+    <string name="waiting">Waiting to reconnect&#8230;</string>
 
     <!-- Game Results -->
     <string name="winner">You Won!</string>

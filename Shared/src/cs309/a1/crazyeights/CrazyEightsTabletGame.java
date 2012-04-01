@@ -16,7 +16,7 @@ import cs309.a1.shared.Player;
 import cs309.a1.shared.Rules;
 import cs309.a1.shared.Util;
 
-public class CrazyEightsTabletGame implements Game{
+public class CrazyEightsTabletGame implements Game {
 	private static final String TAG = CrazyEightsTabletGame.class.getName();
 
 	private static CrazyEightsTabletGame instance = null;
@@ -30,6 +30,34 @@ public class CrazyEightsTabletGame implements Game{
 	private ArrayList<Card> shuffledDeck;
 	private ArrayList<Card> discardPile;
 
+	/**
+	 * Create a new instance of the tablet game so that multiple classes are able to reference
+	 * the same card game and only one instance will be made available. This method uses the custom
+	 * constructor made in this class.
+	 * 
+	 * @return an instance of CrazyEightsTabletGame
+	 */
+	public static CrazyEightsTabletGame getInstance(List<Player> players, Deck deck, Rules rules) {
+		instance = new CrazyEightsTabletGame(players, deck, rules);
+
+		return instance;
+	}
+
+	/**
+	 * Create a new instance of the tablet game so that multiple classes are able to reference
+	 * the same card game and only one instance will be made available. This method uses the default
+	 * constructor.
+	 * 
+	 * @return an instance of CrazyEightsTabletGame
+	 */
+	public static CrazyEightsTabletGame getInstance() {
+		if (instance == null) {
+			throw new IllegalArgumentException();
+		}
+
+		return instance;
+	}
+
 	public CrazyEightsTabletGame(List<Player> players, Deck gameDeck, Rules rules) {
 		this.players = players;
 		this.gameDeck = gameDeck;
@@ -38,6 +66,7 @@ public class CrazyEightsTabletGame implements Game{
 		discardPile = new ArrayList<Card>();
 	}
 
+	@Override
 	public List<Player> getPlayers() {
 		return players;
 	}
@@ -79,41 +108,12 @@ public class CrazyEightsTabletGame implements Game{
 		this.shuffledDeck = shuffledDeck;
 	}
 
-
-	/**
-	 * Create a new instance of the tablet game so that multiple classes are able to reference
-	 * the same card game and only one instance will be made available. This method uses the custom
-	 * constructor made in this class.
-	 * 
-	 * @return an instance of CrazyEightsTabletGame
-	 */
-	public static CrazyEightsTabletGame getInstance(List<Player> players, Deck deck, Rules rules) {
-		instance = new CrazyEightsTabletGame(players, deck, rules);
-
-		return instance;
-	}
-
-	/**
-	 * Create a new instance of the tablet game so that multiple classes are able to reference
-	 * the same card game and only one instance will be made available. This method uses the default
-	 * constructor.
-	 * 
-	 * @return an instance of CrazyEightsTabletGame
-	 */
-	public static CrazyEightsTabletGame getInstance() {
-		if (instance == null) {
-			throw new IllegalArgumentException();
-		}
-
-		return instance;
-	}
-
 	/**
 	 * This method will setup the game by calling shuffleDeck, deal and setting up
 	 * the initial GUI state.
 	 */
 	@Override
-	public void setup(){
+	public void setup() {
 		//shuffle the card ID's
 		this.shuffleDeck();
 
@@ -134,7 +134,7 @@ public class CrazyEightsTabletGame implements Game{
 	 * Upon completion the cards should be shuffled and ready to deal
 	 */
 	@Override
-	public void shuffleDeck(){
+	public void shuffleDeck() {
 		//create a random number generator
 		Random generator = new Random();
 
@@ -150,9 +150,8 @@ public class CrazyEightsTabletGame implements Game{
 	 * pile with the old discard pile. After this method call the shuffled deck
 	 * will only have the top card remaining.
 	 */
-	public void shuffleDiscardPile(){
-		//TODO
-		Card card = discardPile.remove(discardPile.size()-1);
+	public void shuffleDiscardPile() {
+		Card card = discardPile.remove(discardPile.size() - 1);
 
 		//Make copy of discard pile to be new shuffled deck
 		//add to the shuffled deck in case there are still some cards left that are unaccounted for
@@ -177,7 +176,7 @@ public class CrazyEightsTabletGame implements Game{
 	 * a certain number of cards based on a constant.
 	 */
 	@Override
-	public void deal(){
+	public void deal() {
 		if (Util.isDebugBuild()) {
 			Log.d(TAG, "deal: numberOfPlayers: " + players.size());
 		}
@@ -193,7 +192,7 @@ public class CrazyEightsTabletGame implements Game{
 
 		//Deal the given number of cards to each player
 		//NUMBER_OF_CARDS_PER_HAND can be found in cs309.a1.crazyeights
-		for (int i = 0; i < NUMBER_OF_CARDS_PER_HAND; i++){
+		for (int i = 0; i < NUMBER_OF_CARDS_PER_HAND; i++) {
 			for (Player p : players) {
 				//give them a card
 				p.addCard(iter.next());
@@ -221,7 +220,7 @@ public class CrazyEightsTabletGame implements Game{
 	 * @param card the card the player chooses to discard
 	 */
 	@Override
-	public void discard(Player player, Card card){
+	public void discard(Player player, Card card) {
 		discardPile.add(card);
 		player.removeCard(card);
 	}
@@ -231,8 +230,8 @@ public class CrazyEightsTabletGame implements Game{
 	 * @param player the player to check
 	 * @return true if the player has 0 cards and false otherwise
 	 */
-	public boolean isGameOver(Player player){
-
+	@Override
+	public boolean isGameOver(Player player) {
 		//check to see if the player has any cards left
 		if (player.getNumCards() == 0) {
 			return true;
@@ -246,8 +245,8 @@ public class CrazyEightsTabletGame implements Game{
 	 * @param player the player who chooses to draw the card
 	 */
 	@Override
-	public Card draw(Player player){
-		if(!iter.hasNext()){
+	public Card draw(Player player) {
+		if (!iter.hasNext()) {
 			this.shuffleDiscardPile();
 			//maybe refresh gui or something here
 		}
@@ -263,43 +262,63 @@ public class CrazyEightsTabletGame implements Game{
 		if (shuffledDeck.isEmpty()) {
 			shuffleDiscardPile();
 		}
-		
+
 		return card;
 	}
 
 	/**
 	 * This method will remove a player from the game
-	 * @param player the player to be dropped from the game
+	 * 
+	 * @param player the id of the player to be dropped from the game
 	 */
 	@Override
-	public void dropPlayer(Player player) {
-		if (players.contains(player) && player != null) {
-			List<Card> cards = player.getCards();
+	public void dropPlayer(String playerMacAddress) {
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "dropPlayer: " + playerMacAddress);
+		}
+
+		Player p = null;
+
+		for (Player player : players) {
+			if (player.getId().equals(playerMacAddress)) {
+				p = player;
+				break;
+			}
+		}
+
+		if (p != null) {
+			List<Card> cards = p.getCards();
 
 			//player is in the list of current players
-			players.remove(player);
+			players.remove(p);
 
 			//add all of the players cards to the discard pile
 			discardPile.addAll(cards);
 
 			//remove all of the cards from the players hand and set the number of cards to 0
 			cards.removeAll(cards);
+		} else {
+			if (Util.isDebugBuild()) {
+				Log.d(TAG, "dropPlayer: couldn't find player with id: " + playerMacAddress);
+			}
 		}
 	}
-	
+
 	/**
 	 * This method will return the last card added to the discard pile
 	 * @return a Card object representing the last card added to the discard pile
 	 */
-	public Card getDiscardPileTop(){
-		return discardPile.get(discardPile.size()-1);
+	@Override
+	public Card getDiscardPileTop() {
+		return discardPile.get(discardPile.size() - 1);
 	}
-	
+
 	/**
 	 * This method will return the number of players in the present game
 	 * @return an integer representing the number of players
 	 */
-	public int getNumPlayers(){
+	@Override
+	public int getNumPlayers() {
 		return players.size();
 	}
 }
