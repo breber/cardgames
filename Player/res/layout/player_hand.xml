@@ -26,7 +26,7 @@
             android:layout_marginTop="5dip"
             android:background="@drawable/statebutton"
             android:text="@string/Draw"
-            android:textColor="@color/statecolor"
+            android:textColor="@color/buttontextcolor"
             android:textSize="45sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -50,7 +50,7 @@
             android:layout_marginTop="10dip"
             android:background="@drawable/statebutton"
             android:text="@string/Play"
-            android:textColor="@color/statecolor"
+            android:textColor="@color/buttontextcolor"
             android:textSize="45sp"
             android:textStyle="bold" />
     </LinearLayout>

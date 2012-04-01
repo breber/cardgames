@@ -169,6 +169,6 @@
         android:background="@drawable/statebutton"
         android:padding="15dip"
         android:text="@string/start"
-        android:textColor="@color/statecolor" />
+        android:textColor="@color/buttontextcolor" />
 
 </RelativeLayout>

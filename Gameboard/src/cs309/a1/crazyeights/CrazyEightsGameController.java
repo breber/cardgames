@@ -237,9 +237,9 @@ public class CrazyEightsGameController implements GameController {
 			}
 		}
 
-		Intent GameResults = new Intent(gameContext, GameResultsActivity.class);
-		GameResults.putExtra("WINNER_NUMBER", whoWon+1);
-		gameContext.startActivityForResult(GameResults, DECLARE_WINNER);
+		Intent gameResults = new Intent(gameContext, GameResultsActivity.class);
+		gameResults.putExtra(GameResultsActivity.WINNER_NUMBER, whoWon + 1);
+		gameContext.startActivityForResult(gameResults, DECLARE_WINNER);
 		//TODO start ending activity
 	}
 

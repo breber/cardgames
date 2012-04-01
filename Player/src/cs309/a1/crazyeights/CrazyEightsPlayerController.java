@@ -1,9 +1,14 @@
 package cs309.a1.crazyeights;
 
+import static cs309.a1.crazyeights.Constants.CARD_DRAWN;
 import static cs309.a1.crazyeights.Constants.ID;
+import static cs309.a1.crazyeights.Constants.IS_TURN;
+import static cs309.a1.crazyeights.Constants.LOSER;
+import static cs309.a1.crazyeights.Constants.REFRESH;
+import static cs309.a1.crazyeights.Constants.SETUP;
 import static cs309.a1.crazyeights.Constants.SUIT;
 import static cs309.a1.crazyeights.Constants.VALUE;
-import static cs309.a1.crazyeights.Constants.*;
+import static cs309.a1.crazyeights.Constants.WINNER;
 
 import java.util.ArrayList;
 
@@ -49,7 +54,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
 
 	private ArrayList<Card> cardHand;
-	
+
 	private ShowCardsActivity playerContext;
 
 	private Card cardSelected;
@@ -59,24 +64,24 @@ public class CrazyEightsPlayerController implements PlayerController {
 	private Rules gameRules;
 
 	private boolean isTurn = false;
-	
+
 	private Button play;
-	
+
 	private Button draw;
-	
-	BluetoothClient btc;
-	
-	CardTranslator ct;
-	
+
+	private BluetoothClient btc;
+
+	private CardTranslator ct;
+
 	public CrazyEightsPlayerController(Context context, Button playGiven, Button drawGiven, BluetoothClient btcGiven, ArrayList<Card> cardHandGiven){
 		playerContext = (ShowCardsActivity) context;
 		play=playGiven;
 		draw=drawGiven;
-		play.setOnClickListener(this.getPlayOnClickListener());
-		draw.setOnClickListener(this.getDrawOnClickListener());
+		play.setOnClickListener(getPlayOnClickListener());
+		draw.setOnClickListener(getDrawOnClickListener());
 		setButtonsEnabled(false);
 		cardHand = cardHandGiven;
-		
+
 		gameRules = new CrazyEightGameRules();
 		ct = new CrazyEightsCardTranslator();
 		btc = btcGiven;
@@ -86,14 +91,14 @@ public class CrazyEightsPlayerController implements PlayerController {
 		String action = intent.getAction();
 
 		if (BluetoothConstants.MESSAGE_RX_INTENT.equals(action)) {
-	
+
 			String object = intent.getStringExtra(BluetoothConstants.KEY_MESSAGE_RX);
 			int messageType = intent.getIntExtra(BluetoothConstants.KEY_MESSAGE_TYPE, -1);
-	
+
 			if (Util.isDebugBuild()) {
 				Log.d(TAG, "message: " + object);
 			}
-	
+
 			switch(messageType){
 			case SETUP:
 				// Parse the Message if it was the original setup
@@ -114,7 +119,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 				isTurn=false;
 				break;
 			case IS_TURN:
-	
+
 				try {
 					JSONObject obj = new JSONObject(object);
 					int suit = obj.getInt(SUIT);
@@ -139,15 +144,15 @@ public class CrazyEightsPlayerController implements PlayerController {
 				}
 				break;
 			case REFRESH:
-				// Parse the refresh Message 
+				// Parse the refresh Message
 				try {
 					JSONArray arr = new JSONArray(object);
 					JSONObject refreshInfo = arr.getJSONObject(0);
 					isTurn = refreshInfo.getBoolean(Constants.TURN);
 					//if add more refresh info add more here
-					
+
 					playerContext.removeAllCards();
-					
+
 					for (int i = 1; i < arr.length(); i++) {
 						JSONObject obj = arr.getJSONObject(i);
 						int suit = obj.getInt(SUIT);
@@ -193,7 +198,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 						if (Util.isDebugBuild()) {
 							Toast.makeText(playerContext.getApplicationContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), Toast.LENGTH_SHORT);
 						}
-						
+
 						cardSelected=null;
 						setButtonsEnabled(false);
 						isTurn=false;
@@ -216,7 +221,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	}
 
 	public OnLongClickListener getCardLongClickListener() {
-		return new MyLongClickListener();
+		return new CardSelectionClickListener();
 	}
 
 	public void handleActivityResult(int requestCode, int resultCode, Intent data) {
@@ -240,38 +245,36 @@ public class CrazyEightsPlayerController implements PlayerController {
 			if (Util.isDebugBuild()) {
 				Toast.makeText(playerContext.getApplicationContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), 100);
 			}
-			
+
 			cardSelected=null;
 			setButtonsEnabled(false);
 			isTurn=false;
 		}
 	}
-	
-	
+
+
 	private void setButtonsEnabled(boolean isEnabled){
 		play.setEnabled(isEnabled);
 		draw.setEnabled(isEnabled);
 	}
 
-	
 
-
-	private class MyLongClickListener implements View.OnLongClickListener {
+	private class CardSelectionClickListener implements View.OnLongClickListener {
 		public boolean onLongClick(View v) {
 			//so this means they just selected the card.
 			//we could remove it from the hand below and place it so
-			
-			//TODO ASHLEY if you are here and looking to add a boarder or something to a card
-			//     just make a method in the ShowCardsActivity and then call it here using
-			//     playerContext.methodName(...);
+
+			// Show an animation indicating the card was selected
 			ScaleAnimation scale = new ScaleAnimation((float)1.2, (float)1.2, (float)1.2, (float)1.2);
 			scale.scaleCurrentDuration(5);
 			v.startAnimation(scale);
-			
-			int i;
-			for(i=0; i < cardHand.size(); i++){
-				if(cardHand.get(i).getIdNum() == v.getId()){
-					cardSelected= cardHand.get(i);
+
+			// Let the UI know which card was selected
+			playerContext.setSelected(v.getId());
+
+			for (int i = 0; i < cardHand.size(); i++) {
+				if (cardHand.get(i).getIdNum() == v.getId()) {
+					cardSelected = cardHand.get(i);
 				}
 			}
 
@@ -281,4 +284,4 @@ public class CrazyEightsPlayerController implements PlayerController {
 	}
 }
 
-	
+

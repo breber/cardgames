@@ -16,9 +16,9 @@ import cs309.a1.crazyeights.CrazyEightsPlayerController;
 import cs309.a1.player.R;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.PlayerController;
+import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothClient;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
-import cs309.a1.shared.Util;
 
 /**
  *
@@ -49,8 +49,8 @@ public class ShowCardsActivity extends Activity{
 	 */
 	private ArrayList<Card> cardHand;
 
-	BluetoothClient btc;
-	
+	private BluetoothClient btc;
+
 	private PlayerController playerController;
 
 	/**
@@ -60,10 +60,10 @@ public class ShowCardsActivity extends Activity{
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			
+
 			//give it up to the player controller to deal with
 			playerController.handleBroadcastReceive(context, intent);
-			
+
 			if (BluetoothConstants.STATE_CHANGE_INTENT.equals(action)) {
 				// Handle a state change
 				int newState = intent.getIntExtra(BluetoothConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_NONE);
@@ -84,21 +84,21 @@ public class ShowCardsActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.player_hand);
-		
+
 		cardHand = new ArrayList<Card>();
 
 		//check which game we are playing then set rules
-		
+
 		// Register the receiver for message/state change intents
 		registerReceiver(receiver, new IntentFilter(BluetoothConstants.MESSAGE_RX_INTENT));
 
 		btc = BluetoothClient.getInstance(this);
 		Button play = (Button) findViewById(R.id.btPlayCard);
 		Button draw = (Button) findViewById(R.id.btDrawCard);
-		
+
 		//TODO if crazyeights
-		playerController = (PlayerController) new CrazyEightsPlayerController(this,play,draw,btc, cardHand);
-		
+		playerController = new CrazyEightsPlayerController(this,play,draw,btc, cardHand);
+
 
 		// Start the connection screen from here so that we can register the message receive
 		// broadcast receiver so that we don't miss any messages
@@ -156,8 +156,8 @@ public class ShowCardsActivity extends Activity{
 				// Register the state change receiver
 				registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
 			}
-		} 
-		
+		}
+
 		playerController.handleActivityResult(requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -182,24 +182,39 @@ public class ShowCardsActivity extends Activity{
 		// edit layout attributes
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(pixels, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-		for(int i = 0; i < cardHand.size(); i++) {
-
+		for (int i = 0; i < cardHand.size(); i++) {
 			// create ImageView to hold Card
 			ImageView toAdd = new ImageView(this);
 			toAdd.setImageResource(cardHand.get(i).getResourceId());
 			toAdd.setId(cardHand.get(i).getIdNum());
 			toAdd.setAdjustViewBounds(true);
 			toAdd.setOnLongClickListener(playerController.getCardLongClickListener());
+
+			// Add a 5 px border around the image
+			toAdd.setPadding(5, 5, 5, 5);
+
 			ll.addView(toAdd, lp);
 		}
 	}
-	
+
+	public void setSelected(int cardId) {
+		for (Card c : cardHand) {
+			if (c.getIdNum() == cardId) {
+				ImageView iv = (ImageView) findViewById(c.getIdNum());
+				iv.setBackgroundColor(getResources().getColor(R.color.gold));
+			} else {
+				ImageView iv = (ImageView) findViewById(c.getIdNum());
+				iv.setBackgroundColor(getResources().getColor(R.color.transparent));
+			}
+		}
+	}
+
 	/**
 	 * this will remove all cards from cardhand and from the screen
 	 * used for refreshing the player and syncing with game board
 	 */
 	public void removeAllCards() {
-		//this removes all cards from card 
+		//this removes all cards from card
 		while(cardHand.size()>0){
 			cardHand.remove(cardHand.get(0));
 		}
@@ -213,7 +228,6 @@ public class ShowCardsActivity extends Activity{
 	 * @param idNum ID number of the card to be removed
 	 */
 	public void removeFromHand(int idNum) {
-
 		LinearLayout ll = (LinearLayout) findViewById(R.id.playerCardContainer);
 		ll.removeView(findViewById(idNum));
 
@@ -221,7 +235,7 @@ public class ShowCardsActivity extends Activity{
 		Card current = cardHand.get(0);
 		int i = 0;
 
-		while(current.getIdNum() != idNum) {
+		while (current.getIdNum() != idNum) {
 			i++;
 			current = cardHand.get(i);
 		}
