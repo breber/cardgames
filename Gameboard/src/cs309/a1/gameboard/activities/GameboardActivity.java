@@ -18,6 +18,8 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cs309.a1.crazyeights.Constants;
 import cs309.a1.crazyeights.CrazyEightsGameController;
 import cs309.a1.gameboard.R;
@@ -301,7 +303,35 @@ public class GameboardActivity extends Activity {
 			}
 
 			else {
-				//TODO: display counter of cards not shown
+				
+				/*TextView iv = null;
+				
+				if(handSize == MAX_DISPLAYED + 1) {
+					RelativeLayout rl = (RelativeLayout) findViewById(R.layout.gameboard);
+	
+					iv = new TextView(this);
+	
+					RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(20, 20);
+					
+					ImageView fullCard = (ImageView) findViewById((location-1)*MAX_DISPLAYED + 1);
+					
+					int[] viewLocation = new int[2];
+					fullCard.getLocationOnScreen(viewLocation);
+					params.leftMargin = viewLocation[0];
+					params.topMargin = viewLocation[1];
+					
+					iv.setBackgroundColor(R.color.black);
+					iv.setTextColor(R.color.gold);
+					
+					iv.setId(1000*(location+1));
+					
+					rl.addView(iv, params);
+				}
+				else {
+					iv = (TextView) findViewById(1000*(location+1));
+				}
+				
+				iv.setText("+" + (handSize - MAX_DISPLAYED));*/
 			}
 		}
 
