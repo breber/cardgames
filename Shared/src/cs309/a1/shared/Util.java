@@ -39,15 +39,16 @@ public class Util {
 
 		if (btAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
 			Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-			discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 5000);
+			discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3600);
 			ctx.startActivity(discoverableIntent);
 		}
 	}
-	
+
 	/**
 	 * Comparator for sorting cards in ascending order based on ID number
 	 */
 	public static class CompareIdNums implements Comparator<Card> {
+		@Override
 		public int compare(Card card1, Card card2) {
 			return card1.getIdNum() - card2.getIdNum();
 		}

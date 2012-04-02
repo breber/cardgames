@@ -99,6 +99,7 @@ public class AcceptThread extends Thread {
 				try {
 					// This is a blocking call and will only return on a
 					// successful connection or an exception
+					Log.d(TAG, "mmServerSocket.accept() beginning " + socket);
 					socket = mmServerSocket.accept();
 					Log.d(TAG, "mmServerSocket.accept() completed " + socket);
 				} catch (IOException e) {
@@ -137,7 +138,11 @@ public class AcceptThread extends Thread {
 					}
 				}
 			}
+
+			Log.d(TAG, "done: while (continueChecking && serv.getState() != BluetoothConstants.STATE_CONNECTED)");
 		}
+
+		Log.d(TAG, "done: while (continueChecking)");
 	}
 
 	/**

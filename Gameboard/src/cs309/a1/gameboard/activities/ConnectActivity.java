@@ -191,7 +191,7 @@ public class ConnectActivity extends Activity {
 	 * are currently connected.
 	 */
 	private void updatePlayersConnected() {
-		int numPlayers = mBluetoothServer.getConnectedDevices().size();
+		int numPlayers = mBluetoothServer.getConnectedDeviceCount();
 
 		for (int i = 0; i < 4; i++) {
 			if (i < numPlayers) {
