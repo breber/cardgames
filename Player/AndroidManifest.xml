@@ -63,7 +63,7 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.CrazyEights.Dialog" />
         <activity
-            android:name=".activities.EnterNameActivity"
+            android:name=".activities.EnterNameActivty"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.CrazyEights.Dialog" />
         <activity

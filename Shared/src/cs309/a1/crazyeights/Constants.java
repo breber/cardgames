@@ -17,6 +17,8 @@ public class Constants {
 	public static final String MESSAGE_TYPE = "messagetype";
 	public static final String TURN = "isturn";
 	
+	public static final int GET_PLAYER_NAME = "getPlayerName".hashCode();
+	
 	//these are bluetooth message types that can be sent by the GameBoard
 	public static final int SETUP = 0;
 	public static final int IS_TURN = 1;
@@ -33,6 +35,8 @@ public class Constants {
 	public static final int PLAY_EIGHT_D = 9;
 	public static final int PLAY_EIGHT_H = 10;
 	public static final int PLAY_EIGHT_S = 11;
+	public static final String PLAYER_NAME = "playername";
+	
 	
 	
 

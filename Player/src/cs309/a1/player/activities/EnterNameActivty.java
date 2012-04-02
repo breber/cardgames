@@ -1,12 +1,14 @@
 package cs309.a1.player.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import cs309.a1.player.R;
+import static cs309.a1.crazyeights.Constants.PLAYER_NAME;
 
 public class EnterNameActivty extends Activity{
 	
@@ -24,6 +26,9 @@ public class EnterNameActivty extends Activity{
 			public void onClick(View v) {
 				EditText name = (EditText) findViewById(R.id.name);
 				String playerName = name.getText().toString();
+				Intent nameToSend = new Intent();
+				nameToSend.putExtra(PLAYER_NAME, playerName);
+				setResult(RESULT_OK, nameToSend);
 				finish();
 			}
 		});

@@ -1,5 +1,8 @@
 package cs309.a1.player.activities;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,6 +16,10 @@ import cs309.a1.shared.Util;
 import cs309.a1.shared.activities.DeviceListActivity;
 import cs309.a1.shared.bluetooth.BluetoothClient;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
+import static cs309.a1.crazyeights.Constants.GET_PLAYER_NAME;
+import static cs309.a1.crazyeights.Constants.PLAYER_NAME;
+import static cs309.a1.crazyeights.Constants.SETUP;
+import static cs309.a1.crazyeights.Constants.SUIT;
 
 /**
  * The Activity that initiates the device list, and then
@@ -49,9 +56,12 @@ public class ConnectActivity extends Activity {
 			// and register a new receiver to handle the game initiation message
 			if (currentState == BluetoothConstants.STATE_CONNECTED) {
 				readyToStart = true;
-
+				
 				TextView tv = (TextView) findViewById(R.id.progressDialogText);
 				tv.setText(getResources().getString(R.string.waitingForGame));
+				
+				Intent getName = new Intent(ConnectActivity.this, EnterNameActivty.class);
+				startActivityForResult(getName, GET_PLAYER_NAME);
 
 				// Register the receiver for receiving messages from Bluetooth
 				registerReceiver(gameStartReceiver, new IntentFilter(BluetoothConstants.MESSAGE_RX_INTENT));
@@ -134,15 +144,26 @@ public class ConnectActivity extends Activity {
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		BluetoothClient client = BluetoothClient.getInstance(getApplicationContext());
 		if (requestCode == DEVICE_LIST_RESULT && resultCode != RESULT_CANCELED) {
 			// We are coming back from the device list, and it wasn't cancelled, so
 			// grab the MAC address from the result intent, and start connection
 			String macAddress = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-			BluetoothClient client = BluetoothClient.getInstance(getApplicationContext());
 			client.connect(macAddress);
 
 			// Start listening for connection state changes
 			registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
+		} else if( requestCode == GET_PLAYER_NAME && resultCode == RESULT_OK){
+			String playerName = data.getStringExtra(PLAYER_NAME);
+			JSONObject obj = new JSONObject();
+			try {
+				obj.put(PLAYER_NAME, playerName);
+				client.write(GET_PLAYER_NAME, obj);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		} else {
 			// The user cancelled out of the device list, so return them to the main menu
 			setResult(RESULT_CANCELED);
