@@ -35,5 +35,6 @@ To use this application properly, download the application titled “Crazy Eight
 	<!-- Enter Name Activity -->
 	<string name="enter_name">Please enter your name</string>
 	<string name="ok">OK</string>
+	<string name="enter_name_here">Enter your name here</string>
 
 </resources>

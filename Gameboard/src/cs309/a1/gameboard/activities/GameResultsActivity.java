@@ -16,7 +16,7 @@ public class GameResultsActivity extends Activity{
 	/**
 	 * The Intent extra indicating which user won the game
 	 */
-	public static final String WINNER_NUMBER = "whowon";
+	public static final String WINNER_NAME = "whowon";
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -26,11 +26,11 @@ public class GameResultsActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.winlose);
 
-		int winner = getIntent().getIntExtra(WINNER_NUMBER, 0);
+		String winner = getIntent().getStringExtra(WINNER_NAME);
 
 		// Display who won in the title bar
 		TextView title = (TextView) findViewById(R.id.title);
-		title.setText(getResources().getString(R.string.playerNWon).replace("%n", winner + ""));
+		title.setText(getResources().getString(R.string.playerNWon).replace("%s", winner));
 
 		// Add a handler to the Main Menu button
 		Button mainMenu = (Button) findViewById(R.id.btMainMenu);

@@ -238,7 +238,7 @@ public class CrazyEightsGameController implements GameController {
 		}
 
 		Intent gameResults = new Intent(gameContext, GameResultsActivity.class);
-		gameResults.putExtra(GameResultsActivity.WINNER_NUMBER, whoWon + 1);
+		gameResults.putExtra(GameResultsActivity.WINNER_NAME, game.getPlayers().get(whoWon).getName());
 		gameContext.startActivityForResult(gameResults, DECLARE_WINNER);
 		//TODO start ending activity
 	}
@@ -250,7 +250,7 @@ public class CrazyEightsGameController implements GameController {
 		Card tmpCard = game.draw(players.get(whoseTurn));
 		
 		//TODO may need to make this a generic back of card
-		gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
+		gameContext.placeCard(whoseTurn + 1, tmpCard);
 		bts.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
 	}
 

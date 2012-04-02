@@ -25,7 +25,12 @@ public class EnterNameActivty extends Activity{
 		ok.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				EditText name = (EditText) findViewById(R.id.name);
-				String playerName = name.getText().toString();
+				String playerName;
+				if(name.getText().length() == 0){
+					playerName = getResources().getString(R.string.default_name);
+				}else{
+					playerName = name.getText().toString();
+				}
 				Intent nameToSend = new Intent();
 				nameToSend.putExtra(PLAYER_NAME, playerName);
 				setResult(RESULT_OK, nameToSend);

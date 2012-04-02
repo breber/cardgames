@@ -29,7 +29,7 @@ To use this application properly, download the application titled “Crazy Eight
     
     <!-- Game Results Activity -->
     <string name="gameResultsTitle">Game Over</string>
-    <string name="playerNWon">Player %n Wins!</string>
+    <string name="playerNWon">%s Wins!</string>
     <string name="exitGame">Exit Game</string>
 
 </resources>

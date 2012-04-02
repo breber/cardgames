@@ -1,10 +1,10 @@
 package cs309.a1.gameboard.activities;
 
-import static cs309.a1.crazyeights.Constants.ID;
-import static cs309.a1.crazyeights.Constants.VALUE;
 import static cs309.a1.crazyeights.Constants.PLAYER_NAME;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,9 +20,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 import cs309.a1.crazyeights.Constants;
 import cs309.a1.gameboard.R;
-import cs309.a1.shared.Card;
 import cs309.a1.shared.TextView;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
@@ -64,7 +64,7 @@ public class ConnectActivity extends Activity {
 	/**
 	 * 
 	 */
-	private String[] playerNames = new String[4];
+	private Map<String, String> playerNames = new HashMap<String, String>();
 
 	/**
 	 * The BroadcastReceiver that handles state change messages from the Bluetooth module
@@ -75,28 +75,39 @@ public class ConnectActivity extends Activity {
 			String object = intent.getStringExtra(BluetoothConstants.KEY_MESSAGE_RX);
 			int messageType = intent.getIntExtra(BluetoothConstants.KEY_MESSAGE_TYPE, -1);
 			
+			String action = intent.getAction();
 			
-			if(messageType == Constants.GET_PLAYER_NAME){
-				String deviceAddress = intent.getStringExtra(BluetoothConstants.KEY_DEVICE_ID);
-				List<String> deviceIDs = mBluetoothServer.getConnectedDevices();
-				int i;
-				for(i=0;i<mBluetoothServer.getConnectedDeviceCount(); i++){
-					if(deviceIDs.get(i).equals(deviceAddress)){
-						break;
+			if(BluetoothConstants.MESSAGE_RX_INTENT.equals(action)){
+				if(messageType == Constants.GET_PLAYER_NAME){
+					String deviceAddress = intent.getStringExtra(BluetoothConstants.KEY_DEVICE_ID);
+					List<String> deviceIDs = mBluetoothServer.getConnectedDevices();
+					int i;
+					for(i=0;i<mBluetoothServer.getConnectedDeviceCount(); i++){
+						if(deviceIDs.get(i).equals(deviceAddress)){
+							break;
+						}
 					}
-				}
-				//TODO make game not able to start without all players reporting names.
-				try {
-					JSONObject obj = new JSONObject(object);
-					String playerName = obj.getString(PLAYER_NAME);
-					playerNames[i] = playerName;
-				} catch (JSONException ex) {
-					ex.printStackTrace();
-				}
+					//TODO make game not able to start without all players reporting names.
+					try {
+						JSONObject obj = new JSONObject(object);
+						String playerName = obj.getString(PLAYER_NAME);
+						playerNames.put(deviceAddress, playerName);
 
-				
+					} catch (JSONException ex) {
+						ex.printStackTrace();
+					}
+	
+					
+	
+				} 
+			}else if(BluetoothConstants.STATE_CHANGE_INTENT.equals(action)){
+				int state = intent.getIntExtra(BluetoothConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_LISTEN);
+				if(state == BluetoothConstants.STATE_LISTEN){
+					String deviceID = intent.getStringExtra(BluetoothConstants.KEY_DEVICE_ID);
+					playerNames.remove(deviceID);
+				}
 			}
-
+			
 			// Update the UI to indicate how many players are connected
 			updatePlayersConnected();
 		}
@@ -159,10 +170,23 @@ public class ConnectActivity extends Activity {
 
 					// Start the Gameboard activity
 					Intent i = new Intent(ConnectActivity.this,	GameboardActivity.class);
-					i.putExtra(Constants.PLAYER_1, playerNames[0]);
-					i.putExtra(Constants.PLAYER_2, playerNames[1]);
-					i.putExtra(Constants.PLAYER_3, playerNames[2]);
-					i.putExtra(Constants.PLAYER_4, playerNames[3]);
+					int j = 0;
+					for(String s : playerNames.keySet()){
+						if(j == 0 ){
+							i.putExtra(Constants.PLAYER_1, playerNames.get(s));
+						} else if(j == 1){
+							i.putExtra(Constants.PLAYER_1, playerNames.get(s));
+						} else if( j == 2){
+							i.putExtra(Constants.PLAYER_1, playerNames.get(s));
+						} else if(j == 3){
+							i.putExtra(Constants.PLAYER_1, playerNames.get(s));
+						}
+						j++;
+					}
+//					i.putExtra(Constants.PLAYER_1, playerNames.);
+//					i.putExtra(Constants.PLAYER_2, playerNames[1]);
+//					i.putExtra(Constants.PLAYER_3, playerNames[2]);
+//					i.putExtra(Constants.PLAYER_4, playerNames[3]);
 					startActivity(i);
 
 					// Finish this activity so we can't get back here when pressing the back button
@@ -231,28 +255,54 @@ public class ConnectActivity extends Activity {
 	 */
 	private void updatePlayersConnected() {
 		int numPlayers = mBluetoothServer.getConnectedDeviceCount();
+		
 		TextView p1 = (TextView) findViewById(R.id.connectDeviceP1TextView);
 		TextView p2 = (TextView) findViewById(R.id.connectDeviceP2TextView);
 		TextView p3 = (TextView) findViewById(R.id.connectDeviceP3TextView);
 		TextView p4 = (TextView) findViewById(R.id.connectDeviceP4TextView);
 
-		for (int i = 0; i < 4; i++) {
-			if (i < numPlayers) {
-				playerImageViews[i].setImageResource(R.drawable.on_device);
-				playerTextViews[i].setVisibility(View.VISIBLE);
-				if(i == 0 ){
-					p1.setText(playerNames[0]);
-				} else if(i == 1){
-					p2.setText(playerNames[1]);
-				} else if( i == 2){
-					p3.setText(playerNames[2]);
-				} else if(i == 3){
-					p4.setText(playerNames[3]);
+		int i = 0;
+		
+		for (String s : mBluetoothServer.getConnectedDevices()) {
+			Toast.makeText(this,
+					mBluetoothServer.getConnectedDevices().size() + "",
+					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, playerNames.get(s), Toast.LENGTH_SHORT).show();
+
+			playerImageViews[i].setImageResource(R.drawable.on_device);
+			playerTextViews[i].setVisibility(View.VISIBLE);
+			if (i == 0) {
+				if(playerNames.get(s) == null){
+					p1.setText(R.string.default_name);
+				} else{
+					p1.setText(playerNames.get(s));
 				}
-			} else {
-				playerImageViews[i].setImageResource(R.drawable.off_device);
-				playerTextViews[i].setVisibility(View.INVISIBLE);
+			} else if (i == 1) {
+				if(playerNames.get(s) == null){
+					p2.setText(R.string.default_name);
+				} else{
+					p2.setText(playerNames.get(s));
+				}
+			} else if (i == 2) {
+				if(playerNames.get(s) == null){
+					p3.setText(R.string.default_name);
+				} else{
+					p3.setText(playerNames.get(s));
+				}
+			} else if (i == 3) {
+				if(playerNames.get(s) == null){
+					p4.setText(R.string.default_name);
+				} else{
+					p4.setText(playerNames.get(s));
+				}
 			}
+
+			i++;
+		}
+		
+		for( ; i < 4; i++){
+			playerImageViews[i].setImageResource(R.drawable.off_device);
+			playerTextViews[i].setVisibility(View.INVISIBLE);
 		}
 
 		// Update the state of the button so that it changes colors when there

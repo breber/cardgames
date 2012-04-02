@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import cs309.a1.crazyeights.Constants;
 import cs309.a1.crazyeights.CrazyEightsGameController;
 import cs309.a1.gameboard.R;
@@ -153,6 +154,11 @@ public class GameboardActivity extends Activity {
 		String player2 = intent.getStringExtra(Constants.PLAYER_2);
 		String player3 = intent.getStringExtra(Constants.PLAYER_3);
 		String player4 = intent.getStringExtra(Constants.PLAYER_4);
+		
+		Toast.makeText(this, player1, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, player2, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, player3, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, player4, Toast.LENGTH_SHORT).show();
 		
 		for (int i = 0; i < numOfConnections; i++){
 			Player p = new Player();
