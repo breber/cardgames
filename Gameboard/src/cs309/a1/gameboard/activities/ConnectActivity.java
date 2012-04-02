@@ -1,5 +1,14 @@
 package cs309.a1.gameboard.activities;
 
+import static cs309.a1.crazyeights.Constants.ID;
+import static cs309.a1.crazyeights.Constants.VALUE;
+import static cs309.a1.crazyeights.Constants.PLAYER_NAME;
+
+import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -11,8 +20,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
+import cs309.a1.crazyeights.Constants;
 import cs309.a1.gameboard.R;
+import cs309.a1.shared.Card;
 import cs309.a1.shared.TextView;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
@@ -50,6 +60,11 @@ public class ConnectActivity extends Activity {
 	 * are currently connected to this device.
 	 */
 	private BluetoothServer mBluetoothServer;
+	
+	/**
+	 * 
+	 */
+	private String[] playerNames = new String[4];
 
 	/**
 	 * The BroadcastReceiver that handles state change messages from the Bluetooth module
@@ -57,11 +72,29 @@ public class ConnectActivity extends Activity {
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			// Get the number of players connected
-			int numPlayers = mBluetoothServer.getConnectedDeviceCount();
+			String object = intent.getStringExtra(BluetoothConstants.KEY_MESSAGE_RX);
+			int messageType = intent.getIntExtra(BluetoothConstants.KEY_MESSAGE_TYPE, -1);
+			
+			
+			if(messageType == Constants.GET_PLAYER_NAME){
+				String deviceAddress = intent.getStringExtra(BluetoothConstants.KEY_DEVICE_ID);
+				List<String> deviceIDs = mBluetoothServer.getConnectedDevices();
+				int i;
+				for(i=0;i<mBluetoothServer.getConnectedDeviceCount(); i++){
+					if(deviceIDs.get(i).equals(deviceAddress)){
+						break;
+					}
+				}
+				//TODO make game not able to start without all players reporting names.
+				try {
+					JSONObject obj = new JSONObject(object);
+					String playerName = obj.getString(PLAYER_NAME);
+					playerNames[i] = playerName;
+				} catch (JSONException ex) {
+					ex.printStackTrace();
+				}
 
-			if (Util.isDebugBuild()) {
-				Toast.makeText(ConnectActivity.this, "Bluetooth change. Players: " + numPlayers, Toast.LENGTH_LONG).show();
+				
 			}
 
 			// Update the UI to indicate how many players are connected
@@ -76,9 +109,11 @@ public class ConnectActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.connect);
+		
 
 		// Register the BroadcastReceiver for receiving state change messages from
 		// the Bluetooth module
+		registerReceiver(receiver, new IntentFilter(BluetoothConstants.MESSAGE_RX_INTENT));
 		registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
 
 		// Get the ImageView and TextView references so that we can display different
@@ -124,6 +159,10 @@ public class ConnectActivity extends Activity {
 
 					// Start the Gameboard activity
 					Intent i = new Intent(ConnectActivity.this,	GameboardActivity.class);
+					i.putExtra("player1", playerNames[0]);
+					i.putExtra("player2", playerNames[1]);
+					i.putExtra("player3", playerNames[2]);
+					i.putExtra("player4", playerNames[3]);
 					startActivity(i);
 
 					// Finish this activity so we can't get back here when pressing the back button
