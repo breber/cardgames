@@ -18,6 +18,7 @@ public class Player {
 	private List<Card> cards;
 	private String name;
 	private String id;
+	private int position;
 
 	public Player() {
 		this.cards = new ArrayList<Card>();
@@ -66,6 +67,14 @@ public class Player {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public int getPosition(){
+		return position;
+	}
+	
+	public void setPosition(int position){
+		this.position = position;
 	}
 
 	/**

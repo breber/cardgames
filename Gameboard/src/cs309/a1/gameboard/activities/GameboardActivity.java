@@ -144,7 +144,10 @@ public class GameboardActivity extends Activity {
 		int numOfConnections = bts.getConnectedDeviceCount();
 		List<Player> players = new ArrayList<Player>();
 		List<String> devices = bts.getConnectedDevices();
-
+		
+		Intent intent = getIntent();
+		String player1 = intent.getStringExtra("player1");
+		
 		for (int i = 0; i < numOfConnections; i++){
 			Player p = new Player();
 			p.setId(devices.get(i));

@@ -248,7 +248,9 @@ public class CrazyEightsGameController implements GameController {
 	 */
 	private void drawCard() {
 		Card tmpCard = game.draw(players.get(whoseTurn));
-		gameContext.placeCard(whoseTurn + 1, tmpCard);
+		
+		//TODO may need to make this a generic back of card
+		gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
 		bts.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
 	}
 
@@ -265,7 +267,7 @@ public class CrazyEightsGameController implements GameController {
 			int id = obj.getInt(ID);
 			tmpCard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
 
-			gameContext.removeCard(whoseTurn + 1);
+			gameContext.removeCard(players.get(whoseTurn).getPosition());
 			game.discard(players.get(whoseTurn), tmpCard);
 		} catch (JSONException ex) {
 			ex.printStackTrace();
