@@ -171,7 +171,20 @@ public class BluetoothServer extends BluetoothCommon {
 	 * @return a list of connected devices' ids
 	 */
 	public List<String> getConnectedDevices() {
-		return new ArrayList<String>(services.keySet());
+		if (services.size() == 0) {
+			return new ArrayList<String>();
+		}
+
+		ArrayList<String> toRet = new ArrayList<String>();
+
+		for (String s : services.keySet()) {
+			BluetoothConnectionService service = services.get(s);
+
+			if (service.getState() == BluetoothConstants.STATE_CONNECTED) {
+				toRet.add(s);
+			}
+		}
+		return toRet;
 	}
 
 	/* (non-Javadoc)
