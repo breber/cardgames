@@ -2,6 +2,7 @@ package cs309.a1.shared.bluetooth;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import android.bluetooth.BluetoothAdapter;
@@ -150,19 +151,7 @@ public class BluetoothServer extends BluetoothCommon {
 	 * @return the number of connected devices
 	 */
 	public int getConnectedDeviceCount() {
-		if (services.size() == 0) {
-			return 0;
-		}
-
-		int countConnected = 0;
-
-		for (BluetoothConnectionService service : services.values()) {
-			if (service.getState() == BluetoothConstants.STATE_CONNECTED) {
-				countConnected++;
-			}
-		}
-
-		return countConnected;
+		return getConnectedDevices().size();
 	}
 
 	/**
@@ -175,7 +164,7 @@ public class BluetoothServer extends BluetoothCommon {
 			return new ArrayList<String>();
 		}
 
-		ArrayList<String> toRet = new ArrayList<String>();
+		HashSet<String> toRet = new HashSet<String>();
 
 		for (String s : services.keySet()) {
 			BluetoothConnectionService service = services.get(s);
@@ -184,7 +173,8 @@ public class BluetoothServer extends BluetoothCommon {
 				toRet.add(s);
 			}
 		}
-		return toRet;
+
+		return new ArrayList<String>(toRet);
 	}
 
 	/* (non-Javadoc)
