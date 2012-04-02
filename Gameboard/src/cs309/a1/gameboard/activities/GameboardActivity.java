@@ -147,11 +147,23 @@ public class GameboardActivity extends Activity {
 		
 		Intent intent = getIntent();
 		String player1 = intent.getStringExtra("player1");
+		String player2 = intent.getStringExtra("player2");
+		String player3 = intent.getStringExtra("player3");
+		String player4 = intent.getStringExtra("player4");
 		
 		for (int i = 0; i < numOfConnections; i++){
 			Player p = new Player();
 			p.setId(devices.get(i));
-			p.setName("Player " + i);
+			if(i == 0 ){
+				p.setName(player1);
+			} else if(i == 1){
+				p.setName(player2);
+			} else if( i == 2){
+				p.setName(player3);
+			} else if(i == 3){
+				p.setName(player4);
+			}
+
 			players.add(p);
 		}
 

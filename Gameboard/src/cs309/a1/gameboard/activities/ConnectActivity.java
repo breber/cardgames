@@ -231,11 +231,24 @@ public class ConnectActivity extends Activity {
 	 */
 	private void updatePlayersConnected() {
 		int numPlayers = mBluetoothServer.getConnectedDeviceCount();
+		TextView p1 = (TextView) findViewById(R.id.connectDeviceP1TextView);
+		TextView p2 = (TextView) findViewById(R.id.connectDeviceP2TextView);
+		TextView p3 = (TextView) findViewById(R.id.connectDeviceP3TextView);
+		TextView p4 = (TextView) findViewById(R.id.connectDeviceP4TextView);
 
 		for (int i = 0; i < 4; i++) {
 			if (i < numPlayers) {
 				playerImageViews[i].setImageResource(R.drawable.on_device);
 				playerTextViews[i].setVisibility(View.VISIBLE);
+				if(i == 0 ){
+					p1.setText(playerNames[0]);
+				} else if(i == 1){
+					p2.setText(playerNames[1]);
+				} else if( i == 2){
+					p3.setText(playerNames[2]);
+				} else if(i == 3){
+					p4.setText(playerNames[3]);
+				}
 			} else {
 				playerImageViews[i].setImageResource(R.drawable.off_device);
 				playerTextViews[i].setVisibility(View.INVISIBLE);
