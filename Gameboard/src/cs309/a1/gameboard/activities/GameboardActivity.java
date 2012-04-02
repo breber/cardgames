@@ -18,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import cs309.a1.crazyeights.Constants;
 import cs309.a1.crazyeights.CrazyEightsGameController;
 import cs309.a1.gameboard.R;
 import cs309.a1.shared.Card;
@@ -146,10 +147,10 @@ public class GameboardActivity extends Activity {
 		List<String> devices = bts.getConnectedDevices();
 		
 		Intent intent = getIntent();
-		String player1 = intent.getStringExtra("player1");
-		String player2 = intent.getStringExtra("player2");
-		String player3 = intent.getStringExtra("player3");
-		String player4 = intent.getStringExtra("player4");
+		String player1 = intent.getStringExtra(Constants.PLAYER_1);
+		String player2 = intent.getStringExtra(Constants.PLAYER_2);
+		String player3 = intent.getStringExtra(Constants.PLAYER_3);
+		String player4 = intent.getStringExtra(Constants.PLAYER_4);
 		
 		for (int i = 0; i < numOfConnections; i++){
 			Player p = new Player();

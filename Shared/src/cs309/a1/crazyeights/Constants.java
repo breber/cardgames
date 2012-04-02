@@ -10,6 +10,11 @@ public class Constants {
 	public static final int SUIT_SPADES = 3;
 	public static final int SUIT_JOKER = 4;
 	
+	public static final String PLAYER_1 = "player1";
+	public static final String PLAYER_2 = "player2";
+	public static final String PLAYER_3 = "player3";
+	public static final String PLAYER_4 = "player4";
+	
 	public static final String SUIT = "suit";
 	public static final String VALUE = "value";
 	public static final String RESOURCE_ID = "resourceid";

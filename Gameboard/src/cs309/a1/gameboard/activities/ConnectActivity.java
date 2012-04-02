@@ -159,10 +159,10 @@ public class ConnectActivity extends Activity {
 
 					// Start the Gameboard activity
 					Intent i = new Intent(ConnectActivity.this,	GameboardActivity.class);
-					i.putExtra("player1", playerNames[0]);
-					i.putExtra("player2", playerNames[1]);
-					i.putExtra("player3", playerNames[2]);
-					i.putExtra("player4", playerNames[3]);
+					i.putExtra(Constants.PLAYER_1, playerNames[0]);
+					i.putExtra(Constants.PLAYER_2, playerNames[1]);
+					i.putExtra(Constants.PLAYER_3, playerNames[2]);
+					i.putExtra(Constants.PLAYER_4, playerNames[3]);
 					startActivity(i);
 
 					// Finish this activity so we can't get back here when pressing the back button
