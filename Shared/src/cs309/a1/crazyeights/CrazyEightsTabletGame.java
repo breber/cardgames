@@ -251,6 +251,7 @@ public class CrazyEightsTabletGame implements Game {
 			//maybe refresh gui or something here
 		}
 
+		//TODO: make sure next line never executes if !iter.hasNext() after shuffling
 		Card card = iter.next();
 		//get a card out of the shuffled pile and add to the players hand
 		player.addCard(card);
