@@ -391,13 +391,14 @@ public class CrazyEightsTabletGameTest {
 	public void testDropPlayer(){
 		setupGame();
 		Player p = game.getPlayers().get(0);
+		game.getPlayers().get(0).setId("Mac Address");
 		
 		assertEquals("Testing size of players hand", 5, p.getCards().size());
 		assertEquals("Testing size of players hand", 5, p.getNumCards());
 		assertEquals("Testing size of the discard pile", 1, game.getDiscardPile().size());
 		assertEquals("Testing size of the shuffled deck", 43, game.getShuffledDeck().size());
 		
-		game.dropPlayer(p);
+		game.dropPlayer("Mac Address");
 		
 		assertEquals("Testing size of players hand", 0, p.getCards().size());
 		assertEquals("Testing size of players hand", 0, p.getNumCards());
@@ -430,9 +431,10 @@ public class CrazyEightsTabletGameTest {
 	public void testDropGetNumPlayers(){
 		setup();
 		
-		Player p = game.getPlayers().get(0);
+		game.getPlayers().get(0).setId("Mac Address");
+
 		
-		game.dropPlayer(p);
+		game.dropPlayer("Mac Address");
 		
 		assertEquals("Testing number of players", 1, game.getNumPlayers());
 		
