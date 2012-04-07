@@ -9,12 +9,10 @@ import cs309.a1.gameboard.R;
 import cs309.a1.shared.SoundManager;
 
 /**
- * This is the Main Menu activity. This allows
- * the user to create a new game, view the rules,
- * and view the about text.
+ * This is the Main Menu activity. This allows the user to create a new game,
+ * view the rules, and view the about text.
  */
 public class MainMenu extends Activity {
-
 	/**
 	 * The request code to keep track of the "Are you sure you want to quit" activity
 	 */
@@ -27,31 +25,12 @@ public class MainMenu extends Activity {
 	protected void onCreate(android.os.Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		
+
 		//initialize the sounds
 		SoundManager.initSounds(getApplicationContext());
 
 		// Set up the button handlers on the main menu
 		Button play = (Button) findViewById(R.id.btPlay);
-		Button about = (Button) findViewById(R.id.btAbout);
-		Button rules = (Button) findViewById(R.id.btRules);
-
-		rules.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent ruleButtonClick = new Intent(MainMenu.this, RulesActivity.class);
-				startActivity(ruleButtonClick);
-			}
-		});
-
-		about.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent aboutButtonClick = new Intent(MainMenu.this,	AboutActivity.class);
-				startActivity(aboutButtonClick);
-			}
-		});
-
 		play.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -60,6 +39,23 @@ public class MainMenu extends Activity {
 			}
 		});
 
+		Button rules = (Button) findViewById(R.id.btRules);
+		rules.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent ruleButtonClick = new Intent(MainMenu.this, RulesActivity.class);
+				startActivity(ruleButtonClick);
+			}
+		});
+
+		Button about = (Button) findViewById(R.id.btAbout);
+		about.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent aboutButtonClick = new Intent(MainMenu.this,	AboutActivity.class);
+				startActivity(aboutButtonClick);
+			}
+		});
 	}
 
 	/* (non-Javadoc)
@@ -79,7 +75,7 @@ public class MainMenu extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// Handle the result from the Quit Application prompt.
-		// If they answered yes, finish this activity. Otherwise, 
+		// If they answered yes, finish this activity. Otherwise,
 		// do nothing.
 		if (requestCode == QUIT_GAME && resultCode == RESULT_OK) {
 			setResult(RESULT_OK);

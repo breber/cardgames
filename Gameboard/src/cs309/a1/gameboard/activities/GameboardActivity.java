@@ -18,15 +18,13 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 import cs309.a1.crazyeights.Constants;
 import cs309.a1.crazyeights.CrazyEightsGameController;
 import cs309.a1.gameboard.R;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.GameController;
 import cs309.a1.shared.Player;
+import cs309.a1.shared.TextView;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.bluetooth.BluetoothServer;
@@ -93,6 +91,9 @@ public class GameboardActivity extends Activity {
 	 */
 	private int player4cards;
 
+	/**
+	 * The GameController for handling most of the game logic
+	 */
 	private GameController gameController;
 
 	/**
@@ -124,18 +125,23 @@ public class GameboardActivity extends Activity {
 		}
 	};
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gameboard);
 
+		// Add the handler for the pause button
 		ImageButton pause = (ImageButton) findViewById(R.id.gameboard_pause);
-
 		pause.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent pauseButtonClick = new Intent(GameboardActivity.this, PauseMenuActivity.class);
 				startActivityForResult(pauseButtonClick, PAUSE_GAME);
+
+				// TODO: send a message to the users that the game has been paused
 			}
 		});
 
@@ -148,28 +154,45 @@ public class GameboardActivity extends Activity {
 		int numOfConnections = bts.getConnectedDeviceCount();
 		List<Player> players = new ArrayList<Player>();
 		List<String> devices = bts.getConnectedDevices();
-		
+
 		Intent intent = getIntent();
 		String player1 = intent.getStringExtra(Constants.PLAYER_1);
 		String player2 = intent.getStringExtra(Constants.PLAYER_2);
 		String player3 = intent.getStringExtra(Constants.PLAYER_3);
 		String player4 = intent.getStringExtra(Constants.PLAYER_4);
-		
-		Toast.makeText(this, player1, Toast.LENGTH_SHORT).show();
-		Toast.makeText(this, player2, Toast.LENGTH_SHORT).show();
-		Toast.makeText(this, player3, Toast.LENGTH_SHORT).show();
-		Toast.makeText(this, player4, Toast.LENGTH_SHORT).show();
-		
+
+		// Show the user names we got back
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "Player1: " + player1);
+			Log.d(TAG, "Player2: " + player2);
+			Log.d(TAG, "Player3: " + player3);
+			Log.d(TAG, "Player4: " + player4);
+		}
+
+		// Set up the players for this game
 		for (int i = 0; i < numOfConnections; i++){
 			Player p = new Player();
 			p.setId(devices.get(i));
-			if(i == 0 ){
+
+			if (i == 0) {
+				TextView tv = (TextView) findViewById(R.id.player1text);
+				tv.setText(player1);
+				tv.setVisibility(View.VISIBLE);
 				p.setName(player1);
-			} else if(i == 1){
+			} else if (i == 1) {
+				TextView tv = (TextView) findViewById(R.id.player2text);
+				tv.setText(player2);
+				tv.setVisibility(View.VISIBLE);
 				p.setName(player2);
-			} else if( i == 2){
+			} else if (i == 2) {
+				TextView tv = (TextView) findViewById(R.id.player3text);
+				tv.setText(player3);
+				tv.setVisibility(View.VISIBLE);
 				p.setName(player3);
-			} else if(i == 3){
+			} else if (i == 3) {
+				TextView tv = (TextView) findViewById(R.id.player4text);
+				tv.setText(player4);
+				tv.setVisibility(View.VISIBLE);
 				p.setName(player4);
 			}
 
@@ -182,42 +205,65 @@ public class GameboardActivity extends Activity {
 		gameController = new CrazyEightsGameController(this, bts, players, refresh);
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onBackPressed()
+	 */
 	@Override
 	public void onBackPressed() {
 		Intent intent = new Intent(this, QuitGameActivity.class);
 		startActivityForResult(intent, QUIT_GAME);
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onDestroy()
+	 */
 	@Override
 	protected void onDestroy() {
 		// Disconnect Bluetooth connection
 		BluetoothServer.getInstance(this).disconnect();
 
 		// Unregister the receiver
-		unregisterReceiver(receiver);
+		try {
+			unregisterReceiver(receiver);
+		} catch (IllegalArgumentException e) {
+			// We didn't get far enough to register the receiver
+		}
 
 		super.onDestroy();
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == QUIT_GAME && resultCode == RESULT_OK) {
 			// Finish this activity
 			setResult(RESULT_OK);
 			finish();
-		} else if (requestCode == PAUSE_GAME && resultCode == RESULT_CANCELED) {
-			// Finish this activity
+		} else if (requestCode == PAUSE_GAME) {
+			if (resultCode == RESULT_CANCELED) {
+				// On the Pause Menu, they selected something that will end
+				// the game, so Finish this activity
+
+				// TODO: send a message to the handhelds letting them know the game is over...
+
+				setResult(RESULT_OK);
+				finish();
+			} else {
+				// TODO: send a message to the handhelds letting them know the game has been resumed
+			}
+		} else if (requestCode == DECLARE_WINNER) {
+			// We are coming back from the winner screen, so just go back to the main menu
+			// no matter what the result is.
 			setResult(RESULT_OK);
 			finish();
-		} else if (requestCode == DECLARE_WINNER && resultCode == RESULT_OK) {
-			// TODO: what do we do here?
 		} else {
 			// If we didn't handle the result here, try handling it in the GameController
-			// If they don't handle it, pass it on to the default onActivityResult
-			if (!gameController.handleActivityResult(requestCode, resultCode, data)) {
-				super.onActivityResult(requestCode, resultCode, data);
-			}
+			gameController.handleActivityResult(requestCode, resultCode, data);
 		}
+
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	/**
@@ -227,7 +273,8 @@ public class GameboardActivity extends Activity {
 	 * @param newCard Card to be placed on the game board
 	 */
 	public void placeCard(int location, Card newCard) {
-
+		// TODO: do we want to move the layouts into an array so that
+		// we don't have to findViewById each time?
 		LinearLayout ll;
 		LinearLayout.LayoutParams lp;
 		int handSize;
@@ -309,34 +356,34 @@ public class GameboardActivity extends Activity {
 			}
 
 			else {
-				
+
 				/*TextView iv = null;
-				
+
 				if(handSize == MAX_DISPLAYED + 1) {
 					RelativeLayout rl = (RelativeLayout) findViewById(R.layout.gameboard);
-	
+
 					iv = new TextView(this);
-	
+
 					RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(20, 20);
-					
+
 					ImageView fullCard = (ImageView) findViewById((location-1)*MAX_DISPLAYED + 1);
-					
+
 					int[] viewLocation = new int[2];
 					fullCard.getLocationOnScreen(viewLocation);
 					params.leftMargin = viewLocation[0];
 					params.topMargin = viewLocation[1];
-					
+
 					iv.setBackgroundColor(R.color.black);
 					iv.setTextColor(R.color.gold);
-					
+
 					iv.setId(1000*(location+1));
-					
+
 					rl.addView(iv, params);
 				}
 				else {
 					iv = (TextView) findViewById(1000*(location+1));
 				}
-				
+
 				iv.setText("+" + (handSize - MAX_DISPLAYED));*/
 			}
 		}
@@ -442,7 +489,8 @@ public class GameboardActivity extends Activity {
 	 * @param location Location from which card should be removed
 	 */
 	public void removeCard(int location) {
-
+		// TODO: do we want to move the layouts into an array so that
+		// we don't have to findViewById each time?
 		LinearLayout ll;
 		int handSize;
 

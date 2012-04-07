@@ -1,5 +1,8 @@
 package cs309.a1.player.activities;
 
+import static cs309.a1.crazyeights.Constants.GET_PLAYER_NAME;
+import static cs309.a1.crazyeights.Constants.PLAYER_NAME;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,16 +19,16 @@ import cs309.a1.shared.Util;
 import cs309.a1.shared.activities.DeviceListActivity;
 import cs309.a1.shared.bluetooth.BluetoothClient;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
-import static cs309.a1.crazyeights.Constants.GET_PLAYER_NAME;
-import static cs309.a1.crazyeights.Constants.PLAYER_NAME;
-import static cs309.a1.crazyeights.Constants.SETUP;
-import static cs309.a1.crazyeights.Constants.SUIT;
 
 /**
  * The Activity that initiates the device list, and then
  * waits for the Bluetooth connection to be made, and finally
  * waits for the game to begin before moving on to display
  * the user's hand.
+ * 
+ * Activity Results:
+ * 		RESULT_OK - If the user is connected and the game can begin
+ * 		RESULT_CANCELLED - If the user cancelled or is not connected
  */
 public class ConnectActivity extends Activity {
 
@@ -56,10 +59,10 @@ public class ConnectActivity extends Activity {
 			// and register a new receiver to handle the game initiation message
 			if (currentState == BluetoothConstants.STATE_CONNECTED) {
 				readyToStart = true;
-				
+
 				TextView tv = (TextView) findViewById(R.id.progressDialogText);
 				tv.setText(getResources().getString(R.string.waitingForGame));
-				
+
 				Intent getName = new Intent(ConnectActivity.this, EnterNameActivty.class);
 				startActivityForResult(getName, GET_PLAYER_NAME);
 
@@ -153,17 +156,15 @@ public class ConnectActivity extends Activity {
 
 			// Start listening for connection state changes
 			registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
-		} else if( requestCode == GET_PLAYER_NAME && resultCode == RESULT_OK){
+		} else if (requestCode == GET_PLAYER_NAME && resultCode == RESULT_OK) {
 			String playerName = data.getStringExtra(PLAYER_NAME);
 			JSONObject obj = new JSONObject();
 			try {
 				obj.put(PLAYER_NAME, playerName);
 				client.write(GET_PLAYER_NAME, obj);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		} else {
 			// The user cancelled out of the device list, so return them to the main menu
 			setResult(RESULT_CANCELED);

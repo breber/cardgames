@@ -12,13 +12,16 @@ import cs309.a1.player.R;
 /**
  * The activity that is displayed on the client when the game finishes.
  * It will tell the user whether they won or lost.
+ * 
+ * Activity Results:
+ * 		RESULT_OK - Always
  */
-public class GameResultsActivity extends Activity{
+public class GameResultsActivity extends Activity {
 	/**
 	 * The Intent extra indicating whether the user
 	 * won the game or lost the game.
 	 */
-	public static final String IS_WINNER = "iswinner";
+	public static final String IS_WINNER = "isWinner";
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -27,17 +30,18 @@ public class GameResultsActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.winlose);
-		
+		setResult(RESULT_OK);
+
 		TextView title = (TextView) findViewById(R.id.title);
 		Intent isWinner = getIntent();
-		
+
 		// Update the title to display the proper title
 		if (isWinner.getBooleanExtra(IS_WINNER, false)) {
 			title.setText(R.string.winner);
 		} else {
 			title.setText(R.string.loser);
 		}
-		
+
 		// Add a handler to the Main Menu button
 		Button mainMenu = (Button) findViewById(R.id.btMainMenu);
 		mainMenu.setOnClickListener(new OnClickListener() {
@@ -50,7 +54,7 @@ public class GameResultsActivity extends Activity{
 			}
 		});
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onBackPressed()
 	 */

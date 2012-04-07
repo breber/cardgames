@@ -12,6 +12,10 @@ import cs309.a1.shared.TextView;
 /**
  * This is the Pause Menu. It will be started when a user
  * clicks on the pause button on the Gameboard.
+ * 
+ * Activity Results:
+ * 		RESULT_OK - Game should be resumed
+ * 		RESULT_CANCELLED - End the game
  */
 public class PauseMenuActivity extends Activity {
 	/**
@@ -65,6 +69,16 @@ public class PauseMenuActivity extends Activity {
 	}
 
 	/* (non-Javadoc)
+	 * @see android.app.Activity#onBackPressed()
+	 */
+	@Override
+	public void onBackPressed() {
+		// We will treat the back button as if they clicked the "Resume" button
+		setResult(RESULT_OK);
+		finish();
+	}
+
+	/* (non-Javadoc)
 	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
 	 */
 	@Override
@@ -75,5 +89,4 @@ public class PauseMenuActivity extends Activity {
 			finish();
 		}
 	}
-
 }

@@ -19,7 +19,7 @@ public class RulesActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.information);
 
-		//This is a test of the SoundManager
+		// This is a test of the SoundManager
 		SoundManager.playMusic();
 
 		// Update the title to "Rules"

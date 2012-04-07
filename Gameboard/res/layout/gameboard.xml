@@ -40,7 +40,8 @@
 		    android:textStyle="bold"
 		    android:gravity="bottom|center_horizontal"
 		    android:rotation="180"
-		    android:padding="10sp" />
+		    android:padding="10sp"
+		    android:visibility="invisible" />
 	</LinearLayout>
 	
     <LinearLayout 
@@ -59,7 +60,8 @@
 		    android:textSize="50sp"
 		    android:textStyle="bold"
 		    android:gravity="top|center_horizontal"
-		    android:paddingBottom="10sp" />
+		    android:paddingBottom="10sp"
+		    android:visibility="invisible" />
 	    <LinearLayout 
 	        android:id="@+id/player1ll"
 	        android:orientation="horizontal"
@@ -97,6 +99,7 @@
 		    android:textSize="50sp"
 		    android:textStyle="bold"
 		    android:rotation="270"
+		    android:visibility="invisible"
 		    android:gravity="left|center_vertical" />
 	    <LinearLayout 
 	        android:id="@+id/player2ll"
@@ -128,6 +131,7 @@
 		    android:textSize="50sp"
 		    android:textStyle="bold"
 		    android:rotation="90"
+		    android:visibility="invisible"
 		    android:gravity="left|center_vertical" /> 
     </LinearLayout>
     

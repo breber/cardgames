@@ -30,7 +30,14 @@ import cs309.a1.shared.bluetooth.BluetoothConstants;
 /**
  * This Activity lists all devices that are discoverable, or paired and
  * in range. The user can then select which device they want to connect
- * to, and the address of that device is returned in the result Intent
+ * to, and the address of that device is returned in the result Intent.
+ * 
+ * Activity Results:
+ * 		RESULT_OK - If the user chose a device
+ * 					The Device's MAC address will be in the result
+ * 					Intent with the key DeviceListActivity.EXTRA_DEVICE_ADDRESS
+ * 
+ * 		RESULT_CANCELLED - If no device was chosen
  */
 public class DeviceListActivity extends Activity {
 	/**
@@ -85,7 +92,6 @@ public class DeviceListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.device_list);
-
 
 		noDevicesFound = (TextView) findViewById(R.id.noDevicesFoundText);
 		noDevicesFound.setText(R.string.scanning);
@@ -148,8 +154,12 @@ public class DeviceListActivity extends Activity {
 			mBtAdapter.cancelDiscovery();
 		}
 
-		// Unregister broadcast listeners
-		unregisterReceiver(mReceiver);
+		// Unregister all the receivers we may have registered
+		try {
+			unregisterReceiver(mReceiver);
+		} catch (IllegalArgumentException e) {
+			// We didn't get far enough to register the receiver
+		}
 
 		super.onDestroy();
 	}

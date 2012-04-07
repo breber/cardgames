@@ -11,6 +11,9 @@ import cs309.a1.shared.TextView;
 /**
  * The activity that is displayed on the tablet when the game finishes.
  * It will tell the users who won.
+ * 
+ * Activity Results:
+ * 		RESULT_OK - Always
  */
 public class GameResultsActivity extends Activity{
 	/**
@@ -25,6 +28,7 @@ public class GameResultsActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.winlose);
+		setResult(RESULT_OK);
 
 		String winner = getIntent().getStringExtra(WINNER_NAME);
 

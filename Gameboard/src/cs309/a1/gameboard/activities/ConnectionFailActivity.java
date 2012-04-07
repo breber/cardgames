@@ -12,8 +12,22 @@ import cs309.a1.shared.bluetooth.BluetoothConstants;
 /**
  * The Activtiy that gets displayed when the connection
  * with a user gets disconnected.
+ * 
+ * Activity Results:
+ * 		RESULT_OK - If the user chose to "Reconnect"
+ * 		RESULT_CANCELLED - If the player is to be dropped
+ * 
+ * 		In both cases, there will be an Intent passed back with
+ * 		the MAC address of the user this is referring to as a string
+ * 		extra with key BluetoothConstants.KEY_DEVICE_ID.
  */
-public class ConnectionFailActivity extends Activity{
+public class ConnectionFailActivity extends Activity {
+
+	/**
+	 * The Intent that is passed back to the Activity that
+	 * started this Activity
+	 */
+	private Intent resultIntent = new Intent();
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -23,11 +37,9 @@ public class ConnectionFailActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.disconnectedplayer);
 
+		// Add the MAC address of the player this Activity is referring to
 		String playerId = getIntent().getStringExtra(BluetoothConstants.KEY_DEVICE_ID);
-
-		final Intent resultIntent = new Intent();
 		resultIntent.putExtra(BluetoothConstants.KEY_DEVICE_ID, playerId);
-
 
 		// If they choose to drop the player, finish this activity
 		// with a status of RESULT_CANCELLED
@@ -59,7 +71,7 @@ public class ConnectionFailActivity extends Activity{
 	public void onBackPressed() {
 		// If they choose to click the back button, treat
 		// it as if they clicked the Drop Player button
-		setResult(RESULT_CANCELED);
+		setResult(RESULT_CANCELED, resultIntent);
 		finish();
 	}
 }

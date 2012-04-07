@@ -13,6 +13,10 @@ import cs309.a1.shared.R;
  * an action that will cause the application to close if the action
  * is completed. We ask them if they actually want to quit
  * the application.
+ * 
+ * Activity Results:
+ * 		RESULT_OK - if the user chose the affirmative option
+ * 		RESULT_CANCELLED - if the user chose the negative option
  */
 public class QuitApplicationActivity extends Activity{
 

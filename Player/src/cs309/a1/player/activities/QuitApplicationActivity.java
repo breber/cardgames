@@ -13,8 +13,12 @@ import cs309.a1.shared.R;
  * an action that will cause the application to close if the action
  * is completed. We ask them if they actually want to quit
  * the application.
+ * 
+ * Activity Results:
+ * 		RESULT_OK - if the user chose the affirmative option
+ * 		RESULT_CANCELLED - if the user chose the negative option
  */
-public class QuitApplicationActivity extends Activity{
+public class QuitApplicationActivity extends Activity {
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -24,7 +28,7 @@ public class QuitApplicationActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.prompt_dialog);
 
-		// Update the title to the prompt "Are you sure you want to 
+		// Update the title to the prompt "Are you sure you want to
 		// exit the application?"
 		TextView body = (TextView) findViewById(R.id.promptDialogTitle);
 		body.setText(R.string.exit_application);

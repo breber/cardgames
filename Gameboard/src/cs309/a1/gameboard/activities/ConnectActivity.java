@@ -60,9 +60,9 @@ public class ConnectActivity extends Activity {
 	 * are currently connected to this device.
 	 */
 	private BluetoothServer mBluetoothServer;
-	
+
 	/**
-	 * 
+	 * A Map of the MAC address to the names of the players
 	 */
 	private Map<String, String> playerNames = new HashMap<String, String>();
 
@@ -74,40 +74,42 @@ public class ConnectActivity extends Activity {
 		public void onReceive(Context context, Intent intent) {
 			String object = intent.getStringExtra(BluetoothConstants.KEY_MESSAGE_RX);
 			int messageType = intent.getIntExtra(BluetoothConstants.KEY_MESSAGE_TYPE, -1);
-			
+
 			String action = intent.getAction();
-			
-			if(BluetoothConstants.MESSAGE_RX_INTENT.equals(action)){
-				if(messageType == Constants.GET_PLAYER_NAME){
+
+			if (BluetoothConstants.MESSAGE_RX_INTENT.equals(action)) {
+				if (messageType == Constants.GET_PLAYER_NAME) {
 					String deviceAddress = intent.getStringExtra(BluetoothConstants.KEY_DEVICE_ID);
 					List<String> deviceIDs = mBluetoothServer.getConnectedDevices();
-					int i;
-					for(i=0;i<mBluetoothServer.getConnectedDeviceCount(); i++){
-						if(deviceIDs.get(i).equals(deviceAddress)){
+
+					// TODO: what is this loop for?
+					for (int i = 0; i < mBluetoothServer.getConnectedDeviceCount(); i++) {
+						if (deviceIDs.get(i).equals(deviceAddress)) {
 							break;
 						}
 					}
+
 					//TODO make game not able to start without all players reporting names.
+					// 		I think making the game unable to start without all players names
+					//		could go down where we enable/disable the start button in updatePlayersConnected()
 					try {
 						JSONObject obj = new JSONObject(object);
 						String playerName = obj.getString(PLAYER_NAME);
 						playerNames.put(deviceAddress, playerName);
-
 					} catch (JSONException ex) {
 						ex.printStackTrace();
 					}
-	
-					
-	
-				} 
-			}else if(BluetoothConstants.STATE_CHANGE_INTENT.equals(action)){
+				}
+			} else if (BluetoothConstants.STATE_CHANGE_INTENT.equals(action)) {
 				int state = intent.getIntExtra(BluetoothConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_LISTEN);
-				if(state == BluetoothConstants.STATE_LISTEN){
+
+				// If we are now in the LISTEN state, remove the player's name from the list
+				if (state == BluetoothConstants.STATE_LISTEN) {
 					String deviceID = intent.getStringExtra(BluetoothConstants.KEY_DEVICE_ID);
 					playerNames.remove(deviceID);
 				}
 			}
-			
+
 			// Update the UI to indicate how many players are connected
 			updatePlayersConnected();
 		}
@@ -120,7 +122,6 @@ public class ConnectActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.connect);
-		
 
 		// Register the BroadcastReceiver for receiving state change messages from
 		// the Bluetooth module
@@ -139,7 +140,7 @@ public class ConnectActivity extends Activity {
 		playerTextViews[2] = (TextView) findViewById(R.id.connectDeviceP3TextView);
 		playerTextViews[3] = (TextView) findViewById(R.id.connectDeviceP4TextView);
 
-
+		// Get the BluetoothAdapter for doing operations with Bluetooth
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		// If Bluetooth isn't enabled, request that it be enabled
@@ -169,25 +170,22 @@ public class ConnectActivity extends Activity {
 					mBluetoothServer.write(BluetoothConstants.MSG_TYPE_INIT, null);
 
 					// Start the Gameboard activity
-					Intent i = new Intent(ConnectActivity.this,	GameboardActivity.class);
-					int j = 0;
-					for(String s : playerNames.keySet()){
-						if(j == 0 ){
-							i.putExtra(Constants.PLAYER_1, playerNames.get(s));
-						} else if(j == 1){
-							i.putExtra(Constants.PLAYER_1, playerNames.get(s));
-						} else if( j == 2){
-							i.putExtra(Constants.PLAYER_1, playerNames.get(s));
-						} else if(j == 3){
-							i.putExtra(Constants.PLAYER_1, playerNames.get(s));
+					Intent gameIntent = new Intent(ConnectActivity.this, GameboardActivity.class);
+					int i = 0;
+					for (String s : playerNames.keySet()) {
+						if (i == 0) {
+							gameIntent.putExtra(Constants.PLAYER_1, playerNames.get(s));
+						} else if (i == 1) {
+							gameIntent.putExtra(Constants.PLAYER_2, playerNames.get(s));
+						} else if (i == 2) {
+							gameIntent.putExtra(Constants.PLAYER_3, playerNames.get(s));
+						} else if (i == 3) {
+							gameIntent.putExtra(Constants.PLAYER_4, playerNames.get(s));
 						}
-						j++;
+						i++;
 					}
-//					i.putExtra(Constants.PLAYER_1, playerNames.);
-//					i.putExtra(Constants.PLAYER_2, playerNames[1]);
-//					i.putExtra(Constants.PLAYER_3, playerNames[2]);
-//					i.putExtra(Constants.PLAYER_4, playerNames[3]);
-					startActivity(i);
+
+					startActivity(gameIntent);
 
 					// Finish this activity so we can't get back here when pressing the back button
 					setResult(RESULT_OK);
@@ -195,7 +193,6 @@ public class ConnectActivity extends Activity {
 				}
 			}
 		});
-
 	}
 
 	/* (non-Javadoc)
@@ -203,8 +200,13 @@ public class ConnectActivity extends Activity {
 	 */
 	@Override
 	protected void onDestroy() {
-		unregisterReceiver(receiver);
 		mBluetoothServer.stopListening();
+
+		try {
+			unregisterReceiver(receiver);
+		} catch (IllegalArgumentException e) {
+			// We didn't get far enough to register the receiver
+		}
 
 		super.onDestroy();
 	}
@@ -254,53 +256,31 @@ public class ConnectActivity extends Activity {
 	 * are currently connected.
 	 */
 	private void updatePlayersConnected() {
-		int numPlayers = mBluetoothServer.getConnectedDeviceCount();
-		
-		TextView p1 = (TextView) findViewById(R.id.connectDeviceP1TextView);
-		TextView p2 = (TextView) findViewById(R.id.connectDeviceP2TextView);
-		TextView p3 = (TextView) findViewById(R.id.connectDeviceP3TextView);
-		TextView p4 = (TextView) findViewById(R.id.connectDeviceP4TextView);
-
 		int i = 0;
-		
-		for (String s : mBluetoothServer.getConnectedDevices()) {
-			Toast.makeText(this,
-					mBluetoothServer.getConnectedDevices().size() + "",
-					Toast.LENGTH_SHORT).show();
-			Toast.makeText(this, playerNames.get(s), Toast.LENGTH_SHORT).show();
 
+		for (String s : mBluetoothServer.getConnectedDevices()) {
+			if (Util.isDebugBuild()) {
+				Toast.makeText(this, mBluetoothServer.getConnectedDevices().size() + "", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, playerNames.get(s), Toast.LENGTH_SHORT).show();
+			}
+
+			// Set this user's device as the "on" screen
 			playerImageViews[i].setImageResource(R.drawable.on_device);
 			playerTextViews[i].setVisibility(View.VISIBLE);
-			if (i == 0) {
-				if(playerNames.get(s) == null){
-					p1.setText(R.string.default_name);
-				} else{
-					p1.setText(playerNames.get(s));
-				}
-			} else if (i == 1) {
-				if(playerNames.get(s) == null){
-					p2.setText(R.string.default_name);
-				} else{
-					p2.setText(playerNames.get(s));
-				}
-			} else if (i == 2) {
-				if(playerNames.get(s) == null){
-					p3.setText(R.string.default_name);
-				} else{
-					p3.setText(playerNames.get(s));
-				}
-			} else if (i == 3) {
-				if(playerNames.get(s) == null){
-					p4.setText(R.string.default_name);
-				} else{
-					p4.setText(playerNames.get(s));
-				}
+
+			// Show either the Default name, or the player chosen
+			// name on their device
+			if (playerNames.get(s) == null) {
+				playerTextViews[i].setText(R.string.default_name);
+			} else{
+				playerTextViews[i].setText(playerNames.get(s));
 			}
 
 			i++;
 		}
-		
-		for( ; i < 4; i++){
+
+		// Update the rest of the players with an off device and no name
+		for ( ; i < 4; i++) {
 			playerImageViews[i].setImageResource(R.drawable.off_device);
 			playerTextViews[i].setVisibility(View.INVISIBLE);
 		}
