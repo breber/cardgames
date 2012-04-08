@@ -6,9 +6,15 @@ import android.widget.Toast;
 import cs309.a1.crazyeights.Constants;
 import cs309.a1.shared.Util;
 
-public class PlayComputerTurn extends Activity{
+/**
+ * This class will basically just wait a specified amount of time in the
+ * Constants class then when the time is up the GameController class will play
+ * for the computer using the information available in the GameController
+ */
+public class PlayComputerTurnActivity extends Activity {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
@@ -21,6 +27,7 @@ public class PlayComputerTurn extends Activity{
 				Toast.makeText(this, "Sleep interrupted", Toast.LENGTH_SHORT);
 			}
 		}
+		setResult(RESULT_OK);
 		finish();
 	}
 }

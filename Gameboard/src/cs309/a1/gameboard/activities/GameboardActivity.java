@@ -22,6 +22,7 @@ import android.widget.TextView;
 import cs309.a1.crazyeights.Constants;
 import cs309.a1.crazyeights.CrazyEightsGameController;
 import cs309.a1.gameboard.R;
+import cs309.a1.gameboard.activities.PlayComputerTurnActivity;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.GameController;
 import cs309.a1.shared.Player;
@@ -42,19 +43,22 @@ public class GameboardActivity extends Activity {
 	private static final int PAUSE_GAME = Math.abs("PAUSE_GAME".hashCode());
 
 	/**
-	 * The request code to keep track of the "Are you sure you want to quit" activity
+	 * The request code to keep track of the "Are you sure you want to quit"
+	 * activity
 	 */
 	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
 
 	/**
-	 * The request code to keep track of the "You have been disconnected" activity
+	 * The request code to keep track of the "You have been disconnected"
+	 * activity
 	 */
 	public static final int DISCONNECTED = Math.abs("DISCONNECTED".hashCode());
 
 	/**
 	 * The request code to keep track of the "Player N Won!" activity
 	 */
-	private static final int DECLARE_WINNER = Math.abs("DECLARE_WINNER".hashCode());
+	private static final int DECLARE_WINNER = Math.abs("DECLARE_WINNER"
+			.hashCode());
 
 	/**
 	 * The BluetoothServer that sends and receives messages from other devices
@@ -92,16 +96,16 @@ public class GameboardActivity extends Activity {
 	private int player4cards;
 
 	/**
-	 * This will handle the specific logic of the game chosen, it will follow the turn logic 
-	 * and bluetooth communication with players and also control the current gameboard state
+	 * This will handle the specific logic of the game chosen, it will follow
+	 * the turn logic and bluetooth communication with players and also control
+	 * the current gameboard state
 	 */
 	private GameController gameController;
-	
+
 	/**
-	 * This is the number of players
-	 * includes computer players
+	 * This is the TextViews for all the player names
 	 */
-	private int numPlayers=0;
+	private TextView[] playerTextViews = new TextView[4];
 
 	/**
 	 * The BroadcastReceiver for handling messages from the Bluetooth connection
@@ -117,22 +121,30 @@ public class GameboardActivity extends Activity {
 
 			if (BluetoothConstants.STATE_CHANGE_INTENT.equals(action)) {
 				// Handle a state change
-				int newState = intent.getIntExtra(BluetoothConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_NONE);
+				int newState = intent.getIntExtra(
+						BluetoothConstants.KEY_STATE_MESSAGE,
+						BluetoothConstants.STATE_NONE);
 
-				// If the new state is anything but connected, display the "You have been disconnected" screen
+				// If the new state is anything but connected, display the
+				// "You have been disconnected" screen
 				if (newState != BluetoothConstants.STATE_CONNECTED) {
-					Intent i = new Intent(GameboardActivity.this, ConnectionFailActivity.class);
-					i.putExtra(BluetoothConstants.KEY_DEVICE_ID, intent.getStringExtra(BluetoothConstants.KEY_DEVICE_ID));
+					Intent i = new Intent(GameboardActivity.this,
+							ConnectionFailActivity.class);
+					i.putExtra(BluetoothConstants.KEY_DEVICE_ID, intent
+							.getStringExtra(BluetoothConstants.KEY_DEVICE_ID));
 					startActivityForResult(i, DISCONNECTED);
 				}
 			} else {
-				// We didn't handle the Broadcast message here, so pass it on to the GameController
+				// We didn't handle the Broadcast message here, so pass it on to
+				// the GameController
 				gameController.handleBroadcastReceive(context, intent);
 			}
 		}
 	};
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
@@ -140,61 +152,74 @@ public class GameboardActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gameboard);
 
+		playerTextViews[0] = (TextView) findViewById(R.id.player1text);
+		playerTextViews[1] = (TextView) findViewById(R.id.player2text);
+		playerTextViews[2] = (TextView) findViewById(R.id.player3text);
+		playerTextViews[3] = (TextView) findViewById(R.id.player4text);
+
 		// Add the handler for the pause button
 		ImageButton pause = (ImageButton) findViewById(R.id.gameboard_pause);
 		pause.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				gameController.pause();
-				Intent pauseButtonClick = new Intent(GameboardActivity.this, PauseMenuActivity.class);
+				Intent pauseButtonClick = new Intent(GameboardActivity.this,
+						PauseMenuActivity.class);
 				startActivityForResult(pauseButtonClick, PAUSE_GAME);
 			}
 		});
 
 		// Register the receiver for message/state change intents
-		registerReceiver(receiver, new IntentFilter(BluetoothConstants.MESSAGE_RX_INTENT));
-		registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
+		registerReceiver(receiver, new IntentFilter(
+				BluetoothConstants.MESSAGE_RX_INTENT));
+		registerReceiver(receiver, new IntentFilter(
+				BluetoothConstants.STATE_CHANGE_INTENT));
 
 		bts = BluetoothServer.getInstance(this);
 
 		int numOfConnections = bts.getConnectedDeviceCount();
 		List<Player> players = new ArrayList<Player>();
 		List<String> devices = bts.getConnectedDevices();
-				
-		//this method will handle setting up player names
+
+		// this method will handle setting up player names
 		String[] playerNames = getPlayerNames();
 		int i;
-		for (i = 0; i < numOfConnections; i++){
+		for (i = 0; i < numOfConnections; i++) {
 			Player p = new Player();
 			p.setId(devices.get(i));
 			p.setName(playerNames[i]);
-			p.setPosition(i+1);//TODO make the users able to choose this
+			p.setPosition(i + 1);// TODO make the users able to choose this
 			players.add(p);
-			
+
 			// Show the user names we got back
 			if (Util.isDebugBuild()) {
-				Log.d(TAG, "Player"+ (i+1) +": " + playerNames[i]);
+				Log.d(TAG, "Player" + (i + 1) + ": " + playerNames[i]);
 			}
 		}
-		
-		//TODO make users able to choose number of computers
-		for(int j=i;j<4;j++){
+
+		// TODO make users able to choose number of computers
+		int numComputers = 3;
+		for (int j = i; j < 4 && (j + i < numComputers); j++) {
 			Player p = new Player();
-			p.setName("Computer " + (j-i+1) );
-			p.setPosition(j+1);
+			p.setName("Computer " + (j - i + 1));
+			p.setPosition(j + 1);
 			p.setIsComputer(true);
 			p.setComputerDifficulty(0);
 			players.add(p);
+			playerTextViews[j].setVisibility(View.VISIBLE);
+			playerTextViews[j].setText(p.getName());
 		}
-		numPlayers = players.size();
-		
+
 		ImageButton refresh = (ImageButton) findViewById(R.id.gameboard_refresh);
 
-		//the GameController now handles the setup of the game.
-		gameController = new CrazyEightsGameController(this, bts, players, refresh);
+		// the GameController now handles the setup of the game.
+		gameController = new CrazyEightsGameController(this, bts, players,
+				refresh);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onBackPressed()
 	 */
 	@Override
@@ -203,7 +228,9 @@ public class GameboardActivity extends Activity {
 		startActivityForResult(intent, QUIT_GAME);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onDestroy()
 	 */
 	@Override
@@ -221,8 +248,11 @@ public class GameboardActivity extends Activity {
 		super.onDestroy();
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onActivityResult(int, int,
+	 * android.content.Intent)
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -235,7 +265,8 @@ public class GameboardActivity extends Activity {
 				// On the Pause Menu, they selected something that will end
 				// the game, so Finish this activity
 
-				// TODO: send a message to the handhelds letting them know the game is over...
+				// TODO: send a message to the handhelds letting them know the
+				// game is over...
 
 				setResult(RESULT_OK);
 				finish();
@@ -243,62 +274,59 @@ public class GameboardActivity extends Activity {
 				gameController.unpause();
 			}
 		} else if (requestCode == DECLARE_WINNER) {
-			// We are coming back from the winner screen, so just go back to the main menu
+			// We are coming back from the winner screen, so just go back to the
+			// main menu
 			// no matter what the result is.
 			setResult(RESULT_OK);
 			finish();
 		} else {
-			// If we didn't handle the result here, try handling it in the GameController
+			// If we didn't handle the result here, try handling it in the
+			// GameController
 			gameController.handleActivityResult(requestCode, resultCode, data);
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	
 	/**
-	 * This method will get all the player names from the intent and set them up on the gameboard.xml with the text views
+	 * This method will get all the player names from the intent and set them up
+	 * on the gameboard.xml with the text views
+	 * 
 	 * @return List of player names
 	 */
-	private String[] getPlayerNames(){
+	private String[] getPlayerNames() {
 		int numOfConnections = bts.getConnectedDeviceCount();
 		Intent intent = getIntent();
 		String[] playerNames = new String[numOfConnections];
-		TextView[] playerTextViews = new TextView[4];
-		
-		if(numOfConnections > 0 ){
+
+		if (numOfConnections > 0) {
 			playerNames[0] = intent.getStringExtra(Constants.PLAYER_1);
-		} else if(numOfConnections > 1){
+		} else if (numOfConnections > 1) {
 			playerNames[1] = intent.getStringExtra(Constants.PLAYER_2);
-		} else if( numOfConnections > 2){
+		} else if (numOfConnections > 2) {
 			playerNames[2] = intent.getStringExtra(Constants.PLAYER_3);
-		} else if(numOfConnections > 3){
+		} else if (numOfConnections > 3) {
 			playerNames[3] = intent.getStringExtra(Constants.PLAYER_4);
 		}
-		
-		//TODO add computer names
-		
-		playerTextViews[0] = (TextView) findViewById(R.id.player1text);
-		playerTextViews[1] = (TextView) findViewById(R.id.player2text);
-		playerTextViews[2] = (TextView) findViewById(R.id.player3text);
-		playerTextViews[3] = (TextView) findViewById(R.id.player4text);
-		
+
 		int i;
-		for(i=0; i<numOfConnections; i++){
+		for (i = 0; i < numOfConnections; i++) {
 			playerTextViews[i].setVisibility(View.VISIBLE);
 			playerTextViews[i].setText(playerNames[i]);
 		}
-		for(; i<4; i++){
+		for (; i < 4; i++) {
 			playerTextViews[i].setVisibility(View.INVISIBLE);
 		}
 		return playerNames;
 	}
-	
+
 	/**
 	 * Places a card in the specified location on the game board
 	 * 
-	 * @param location Location to place the card
-	 * @param newCard Card to be placed on the game board
+	 * @param location
+	 *            Location to place the card
+	 * @param newCard
+	 *            Card to be placed on the game board
 	 */
 	public void placeCard(int location, Card newCard) {
 		// TODO: do we want to move the layouts into an array so that
@@ -308,67 +336,81 @@ public class GameboardActivity extends Activity {
 		int handSize;
 
 		// convert dip to pixels
-		final float dpsToPixScale = getApplicationContext().getResources().getDisplayMetrics().density;
+		final float dpsToPixScale = getApplicationContext().getResources()
+				.getDisplayMetrics().density;
 		int pixels = (int) (125 * dpsToPixScale + 0.5f);
 
 		// place in discard pile
-		if(location == 0) {
+		if (location == 0) {
 			ImageView discard = (ImageView) findViewById(R.id.discardpile);
 			discard.setImageResource(newCard.getResourceId());
 		}
 
 		// if Player 1 or Player 3
-		else if(location == 1 || location == 3) {
+		else if (location == 1 || location == 3) {
 
-			if(location == 1) {
+			if (location == 1) {
 				ll = (LinearLayout) findViewById(R.id.player1ll);
 				handSize = ++player1cards;
-			}
-			else {
+			} else {
 				ll = (LinearLayout) findViewById(R.id.player3ll);
 				handSize = ++player3cards;
 			}
 
 			// create full-sized card image if first card in hand
-			if(handSize == 1) {
-				lp = new LinearLayout.LayoutParams(pixels, LinearLayout.LayoutParams.WRAP_CONTENT);
+			if (handSize == 1) {
+				lp = new LinearLayout.LayoutParams(pixels,
+						LinearLayout.LayoutParams.WRAP_CONTENT);
 
 				ImageView toAdd = new ImageView(this);
 				toAdd.setImageResource(newCard.getResourceId());
-				if(location == 1) toAdd.setId(handSize);
-				else toAdd.setId(2*MAX_DISPLAYED + handSize);
+				if (location == 1)
+					toAdd.setId(handSize);
+				else
+					toAdd.setId(2 * MAX_DISPLAYED + handSize);
 				toAdd.setAdjustViewBounds(true);
 				ll.addView(toAdd, lp);
 			}
 
-			// create half-sized card image to add to hand if current card count is less than display limit
-			else if(handSize <= MAX_DISPLAYED) {
+			// create half-sized card image to add to hand if current card count
+			// is less than display limit
+			else if (handSize <= MAX_DISPLAYED) {
 
-				Bitmap verticalCard = BitmapFactory.decodeResource(getResources(), newCard.getResourceId());
+				Bitmap verticalCard = BitmapFactory.decodeResource(
+						getResources(), newCard.getResourceId());
 				Matrix tempMatrix = new Matrix();
 
-				// if player 3, add new image to linear layout of player 3's hand
-				if(location == 3) {
-					Bitmap halfCard = Bitmap.createBitmap(verticalCard, verticalCard.getWidth()/2, 0, verticalCard.getWidth()/2, verticalCard.getHeight(), tempMatrix, true);
+				// if player 3, add new image to linear layout of player 3's
+				// hand
+				if (location == 3) {
+					Bitmap halfCard = Bitmap.createBitmap(verticalCard,
+							verticalCard.getWidth() / 2, 0,
+							verticalCard.getWidth() / 2,
+							verticalCard.getHeight(), tempMatrix, true);
 					ImageView toAdd = new ImageView(this);
-					toAdd.setId(2*MAX_DISPLAYED + handSize);
+					toAdd.setId(2 * MAX_DISPLAYED + handSize);
 					toAdd.setImageBitmap(halfCard);
 
-					lp = new LinearLayout.LayoutParams(pixels/2, LinearLayout.LayoutParams.WRAP_CONTENT);
+					lp = new LinearLayout.LayoutParams(pixels / 2,
+							LinearLayout.LayoutParams.WRAP_CONTENT);
 					toAdd.setAdjustViewBounds(true);
 					ll.addView(toAdd, lp);
 				}
 
-				// if player 1, remove and re-add all views so new card displays in correct order
+				// if player 1, remove and re-add all views so new card displays
+				// in correct order
 				else {
-					Bitmap horCard = Bitmap.createBitmap(verticalCard, 0, 0, verticalCard.getWidth()/2, verticalCard.getHeight(), tempMatrix, true);
+					Bitmap horCard = Bitmap.createBitmap(verticalCard, 0, 0,
+							verticalCard.getWidth() / 2,
+							verticalCard.getHeight(), tempMatrix, true);
 					ll.removeAllViews();
-					for(int i = 1; i < handSize; i++) {
+					for (int i = 1; i < handSize; i++) {
 						ImageView toAdd = new ImageView(this);
-						toAdd.setId(i+1);
+						toAdd.setId(i + 1);
 						toAdd.setImageBitmap(horCard);
 
-						lp = new LinearLayout.LayoutParams(pixels/2, LinearLayout.LayoutParams.WRAP_CONTENT);
+						lp = new LinearLayout.LayoutParams(pixels / 2,
+								LinearLayout.LayoutParams.WRAP_CONTENT);
 						toAdd.setAdjustViewBounds(true);
 						ll.addView(toAdd, lp);
 					}
@@ -377,130 +419,151 @@ public class GameboardActivity extends Activity {
 					toAdd.setId(1);
 					toAdd.setImageResource(newCard.getResourceId());
 
-					lp = new LinearLayout.LayoutParams(pixels, LinearLayout.LayoutParams.WRAP_CONTENT);
+					lp = new LinearLayout.LayoutParams(pixels,
+							LinearLayout.LayoutParams.WRAP_CONTENT);
 					toAdd.setAdjustViewBounds(true);
 					ll.addView(toAdd, lp);
 				}
 			}
 
 			else {
-				
-				/*TextView iv = null;
-				
-				if(handSize == MAX_DISPLAYED + 1) {
-					RelativeLayout rl = (RelativeLayout) findViewById(R.layout.gameboard);
-	
-					iv = new TextView(this);
-	
-					RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(20, 20);
-					
-					ImageView fullCard = (ImageView) findViewById((location-1)*MAX_DISPLAYED + 1);
-					
-					int[] viewLocation = new int[2];
-					fullCard.getLocationOnScreen(viewLocation);
-					params.leftMargin = viewLocation[0];
-					params.topMargin = viewLocation[1];
-					
-					iv.setBackgroundColor(R.color.black);
-					iv.setTextColor(R.color.gold);
-					
-					iv.setId(1000*(location+1));
-					
-					rl.addView(iv, params);
-				}
-				else {
-					iv = (TextView) findViewById(1000*(location+1));
-				}
-				
-				iv.setText("+" + (handSize - MAX_DISPLAYED));*/
+
+				/*
+				 * TextView iv = null;
+				 * 
+				 * if(handSize == MAX_DISPLAYED + 1) { RelativeLayout rl =
+				 * (RelativeLayout) findViewById(R.layout.gameboard);
+				 * 
+				 * iv = new TextView(this);
+				 * 
+				 * RelativeLayout.LayoutParams params = new
+				 * RelativeLayout.LayoutParams(20, 20);
+				 * 
+				 * ImageView fullCard = (ImageView)
+				 * findViewById((location-1)*MAX_DISPLAYED + 1);
+				 * 
+				 * int[] viewLocation = new int[2];
+				 * fullCard.getLocationOnScreen(viewLocation); params.leftMargin
+				 * = viewLocation[0]; params.topMargin = viewLocation[1];
+				 * 
+				 * iv.setBackgroundColor(R.color.black);
+				 * iv.setTextColor(R.color.gold);
+				 * 
+				 * iv.setId(1000*(location+1));
+				 * 
+				 * rl.addView(iv, params); } else { iv = (TextView)
+				 * findViewById(1000*(location+1)); }
+				 * 
+				 * iv.setText("+" + (handSize - MAX_DISPLAYED));
+				 */
 			}
 		}
 
 		// if Player 2 or Player 4
-		else if(location == 2 || location == 4) {
+		else if (location == 2 || location == 4) {
 
-			if(location == 2) {
+			if (location == 2) {
 				ll = (LinearLayout) findViewById(R.id.player2ll);
 				handSize = ++player2cards;
-			}
-			else {
+			} else {
 				ll = (LinearLayout) findViewById(R.id.player4ll);
 				handSize = ++player4cards;
 			}
 
 			// create full-sized horizontal card if first card in hand
-			if(handSize == 1) {
+			if (handSize == 1) {
 
 				// rotate vertical card image 90 degrees
-				Bitmap verticalCard = BitmapFactory.decodeResource(getResources(), newCard.getResourceId());
+				Bitmap verticalCard = BitmapFactory.decodeResource(
+						getResources(), newCard.getResourceId());
 				Matrix tempMatrix = new Matrix();
 				tempMatrix.postRotate(90);
-				Bitmap horCard = Bitmap.createBitmap(verticalCard, 0, 0, verticalCard.getWidth(), verticalCard.getHeight(), tempMatrix, true);
+				Bitmap horCard = Bitmap.createBitmap(verticalCard, 0, 0,
+						verticalCard.getWidth(), verticalCard.getHeight(),
+						tempMatrix, true);
 
 				ImageView toAdd = new ImageView(this);
-				if(location == 2) toAdd.setId(MAX_DISPLAYED + handSize);
-				else toAdd.setId(3*MAX_DISPLAYED + handSize);
+				if (location == 2)
+					toAdd.setId(MAX_DISPLAYED + handSize);
+				else
+					toAdd.setId(3 * MAX_DISPLAYED + handSize);
 				toAdd.setImageBitmap(horCard);
 
-				lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, pixels);
+				lp = new LinearLayout.LayoutParams(
+						LinearLayout.LayoutParams.WRAP_CONTENT, pixels);
 				toAdd.setAdjustViewBounds(true);
 				ll.addView(toAdd, lp);
 			}
 
-			// create horizontal half-cards to display if maximum display count has not been reached
-			else if(handSize <= MAX_DIS_SIDES) {
+			// create horizontal half-cards to display if maximum display count
+			// has not been reached
+			else if (handSize <= MAX_DIS_SIDES) {
 
 				Bitmap horCard;
 
-				Bitmap verticalCard = BitmapFactory.decodeResource(getResources(), newCard.getResourceId());
-				double conversion = verticalCard.getHeight()*(((double)pixels/(double)verticalCard.getWidth()));
+				Bitmap verticalCard = BitmapFactory.decodeResource(
+						getResources(), newCard.getResourceId());
+				double conversion = verticalCard.getHeight()
+						* (((double) pixels / (double) verticalCard.getWidth()));
 
 				Matrix tempMatrix = new Matrix();
 				tempMatrix.postRotate(90);
 
-				// if player 4, remove all views and re-add to player 4's linear layout to display in correct order
-				if(location == 4) {
-					horCard = Bitmap.createBitmap(verticalCard, 0, 0, verticalCard.getWidth()/2, verticalCard.getHeight(), tempMatrix, true);
+				// if player 4, remove all views and re-add to player 4's linear
+				// layout to display in correct order
+				if (location == 4) {
+					horCard = Bitmap.createBitmap(verticalCard, 0, 0,
+							verticalCard.getWidth() / 2,
+							verticalCard.getHeight(), tempMatrix, true);
 					ll.removeAllViews();
-					for(int i = 1; i < handSize; i++) {
+					for (int i = 1; i < handSize; i++) {
 						ImageView toAdd = new ImageView(this);
-						toAdd.setId(3*MAX_DISPLAYED + i+1);
+						toAdd.setId(3 * MAX_DISPLAYED + i + 1);
 						toAdd.setImageBitmap(horCard);
 
-						lp = new LinearLayout.LayoutParams((int)conversion, LinearLayout.LayoutParams.WRAP_CONTENT);
+						lp = new LinearLayout.LayoutParams((int) conversion,
+								LinearLayout.LayoutParams.WRAP_CONTENT);
 						toAdd.setAdjustViewBounds(true);
 						ll.addView(toAdd, lp);
 					}
 
-					Bitmap verticalCard2 = BitmapFactory.decodeResource(getResources(), newCard.getResourceId());
+					Bitmap verticalCard2 = BitmapFactory.decodeResource(
+							getResources(), newCard.getResourceId());
 					Matrix tempMatrix2 = new Matrix();
 					tempMatrix2.postRotate(90);
-					Bitmap horCard2 = Bitmap.createBitmap(verticalCard2, 0, 0, verticalCard2.getWidth(), verticalCard2.getHeight(), tempMatrix2, true);
+					Bitmap horCard2 = Bitmap.createBitmap(verticalCard2, 0, 0,
+							verticalCard2.getWidth(),
+							verticalCard2.getHeight(), tempMatrix2, true);
 
 					ImageView toAdd = new ImageView(this);
-					toAdd.setId(3*MAX_DISPLAYED + 1);
+					toAdd.setId(3 * MAX_DISPLAYED + 1);
 					toAdd.setImageBitmap(horCard2);
 
-					lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, pixels);
+					lp = new LinearLayout.LayoutParams(
+							LinearLayout.LayoutParams.WRAP_CONTENT, pixels);
 					toAdd.setAdjustViewBounds(true);
 					ll.addView(toAdd, lp);
 				}
 
 				// if player 2, add new card view to player 2's linear layout
 				else {
-					horCard = Bitmap.createBitmap(verticalCard, verticalCard.getWidth()/2, 0, verticalCard.getWidth()/2, verticalCard.getHeight(), tempMatrix, true);
+					horCard = Bitmap.createBitmap(verticalCard,
+							verticalCard.getWidth() / 2, 0,
+							verticalCard.getWidth() / 2,
+							verticalCard.getHeight(), tempMatrix, true);
 					ImageView toAdd = new ImageView(this);
 					toAdd.setId(MAX_DISPLAYED + handSize);
 					toAdd.setImageBitmap(horCard);
 
-					lp = new LinearLayout.LayoutParams((int)conversion, LinearLayout.LayoutParams.WRAP_CONTENT);
+					lp = new LinearLayout.LayoutParams((int) conversion,
+							LinearLayout.LayoutParams.WRAP_CONTENT);
 					toAdd.setAdjustViewBounds(true);
 					ll.addView(toAdd, lp);
 				}
 			}
 
 			else {
-				//TODO: display counter of cards not shown
+				// TODO: display counter of cards not shown
 			}
 		}
 
@@ -514,7 +577,8 @@ public class GameboardActivity extends Activity {
 	/**
 	 * Removes a card from specified location on the game board
 	 * 
-	 * @param location Location from which card should be removed
+	 * @param location
+	 *            Location from which card should be removed
 	 */
 	public void removeCard(int location) {
 		// TODO: do we want to move the layouts into an array so that
@@ -523,34 +587,33 @@ public class GameboardActivity extends Activity {
 		int handSize;
 
 		// remove card from player 1's hand
-		if(location == 1) {
+		if (location == 1) {
 			ll = (LinearLayout) findViewById(R.id.player1ll);
 			handSize = --player1cards;
-			if(handSize < MAX_DISPLAYED) {
-				if(handSize == 0) {
+			if (handSize < MAX_DISPLAYED) {
+				if (handSize == 0) {
 					ll.removeView(findViewById(1));
-				}
-				else {
+				} else {
 					ll.removeView(findViewById(handSize + 1));
 				}
 			}
 		}
 
 		// remove card from player 2's hand
-		else if(location == 2) {
+		else if (location == 2) {
 			ll = (LinearLayout) findViewById(R.id.player2ll);
 			handSize = --player2cards;
-			if(handSize < MAX_DIS_SIDES) {
-				ll.removeView(findViewById(MAX_DISPLAYED +handSize+1));
+			if (handSize < MAX_DIS_SIDES) {
+				ll.removeView(findViewById(MAX_DISPLAYED + handSize + 1));
 			}
 		}
 
 		// remove card from player 3's hand
-		else if(location == 3) {
+		else if (location == 3) {
 			ll = (LinearLayout) findViewById(R.id.player3ll);
 			handSize = --player3cards;
-			if(handSize < MAX_DISPLAYED) {
-				ll.removeView(findViewById(2*MAX_DISPLAYED + handSize+1));
+			if (handSize < MAX_DISPLAYED) {
+				ll.removeView(findViewById(2 * MAX_DISPLAYED + handSize + 1));
 			}
 		}
 
@@ -558,12 +621,11 @@ public class GameboardActivity extends Activity {
 		else {
 			ll = (LinearLayout) findViewById(R.id.player4ll);
 			handSize = --player4cards;
-			if(handSize < MAX_DIS_SIDES) {
-				if(handSize == 0) {
-					ll.removeView(findViewById(3*MAX_DISPLAYED + 1));
-				}
-				else {
-					ll.removeView(findViewById(3*MAX_DISPLAYED + handSize + 1));
+			if (handSize < MAX_DIS_SIDES) {
+				if (handSize == 0) {
+					ll.removeView(findViewById(3 * MAX_DISPLAYED + 1));
+				} else {
+					ll.removeView(findViewById(3 * MAX_DISPLAYED + handSize + 1));
 				}
 			}
 		}

@@ -44,7 +44,8 @@ public class CrazyEightsPlayerController implements PlayerController {
 	/**
 	 * The Logcat Debug tag
 	 */
-	private static final String TAG = CrazyEightsPlayerController.class.getName();
+	private static final String TAG = CrazyEightsPlayerController.class
+			.getName();
 
 	/**
 	 * intent code for choosing suit
@@ -52,15 +53,16 @@ public class CrazyEightsPlayerController implements PlayerController {
 	private static final int CHOOSE_SUIT = Math.abs("CHOOSE_SUIT".hashCode());
 
 	/**
-	 * The request code to keep track of the "Are you sure you want to quit" activity
+	 * The request code to keep track of the "Are you sure you want to quit"
+	 * activity
 	 */
 	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
-	
+
 	/**
-	 * The request code to keep track of the "Are you sure you want to quit" activity
+	 * The request code to keep track of the "Are you sure you want to quit"
+	 * activity
 	 */
 	private static final int PAUSE_GAME = Math.abs("PAUSE_GAME".hashCode());
-	
 
 	/**
 	 * The cards of this player
@@ -68,8 +70,8 @@ public class CrazyEightsPlayerController implements PlayerController {
 	private ArrayList<Card> cardHand;
 
 	/**
-	 * An instance of the ShowCardsActivity that can be used to display cards and 
-	 * do other things as if this class was the ShowCardsActivity.
+	 * An instance of the ShowCardsActivity that can be used to display cards
+	 * and do other things as if this class was the ShowCardsActivity.
 	 */
 	private ShowCardsActivity playerContext;
 
@@ -84,7 +86,8 @@ public class CrazyEightsPlayerController implements PlayerController {
 	private Card cardOnDiscard;
 
 	/**
-	 * An instance of the GameRules that is used to check if a card can be played
+	 * An instance of the GameRules that is used to check if a card can be
+	 * played
 	 */
 	private Rules gameRules;
 
@@ -112,31 +115,35 @@ public class CrazyEightsPlayerController implements PlayerController {
 	 * This is how we can make sure that the card resource IDs are correct
 	 */
 	private CardTranslator ct;
-	
+
 	/**
-	 * This is a soundmanager instance that can do text to speech and other sounds.
+	 * This is a soundmanager instance that can do text to speech and other
+	 * sounds.
 	 */
 	private SoundManager mySM;
-	
+
 	private String playerName;
 
 	/**
 	 * This will initialize an instance of a CrazyEightsPlayerController
+	 * 
 	 * @param context
-	 * This is an instance of the ShowCardsActivity
+	 *            This is an instance of the ShowCardsActivity
 	 * @param playGiven
-	 * The Play button
+	 *            The Play button
 	 * @param drawGiven
-	 * The Draw button
+	 *            The Draw button
 	 * @param btcGiven
-	 * The bluetooth client
+	 *            The bluetooth client
 	 * @param cardHandGiven
-	 * The list of cards that this player has
+	 *            The list of cards that this player has
 	 */
-	public CrazyEightsPlayerController(Context context, Button playGiven, Button drawGiven, BluetoothClient btcGiven, ArrayList<Card> cardHandGiven){
+	public CrazyEightsPlayerController(Context context, Button playGiven,
+			Button drawGiven, BluetoothClient btcGiven,
+			ArrayList<Card> cardHandGiven) {
 		playerContext = (ShowCardsActivity) context;
-		play=playGiven;
-		draw=drawGiven;
+		play = playGiven;
+		draw = drawGiven;
 		play.setOnClickListener(getPlayOnClickListener());
 		draw.setOnClickListener(getDrawOnClickListener());
 		setButtonsEnabled(false);
@@ -149,22 +156,28 @@ public class CrazyEightsPlayerController implements PlayerController {
 		btc = btcGiven;
 	}
 
-	/* (non-Javadoc)
-	 * @see cs309.a1.shared.PlayerController#handleBroadcastReceive(android.content.Context, android.content.Intent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * cs309.a1.shared.PlayerController#handleBroadcastReceive(android.content
+	 * .Context, android.content.Intent)
 	 */
 	public void handleBroadcastReceive(Context context, Intent intent) {
 		String action = intent.getAction();
 
 		if (BluetoothConstants.MESSAGE_RX_INTENT.equals(action)) {
 
-			String object = intent.getStringExtra(BluetoothConstants.KEY_MESSAGE_RX);
-			int messageType = intent.getIntExtra(BluetoothConstants.KEY_MESSAGE_TYPE, -1);
+			String object = intent
+					.getStringExtra(BluetoothConstants.KEY_MESSAGE_RX);
+			int messageType = intent.getIntExtra(
+					BluetoothConstants.KEY_MESSAGE_TYPE, -1);
 
 			if (Util.isDebugBuild()) {
 				Log.d(TAG, "message: " + object);
 			}
 
-			switch(messageType){
+			switch (messageType) {
 			case SETUP:
 				// Parse the Message if it was the original setup
 				try {
@@ -175,13 +188,14 @@ public class CrazyEightsPlayerController implements PlayerController {
 						int suit = obj.getInt(SUIT);
 						int value = obj.getInt(VALUE);
 						int id = obj.getInt(ID);
-						playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+						playerContext.addCard(new Card(suit, value, ct
+								.getResourceForCardWithId(id), id));
 					}
 				} catch (JSONException ex) {
 					ex.printStackTrace();
 				}
 				setButtonsEnabled(false);
-				isTurn=false;
+				isTurn = false;
 				break;
 			case IS_TURN:
 				mySM.sayTurn(playerName);
@@ -190,7 +204,8 @@ public class CrazyEightsPlayerController implements PlayerController {
 					int suit = obj.getInt(SUIT);
 					int value = obj.getInt(VALUE);
 					int id = obj.getInt(ID);
-					cardOnDiscard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
+					cardOnDiscard = new Card(suit, value,
+							ct.getResourceForCardWithId(id), id);
 				} catch (JSONException ex) {
 					ex.printStackTrace();
 				}
@@ -203,7 +218,8 @@ public class CrazyEightsPlayerController implements PlayerController {
 					int suit = obj.getInt(SUIT);
 					int value = obj.getInt(VALUE);
 					int id = obj.getInt(ID);
-					playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+					playerContext.addCard(new Card(suit, value, ct
+							.getResourceForCardWithId(id), id));
 				} catch (JSONException ex) {
 					ex.printStackTrace();
 				}
@@ -214,7 +230,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 					JSONArray arr = new JSONArray(object);
 					JSONObject refreshInfo = arr.getJSONObject(0);
 					isTurn = refreshInfo.getBoolean(Constants.TURN);
-					//if add more refresh info add more here
+					// if add more refresh info add more here
 
 					playerContext.removeAllCards();
 
@@ -223,25 +239,29 @@ public class CrazyEightsPlayerController implements PlayerController {
 						int suit = obj.getInt(SUIT);
 						int value = obj.getInt(VALUE);
 						int id = obj.getInt(ID);
-						playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+						playerContext.addCard(new Card(suit, value, ct
+								.getResourceForCardWithId(id), id));
 					}
 				} catch (JSONException ex) {
 					ex.printStackTrace();
 				}
 				setButtonsEnabled(isTurn);
-				cardSelected=null;
+				cardSelected = null;
 				break;
 			case PAUSE:
-				Intent pause = new Intent(playerContext, PauseMenuActivity.class);
+				Intent pause = new Intent(playerContext,
+						PauseMenuActivity.class);
 				playerContext.startActivityForResult(pause, PAUSE_GAME);
 				break;
 			case WINNER:
-				Intent Winner = new Intent(playerContext, GameResultsActivity.class);
+				Intent Winner = new Intent(playerContext,
+						GameResultsActivity.class);
 				Winner.putExtra(GameResultsActivity.IS_WINNER, true);
 				playerContext.startActivityForResult(Winner, QUIT_GAME);
 				break;
 			case LOSER:
-				Intent Loser = new Intent(playerContext, GameResultsActivity.class);
+				Intent Loser = new Intent(playerContext,
+						GameResultsActivity.class);
 				Loser.putExtra(GameResultsActivity.IS_WINNER, false);
 				playerContext.startActivityForResult(Loser, QUIT_GAME);
 				break;
@@ -250,64 +270,83 @@ public class CrazyEightsPlayerController implements PlayerController {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see cs309.a1.shared.PlayerController#getPlayOnClickListener()
 	 */
 	public View.OnClickListener getPlayOnClickListener() {
 		return new OnClickListener() {
 			public void onClick(View v) {
-				if(isTurn && gameRules.checkCard(cardSelected, cardOnDiscard) && cardHand.size()!=0){
-					//play card
-					if(cardSelected.getValue() == 7){
-						Intent selectSuit = new Intent(playerContext, SelectSuitActivity.class);
-						playerContext.startActivityForResult(selectSuit, CHOOSE_SUIT);
-						//go to the onactivityresult to finish this turn
-					}else{
+				if (isTurn && gameRules.checkCard(cardSelected, cardOnDiscard)
+						&& cardHand.size() != 0) {
+					// play card
+					if (cardSelected.getValue() == 7) {
+						Intent selectSuit = new Intent(playerContext,
+								SelectSuitActivity.class);
+						playerContext.startActivityForResult(selectSuit,
+								CHOOSE_SUIT);
+						// go to the onactivityresult to finish this turn
+					} else {
 						btc.write(Constants.PLAY_CARD, cardSelected);
-						Toast.makeText(playerContext.getApplicationContext(), "playing : " + cardSelected.getValue(), Toast.LENGTH_SHORT).show();
+						Toast.makeText(playerContext.getApplicationContext(),
+								"playing : " + cardSelected.getValue(),
+								Toast.LENGTH_SHORT).show();
 						playerContext.removeFromHand(cardSelected.getIdNum());
 
 						if (Util.isDebugBuild()) {
-							Toast.makeText(playerContext.getApplicationContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), Toast.LENGTH_SHORT);
+							Toast.makeText(
+									playerContext.getApplicationContext(),
+									"Played: " + cardSelected.getSuit() + " "
+											+ cardSelected.getValue(),
+									Toast.LENGTH_SHORT);
 						}
 
-						cardSelected=null;
+						cardSelected = null;
 						setButtonsEnabled(false);
-						isTurn=false;
+						isTurn = false;
 					}
 				}
 			}
 		};
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see cs309.a1.shared.PlayerController#getDrawOnClickListener()
 	 */
 	public View.OnClickListener getDrawOnClickListener() {
-		return new View.OnClickListener(){
+		return new View.OnClickListener() {
 			public void onClick(View v) {
-				if(isTurn){
+				if (isTurn) {
 					btc.write(Constants.DRAW_CARD, null);
 					setButtonsEnabled(false);
-					isTurn=false;
+					isTurn = false;
 				}
 			}
 		};
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see cs309.a1.shared.PlayerController#getCardLongClickListener()
 	 */
 	public OnLongClickListener getCardLongClickListener() {
 		return new CardSelectionClickListener();
 	}
 
-	/* (non-Javadoc)
-	 * @see cs309.a1.shared.PlayerController#handleActivityResult(int, int, android.content.Intent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see cs309.a1.shared.PlayerController#handleActivityResult(int, int,
+	 * android.content.Intent)
 	 */
-	public void handleActivityResult(int requestCode, int resultCode, Intent data) {
+	public void handleActivityResult(int requestCode, int resultCode,
+			Intent data) {
 		if (requestCode == CHOOSE_SUIT) {
-			switch(resultCode){
+			switch (resultCode) {
 			case Constants.SUIT_CLUBS:
 				btc.write(Constants.PLAY_EIGHT_C, cardSelected);
 				break;
@@ -323,42 +362,46 @@ public class CrazyEightsPlayerController implements PlayerController {
 			}
 			playerContext.removeFromHand(cardSelected.getIdNum());
 			if (Util.isDebugBuild()) {
-				Toast.makeText(playerContext.getApplicationContext(), "Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(), 100);
+				Toast.makeText(playerContext.getApplicationContext(),
+						"Played: " + cardSelected.getSuit() + " "
+								+ cardSelected.getValue(), 100);
 			}
 
-			cardSelected=null;
+			cardSelected = null;
 			setButtonsEnabled(false);
-			isTurn=false;
-		} else if (resultCode == PAUSE_GAME){
-			//nothing to do here
+			isTurn = false;
+		} else if (resultCode == PAUSE_GAME) {
+			// nothing to do here
 		}
 	}
 
-
 	/**
 	 * Used to set the play and draw buttons to enable or disabled
+	 * 
 	 * @param isEnabled
 	 */
-	private void setButtonsEnabled(boolean isEnabled){
+	private void setButtonsEnabled(boolean isEnabled) {
 		play.setEnabled(isEnabled);
 		draw.setEnabled(isEnabled);
 	}
-	
-	public void setPlayerName(String name){
+
+	public void setPlayerName(String name) {
 		playerName = name;
 	}
 
-
 	/**
-	 * This will be used for each card imageview and will allow the card to be selected when it is LongClicked
+	 * This will be used for each card imageview and will allow the card to be
+	 * selected when it is LongClicked
 	 */
-	private class CardSelectionClickListener implements View.OnLongClickListener {
+	private class CardSelectionClickListener implements
+			View.OnLongClickListener {
 		public boolean onLongClick(View v) {
-			//so this means they just selected the card.
-			//we could remove it from the hand below and place it so
+			// so this means they just selected the card.
+			// we could remove it from the hand below and place it so
 
 			// Show an animation indicating the card was selected
-			ScaleAnimation scale = new ScaleAnimation((float)1.2, (float)1.2, (float)1.2, (float)1.2);
+			ScaleAnimation scale = new ScaleAnimation((float) 1.2, (float) 1.2,
+					(float) 1.2, (float) 1.2);
 			scale.scaleCurrentDuration(5);
 			v.startAnimation(scale);
 
@@ -375,7 +418,5 @@ public class CrazyEightsPlayerController implements PlayerController {
 		}
 
 	}
-	
+
 }
-
-

@@ -230,10 +230,8 @@ public class ConnectActivity extends Activity {
 		
 		boolean namesEntered = (numPlayers == numNames);
 		
-		//TODO check to see if this works I have no way to check it
-		// so I have left it out for now. please test. add namesEntered to debug
 		if (Util.isDebugBuild()) {
-			return (mBluetoothServer.getConnectedDeviceCount() > 0)  ;
+			return (mBluetoothServer.getConnectedDeviceCount() > 0) && namesEntered ;
 		} else {
 			return (mBluetoothServer.getConnectedDeviceCount() > 1) && namesEntered;
 		}

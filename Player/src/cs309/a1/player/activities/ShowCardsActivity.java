@@ -28,15 +28,18 @@ public class ShowCardsActivity extends Activity {
 	/**
 	 * The request code to keep track of the connect device activity
 	 */
-	private static final int CONNECT_DEVICE = Math.abs("CONNECT_DEVICE".hashCode());
+	private static final int CONNECT_DEVICE = Math.abs("CONNECT_DEVICE"
+			.hashCode());
 
 	/**
-	 * The request code to keep track of the "Are you sure you want to quit" activity
+	 * The request code to keep track of the "Are you sure you want to quit"
+	 * activity
 	 */
 	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
 
 	/**
-	 * The request code to keep track of the "You have been disconnected" activity
+	 * The request code to keep track of the "You have been disconnected"
+	 * activity
 	 */
 	private static final int DISCONNECTED = Math.abs("DISCONNECTED".hashCode());
 
@@ -70,11 +73,15 @@ public class ShowCardsActivity extends Activity {
 
 			if (BluetoothConstants.STATE_CHANGE_INTENT.equals(action)) {
 				// Handle a state change
-				int newState = intent.getIntExtra(BluetoothConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_NONE);
+				int newState = intent.getIntExtra(
+						BluetoothConstants.KEY_STATE_MESSAGE,
+						BluetoothConstants.STATE_NONE);
 
-				// If the new state is anything but connected, display the "You have been disconnected" screen
+				// If the new state is anything but connected, display the
+				// "You have been disconnected" screen
 				if (newState != BluetoothConstants.STATE_CONNECTED) {
-					Intent i = new Intent(ShowCardsActivity.this, ConnectionFailActivity.class);
+					Intent i = new Intent(ShowCardsActivity.this,
+							ConnectionFailActivity.class);
 					startActivityForResult(i, DISCONNECTED);
 				}
 			} else {
@@ -84,7 +91,9 @@ public class ShowCardsActivity extends Activity {
 		}
 	};
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
@@ -96,7 +105,8 @@ public class ShowCardsActivity extends Activity {
 		cardHand = new ArrayList<Card>();
 
 		// Register the receiver for message/state change intents
-		registerReceiver(receiver, new IntentFilter(BluetoothConstants.MESSAGE_RX_INTENT));
+		registerReceiver(receiver, new IntentFilter(
+				BluetoothConstants.MESSAGE_RX_INTENT));
 
 		// Get an instance of the BluetoothClient so that we can
 		// send messages back to the tablet
@@ -111,15 +121,19 @@ public class ShowCardsActivity extends Activity {
 		Button draw = (Button) findViewById(R.id.btDrawCard);
 
 		// TODO: if crazyeights
-		playerController = new CrazyEightsPlayerController(this, play, draw, btc, cardHand);
+		playerController = new CrazyEightsPlayerController(this, play, draw,
+				btc, cardHand);
 
-		// Start the connection screen from here so that we can register the message receive
+		// Start the connection screen from here so that we can register the
+		// message receive
 		// broadcast receiver so that we don't miss any messages
 		Intent i = new Intent(this, ConnectActivity.class);
 		startActivityForResult(i, CONNECT_DEVICE);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onBackPressed()
 	 */
 	@Override
@@ -128,7 +142,9 @@ public class ShowCardsActivity extends Activity {
 		startActivityForResult(intent, QUIT_GAME);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onDestroy()
 	 */
 	@Override
@@ -146,8 +162,11 @@ public class ShowCardsActivity extends Activity {
 		super.onDestroy();
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onActivityResult(int, int,
+	 * android.content.Intent)
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -158,11 +177,13 @@ public class ShowCardsActivity extends Activity {
 			finish();
 		} else if (requestCode == DISCONNECTED) {
 			// Whatever result we get from the disconnected activity,
-			// just finish this activity since they will need to reconnect anyways.
+			// just finish this activity since they will need to reconnect
+			// anyways.
 			setResult(RESULT_CANCELED);
 			finish();
 		} else if (requestCode == CONNECT_DEVICE) {
-			// If the user cancelled the device list, then bring them back to the main menu
+			// If the user cancelled the device list, then bring them back to
+			// the main menu
 			if (resultCode == RESULT_CANCELED) {
 				setResult(RESULT_CANCELED);
 				finish();
@@ -170,12 +191,14 @@ public class ShowCardsActivity extends Activity {
 				String playerName = data.getStringExtra(PLAYER_NAME);
 				playerController.setPlayerName(playerName);
 				// Register the state change receiver
-				registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
+				registerReceiver(receiver, new IntentFilter(
+						BluetoothConstants.STATE_CHANGE_INTENT));
 			}
 		} else {
 			// If it isn't anything we know how to handle, pass it on to the
 			// playerController to try and handle it
-			playerController.handleActivityResult(requestCode, resultCode, data);
+			playerController
+					.handleActivityResult(requestCode, resultCode, data);
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
@@ -184,7 +207,8 @@ public class ShowCardsActivity extends Activity {
 	/**
 	 * Adds and displays a card in the player's hand
 	 * 
-	 * @param newCard Card to be added to the hand
+	 * @param newCard
+	 *            Card to be added to the hand
 	 */
 	public void addCard(Card newCard) {
 
@@ -195,11 +219,13 @@ public class ShowCardsActivity extends Activity {
 		playerHandLayout.removeAllViews();
 
 		// convert dip to pixels
-		final float dpsToPixScale = getApplicationContext().getResources().getDisplayMetrics().density;
+		final float dpsToPixScale = getApplicationContext().getResources()
+				.getDisplayMetrics().density;
 		int pixels = (int) (125 * dpsToPixScale + 0.5f);
 
 		// edit layout attributes
-		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(pixels, LinearLayout.LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(pixels,
+				LinearLayout.LayoutParams.WRAP_CONTENT);
 
 		for (int i = 0; i < cardHand.size(); i++) {
 			// create ImageView to hold Card
@@ -207,7 +233,8 @@ public class ShowCardsActivity extends Activity {
 			toAdd.setImageResource(cardHand.get(i).getResourceId());
 			toAdd.setId(cardHand.get(i).getIdNum());
 			toAdd.setAdjustViewBounds(true);
-			toAdd.setOnLongClickListener(playerController.getCardLongClickListener());
+			toAdd.setOnLongClickListener(playerController
+					.getCardLongClickListener());
 
 			// Add a 5 px border around the image
 			toAdd.setPadding(5, 5, 5, 5);
@@ -217,10 +244,11 @@ public class ShowCardsActivity extends Activity {
 	}
 
 	/**
-	 * Set the selected card. This will highlight the selected
-	 * card, and clear the highlight from any other cards.
+	 * Set the selected card. This will highlight the selected card, and clear
+	 * the highlight from any other cards.
 	 * 
-	 * @param cardId - the currently selected card
+	 * @param cardId
+	 *            - the currently selected card
 	 */
 	public void setSelected(int cardId) {
 		for (Card c : cardHand) {
@@ -229,17 +257,18 @@ public class ShowCardsActivity extends Activity {
 				iv.setBackgroundColor(getResources().getColor(R.color.gold));
 			} else {
 				ImageView iv = (ImageView) findViewById(c.getIdNum());
-				iv.setBackgroundColor(getResources().getColor(R.color.transparent));
+				iv.setBackgroundColor(getResources().getColor(
+						R.color.transparent));
 			}
 		}
 	}
 
 	/**
-	 * This will remove all cards from cardHand and from the screen
-	 * used for refreshing the player and syncing with game board
+	 * This will remove all cards from cardHand and from the screen used for
+	 * refreshing the player and syncing with game board
 	 */
 	public void removeAllCards() {
-		//this removes all cards from card
+		// this removes all cards from card
 		while (cardHand.size() > 0) {
 			cardHand.remove(cardHand.get(0));
 		}
@@ -250,7 +279,8 @@ public class ShowCardsActivity extends Activity {
 	/**
 	 * Removes card from player's hand
 	 * 
-	 * @param idNum ID number of the card to be removed
+	 * @param idNum
+	 *            ID number of the card to be removed
 	 */
 	public void removeFromHand(int idNum) {
 		playerHandLayout.removeView(findViewById(idNum));
