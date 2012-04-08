@@ -13,6 +13,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import cs309.a1.shared.Util;
+import cs309.a1.shared.connection.ConnectionConstants;
+import cs309.a1.shared.connection.ConnectionServer;
 
 /**
  * This Singleton class acts as a Server for a Bluetooth connection.
@@ -20,7 +22,7 @@ import cs309.a1.shared.Util;
  * It connects to up to 4 other Bluetooth devices (running the client), and then
  * communicates with any number of them (by sending messages and receiving messages).
  */
-public class BluetoothServer extends BluetoothCommon {
+public class BluetoothServer extends BluetoothCommon implements ConnectionServer {
 	/**
 	 * The Logcat Debug tag
 	 */
@@ -68,16 +70,16 @@ public class BluetoothServer extends BluetoothCommon {
 			case BluetoothConstants.STATE_MESSAGE:
 				// When the state of the Bluetooth connection has changed
 				// let all the listeners know that this has happened
-				Intent i = new Intent(BluetoothConstants.STATE_CHANGE_INTENT);
-				i.putExtra(BluetoothConstants.KEY_STATE_MESSAGE, data.getInt(BluetoothConstants.KEY_STATE_MESSAGE));
-				i.putExtra(BluetoothConstants.KEY_DEVICE_ID, data.getString(BluetoothConstants.KEY_DEVICE_ID));
+				Intent i = new Intent(ConnectionConstants.STATE_CHANGE_INTENT);
+				i.putExtra(ConnectionConstants.KEY_STATE_MESSAGE, data.getInt(ConnectionConstants.KEY_STATE_MESSAGE));
+				i.putExtra(ConnectionConstants.KEY_DEVICE_ID, data.getString(ConnectionConstants.KEY_DEVICE_ID));
 				mContext.sendBroadcast(i);
 				break;
 			case BluetoothConstants.READ_MESSAGE:
-				Intent i1 = new Intent(BluetoothConstants.MESSAGE_RX_INTENT);
-				i1.putExtra(BluetoothConstants.KEY_MESSAGE_TYPE, data.getInt(BluetoothConstants.KEY_MESSAGE_TYPE));
-				i1.putExtra(BluetoothConstants.KEY_MESSAGE_RX, data.getString(BluetoothConstants.KEY_MESSAGE_RX));
-				i1.putExtra(BluetoothConstants.KEY_DEVICE_ID, data.getString(BluetoothConstants.KEY_DEVICE_ID));
+				Intent i1 = new Intent(ConnectionConstants.MESSAGE_RX_INTENT);
+				i1.putExtra(ConnectionConstants.KEY_MESSAGE_TYPE, data.getInt(ConnectionConstants.KEY_MESSAGE_TYPE));
+				i1.putExtra(ConnectionConstants.KEY_MESSAGE_RX, data.getString(ConnectionConstants.KEY_MESSAGE_RX));
+				i1.putExtra(ConnectionConstants.KEY_DEVICE_ID, data.getString(ConnectionConstants.KEY_DEVICE_ID));
 				mContext.sendBroadcast(i1);
 				break;
 			}
@@ -110,9 +112,10 @@ public class BluetoothServer extends BluetoothCommon {
 		return instance;
 	}
 
-	/**
-	 * Start listening for Bluetooth Connections
+	/* (non-Javadoc)
+	 * @see cs309.a1.shared.connection.ConnectionServer#startListening()
 	 */
+	@Override
 	public void startListening() {
 		// Start the AcceptThread which listens for incoming connection requests
 		if (mAcceptThread == null) {
@@ -122,9 +125,10 @@ public class BluetoothServer extends BluetoothCommon {
 		mAcceptThread.start();
 	}
 
-	/**
-	 * Stop listening for Bluetooth Connections
+	/* (non-Javadoc)
+	 * @see cs309.a1.shared.connection.ConnectionServer#stopListening()
 	 */
+	@Override
 	public void stopListening() {
 		if (mAcceptThread != null) {
 			mAcceptThread.cancel();
@@ -132,9 +136,10 @@ public class BluetoothServer extends BluetoothCommon {
 		}
 	}
 
-	/**
-	 * Terminate ALL Bluetooth connections
+	/* (non-Javadoc)
+	 * @see cs309.a1.shared.connection.ConnectionServer#disconnect()
 	 */
+	@Override
 	public void disconnect() {
 		// Disconnect connections
 		for (BluetoothConnectionService serv : services.values()) {
@@ -145,20 +150,18 @@ public class BluetoothServer extends BluetoothCommon {
 		services.clear();
 	}
 
-	/**
-	 * Gets the number of devices listed as "connected"
-	 * 
-	 * @return the number of connected devices
+	/* (non-Javadoc)
+	 * @see cs309.a1.shared.connection.ConnectionServer#getConnectedDeviceCount()
 	 */
+	@Override
 	public int getConnectedDeviceCount() {
 		return getConnectedDevices().size();
 	}
 
-	/**
-	 * Gets a list of Devices ids
-	 * 
-	 * @return a list of connected devices' ids
+	/* (non-Javadoc)
+	 * @see cs309.a1.shared.connection.ConnectionServer#getConnectedDevices()
 	 */
+	@Override
 	public List<String> getConnectedDevices() {
 		if (services.size() == 0) {
 			return new ArrayList<String>();

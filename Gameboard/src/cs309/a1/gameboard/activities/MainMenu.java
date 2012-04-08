@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import cs309.a1.gameboard.R;
-import cs309.a1.shared.SoundManager;
 
 /**
  * This is the Main Menu activity. This allows the user to create a new game,
@@ -25,7 +24,7 @@ public class MainMenu extends Activity {
 	protected void onCreate(android.os.Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		
+
 		// Set up the button handlers on the main menu
 		Button play = (Button) findViewById(R.id.btPlay);
 		play.setOnClickListener(new OnClickListener() {

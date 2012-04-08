@@ -23,7 +23,7 @@ public class MainMenu extends Activity {
 	 * Sound manager will allow us to add sounds or music to the main menu
 	 */
 	private SoundManager mySM;
-	
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -60,11 +60,9 @@ public class MainMenu extends Activity {
 				startActivity(aboutButtonClick);
 			}
 		});
-	
-
 	}
 
-	
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onBackPressed()
 	 */
@@ -76,7 +74,7 @@ public class MainMenu extends Activity {
 		startActivityForResult(intent, QUIT_GAME);
 	}
 
-	
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
 	 */

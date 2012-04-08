@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import cs309.a1.shared.Util;
+import cs309.a1.shared.connection.ConnectionClient;
+import cs309.a1.shared.connection.ConnectionConstants;
 
 /**
  * This Singleton class acts as a Client for a Bluetooth connection.
@@ -16,7 +18,7 @@ import cs309.a1.shared.Util;
  * It connects to another Bluetooth device (running the server), and then
  * communicates with it (by sending messages and receiving messages).
  */
-public class BluetoothClient extends BluetoothCommon {
+public class BluetoothClient extends BluetoothCommon implements ConnectionClient {
 	/**
 	 * The Logcat Debug tag
 	 */
@@ -64,15 +66,15 @@ public class BluetoothClient extends BluetoothCommon {
 			case BluetoothConstants.STATE_MESSAGE:
 				// When the state of the Bluetooth connection has changed
 				// let all the listeners know that this has happened
-				Intent i = new Intent(BluetoothConstants.STATE_CHANGE_INTENT);
-				i.putExtra(BluetoothConstants.KEY_STATE_MESSAGE, data.getInt(BluetoothConstants.KEY_STATE_MESSAGE));
+				Intent i = new Intent(ConnectionConstants.STATE_CHANGE_INTENT);
+				i.putExtra(ConnectionConstants.KEY_STATE_MESSAGE, data.getInt(ConnectionConstants.KEY_STATE_MESSAGE));
 				mContext.sendBroadcast(i);
 				break;
 			case BluetoothConstants.READ_MESSAGE:
-				Intent i1 = new Intent(BluetoothConstants.MESSAGE_RX_INTENT);
-				i1.putExtra(BluetoothConstants.KEY_MESSAGE_TYPE, data.getInt(BluetoothConstants.KEY_MESSAGE_TYPE));
-				i1.putExtra(BluetoothConstants.KEY_MESSAGE_RX, data.getString(BluetoothConstants.KEY_MESSAGE_RX));
-				i1.putExtra(BluetoothConstants.KEY_DEVICE_ID, data.getString(BluetoothConstants.KEY_DEVICE_ID));
+				Intent i1 = new Intent(ConnectionConstants.MESSAGE_RX_INTENT);
+				i1.putExtra(ConnectionConstants.KEY_MESSAGE_TYPE, data.getInt(ConnectionConstants.KEY_MESSAGE_TYPE));
+				i1.putExtra(ConnectionConstants.KEY_MESSAGE_RX, data.getString(ConnectionConstants.KEY_MESSAGE_RX));
+				i1.putExtra(ConnectionConstants.KEY_DEVICE_ID, data.getString(ConnectionConstants.KEY_DEVICE_ID));
 				mContext.sendBroadcast(i1);
 				break;
 			}
@@ -120,15 +122,10 @@ public class BluetoothClient extends BluetoothCommon {
 		this.mMacAddress = macAddress;
 	}
 
-	/**
-	 * Connect to the device given by the macAddress
-	 * 
-	 * This method only starts trying to connect. It would be beneficial
-	 * to create a BroadcastReceiver that listens on the BluetoothConstants.STATE_CHANGE_INTENT
-	 * in order to figure out whether the connection was actually made.
-	 * 
-	 * @param macAddress
+	/* (non-Javadoc)
+	 * @see cs309.a1.shared.connection.ConnectionClient#connect(java.lang.String)
 	 */
+	@Override
 	public void connect(String macAddress) {
 		setMacAddress(macAddress);
 
@@ -136,9 +133,10 @@ public class BluetoothClient extends BluetoothCommon {
 		mService.connect(device);
 	}
 
-	/**
-	 * Terminate the Bluetooth connection
+	/* (non-Javadoc)
+	 * @see cs309.a1.shared.connection.ConnectionClient#disconnect()
 	 */
+	@Override
 	public void disconnect() {
 		mService.stop();
 	}

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import cs309.a1.gameboard.R;
 import cs309.a1.shared.Button;
-import cs309.a1.shared.bluetooth.BluetoothConstants;
+import cs309.a1.shared.connection.ConnectionConstants;
 
 /**
  * The Activtiy that gets displayed when the connection
@@ -38,8 +38,8 @@ public class ConnectionFailActivity extends Activity {
 		setContentView(R.layout.disconnectedplayer);
 
 		// Add the MAC address of the player this Activity is referring to
-		String playerId = getIntent().getStringExtra(BluetoothConstants.KEY_DEVICE_ID);
-		resultIntent.putExtra(BluetoothConstants.KEY_DEVICE_ID, playerId);
+		String playerId = getIntent().getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
+		resultIntent.putExtra(ConnectionConstants.KEY_DEVICE_ID, playerId);
 
 		// If they choose to drop the player, finish this activity
 		// with a status of RESULT_CANCELLED

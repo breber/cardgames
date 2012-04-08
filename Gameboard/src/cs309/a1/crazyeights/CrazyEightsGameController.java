@@ -35,12 +35,12 @@ import cs309.a1.shared.Player;
 import cs309.a1.shared.Rules;
 import cs309.a1.shared.SoundManager;
 import cs309.a1.shared.Util;
-import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.bluetooth.BluetoothServer;
+import cs309.a1.shared.connection.ConnectionConstants;
+import cs309.a1.shared.connection.ConnectionServer;
 
 /**
  * This is the GameController for the game of Crazy Eights
- * 
  */
 public class CrazyEightsGameController implements GameController {
 
@@ -52,25 +52,22 @@ public class CrazyEightsGameController implements GameController {
 	/**
 	 * The request code to keep track of the "Player N Won!" activity
 	 */
-	private static final int DECLARE_WINNER = Math.abs("DECLARE_WINNER"
-			.hashCode());
+	private static final int DECLARE_WINNER = Math.abs("DECLARE_WINNER".hashCode());
 
 	/**
 	 * request code to allow the gameboard to choose which player to connect
 	 */
-	private static final int CHOOSE_PLAYER = Math.abs("CHOOSE_PLAYER"
-			.hashCode());
+	private static final int CHOOSE_PLAYER = Math.abs("CHOOSE_PLAYER".hashCode());
 
 	/**
 	 * request code to wait for a little while before the computer plays
 	 */
-	private static final int PLAY_COMPUTER_TURN = Math.abs("PLAY_COMPUTER_TURN"
-			.hashCode());
+	private static final int PLAY_COMPUTER_TURN = Math.abs("PLAY_COMPUTER_TURN".hashCode());
 
 	/**
-	 * The BluetoothServer that sends and receives messages from other devices
+	 * The ConnectionServer that sends and receives messages from other devices
 	 */
-	private BluetoothServer bts;
+	private ConnectionServer server;
 
 	/**
 	 * the list of current active players
@@ -111,28 +108,29 @@ public class CrazyEightsGameController implements GameController {
 	 */
 	private ImageButton refreshButton;
 
+	/**
+	 * The implementation of the Game Rules
+	 */
 	private CrazyEightGameRules gameRules = new CrazyEightGameRules();
 
+	/**
+	 * The sound manager
+	 */
 	private SoundManager mySM;
 
 	/**
 	 * This will initialize a CrazyEightsGameController
 	 * 
-	 * @param context
-	 *            Context of the GameBoardActivity
-	 * @param btsGiven
-	 *            The BluetoothServer that will be used
-	 * @param playersGiven
-	 *            The players that will be used in the game
-	 * @param refreshGiven
-	 *            The refresh button which will be handled by this
+	 * @param context Context of the GameBoardActivity
+	 * @param btsGiven The BluetoothServer that will be used
+	 * @param playersGiven The players that will be used in the game
+	 * @param refreshGiven The refresh button which will be handled by this
 	 *            GameController
 	 */
-	public CrazyEightsGameController(GameboardActivity context,
-			BluetoothServer btsGiven, List<Player> playersGiven,
-			ImageButton refreshGiven) {
+	public CrazyEightsGameController(GameboardActivity context,	BluetoothServer btsGiven,
+			List<Player> playersGiven, ImageButton refreshGiven) {
 		gameContext = context;
-		bts = btsGiven;
+		server = btsGiven;
 		players = playersGiven;
 		refreshButton = refreshGiven;
 
@@ -157,12 +155,12 @@ public class CrazyEightsGameController implements GameController {
 				Log.d(TAG, p.getName() + ": " + p);
 			}
 
-			bts.write(Constants.SETUP, p, p.getId());
+			server.write(Constants.SETUP, p, p.getId());
 		}
 
 		placeInitialCards();
 		Card onDiscard = game.getDiscardPileTop();
-		bts.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn).getId());
+		server.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn).getId());
 	}
 
 	/**
@@ -182,30 +180,23 @@ public class CrazyEightsGameController implements GameController {
 		} else {
 			// Otherwise just show the back of the cards for all players
 			for (int i = 1; i < NUMBER_OF_CARDS_PER_HAND * players.size(); i++) {
-				gameContext.placeCard(i % 4 + 1, new Card(5, 0,
-						R.drawable.back_blue_1, 54));
+				gameContext.placeCard(i % 4 + 1, new Card(5, 0,	R.drawable.back_blue_1, 54));
 			}
 
 			gameContext.placeCard(0, game.getDiscardPileTop());
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * cs309.a1.shared.GameController#handleBroadcastReceive(android.content
-	 * .Context, android.content.Intent)
+	/* (non-Javadoc)
+	 * @see cs309.a1.shared.GameController#handleBroadcastReceive(android.content.Context, android.content.Intent)
 	 */
 	@Override
 	public void handleBroadcastReceive(Context context, Intent intent) {
 		String action = intent.getAction();
 
-		if (BluetoothConstants.MESSAGE_RX_INTENT.equals(action)) {
-			String object = intent
-					.getStringExtra(BluetoothConstants.KEY_MESSAGE_RX);
-			int messageType = intent.getIntExtra(
-					BluetoothConstants.KEY_MESSAGE_TYPE, -1);
+		if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
+			String object = intent.getStringExtra(ConnectionConstants.KEY_MESSAGE_RX);
+			int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
 
 			switch (messageType) {
 			case Constants.PLAY_CARD:
@@ -243,25 +234,19 @@ public class CrazyEightsGameController implements GameController {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cs309.a1.shared.GameController#handleActivityResult(int, int,
-	 * android.content.Intent)
+	/* (non-Javadoc)
+	 * @see cs309.a1.shared.GameController#handleActivityResult(int, int, android.content.Intent)
 	 */
 	@Override
-	public boolean handleActivityResult(int requestCode, int resultCode,
-			Intent data) {
+	public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == GameboardActivity.DISCONNECTED) {
 			if (resultCode == Activity.RESULT_CANCELED) {
 				// We chose to drop the player, so let the Game know to do that
-				String playerId = data
-						.getStringExtra(BluetoothConstants.KEY_DEVICE_ID);
+				String playerId = data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
 				game.dropPlayer(playerId);
 
 				// TODO: should the UI be updated?
-				// TODO: if this was the last player, should we go to the main
-				// menu?
+				// TODO: if this was the last player, should we go to the main menu?
 			} else if (resultCode == Activity.RESULT_OK) {
 				// We chose to add a new player, so start the ConnectActivity
 				Intent i = new Intent(gameContext, ConnectActivity.class);
@@ -284,25 +269,23 @@ public class CrazyEightsGameController implements GameController {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see cs309.a1.shared.GameController#pause()
 	 */
+	@Override
 	public void pause() {
 		for (int i = 0; i < game.getNumPlayers(); i++) {
-			bts.write(Constants.PAUSE, null, players.get(i).getId());
+			server.write(Constants.PAUSE, null, players.get(i).getId());
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see cs309.a1.shared.GameController#unpause()
 	 */
+	@Override
 	public void unpause() {
 		for (int i = 0; i < game.getNumPlayers(); i++) {
-			bts.write(Constants.UNPAUSE, null, players.get(i).getId());
+			server.write(Constants.UNPAUSE, null, players.get(i).getId());
 		}
 	}
 
@@ -323,8 +306,8 @@ public class CrazyEightsGameController implements GameController {
 					gameContext.getApplicationContext(),
 					"player "
 							+ game.getPlayers().get(whoseTurn).getCards()
-									.size() + " cards.", Toast.LENGTH_SHORT)
-					.show();
+							.size() + " cards.", Toast.LENGTH_SHORT)
+							.show();
 		}
 
 		if (whoseTurn < game.getNumPlayers() - 1) {
@@ -340,13 +323,11 @@ public class CrazyEightsGameController implements GameController {
 		}
 
 		if (players.get(whoseTurn).getIsComputer()) {
-			Intent computerTurn = new Intent(gameContext,
-					PlayComputerTurnActivity.class);
-			gameContext
-					.startActivityForResult(computerTurn, PLAY_COMPUTER_TURN);
+			Intent computerTurn = new Intent(gameContext, PlayComputerTurnActivity.class);
+			gameContext.startActivityForResult(computerTurn, PLAY_COMPUTER_TURN);
 		} else {
 			// tell the player it is their turn.
-			bts.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn)
+			server.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn)
 					.getId());
 		}
 	}
@@ -355,28 +336,24 @@ public class CrazyEightsGameController implements GameController {
 	 * This will send winner and loser messages to all the players depending if
 	 * they won or not
 	 * 
-	 * @param whoWon
-	 *            The player that won
+	 * @param whoWon The player that won
 	 */
 	private void declareWinner(int whoWon) {
 		if (Util.isDebugBuild()) {
-			Toast.makeText(gameContext, "Sending winner and loser info",
-					Toast.LENGTH_SHORT);
+			Toast.makeText(gameContext, "Sending winner and loser info", Toast.LENGTH_SHORT).show();
 		}
 
 		for (int i = 0; i < game.getNumPlayers(); i++) {
 			if (i == whoWon) {
-				bts.write(Constants.WINNER, null, players.get(i).getId());
+				server.write(Constants.WINNER, null, players.get(i).getId());
 			} else {
-				bts.write(Constants.LOSER, null, players.get(i).getId());
+				server.write(Constants.LOSER, null, players.get(i).getId());
 			}
 		}
 
-		mySM.speak("Congratulations " + game.getPlayers().get(whoWon).getName()
-				+ "! You Won!");
+		mySM.speak("Congratulations " + game.getPlayers().get(whoWon).getName()	+ "! You Won!");
 		Intent gameResults = new Intent(gameContext, GameResultsActivity.class);
-		gameResults.putExtra(GameResultsActivity.WINNER_NAME, game.getPlayers()
-				.get(whoWon).getName());
+		gameResults.putExtra(GameResultsActivity.WINNER_NAME, game.getPlayers().get(whoWon).getName());
 		gameContext.startActivityForResult(gameResults, DECLARE_WINNER);
 		// TODO start ending activity
 	}
@@ -390,7 +367,7 @@ public class CrazyEightsGameController implements GameController {
 
 		// TODO may need to make this a generic back of card
 		gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
-		bts.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
+		server.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
 	}
 
 	/**
@@ -447,7 +424,7 @@ public class CrazyEightsGameController implements GameController {
 				}
 
 				arr.toString();
-				bts.write(Constants.REFRESH, arr.toString(), p.getId());
+				server.write(Constants.REFRESH, arr.toString(), p.getId());
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -460,8 +437,7 @@ public class CrazyEightsGameController implements GameController {
 	private void playComputerTurn() {
 		Card onDiscard = game.getDiscardPileTop();
 		if (onDiscard.getValue() == 7) {
-			onDiscard = new Card(suitChosen, onDiscard.getValue(),
-					onDiscard.getResourceId(), onDiscard.getIdNum());
+			onDiscard = new Card(suitChosen, onDiscard.getValue(), onDiscard.getResourceId(), onDiscard.getIdNum());
 		}
 		List<Card> cards = players.get(whoseTurn).getCards();
 		Card cardSelected = null;
@@ -487,10 +463,7 @@ public class CrazyEightsGameController implements GameController {
 		} else {
 			Card tmpCard = game.draw(players.get(whoseTurn));
 			// TODO may need to make this a generic back of card
-			gameContext
-					.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
+			gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
 		}
-
 	}
-
 }

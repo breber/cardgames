@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import cs309.a1.shared.Util;
+import cs309.a1.shared.connection.ConnectionConstants;
 
 /**
  * This class does all the work for setting up and managing Bluetooth
@@ -89,8 +90,8 @@ public class BluetoothConnectionService {
 		// Send a message to the Handler letting them know the state has been updated
 		Message msg = mHandler.obtainMessage(BluetoothConstants.STATE_MESSAGE, -1, -1);
 		Bundle bundle = new Bundle();
-		bundle.putInt(BluetoothConstants.KEY_STATE_MESSAGE, state);
-		bundle.putString(BluetoothConstants.KEY_DEVICE_ID, deviceAddress);
+		bundle.putInt(ConnectionConstants.KEY_STATE_MESSAGE, state);
+		bundle.putString(ConnectionConstants.KEY_DEVICE_ID, deviceAddress);
 		msg.setData(bundle);
 		msg.sendToTarget();
 	}
@@ -423,11 +424,11 @@ public class BluetoothConnectionService {
 					// Send the obtained bytes to the UI Activity
 					Message msg = mHandler.obtainMessage(BluetoothConstants.READ_MESSAGE, -1, -1, null);
 					Bundle data = new Bundle();
-					data.putInt(BluetoothConstants.KEY_MESSAGE_TYPE, obj.getInt(BluetoothConstants.KEY_MESSAGE_TYPE));
-					if (obj.has(BluetoothConstants.KEY_MSG_DATA)) {
-						data.putString(BluetoothConstants.KEY_MESSAGE_RX, obj.get(BluetoothConstants.KEY_MSG_DATA).toString());
+					data.putInt(ConnectionConstants.KEY_MESSAGE_TYPE, obj.getInt(ConnectionConstants.KEY_MESSAGE_TYPE));
+					if (obj.has(ConnectionConstants.KEY_MSG_DATA)) {
+						data.putString(ConnectionConstants.KEY_MESSAGE_RX, obj.get(ConnectionConstants.KEY_MSG_DATA).toString());
 					}
-					data.putString(BluetoothConstants.KEY_DEVICE_ID, deviceAddress);
+					data.putString(ConnectionConstants.KEY_DEVICE_ID, deviceAddress);
 					msg.setData(data);
 					msg.sendToTarget();
 				} catch (IOException e) {

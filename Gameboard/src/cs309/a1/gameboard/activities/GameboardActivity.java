@@ -1,6 +1,7 @@
 package cs309.a1.gameboard.activities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
@@ -22,13 +23,13 @@ import android.widget.TextView;
 import cs309.a1.crazyeights.Constants;
 import cs309.a1.crazyeights.CrazyEightsGameController;
 import cs309.a1.gameboard.R;
-import cs309.a1.gameboard.activities.PlayComputerTurnActivity;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.GameController;
 import cs309.a1.shared.Player;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.bluetooth.BluetoothServer;
+import cs309.a1.shared.connection.ConnectionConstants;
 
 public class GameboardActivity extends Activity {
 
@@ -57,8 +58,7 @@ public class GameboardActivity extends Activity {
 	/**
 	 * The request code to keep track of the "Player N Won!" activity
 	 */
-	private static final int DECLARE_WINNER = Math.abs("DECLARE_WINNER"
-			.hashCode());
+	private static final int DECLARE_WINNER = Math.abs("DECLARE_WINNER".hashCode());
 
 	/**
 	 * The BluetoothServer that sends and receives messages from other devices
@@ -119,19 +119,15 @@ public class GameboardActivity extends Activity {
 				Log.d(TAG, "onReceive: " + action);
 			}
 
-			if (BluetoothConstants.STATE_CHANGE_INTENT.equals(action)) {
+			if (ConnectionConstants.STATE_CHANGE_INTENT.equals(action)) {
 				// Handle a state change
-				int newState = intent.getIntExtra(
-						BluetoothConstants.KEY_STATE_MESSAGE,
-						BluetoothConstants.STATE_NONE);
+				int newState = intent.getIntExtra(ConnectionConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_NONE);
 
 				// If the new state is anything but connected, display the
 				// "You have been disconnected" screen
 				if (newState != BluetoothConstants.STATE_CONNECTED) {
-					Intent i = new Intent(GameboardActivity.this,
-							ConnectionFailActivity.class);
-					i.putExtra(BluetoothConstants.KEY_DEVICE_ID, intent
-							.getStringExtra(BluetoothConstants.KEY_DEVICE_ID));
+					Intent i = new Intent(GameboardActivity.this, ConnectionFailActivity.class);
+					i.putExtra(ConnectionConstants.KEY_DEVICE_ID, intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID));
 					startActivityForResult(i, DISCONNECTED);
 				}
 			} else {
@@ -163,17 +159,14 @@ public class GameboardActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				gameController.pause();
-				Intent pauseButtonClick = new Intent(GameboardActivity.this,
-						PauseMenuActivity.class);
+				Intent pauseButtonClick = new Intent(GameboardActivity.this, PauseMenuActivity.class);
 				startActivityForResult(pauseButtonClick, PAUSE_GAME);
 			}
 		});
 
 		// Register the receiver for message/state change intents
-		registerReceiver(receiver, new IntentFilter(
-				BluetoothConstants.MESSAGE_RX_INTENT));
-		registerReceiver(receiver, new IntentFilter(
-				BluetoothConstants.STATE_CHANGE_INTENT));
+		registerReceiver(receiver, new IntentFilter(ConnectionConstants.MESSAGE_RX_INTENT));
+		registerReceiver(receiver, new IntentFilter(ConnectionConstants.STATE_CHANGE_INTENT));
 
 		bts = BluetoothServer.getInstance(this);
 
@@ -297,26 +290,26 @@ public class GameboardActivity extends Activity {
 	private String[] getPlayerNames() {
 		int numOfConnections = bts.getConnectedDeviceCount();
 		Intent intent = getIntent();
-		String[] playerNames = new String[numOfConnections];
+		String[] playerNames = new String[4];
 
-		if (numOfConnections > 0) {
-			playerNames[0] = intent.getStringExtra(Constants.PLAYER_1);
-		} else if (numOfConnections > 1) {
-			playerNames[1] = intent.getStringExtra(Constants.PLAYER_2);
-		} else if (numOfConnections > 2) {
-			playerNames[2] = intent.getStringExtra(Constants.PLAYER_3);
-		} else if (numOfConnections > 3) {
-			playerNames[3] = intent.getStringExtra(Constants.PLAYER_4);
+		playerNames[0] = intent.getStringExtra(Constants.PLAYER_1);
+		playerNames[1] = intent.getStringExtra(Constants.PLAYER_2);
+		playerNames[2] = intent.getStringExtra(Constants.PLAYER_3);
+		playerNames[3] = intent.getStringExtra(Constants.PLAYER_4);
+
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, Arrays.toString(playerNames));
 		}
 
-		int i;
-		for (i = 0; i < numOfConnections; i++) {
-			playerTextViews[i].setVisibility(View.VISIBLE);
-			playerTextViews[i].setText(playerNames[i]);
+		for (int i = 0; i < 4; i++) {
+			if (i < numOfConnections) {
+				playerTextViews[i].setVisibility(View.VISIBLE);
+				playerTextViews[i].setText(playerNames[i]);
+			} else {
+				playerTextViews[i].setVisibility(View.INVISIBLE);
+			}
 		}
-		for (; i < 4; i++) {
-			playerTextViews[i].setVisibility(View.INVISIBLE);
-		}
+
 		return playerNames;
 	}
 
@@ -336,8 +329,7 @@ public class GameboardActivity extends Activity {
 		int handSize;
 
 		// convert dip to pixels
-		final float dpsToPixScale = getApplicationContext().getResources()
-				.getDisplayMetrics().density;
+		final float dpsToPixScale = getApplicationContext().getResources().getDisplayMetrics().density;
 		int pixels = (int) (125 * dpsToPixScale + 0.5f);
 
 		// place in discard pile
@@ -364,10 +356,11 @@ public class GameboardActivity extends Activity {
 
 				ImageView toAdd = new ImageView(this);
 				toAdd.setImageResource(newCard.getResourceId());
-				if (location == 1)
+				if (location == 1) {
 					toAdd.setId(handSize);
-				else
+				} else {
 					toAdd.setId(2 * MAX_DISPLAYED + handSize);
+				}
 				toAdd.setAdjustViewBounds(true);
 				ll.addView(toAdd, lp);
 			}
@@ -376,8 +369,7 @@ public class GameboardActivity extends Activity {
 			// is less than display limit
 			else if (handSize <= MAX_DISPLAYED) {
 
-				Bitmap verticalCard = BitmapFactory.decodeResource(
-						getResources(), newCard.getResourceId());
+				Bitmap verticalCard = BitmapFactory.decodeResource(getResources(), newCard.getResourceId());
 				Matrix tempMatrix = new Matrix();
 
 				// if player 3, add new image to linear layout of player 3's

@@ -26,7 +26,9 @@ import cs309.a1.gameboard.R;
 import cs309.a1.shared.TextView;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
-import cs309.a1.shared.bluetooth.BluetoothServer;
+import cs309.a1.shared.connection.ConnectionConstants;
+import cs309.a1.shared.connection.ConnectionServer;
+import cs309.a1.shared.connection.ConnectionUtil;
 
 /**
  * This Activity will show how many players are connected, and
@@ -56,11 +58,11 @@ public class ConnectActivity extends Activity {
 	private BluetoothAdapter mBluetoothAdapter;
 
 	/**
-	 * A reference to the BluetoothServer that allows us to keep track of how many devices
+	 * A reference to the ConnectionServer that allows us to keep track of how many devices
 	 * are currently connected to this device.
 	 */
-	private BluetoothServer mBluetoothServer;
-	
+	private ConnectionServer mConnectionServer;
+
 	/**
 	 * A Map of the MAC address to the names of the players
 	 */
@@ -72,18 +74,18 @@ public class ConnectActivity extends Activity {
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			String object = intent.getStringExtra(BluetoothConstants.KEY_MESSAGE_RX);
-			int messageType = intent.getIntExtra(BluetoothConstants.KEY_MESSAGE_TYPE, -1);
-			
+			String object = intent.getStringExtra(ConnectionConstants.KEY_MESSAGE_RX);
+			int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
+
 			String action = intent.getAction();
 
-			if (BluetoothConstants.MESSAGE_RX_INTENT.equals(action)) {
+			if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
 				if (messageType == Constants.GET_PLAYER_NAME) {
-					String deviceAddress = intent.getStringExtra(BluetoothConstants.KEY_DEVICE_ID);
-					List<String> deviceIDs = mBluetoothServer.getConnectedDevices();
+					String deviceAddress = intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
+					List<String> deviceIDs = mConnectionServer.getConnectedDevices();
 
 					// TODO: what is this loop for?
-					for (int i = 0; i < mBluetoothServer.getConnectedDeviceCount(); i++) {
+					for (int i = 0; i < mConnectionServer.getConnectedDeviceCount(); i++) {
 						if (deviceIDs.get(i).equals(deviceAddress)) {
 							break;
 						}
@@ -97,16 +99,16 @@ public class ConnectActivity extends Activity {
 						ex.printStackTrace();
 					}
 				}
-			} else if (BluetoothConstants.STATE_CHANGE_INTENT.equals(action)) {
-				int state = intent.getIntExtra(BluetoothConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_LISTEN);
+			} else if (ConnectionConstants.STATE_CHANGE_INTENT.equals(action)) {
+				int state = intent.getIntExtra(ConnectionConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_LISTEN);
 
 				// If we are now in the LISTEN state, remove the player's name from the list
 				if (state == BluetoothConstants.STATE_LISTEN) {
-					String deviceID = intent.getStringExtra(BluetoothConstants.KEY_DEVICE_ID);
+					String deviceID = intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
 					playerNames.remove(deviceID);
 				}
 			}
-			
+
 			// Update the UI to indicate how many players are connected
 			updatePlayersConnected();
 		}
@@ -122,8 +124,8 @@ public class ConnectActivity extends Activity {
 
 		// Register the BroadcastReceiver for receiving state change messages from
 		// the Bluetooth module
-		registerReceiver(receiver, new IntentFilter(BluetoothConstants.MESSAGE_RX_INTENT));
-		registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
+		registerReceiver(receiver, new IntentFilter(ConnectionConstants.MESSAGE_RX_INTENT));
+		registerReceiver(receiver, new IntentFilter(ConnectionConstants.STATE_CHANGE_INTENT));
 
 		// Get the ImageView and TextView references so that we can display different
 		// states for connected/disconnected devices
@@ -161,10 +163,10 @@ public class ConnectActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (canStartGame()) {
-					mBluetoothServer.stopListening();
+					mConnectionServer.stopListening();
 
 					// Send a message to all connected devices saying that the game is beginning
-					mBluetoothServer.write(BluetoothConstants.MSG_TYPE_INIT, null);
+					mConnectionServer.write(BluetoothConstants.MSG_TYPE_INIT, null);
 
 					// Start the Gameboard activity
 					Intent gameIntent = new Intent(ConnectActivity.this, GameboardActivity.class);
@@ -181,7 +183,7 @@ public class ConnectActivity extends Activity {
 						}
 						i++;
 					}
-				
+
 					startActivity(gameIntent);
 
 					// Finish this activity so we can't get back here when pressing the back button
@@ -198,7 +200,7 @@ public class ConnectActivity extends Activity {
 	 */
 	@Override
 	protected void onDestroy() {
-		mBluetoothServer.stopListening();
+		mConnectionServer.stopListening();
 
 		try {
 			unregisterReceiver(receiver);
@@ -219,31 +221,31 @@ public class ConnectActivity extends Activity {
 	 * @return whether a game can be started or not
 	 */
 	private boolean canStartGame() {
-		int numPlayers = mBluetoothServer.getConnectedDeviceCount();
-		List<String> devices = mBluetoothServer.getConnectedDevices();
-		int numNames=0;
-		for(int i = 0; i<numPlayers; i++){
-			if(playerNames.containsKey(devices.get(i))){
+		int numPlayers = mConnectionServer.getConnectedDeviceCount();
+		List<String> devices = mConnectionServer.getConnectedDevices();
+		int numNames = 0;
+		for (int i = 0; i<numPlayers; i++) {
+			if (playerNames.containsKey(devices.get(i))) {
 				numNames++;
 			}
 		}
-		
+
 		boolean namesEntered = (numPlayers == numNames);
-		
+
 		if (Util.isDebugBuild()) {
-			return (mBluetoothServer.getConnectedDeviceCount() > 0) && namesEntered ;
+			return (mConnectionServer.getConnectedDeviceCount() > 0) && namesEntered;
 		} else {
-			return (mBluetoothServer.getConnectedDeviceCount() > 1) && namesEntered;
+			return (mConnectionServer.getConnectedDeviceCount() > 1) && namesEntered;
 		}
 	}
 
 	/**
-	 * Start the Bluetooth server listening for connections.
+	 * Start the ConnectionServer server listening for connections.
 	 */
 	private void startListeningForDevices() {
-		mBluetoothServer = BluetoothServer.getInstance(this);
+		mConnectionServer = ConnectionUtil.getServerInstance(this);
 		Util.ensureDiscoverable(this, mBluetoothAdapter);
-		mBluetoothServer.startListening();
+		mConnectionServer.startListening();
 	}
 
 	/* (non-Javadoc)
@@ -262,22 +264,21 @@ public class ConnectActivity extends Activity {
 
 	/**
 	 * Update the image views for the players indicating which ones
-	 * are currently connected and display the names of players if 
+	 * are currently connected and display the names of players if
 	 * they have set their name.
 	 */
 	private void updatePlayersConnected() {
 		int i = 0;
-		
-		for (String s : mBluetoothServer.getConnectedDevices()) {
-			Toast.makeText(this,
-					mBluetoothServer.getConnectedDevices().size() + "",
-					Toast.LENGTH_SHORT).show();
-			Toast.makeText(this, playerNames.get(s), Toast.LENGTH_SHORT).show();
+
+		for (String s : mConnectionServer.getConnectedDevices()) {
+			if (Util.isDebugBuild()) {
+				Toast.makeText(this, playerNames.get(s), Toast.LENGTH_SHORT).show();
+			}
 
 			// Set this user's device as the "on" screen
 			playerImageViews[i].setImageResource(R.drawable.on_device);
 			playerTextViews[i].setVisibility(View.VISIBLE);
-		
+
 			// Show either the Default name, or the player chosen
 			// name on their device
 			if (playerNames.get(s) == null) {
