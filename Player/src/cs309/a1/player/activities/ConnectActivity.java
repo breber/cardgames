@@ -1,8 +1,5 @@
 package cs309.a1.player.activities;
 
-import static cs309.a1.crazyeights.Constants.GET_PLAYER_NAME;
-import static cs309.a1.crazyeights.Constants.PLAYER_NAME;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +16,10 @@ import cs309.a1.shared.Util;
 import cs309.a1.shared.activities.DeviceListActivity;
 import cs309.a1.shared.bluetooth.BluetoothClient;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
+import static cs309.a1.crazyeights.Constants.GET_PLAYER_NAME;
+import static cs309.a1.crazyeights.Constants.PLAYER_NAME;
+import static cs309.a1.crazyeights.Constants.SETUP;
+import static cs309.a1.crazyeights.Constants.SUIT;
 
 /**
  * The Activity that initiates the device list, and then
@@ -41,6 +42,12 @@ public class ConnectActivity extends Activity {
 	 * Indicates whether the game is ready to start (a Bluetooth connection has been established)
 	 */
 	private boolean readyToStart = false;
+	
+	/**
+	 * This intent will be set to the result of this activity
+	 * the player name will be added to this intent so ShowCardsActivity can know the name
+	 */
+	private Intent returnIntent;
 
 	/**
 	 * The BroadcastReceiver that handles state change messages
@@ -59,10 +66,10 @@ public class ConnectActivity extends Activity {
 			// and register a new receiver to handle the game initiation message
 			if (currentState == BluetoothConstants.STATE_CONNECTED) {
 				readyToStart = true;
-
+				
 				TextView tv = (TextView) findViewById(R.id.progressDialogText);
 				tv.setText(getResources().getString(R.string.waitingForGame));
-
+				
 				Intent getName = new Intent(ConnectActivity.this, EnterNameActivty.class);
 				startActivityForResult(getName, GET_PLAYER_NAME);
 
@@ -95,7 +102,7 @@ public class ConnectActivity extends Activity {
 				// We connected just fine, so bring them to the ShowCardsActivity, and close
 				// this activity out.
 
-				ConnectActivity.this.setResult(RESULT_OK);
+				ConnectActivity.this.setResult(RESULT_OK, returnIntent);
 				ConnectActivity.this.finish();
 			} else {
 				if (Util.isDebugBuild()) {
@@ -120,6 +127,9 @@ public class ConnectActivity extends Activity {
 		// Show the device list
 		Intent showDeviceList = new Intent(this, DeviceListActivity.class);
 		startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
+		
+		returnIntent = new Intent();
+		
 	}
 
 	/* (non-Javadoc)
@@ -156,8 +166,9 @@ public class ConnectActivity extends Activity {
 
 			// Start listening for connection state changes
 			registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
-		} else if (requestCode == GET_PLAYER_NAME && resultCode == RESULT_OK) {
+		} else if(requestCode == GET_PLAYER_NAME && resultCode == RESULT_OK){
 			String playerName = data.getStringExtra(PLAYER_NAME);
+			returnIntent.putExtra(PLAYER_NAME, playerName);
 			JSONObject obj = new JSONObject();
 			try {
 				obj.put(PLAYER_NAME, playerName);
@@ -165,9 +176,10 @@ public class ConnectActivity extends Activity {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+			
 		} else {
 			// The user cancelled out of the device list, so return them to the main menu
-			setResult(RESULT_CANCELED);
+			setResult(RESULT_CANCELED, returnIntent);
 			finish();
 		}
 	}

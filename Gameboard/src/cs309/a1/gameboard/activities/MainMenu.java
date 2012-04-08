@@ -25,10 +25,7 @@ public class MainMenu extends Activity {
 	protected void onCreate(android.os.Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
-		//initialize the sounds
-		SoundManager.initSounds(getApplicationContext());
-
+		
 		// Set up the button handlers on the main menu
 		Button play = (Button) findViewById(R.id.btPlay);
 		play.setOnClickListener(new OnClickListener() {

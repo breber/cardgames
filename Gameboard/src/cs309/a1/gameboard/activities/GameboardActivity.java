@@ -18,13 +18,13 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import cs309.a1.crazyeights.Constants;
 import cs309.a1.crazyeights.CrazyEightsGameController;
 import cs309.a1.gameboard.R;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.GameController;
 import cs309.a1.shared.Player;
-import cs309.a1.shared.TextView;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.bluetooth.BluetoothServer;
@@ -92,9 +92,16 @@ public class GameboardActivity extends Activity {
 	private int player4cards;
 
 	/**
-	 * The GameController for handling most of the game logic
+	 * This will handle the specific logic of the game chosen, it will follow the turn logic 
+	 * and bluetooth communication with players and also control the current gameboard state
 	 */
 	private GameController gameController;
+	
+	/**
+	 * This is the number of players
+	 * includes computer players
+	 */
+	private int numPlayers=0;
 
 	/**
 	 * The BroadcastReceiver for handling messages from the Bluetooth connection
@@ -138,10 +145,9 @@ public class GameboardActivity extends Activity {
 		pause.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				gameController.pause();
 				Intent pauseButtonClick = new Intent(GameboardActivity.this, PauseMenuActivity.class);
 				startActivityForResult(pauseButtonClick, PAUSE_GAME);
-
-				// TODO: send a message to the users that the game has been paused
 			}
 		});
 
@@ -154,51 +160,34 @@ public class GameboardActivity extends Activity {
 		int numOfConnections = bts.getConnectedDeviceCount();
 		List<Player> players = new ArrayList<Player>();
 		List<String> devices = bts.getConnectedDevices();
-
-		Intent intent = getIntent();
-		String player1 = intent.getStringExtra(Constants.PLAYER_1);
-		String player2 = intent.getStringExtra(Constants.PLAYER_2);
-		String player3 = intent.getStringExtra(Constants.PLAYER_3);
-		String player4 = intent.getStringExtra(Constants.PLAYER_4);
-
-		// Show the user names we got back
-		if (Util.isDebugBuild()) {
-			Log.d(TAG, "Player1: " + player1);
-			Log.d(TAG, "Player2: " + player2);
-			Log.d(TAG, "Player3: " + player3);
-			Log.d(TAG, "Player4: " + player4);
-		}
-
-		// Set up the players for this game
-		for (int i = 0; i < numOfConnections; i++){
+				
+		//this method will handle setting up player names
+		String[] playerNames = getPlayerNames();
+		int i;
+		for (i = 0; i < numOfConnections; i++){
 			Player p = new Player();
 			p.setId(devices.get(i));
-
-			if (i == 0) {
-				TextView tv = (TextView) findViewById(R.id.player1text);
-				tv.setText(player1);
-				tv.setVisibility(View.VISIBLE);
-				p.setName(player1);
-			} else if (i == 1) {
-				TextView tv = (TextView) findViewById(R.id.player2text);
-				tv.setText(player2);
-				tv.setVisibility(View.VISIBLE);
-				p.setName(player2);
-			} else if (i == 2) {
-				TextView tv = (TextView) findViewById(R.id.player3text);
-				tv.setText(player3);
-				tv.setVisibility(View.VISIBLE);
-				p.setName(player3);
-			} else if (i == 3) {
-				TextView tv = (TextView) findViewById(R.id.player4text);
-				tv.setText(player4);
-				tv.setVisibility(View.VISIBLE);
-				p.setName(player4);
+			p.setName(playerNames[i]);
+			p.setPosition(i+1);//TODO make the users able to choose this
+			players.add(p);
+			
+			// Show the user names we got back
+			if (Util.isDebugBuild()) {
+				Log.d(TAG, "Player"+ (i+1) +": " + playerNames[i]);
 			}
-
+		}
+		
+		//TODO make users able to choose number of computers
+		for(int j=i;j<4;j++){
+			Player p = new Player();
+			p.setName("Computer " + (j-i+1) );
+			p.setPosition(j+1);
+			p.setIsComputer(true);
+			p.setComputerDifficulty(0);
 			players.add(p);
 		}
-
+		numPlayers = players.size();
+		
 		ImageButton refresh = (ImageButton) findViewById(R.id.gameboard_refresh);
 
 		//the GameController now handles the setup of the game.
@@ -251,7 +240,7 @@ public class GameboardActivity extends Activity {
 				setResult(RESULT_OK);
 				finish();
 			} else {
-				// TODO: send a message to the handhelds letting them know the game has been resumed
+				gameController.unpause();
 			}
 		} else if (requestCode == DECLARE_WINNER) {
 			// We are coming back from the winner screen, so just go back to the main menu
@@ -266,6 +255,45 @@ public class GameboardActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	
+	/**
+	 * This method will get all the player names from the intent and set them up on the gameboard.xml with the text views
+	 * @return List of player names
+	 */
+	private String[] getPlayerNames(){
+		int numOfConnections = bts.getConnectedDeviceCount();
+		Intent intent = getIntent();
+		String[] playerNames = new String[numOfConnections];
+		TextView[] playerTextViews = new TextView[4];
+		
+		if(numOfConnections > 0 ){
+			playerNames[0] = intent.getStringExtra(Constants.PLAYER_1);
+		} else if(numOfConnections > 1){
+			playerNames[1] = intent.getStringExtra(Constants.PLAYER_2);
+		} else if( numOfConnections > 2){
+			playerNames[2] = intent.getStringExtra(Constants.PLAYER_3);
+		} else if(numOfConnections > 3){
+			playerNames[3] = intent.getStringExtra(Constants.PLAYER_4);
+		}
+		
+		//TODO add computer names
+		
+		playerTextViews[0] = (TextView) findViewById(R.id.player1text);
+		playerTextViews[1] = (TextView) findViewById(R.id.player2text);
+		playerTextViews[2] = (TextView) findViewById(R.id.player3text);
+		playerTextViews[3] = (TextView) findViewById(R.id.player4text);
+		
+		int i;
+		for(i=0; i<numOfConnections; i++){
+			playerTextViews[i].setVisibility(View.VISIBLE);
+			playerTextViews[i].setText(playerNames[i]);
+		}
+		for(; i<4; i++){
+			playerTextViews[i].setVisibility(View.INVISIBLE);
+		}
+		return playerNames;
+	}
+	
 	/**
 	 * Places a card in the specified location on the game board
 	 * 
@@ -356,34 +384,34 @@ public class GameboardActivity extends Activity {
 			}
 
 			else {
-
+				
 				/*TextView iv = null;
-
+				
 				if(handSize == MAX_DISPLAYED + 1) {
 					RelativeLayout rl = (RelativeLayout) findViewById(R.layout.gameboard);
-
+	
 					iv = new TextView(this);
-
+	
 					RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(20, 20);
-
+					
 					ImageView fullCard = (ImageView) findViewById((location-1)*MAX_DISPLAYED + 1);
-
+					
 					int[] viewLocation = new int[2];
 					fullCard.getLocationOnScreen(viewLocation);
 					params.leftMargin = viewLocation[0];
 					params.topMargin = viewLocation[1];
-
+					
 					iv.setBackgroundColor(R.color.black);
 					iv.setTextColor(R.color.gold);
-
+					
 					iv.setId(1000*(location+1));
-
+					
 					rl.addView(iv, params);
 				}
 				else {
 					iv = (TextView) findViewById(1000*(location+1));
 				}
-
+				
 				iv.setText("+" + (handSize - MAX_DISPLAYED));*/
 			}
 		}

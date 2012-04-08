@@ -32,11 +32,16 @@ import cs309.a1.shared.Game;
 import cs309.a1.shared.GameController;
 import cs309.a1.shared.Player;
 import cs309.a1.shared.Rules;
+import cs309.a1.shared.SoundManager;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.bluetooth.BluetoothServer;
 
 
+/**
+ * This is the GameController for the game of Crazy Eights
+ *
+ */
 public class CrazyEightsGameController implements GameController {
 
 	/**
@@ -44,20 +49,46 @@ public class CrazyEightsGameController implements GameController {
 	 */
 	private static final String TAG = CrazyEightsGameController.class.getName();
 
+	/**
+	 * The request code to keep track of the "Player N Won!" activity
+	 */
 	private static final int DECLARE_WINNER = Math.abs("DECLARE_WINNER".hashCode());
 
+	/**
+	 * request code to allow the gameboard to choose which player to connect
+	 */
 	private static final int CHOOSE_PLAYER = Math.abs("CHOOSE_PLAYER".hashCode());
 
+	/**
+	 * The BluetoothServer that sends and receives messages from other devices
+	 */
 	private BluetoothServer bts;
 
+	/**
+	 * the list of current active players
+	 */
 	private List<Player> players;
 
+	/**
+	 * This game object will keep track of the current state of the game and be used 
+	 * to manage player hands and draw and discard piles
+	 */
 	private static Game game = null;
 
+	/**
+	 * This allows the resource ids of cards to be correct
+	 */
 	private CardTranslator ct = new CrazyEightsCardTranslator();
 
+	/**
+	 * This represents the suit chosen when an 8 is played
+	 */
 	private int suitChosen = 0;
 
+	/**
+	 * This is the context of the GameBoardActivity this allows this class to call methods 
+	 * and activities as if it were in the GameBoardActivity
+	 */
 	private GameboardActivity gameContext;
 
 	/**
@@ -65,8 +96,26 @@ public class CrazyEightsGameController implements GameController {
 	 */
 	private int whoseTurn = 0;
 
+	/**
+	 * This is the refresh button that is on the GameBoard The GameController will handle any button presses
+	 */
 	private ImageButton refreshButton;
+	
+	private CrazyEightGameRules gameRules = new CrazyEightGameRules();
+	
+	private SoundManager mySM;
 
+	/**
+	 * This will initialize a CrazyEightsGameController
+	 * @param context
+	 * Context of the GameBoardActivity
+	 * @param btsGiven
+	 * The BluetoothServer that will be used
+	 * @param playersGiven
+	 * The players that will be used in the game
+	 * @param refreshGiven
+	 * The refresh button which will be handled by this GameController
+	 */
 	public CrazyEightsGameController(GameboardActivity context, BluetoothServer btsGiven, List<Player> playersGiven, ImageButton refreshGiven) {
 		gameContext = context;
 		bts = btsGiven;
@@ -81,6 +130,8 @@ public class CrazyEightsGameController implements GameController {
 				v.setEnabled(true);
 			}
 		});
+		
+		mySM = new SoundManager(gameContext);
 
 		Deck deck = new Deck(CRAZY_EIGHTS);
 		Rules rules = new CrazyEightGameRules();
@@ -100,17 +151,17 @@ public class CrazyEightsGameController implements GameController {
 		bts.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn).getId());
 	}
 
+	/**
+	 * This will place the initial cards of each player
+	 */
 	private void placeInitialCards() {
 		// If it is a debug build, show the cards face up so that we can
 		// verify that the tablet has the same cards as the player
 		if (Util.isDebugBuild()) {
-			int i = 1;
 			for (Player p : players) {
 				for (Card c : p.getCards()){
-					gameContext.placeCard(i, c);
+					gameContext.placeCard(p.getPosition(), c);
 				}
-
-				i++;
 			}
 
 			gameContext.placeCard(0, game.getDiscardPileTop());
@@ -125,6 +176,9 @@ public class CrazyEightsGameController implements GameController {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see cs309.a1.shared.GameController#handleBroadcastReceive(android.content.Context, android.content.Intent)
+	 */
 	@Override
 	public void handleBroadcastReceive(Context context, Intent intent) {
 		String action = intent.getAction();
@@ -169,10 +223,9 @@ public class CrazyEightsGameController implements GameController {
 		}
 	}
 
-	/**
-	 * @param requestCode
-	 * @param resultCode
-	 * @param data
+	
+	/* (non-Javadoc)
+	 * @see cs309.a1.shared.GameController#handleActivityResult(int, int, android.content.Intent)
 	 */
 	@Override
 	public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
@@ -200,10 +253,33 @@ public class CrazyEightsGameController implements GameController {
 
 		return false;
 	}
+	
+	/* (non-Javadoc)
+	 * @see cs309.a1.shared.GameController#pause()
+	 */
+	public void pause(){
+		for(int i = 0; i < game.getNumPlayers(); i++) {
+			bts.write(Constants.PAUSE, null, players.get(i).getId());
+		}		
+	}
+	
+	/* (non-Javadoc)
+	 * @see cs309.a1.shared.GameController#unpause()
+	 */
+	public void unpause(){
+		for(int i = 0; i < game.getNumPlayers(); i++) {
+			bts.write(Constants.UNPAUSE, null, players.get(i).getId());
+		}
+	}
 
+	/**
+	 * This function will be called when a players turn is over
+	 * It will change whoseTurn to the next player and send them the message that it is their turn
+	 */
 	private void advanceTurn(){
 		if (game.isGameOver(players.get(whoseTurn))) {
 			declareWinner(whoseTurn);
+			return;
 		}
 
 		if (Util.isDebugBuild()) {
@@ -221,9 +297,20 @@ public class CrazyEightsGameController implements GameController {
 		if (onDiscard.getValue() == 7) {
 			onDiscard = new Card(suitChosen, onDiscard.getValue(), onDiscard.getResourceId(), onDiscard.getIdNum());
 		}
-		bts.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn).getId());
+		
+		if(players.get(whoseTurn).getIsComputer()){
+			playComputerTurn(onDiscard);
+			advanceTurn();
+		}else{
+			bts.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn).getId());			
+		}
 	}
 
+	/**
+	 * This will send winner and loser messages to all the players depending if they won or not
+	 * @param whoWon
+	 * The player that won
+	 */
 	private void declareWinner(int whoWon){
 		if (Util.isDebugBuild()) {
 			Toast.makeText(gameContext, "Sending winner and loser info", Toast.LENGTH_SHORT);
@@ -237,6 +324,8 @@ public class CrazyEightsGameController implements GameController {
 			}
 		}
 
+		
+		mySM.speak("Congratulations " + game.getPlayers().get(whoWon).getName() + "! You Won!");
 		Intent gameResults = new Intent(gameContext, GameResultsActivity.class);
 		gameResults.putExtra(GameResultsActivity.WINNER_NAME, game.getPlayers().get(whoWon).getName());
 		gameContext.startActivityForResult(gameResults, DECLARE_WINNER);
@@ -250,7 +339,7 @@ public class CrazyEightsGameController implements GameController {
 		Card tmpCard = game.draw(players.get(whoseTurn));
 		
 		//TODO may need to make this a generic back of card
-		gameContext.placeCard(whoseTurn + 1, tmpCard);
+		gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
 		bts.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
 	}
 
@@ -276,6 +365,9 @@ public class CrazyEightsGameController implements GameController {
 		gameContext.placeCard(0, tmpCard);
 	}
 
+	/**
+	 * This will refresh the state of all the players by sending them their cards and if it is their turn via bluetooth
+	 */
 	private void refreshPlayers() {
 		Player pTurn = players.get(whoseTurn);
 
@@ -291,11 +383,7 @@ public class CrazyEightsGameController implements GameController {
 				//Maybe add more refresh info here
 
 				arr.put(refreshInfo);
-
-				//TODO BRIAN do I need to do this if I am going to have an array with
-				//     a refresh object then an array of cards
-				//     or can I just do arr.put(players)   ? doing arr.put(arr2) essentially
-				//FROM BRIAN: I don't understand the question...
+				
 				for (Card c : p.getCards()) {
 					JSONObject obj = new JSONObject();
 					obj.put(SUIT, c.getSuit());
@@ -312,6 +400,41 @@ public class CrazyEightsGameController implements GameController {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	private void playComputerTurn(Card onDiscard){
+		List<Card> cards = players.get(whoseTurn).getCards();
+		Card cardSelected = null;
+		for (Card c : cards){
+			if(gameRules.checkCard(c, onDiscard)){
+				cardSelected = c;
+				break;
+			}
+		}
+		
+		//TODO handle 8 playing.
+		
+		
+		if(cardSelected != null){
+			
+			//TODO handle 8 playing.
+			if(cardSelected.getValue() == 7){
+				suitChosen = cardSelected.getSuit();
+			}
+			
+			gameContext.removeCard(players.get(whoseTurn).getPosition());
+			game.discard(players.get(whoseTurn), cardSelected);
+			gameContext.placeCard(0, cardSelected);
+		}else{
+			Card tmpCard = game.draw(players.get(whoseTurn));
+			//TODO may need to make this a generic back of card
+			gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
+		}
+		
+		
 	}
 
 }

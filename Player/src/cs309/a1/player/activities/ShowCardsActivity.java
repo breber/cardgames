@@ -19,6 +19,7 @@ import cs309.a1.shared.PlayerController;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothClient;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
+import static cs309.a1.crazyeights.Constants.PLAYER_NAME;
 
 /**
  * This is the Activity that handles Game Play
@@ -166,6 +167,8 @@ public class ShowCardsActivity extends Activity {
 				setResult(RESULT_CANCELED);
 				finish();
 			} else {
+				String playerName = data.getStringExtra(PLAYER_NAME);
+				playerController.setPlayerName(playerName);
 				// Register the state change receiver
 				registerReceiver(receiver, new IntentFilter(BluetoothConstants.STATE_CHANGE_INTENT));
 			}

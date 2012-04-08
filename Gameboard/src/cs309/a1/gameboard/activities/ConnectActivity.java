@@ -60,7 +60,7 @@ public class ConnectActivity extends Activity {
 	 * are currently connected to this device.
 	 */
 	private BluetoothServer mBluetoothServer;
-
+	
 	/**
 	 * A Map of the MAC address to the names of the players
 	 */
@@ -74,7 +74,7 @@ public class ConnectActivity extends Activity {
 		public void onReceive(Context context, Intent intent) {
 			String object = intent.getStringExtra(BluetoothConstants.KEY_MESSAGE_RX);
 			int messageType = intent.getIntExtra(BluetoothConstants.KEY_MESSAGE_TYPE, -1);
-
+			
 			String action = intent.getAction();
 
 			if (BluetoothConstants.MESSAGE_RX_INTENT.equals(action)) {
@@ -89,9 +89,6 @@ public class ConnectActivity extends Activity {
 						}
 					}
 
-					//TODO make game not able to start without all players reporting names.
-					// 		I think making the game unable to start without all players names
-					//		could go down where we enable/disable the start button in updatePlayersConnected()
 					try {
 						JSONObject obj = new JSONObject(object);
 						String playerName = obj.getString(PLAYER_NAME);
@@ -109,7 +106,7 @@ public class ConnectActivity extends Activity {
 					playerNames.remove(deviceID);
 				}
 			}
-
+			
 			// Update the UI to indicate how many players are connected
 			updatePlayersConnected();
 		}
@@ -184,7 +181,7 @@ public class ConnectActivity extends Activity {
 						}
 						i++;
 					}
-
+				
 					startActivity(gameIntent);
 
 					// Finish this activity so we can't get back here when pressing the back button
@@ -193,6 +190,7 @@ public class ConnectActivity extends Activity {
 				}
 			}
 		});
+
 	}
 
 	/* (non-Javadoc)
@@ -221,10 +219,23 @@ public class ConnectActivity extends Activity {
 	 * @return whether a game can be started or not
 	 */
 	private boolean canStartGame() {
+		int numPlayers = mBluetoothServer.getConnectedDeviceCount();
+		List<String> devices = mBluetoothServer.getConnectedDevices();
+		int numNames=0;
+		for(int i = 0; i<numPlayers; i++){
+			if(playerNames.containsKey(devices.get(i))){
+				numNames++;
+			}
+		}
+		
+		boolean namesEntered = (numPlayers == numNames);
+		
+		//TODO check to see if this works I have no way to check it
+		// so I have left it out for now. please test. add namesEntered to debug
 		if (Util.isDebugBuild()) {
-			return mBluetoothServer.getConnectedDeviceCount() > 0;
+			return (mBluetoothServer.getConnectedDeviceCount() > 0)  ;
 		} else {
-			return mBluetoothServer.getConnectedDeviceCount() > 1;
+			return (mBluetoothServer.getConnectedDeviceCount() > 1) && namesEntered;
 		}
 	}
 
@@ -253,21 +264,22 @@ public class ConnectActivity extends Activity {
 
 	/**
 	 * Update the image views for the players indicating which ones
-	 * are currently connected.
+	 * are currently connected and display the names of players if 
+	 * they have set their name.
 	 */
 	private void updatePlayersConnected() {
 		int i = 0;
-
+		
 		for (String s : mBluetoothServer.getConnectedDevices()) {
-			if (Util.isDebugBuild()) {
-				Toast.makeText(this, mBluetoothServer.getConnectedDevices().size() + "", Toast.LENGTH_SHORT).show();
-				Toast.makeText(this, playerNames.get(s), Toast.LENGTH_SHORT).show();
-			}
+			Toast.makeText(this,
+					mBluetoothServer.getConnectedDevices().size() + "",
+					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, playerNames.get(s), Toast.LENGTH_SHORT).show();
 
 			// Set this user's device as the "on" screen
 			playerImageViews[i].setImageResource(R.drawable.on_device);
 			playerTextViews[i].setVisibility(View.VISIBLE);
-
+		
 			// Show either the Default name, or the player chosen
 			// name on their device
 			if (playerNames.get(s) == null) {
