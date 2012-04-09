@@ -192,7 +192,7 @@ public class GameboardActivity extends Activity {
 
 		// TODO make users able to choose number of computers
 		int numComputers = 3;
-		for (int j = i; j < 4 && (j + i < numComputers); j++) {
+		for (int j = i; j < 4 && (j - i < numComputers); j++) {
 			Player p = new Player();
 			p.setName("Computer " + (j - i + 1));
 			p.setPosition(j + 1);

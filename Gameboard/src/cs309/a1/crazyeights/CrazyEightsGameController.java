@@ -167,6 +167,8 @@ public class CrazyEightsGameController implements GameController {
 	 * This will place the initial cards of each player
 	 */
 	private void placeInitialCards() {
+		mySM.shuffleCardsSound();
+		
 		// If it is a debug build, show the cards face up so that we can
 		// verify that the tablet has the same cards as the player
 		if (Util.isDebugBuild()) {
@@ -364,7 +366,9 @@ public class CrazyEightsGameController implements GameController {
 	 */
 	private void drawCard() {
 		Card tmpCard = game.draw(players.get(whoseTurn));
-
+		
+		mySM.drawCardSound();
+		
 		// TODO may need to make this a generic back of card
 		gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
 		server.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
@@ -389,7 +393,8 @@ public class CrazyEightsGameController implements GameController {
 		} catch (JSONException ex) {
 			ex.printStackTrace();
 		}
-
+		
+		mySM.playCardSound();
 		gameContext.placeCard(0, tmpCard);
 	}
 
@@ -456,11 +461,15 @@ public class CrazyEightsGameController implements GameController {
 			if (cardSelected.getValue() == 7) {
 				suitChosen = cardSelected.getSuit();
 			}
-
+			
+			//play sound for playing a card
+			mySM.playCardSound();
+			
 			gameContext.removeCard(players.get(whoseTurn).getPosition());
 			game.discard(players.get(whoseTurn), cardSelected);
 			gameContext.placeCard(0, cardSelected);
 		} else {
+			mySM.drawCardSound();
 			Card tmpCard = game.draw(players.get(whoseTurn));
 			// TODO may need to make this a generic back of card
 			gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
