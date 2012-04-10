@@ -196,7 +196,7 @@ public class GameboardActivity extends Activity {
 			}
 		}
 
-		// TODO make users able to choose number of computers
+		// TODO get from preferences to make users able to choose number of computers
 		int numComputers = 3;
 		for (int j = i; j < 4 && (j - i < numComputers); j++) {
 			Player p = new Player();

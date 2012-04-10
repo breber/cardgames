@@ -89,15 +89,12 @@ public class SoundManager {
 		
 		mediaplayer = new MediaPlayer();
 		MyInitListener mil = new MyInitListener();
-		tts = new TextToSpeech(context, mil);
+		tts = new TextToSpeech(context.getApplicationContext(), mil);
 		isTTSInitialized = false;
 		testSound = soundpool.load(context, R.raw.sound_test, 1);
-		mediaplayer = MediaPlayer.create(context, R.raw.sound_test);
-		
-		
+		mediaplayer = MediaPlayer.create(context, R.raw.sound_test);		
 		
 
-		//TODO this is where you add more sounds
 	}
 
 
@@ -205,7 +202,7 @@ public class SoundManager {
 		public void onInit(int status) {
 			if(status == TextToSpeech.SUCCESS){
 				int langResult = tts.setLanguage(Locale.US);
-				//TODO change locale to other things? like uk, french, german?
+				//TODO get from preferences change locale to other things? like uk, french, german?
 				if(langResult == TextToSpeech.LANG_MISSING_DATA || langResult == TextToSpeech.LANG_NOT_SUPPORTED){
 					if (Util.isDebugBuild()) {
 						Log.d(TAG, "Language not available");

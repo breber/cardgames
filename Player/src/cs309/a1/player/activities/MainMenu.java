@@ -19,11 +19,6 @@ public class MainMenu extends Activity {
 	 */
 	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
 
-	/**
-	 * Sound manager will allow us to add sounds or music to the main menu
-	 */
-	private SoundManager mySM;
-
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -31,8 +26,6 @@ public class MainMenu extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
-		mySM = new SoundManager(getApplicationContext());
 
 		// Set the listener for the play button
 		Button play = (Button) findViewById(R.id.btPlay);
@@ -80,7 +73,6 @@ public class MainMenu extends Activity {
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		mySM.stopAllSound();
 		// If they clicked yes on the prompt asking if they want to quit the
 		// game, finish this activity
 		if (requestCode == QUIT_GAME && resultCode == RESULT_OK){
