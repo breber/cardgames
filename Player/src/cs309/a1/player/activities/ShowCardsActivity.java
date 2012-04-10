@@ -1,5 +1,7 @@
 package cs309.a1.player.activities;
 
+import static cs309.a1.crazyeights.Constants.PAUSE;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -41,6 +43,11 @@ public class ShowCardsActivity extends Activity {
 	 * The request code to keep track of the "You have been disconnected" activity
 	 */
 	private static final int DISCONNECTED = Math.abs("DISCONNECTED".hashCode());
+	
+	/**
+	 * The request code to pause the game
+	 */
+	private static final int PAUSE_GAME = Math.abs("PAUSE_GAME".hashCode());
 
 	/**
 	 * List of cards in player's hand
@@ -69,7 +76,7 @@ public class ShowCardsActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-
+			int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
 			if (ConnectionConstants.STATE_CHANGE_INTENT.equals(action)) {
 				// Handle a state change
 				int newState = intent.getIntExtra(ConnectionConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_NONE);
@@ -79,6 +86,9 @@ public class ShowCardsActivity extends Activity {
 					Intent i = new Intent(ShowCardsActivity.this, ConnectionFailActivity.class);
 					startActivityForResult(i, DISCONNECTED);
 				}
+			}else if (messageType == Constants.PAUSE){
+				Intent pause = new Intent(ShowCardsActivity.this, PauseMenuActivity.class);
+				ShowCardsActivity.this.startActivityForResult(pause, PAUSE_GAME);
 			} else {
 				// Give it up to the player controller to deal with
 				playerController.handleBroadcastReceive(context, intent);
@@ -174,6 +184,11 @@ public class ShowCardsActivity extends Activity {
 				// Register the state change receiver
 				registerReceiver(receiver, new IntentFilter(ConnectionConstants.STATE_CHANGE_INTENT));
 			}
+		} else if (requestCode == PAUSE_GAME && resultCode == RESULT_CANCELED ) {
+			// Finish this activity - if everything goes right, we
+			// should be back at the main menu
+			setResult(RESULT_OK);
+			finish();
 		} else {
 			// If it isn't anything we know how to handle, pass it on to the
 			// playerController to try and handle it

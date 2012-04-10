@@ -58,12 +58,6 @@ public class CrazyEightsPlayerController implements PlayerController {
 	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
 
 	/**
-	 * The request code to keep track of the "Are you sure you want to quit"
-	 * activity
-	 */
-	private static final int PAUSE_GAME = Math.abs("PAUSE_GAME".hashCode());
-
-	/**
 	 * The cards of this player
 	 */
 	private ArrayList<Card> cardHand;
@@ -233,10 +227,6 @@ public class CrazyEightsPlayerController implements PlayerController {
 				setButtonsEnabled(isTurn);
 				cardSelected = null;
 				break;
-			case PAUSE:
-				Intent pause = new Intent(playerContext, PauseMenuActivity.class);
-				playerContext.startActivityForResult(pause, PAUSE_GAME);
-				break;
 			case WINNER:
 				Intent Winner = new Intent(playerContext, GameResultsActivity.class);
 				Winner.putExtra(GameResultsActivity.IS_WINNER, true);
@@ -337,9 +327,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 			cardSelected = null;
 			setButtonsEnabled(false);
 			isTurn = false;
-		} else if (resultCode == PAUSE_GAME) {
-			// nothing to do here
-		}
+		} 
 	}
 
 	/**
