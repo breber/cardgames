@@ -209,13 +209,14 @@ public class GameboardActivity extends Activity {
 		}
 
 		int numComputers = sharedPreferences.getInt(Constants.NUMBER_OF_COMPUTERS, 1);
+		int computerDifficulty = sharedPreferences.getInt(Constants.DIFFICULTY_OF_COMPUTERS, 0);
 		for (int j = i; j < 4 && (j - i < numComputers); j++) {
 			Player p = new Player();
 			p.setName("Computer " + (j - i + 1));
 			p.setId("Computer" + (j - i + 1));
 			p.setPosition(j + 1);
 			p.setIsComputer(true);
-			p.setComputerDifficulty(0);
+			p.setComputerDifficulty(computerDifficulty);
 			players.add(p);
 		}
 
