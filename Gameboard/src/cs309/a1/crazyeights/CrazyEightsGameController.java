@@ -183,7 +183,7 @@ public class CrazyEightsGameController implements GameController {
 			gameContext.placeCard(0, game.getDiscardPileTop());
 		} else {
 			// Otherwise just show the back of the cards for all players
-			for (int i = 1; i < NUMBER_OF_CARDS_PER_HAND * players.size(); i++) {
+			for (int i = 0; i < NUMBER_OF_CARDS_PER_HAND * players.size(); i++) {
 				gameContext.placeCard(i % 4 + 1, new Card(5, 0,	R.drawable.back_blue_1, 54));
 			}
 
@@ -369,12 +369,18 @@ public class CrazyEightsGameController implements GameController {
 	 * player
 	 */
 	private void drawCard() {
-		Card tmpCard = game.draw(players.get(whoseTurn));
-
+		//play draw card sound
 		mySM.drawCardSound();
-
-		// TODO may need to make this a generic back of card
-		gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
+		
+		Card tmpCard = game.draw(players.get(whoseTurn));
+		
+		if (Util.isDebugBuild()) {
+			gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
+		} else {
+			//generic back of card
+			gameContext.placeCard(players.get(whoseTurn).getPosition(), new Card(5, 0,	R.drawable.back_blue_1, 54));
+		}
+		
 		server.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
 	}
 
@@ -399,6 +405,7 @@ public class CrazyEightsGameController implements GameController {
 		}
 
 		mySM.playCardSound();
+		
 		gameContext.placeCard(0, tmpCard);
 	}
 
@@ -450,10 +457,13 @@ public class CrazyEightsGameController implements GameController {
 		}
 		List<Card> cards = players.get(whoseTurn).getCards();
 		Card cardSelected = null;
-		for (Card c : cards) {
-			if (gameRules.checkCard(c, onDiscard)) {
-				cardSelected = c;
-				break;
+		
+		if(players.get(whoseTurn).getComputerDifficulty() < 0){
+			for (Card c : cards) {
+				if (gameRules.checkCard(c, onDiscard)) {
+					cardSelected = c;
+					break;
+				}
 			}
 		}
 
@@ -473,10 +483,17 @@ public class CrazyEightsGameController implements GameController {
 			game.discard(players.get(whoseTurn), cardSelected);
 			gameContext.placeCard(0, cardSelected);
 		} else {
+			//play sound for drawing a card
 			mySM.drawCardSound();
+			
 			Card tmpCard = game.draw(players.get(whoseTurn));
-			// TODO may need to make this a generic back of card
-			gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
+			
+			if (Util.isDebugBuild()) {
+				gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
+			} else {
+				//generic back of card
+				gameContext.placeCard(players.get(whoseTurn).getPosition(), new Card(5, 0,	R.drawable.back_blue_1, 54));
+			}
 		}
 	}
 }
