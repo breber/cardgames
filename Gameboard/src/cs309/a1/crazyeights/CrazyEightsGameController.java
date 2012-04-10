@@ -149,7 +149,7 @@ public class CrazyEightsGameController implements GameController {
 		Rules rules = new CrazyEightGameRules();
 		game = CrazyEightsTabletGame.getInstance(players, deck, rules);
 		game.setup();
-		
+
 		gameContext.highlightPlayer(1);
 
 		for (Player p : players) {
@@ -254,6 +254,8 @@ public class CrazyEightsGameController implements GameController {
 			} else if (resultCode == Activity.RESULT_OK) {
 				// We chose to add a new player, so start the ConnectActivity
 				Intent i = new Intent(gameContext, ConnectActivity.class);
+				i.putExtra(ConnectActivity.IS_RECONNECT, true);
+				i.putExtra(ConnectionConstants.KEY_DEVICE_ID, data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID));
 				gameContext.startActivityForResult(i, CHOOSE_PLAYER);
 
 				// Unregister the receiver so that we don't get an annoying
@@ -263,8 +265,16 @@ public class CrazyEightsGameController implements GameController {
 
 			return true;
 		} else if (requestCode == CHOOSE_PLAYER) {
+			if (Util.isDebugBuild()) {
+				Log.d(TAG, "onActivityResult: CHOOSE_PLAYER");
+			}
+
+			// Re-register the broadcast receivers
 			gameContext.registerReceiver();
-			// TODO: update the player with the new id
+
+			// Update the gameboard with the correct player names
+			gameContext.updateNamesOnGameboard();
+			refreshPlayers();
 		} else if (requestCode == PLAY_COMPUTER_TURN) {
 			playComputerTurn();
 			advanceTurn();
@@ -306,12 +316,7 @@ public class CrazyEightsGameController implements GameController {
 
 		if (Util.isDebugBuild()) {
 			// for debugging to see number of cards
-			Toast.makeText(
-					gameContext.getApplicationContext(),
-					"player "
-							+ game.getPlayers().get(whoseTurn).getCards()
-							.size() + " cards.", Toast.LENGTH_SHORT)
-							.show();
+			Log.d(TAG, "player " + game.getPlayers().get(whoseTurn).getCards().size() + " cards.");
 		}
 
 		if (whoseTurn < game.getNumPlayers() - 1) {
@@ -321,7 +326,7 @@ public class CrazyEightsGameController implements GameController {
 		}
 
 		gameContext.highlightPlayer(whoseTurn+1);
-		
+
 		Card onDiscard = game.getDiscardPileTop();
 		if (onDiscard.getValue() == 7) {
 			onDiscard = new Card(suitChosen, onDiscard.getValue(),
@@ -333,8 +338,7 @@ public class CrazyEightsGameController implements GameController {
 			gameContext.startActivityForResult(computerTurn, PLAY_COMPUTER_TURN);
 		} else {
 			// tell the player it is their turn.
-			server.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn)
-					.getId());
+			server.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn).getId());
 		}
 	}
 
@@ -371,21 +375,22 @@ public class CrazyEightsGameController implements GameController {
 	private void drawCard() {
 		//play draw card sound
 		mySM.drawCardSound();
-		
+
 		Card tmpCard = game.draw(players.get(whoseTurn));
-		
+
 		if (Util.isDebugBuild()) {
 			gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
 		} else {
 			//generic back of card
 			gameContext.placeCard(players.get(whoseTurn).getPosition(), new Card(5, 0,	R.drawable.back_blue_1, 54));
 		}
-		
+
 		server.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
 	}
 
 	/**
 	 * This will take in the received card and discard it
+	 * 
 	 * @param object
 	 */
 	private void discardReceivedCard(String object) {
@@ -404,7 +409,6 @@ public class CrazyEightsGameController implements GameController {
 		}
 
 		mySM.playCardSound();
-		
 		gameContext.placeCard(0, tmpCard);
 	}
 
@@ -414,7 +418,7 @@ public class CrazyEightsGameController implements GameController {
 	 */
 	private void refreshPlayers() {
 		Player pTurn = players.get(whoseTurn);
-		
+
 		JSONObject discardObj = new JSONObject();
 		try {
 			//send the card on the discard pile
@@ -440,10 +444,10 @@ public class CrazyEightsGameController implements GameController {
 				// Maybe add more refresh info here
 
 				arr.put(refreshInfo);
-				
+
 				//send the card on the discard pile
 				arr.put(discardObj);
-				
+
 				//send all the cards in the players hand
 				for (Card c : p.getCards()) {
 					JSONObject obj = new JSONObject();
@@ -472,7 +476,7 @@ public class CrazyEightsGameController implements GameController {
 		}
 		List<Card> cards = players.get(whoseTurn).getCards();
 		Card cardSelected = null;
-		
+
 		//computer with difficulty 0
 		if(players.get(whoseTurn).getComputerDifficulty() < 0){
 			for (Card c : cards) {
@@ -509,9 +513,9 @@ public class CrazyEightsGameController implements GameController {
 		} else {
 			//play sound for drawing a card
 			mySM.drawCardSound();
-			
+
 			Card tmpCard = game.draw(players.get(whoseTurn));
-			
+
 			if (Util.isDebugBuild()) {
 				gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
 			} else {

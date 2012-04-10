@@ -2,6 +2,9 @@ package cs309.a1.gameboard.activities;
 
 import static cs309.a1.crazyeights.Constants.PLAYER_NAME;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,13 +19,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 import cs309.a1.crazyeights.Constants;
+import cs309.a1.crazyeights.CrazyEightsTabletGame;
 import cs309.a1.gameboard.R;
+import cs309.a1.shared.Game;
+import cs309.a1.shared.Player;
 import cs309.a1.shared.TextView;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
@@ -36,9 +43,19 @@ import cs309.a1.shared.connection.ConnectionUtil;
  */
 public class ConnectActivity extends Activity {
 	/**
+	 * Logcat debug tag
+	 */
+	private static final String TAG = ConnectActivity.class.getName();
+
+	/**
 	 * The request code to keep track of the Bluetooth request enable intent
 	 */
 	private static final int REQUEST_ENABLE_BT = Math.abs("REQUEST_BLUETOOTH".hashCode());
+
+	/**
+	 * Indicates whether this is a reconnect or a regular connect
+	 */
+	public static final String IS_RECONNECT = "isReconnect";
 
 	/**
 	 * An array of ImageViews. These are the "tablet" images that light up when a player
@@ -69,6 +86,26 @@ public class ConnectActivity extends Activity {
 	private Map<String, String> playerNames = new HashMap<String, String>();
 
 	/**
+	 * A list of device ids
+	 */
+	private List<String> playerIds = new ArrayList<String>();
+
+	/**
+	 * Is this a reconnect, or a regular setup?
+	 */
+	private boolean isReconnectScreen = false;
+
+	/**
+	 * The current game if this is a reconnect
+	 */
+	private Game currentGame = null;
+
+	/**
+	 * If this is a reconnect, this is the position to fill
+	 */
+	private int positionToFill = -1;
+
+	/**
 	 * The BroadcastReceiver that handles state change messages from the Bluetooth module
 	 */
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -82,18 +119,16 @@ public class ConnectActivity extends Activity {
 			if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
 				if (messageType == Constants.GET_PLAYER_NAME) {
 					String deviceAddress = intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
-					List<String> deviceIDs = mConnectionServer.getConnectedDevices();
-
-					// TODO: what is this loop for?
-					for (int i = 0; i < mConnectionServer.getConnectedDeviceCount(); i++) {
-						if (deviceIDs.get(i).equals(deviceAddress)) {
-							break;
-						}
-					}
 
 					try {
 						JSONObject obj = new JSONObject(object);
 						String playerName = obj.getString(PLAYER_NAME);
+
+						if (positionToFill != -1) {
+							playerIds.set(positionToFill, deviceAddress);
+						} else {
+							playerIds.add(deviceAddress);
+						}
 						playerNames.put(deviceAddress, playerName);
 					} catch (JSONException ex) {
 						ex.printStackTrace();
@@ -106,6 +141,7 @@ public class ConnectActivity extends Activity {
 				if (state == BluetoothConstants.STATE_LISTEN) {
 					String deviceID = intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
 					playerNames.remove(deviceID);
+					playerIds.remove(deviceID);
 				}
 			}
 
@@ -139,8 +175,54 @@ public class ConnectActivity extends Activity {
 		playerTextViews[2] = (TextView) findViewById(R.id.connectDeviceP3TextView);
 		playerTextViews[3] = (TextView) findViewById(R.id.connectDeviceP4TextView);
 
+
 		// Get the BluetoothAdapter for doing operations with Bluetooth
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		mConnectionServer = ConnectionUtil.getServerInstance(this);
+		isReconnectScreen = getIntent().getBooleanExtra(IS_RECONNECT, false);
+
+		// If this is a reconnect activity, we will have to update the players
+		// names and positions
+		if (isReconnectScreen) {
+			if (Util.isDebugBuild()) {
+				Toast.makeText(this, "Is Reconnect...", Toast.LENGTH_SHORT).show();
+			}
+			// TODO: if crazy eights?
+			currentGame = CrazyEightsTabletGame.getInstance();
+
+			List<Player> players = currentGame.getPlayers();
+			Collections.sort(players, new Comparator<Player>() {
+				@Override
+				public int compare(Player lhs, Player rhs) {
+					return lhs.getPosition() - rhs.getPosition();
+				}
+			});
+
+			String disconnectedPlayer = getIntent().getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
+
+			for (int i = 0; i < players.size(); i++) {
+				Player p = players.get(i);
+
+				if (Util.isDebugBuild()) {
+					Log.d(TAG, "Player" + i + ": " + p + " --> " + p.getId());
+				}
+
+				// If this is the disconnected player, save the player index
+				if (p.getId().equals(disconnectedPlayer)) {
+					positionToFill = p.getPosition() - 1;
+				}
+
+				playerIds.add(p.getId());
+				playerNames.put(p.getId(), p.getName());
+			}
+
+			if (Util.isDebugBuild()) {
+				Log.d(TAG, "PositionToFill: " + positionToFill);
+				Log.d(TAG, "Players: " + playerIds);
+			}
+
+			updatePlayersConnected();
+		}
 
 		// If Bluetooth isn't enabled, request that it be enabled
 		if (!mBluetoothAdapter.isEnabled()) {
@@ -171,23 +253,39 @@ public class ConnectActivity extends Activity {
 					// Start the Gameboard activity
 					Intent gameIntent = new Intent(ConnectActivity.this, GameboardActivity.class);
 					int i = 0;
-					for (String s : playerNames.keySet()) {
+					for (String s : playerIds) {
 						if (i == 0) {
-							gameIntent.putExtra(Constants.PLAYER_1, playerNames.get(s));
+							gameIntent.putExtra(Constants.PLAYER_1, new String[] { s, playerNames.get(s) });
 						} else if (i == 1) {
-							gameIntent.putExtra(Constants.PLAYER_2, playerNames.get(s));
+							gameIntent.putExtra(Constants.PLAYER_2, new String[] { s, playerNames.get(s) });
 						} else if (i == 2) {
-							gameIntent.putExtra(Constants.PLAYER_3, playerNames.get(s));
+							gameIntent.putExtra(Constants.PLAYER_3, new String[] { s, playerNames.get(s) });
 						} else if (i == 3) {
-							gameIntent.putExtra(Constants.PLAYER_4, playerNames.get(s));
+							gameIntent.putExtra(Constants.PLAYER_4, new String[] { s, playerNames.get(s) });
 						}
 						i++;
 					}
 
-					startActivity(gameIntent);
+					if (!isReconnectScreen) {
+						startActivity(gameIntent);
+					} else {
+						List<Player> players = currentGame.getPlayers();
+						Collections.sort(players, new Comparator<Player>() {
+							@Override
+							public int compare(Player lhs, Player rhs) {
+								return lhs.getPosition() - rhs.getPosition();
+							}
+						});
+
+						if (positionToFill != -1) {
+							Player p = players.get(positionToFill);
+							p.setId(playerIds.get(positionToFill));
+							p.setName(playerNames.get(playerIds.get(positionToFill)));
+						}
+					}
 
 					// Finish this activity so we can't get back here when pressing the back button
-					setResult(RESULT_OK);
+					setResult(RESULT_OK, gameIntent);
 					finish();
 				}
 			}
@@ -243,7 +341,10 @@ public class ConnectActivity extends Activity {
 	 * Start the ConnectionServer server listening for connections.
 	 */
 	private void startListeningForDevices() {
-		mConnectionServer = ConnectionUtil.getServerInstance(this);
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "startListeningForDevices");
+		}
+
 		Util.ensureDiscoverable(this, mBluetoothAdapter);
 		mConnectionServer.startListening();
 	}
@@ -270,30 +371,31 @@ public class ConnectActivity extends Activity {
 	private void updatePlayersConnected() {
 		int i = 0;
 
-		for (String s : mConnectionServer.getConnectedDevices()) {
+		List<String> connected = mConnectionServer.getConnectedDevices();
+
+		for (String s : playerIds) {
 			if (Util.isDebugBuild()) {
 				Toast.makeText(this, playerNames.get(s), Toast.LENGTH_SHORT).show();
 			}
 
-			// Set this user's device as the "on" screen
-			playerImageViews[i].setImageResource(R.drawable.on_device);
-			playerTextViews[i].setVisibility(View.VISIBLE);
+			if (connected.contains(s)) {
+				// Set this user's device as the "on" screen
+				playerImageViews[i].setImageResource(R.drawable.on_device);
+				playerTextViews[i].setVisibility(View.VISIBLE);
 
-			// Show either the Default name, or the player chosen
-			// name on their device
-			if (playerNames.get(s) == null) {
-				playerTextViews[i].setText(R.string.default_name);
-			} else{
-				playerTextViews[i].setText(playerNames.get(s));
+				// Show either the Default name, or the player chosen
+				// name on their device
+				if (playerNames.get(s) == null) {
+					playerTextViews[i].setText(R.string.default_name);
+				} else{
+					playerTextViews[i].setText(playerNames.get(s));
+				}
+			} else {
+				playerImageViews[i].setImageResource(R.drawable.off_device);
+				playerTextViews[i].setVisibility(View.INVISIBLE);
 			}
 
 			i++;
-		}
-
-		// Update the rest of the players with an off device and no name
-		for ( ; i < 4; i++) {
-			playerImageViews[i].setImageResource(R.drawable.off_device);
-			playerTextViews[i].setVisibility(View.INVISIBLE);
 		}
 
 		// Update the state of the button so that it changes colors when there

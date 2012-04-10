@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cs309.a1.crazyeights.Constants;
 import cs309.a1.crazyeights.CrazyEightsGameController;
+import cs309.a1.crazyeights.CrazyEightsTabletGame;
 import cs309.a1.gameboard.R;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.GameController;
@@ -102,7 +103,7 @@ public class GameboardActivity extends Activity {
 	 * the current gameboard state
 	 */
 	private GameController gameController;
-	
+
 	/**
 	 * The TextView that represents the player whose turn it currently is
 	 */
@@ -153,7 +154,7 @@ public class GameboardActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gameboard);
-		
+
 		highlightedPlayer = null;
 
 		playerTextViews[0] = (TextView) findViewById(R.id.player1text);
@@ -181,12 +182,20 @@ public class GameboardActivity extends Activity {
 		List<String> devices = bts.getConnectedDevices();
 
 		// this method will handle setting up player names
-		String[] playerNames = getPlayerNames();
+		NameDevWrapper[] playerNames = getPlayerNames(getIntent());
 		int i;
 		for (i = 0; i < numOfConnections; i++) {
 			Player p = new Player();
-			p.setId(devices.get(i));
-			p.setName(playerNames[i]);
+			int deviceIndex = devices.indexOf(playerNames[i].deviceId);
+
+			// If we can't find the device in the device list,
+			// then set it as a computer
+			if (deviceIndex == -1) {
+				p.setIsComputer(true);
+			} else {
+				p.setId(devices.get(deviceIndex));
+			}
+			p.setName(playerNames[i].name);
 			p.setPosition(i + 1);// TODO make the users able to choose this
 			players.add(p);
 
@@ -201,6 +210,7 @@ public class GameboardActivity extends Activity {
 		for (int j = i; j < 4 && (j - i < numComputers); j++) {
 			Player p = new Player();
 			p.setName("Computer " + (j - i + 1));
+			p.setId("Computer" + (j - i + 1));
 			p.setPosition(j + 1);
 			p.setIsComputer(true);
 			p.setComputerDifficulty(0);
@@ -212,8 +222,9 @@ public class GameboardActivity extends Activity {
 		ImageButton refresh = (ImageButton) findViewById(R.id.gameboard_refresh);
 
 		// the GameController now handles the setup of the game.
-		gameController = new CrazyEightsGameController(this, bts, players,
-				refresh);
+		gameController = new CrazyEightsGameController(this, bts, players, refresh);
+
+		updateNamesOnGameboard();
 	}
 
 	/*
@@ -308,30 +319,31 @@ public class GameboardActivity extends Activity {
 	 * 
 	 * @return List of player names
 	 */
-	private String[] getPlayerNames() {
-		int numOfConnections = bts.getConnectedDeviceCount();
-		Intent intent = getIntent();
-		String[] playerNames = new String[4];
+	public NameDevWrapper[] getPlayerNames(Intent intent) {
+		NameDevWrapper[] playerNames = new NameDevWrapper[4];
 
-		playerNames[0] = intent.getStringExtra(Constants.PLAYER_1);
-		playerNames[1] = intent.getStringExtra(Constants.PLAYER_2);
-		playerNames[2] = intent.getStringExtra(Constants.PLAYER_3);
-		playerNames[3] = intent.getStringExtra(Constants.PLAYER_4);
+		playerNames[0] = new NameDevWrapper(intent.getStringArrayExtra(Constants.PLAYER_1));
+		playerNames[1] = new NameDevWrapper(intent.getStringArrayExtra(Constants.PLAYER_2));
+		playerNames[2] = new NameDevWrapper(intent.getStringArrayExtra(Constants.PLAYER_3));
+		playerNames[3] = new NameDevWrapper(intent.getStringArrayExtra(Constants.PLAYER_4));
 
 		if (Util.isDebugBuild()) {
 			Log.d(TAG, Arrays.toString(playerNames));
 		}
 
+		return playerNames;
+	}
+
+	public void updateNamesOnGameboard() {
+		List<Player> players = CrazyEightsTabletGame.getInstance().getPlayers();
 		for (int i = 0; i < 4; i++) {
-			if (i < numOfConnections) {
+			if (i < players.size()) {
 				playerTextViews[i].setVisibility(View.VISIBLE);
-				playerTextViews[i].setText(playerNames[i]);
+				playerTextViews[i].setText(players.get(i).getName());
 			} else {
 				playerTextViews[i].setVisibility(View.INVISIBLE);
 			}
 		}
-
-		return playerNames;
 	}
 
 	/**
@@ -644,25 +656,41 @@ public class GameboardActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Highlight the name of the person whose turn it is
+	 * 
+	 * @param playerNumber the player whose turn it is
+	 */
 	public void highlightPlayer(int playerNumber) {
-		
-		if(highlightedPlayer != null) {
+		if (highlightedPlayer != null) {
 			highlightedPlayer.setTextColor(Color.BLACK);
 		}
-		
-		if(playerNumber == 1) {
+
+		if (playerNumber == 1) {
 			highlightedPlayer = (TextView) findViewById(R.id.player1text);
-		}
-		else if(playerNumber == 2) {
+		} else if (playerNumber == 2) {
 			highlightedPlayer = (TextView) findViewById(R.id.player2text);
-		}
-		else if(playerNumber == 3) {
+		} else if (playerNumber == 3) {
 			highlightedPlayer = (TextView) findViewById(R.id.player3text);
-		}
-		else if(playerNumber == 4) {
+		} else if (playerNumber == 4) {
 			highlightedPlayer = (TextView) findViewById(R.id.player4text);
 		}
-		
+
 		highlightedPlayer.setTextColor(Color.WHITE);
 	}
+
+	/**
+	 * A class that contains a device name and id
+	 */
+	private class NameDevWrapper {
+		public NameDevWrapper(String[] playerName) {
+			if (playerName != null) {
+				name = playerName[1];
+				deviceId = playerName[0];
+			}
+		}
+		public String name;
+		public String deviceId;
+	}
+
 }

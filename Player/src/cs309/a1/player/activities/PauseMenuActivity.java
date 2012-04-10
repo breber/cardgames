@@ -15,9 +15,16 @@ import cs309.a1.shared.connection.ConnectionConstants;
  * The Pause Menu. It isn't really a menu, just a popup
  * telling the user that the game is paused. It will automatically
  * close when the tablet indicates that the game has been resumed.
+ * 
+ * Activity Result:
+ * 		RESULT_OK - if the game is resumed
+ * 		RESULT_CANCELLED - if the game is ending
  */
-public class PauseMenuActivity extends Activity{
+public class PauseMenuActivity extends Activity {
 
+	/**
+	 * The request code to keep track of the Quit Game activity
+	 */
 	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
 
 	/**
@@ -32,7 +39,8 @@ public class PauseMenuActivity extends Activity{
 				int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
 
 				if (messageType == Constants.UNPAUSE || messageType == Constants.REFRESH) {
-					finish();
+					PauseMenuActivity.this.setResult(RESULT_OK);
+					PauseMenuActivity.this.finish();
 				}
 			}
 		}
@@ -45,6 +53,7 @@ public class PauseMenuActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.progress_dialog);
+		setResult(RESULT_OK);
 
 		// Register the receiver for message/state change intents
 		registerReceiver(receiver, new IntentFilter(ConnectionConstants.MESSAGE_RX_INTENT));
@@ -52,6 +61,20 @@ public class PauseMenuActivity extends Activity{
 		// Update the text on the dialog
 		TextView tv = (TextView) findViewById(R.id.progressDialogText);
 		tv.setText(R.string.gamePaused);
+	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onDestroy()
+	 */
+	@Override
+	protected void onDestroy() {
+		try {
+			unregisterReceiver(receiver);
+		} catch (IllegalArgumentException e) {
+			// We didn't get far enough to register the receiver
+		}
+
+		super.onDestroy();
 	}
 
 	/* (non-Javadoc)

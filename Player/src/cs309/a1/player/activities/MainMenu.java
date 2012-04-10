@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import cs309.a1.player.R;
-import cs309.a1.shared.SoundManager;
 
 /**
  * The Main menu of the application

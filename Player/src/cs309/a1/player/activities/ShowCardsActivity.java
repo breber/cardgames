@@ -1,7 +1,5 @@
 package cs309.a1.player.activities;
 
-import static cs309.a1.crazyeights.Constants.PAUSE;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -43,7 +41,7 @@ public class ShowCardsActivity extends Activity {
 	 * The request code to keep track of the "You have been disconnected" activity
 	 */
 	private static final int DISCONNECTED = Math.abs("DISCONNECTED".hashCode());
-	
+
 	/**
 	 * The request code to pause the game
 	 */
