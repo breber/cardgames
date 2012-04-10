@@ -149,6 +149,8 @@ public class CrazyEightsGameController implements GameController {
 		Rules rules = new CrazyEightGameRules();
 		game = CrazyEightsTabletGame.getInstance(players, deck, rules);
 		game.setup();
+		
+		gameContext.highlightPlayer(1);
 
 		for (Player p : players) {
 			if (Util.isDebugBuild()) {
@@ -318,6 +320,8 @@ public class CrazyEightsGameController implements GameController {
 			whoseTurn = 0;
 		}
 
+		gameContext.highlightPlayer(whoseTurn+1);
+		
 		Card onDiscard = game.getDiscardPileTop();
 		if (onDiscard.getValue() == 7) {
 			onDiscard = new Card(suitChosen, onDiscard.getValue(),

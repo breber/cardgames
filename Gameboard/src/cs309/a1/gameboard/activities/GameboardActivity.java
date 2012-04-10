@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.util.Log;
@@ -101,6 +102,11 @@ public class GameboardActivity extends Activity {
 	 * the current gameboard state
 	 */
 	private GameController gameController;
+	
+	/**
+	 * The TextView that represents the player whose turn it currently is
+	 */
+	private TextView highlightedPlayer;
 
 	/**
 	 * This is the TextViews for all the player names
@@ -147,6 +153,8 @@ public class GameboardActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gameboard);
+		
+		highlightedPlayer = null;
 
 		playerTextViews[0] = (TextView) findViewById(R.id.player1text);
 		playerTextViews[1] = (TextView) findViewById(R.id.player2text);
@@ -636,4 +644,25 @@ public class GameboardActivity extends Activity {
 		}
 	}
 
+	public void highlightPlayer(int playerNumber) {
+		
+		if(highlightedPlayer != null) {
+			highlightedPlayer.setTextColor(Color.BLACK);
+		}
+		
+		if(playerNumber == 1) {
+			highlightedPlayer = (TextView) findViewById(R.id.player1text);
+		}
+		else if(playerNumber == 2) {
+			highlightedPlayer = (TextView) findViewById(R.id.player2text);
+		}
+		else if(playerNumber == 3) {
+			highlightedPlayer = (TextView) findViewById(R.id.player3text);
+		}
+		else if(playerNumber == 4) {
+			highlightedPlayer = (TextView) findViewById(R.id.player4text);
+		}
+		
+		highlightedPlayer.setTextColor(Color.WHITE);
+	}
 }
