@@ -208,17 +208,24 @@ public class CrazyEightsPlayerController implements PlayerController {
 				try {
 					JSONArray arr = new JSONArray(object);
 					JSONObject refreshInfo = arr.getJSONObject(0);
-					isTurn = refreshInfo.getBoolean(Constants.TURN);
+					isTurn = refreshInfo.getBoolean(Constants.TURN);			
 					playerName = refreshInfo.getString(Constants.PLAYER_NAME);
 					// add more refresh info here
 
 					playerContext.removeAllCards();
-
-					for (int i = 1; i < arr.length(); i++) {
-						JSONObject obj = arr.getJSONObject(i);
-						int suit = obj.getInt(SUIT);
-						int value = obj.getInt(VALUE);
-						int id = obj.getInt(ID);
+					
+					JSONObject obj = arr.getJSONObject(1);
+					int suit = obj.getInt(SUIT);
+					int value = obj.getInt(VALUE);
+					int id = obj.getInt(ID);
+					cardOnDiscard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
+					
+					//the 2nd through however many are the cards of the player
+					for (int i = 2; i < arr.length(); i++) {
+						obj = arr.getJSONObject(i);
+						suit = obj.getInt(SUIT);
+						value = obj.getInt(VALUE);
+						id = obj.getInt(ID);
 						playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
 					}
 				} catch (JSONException ex) {

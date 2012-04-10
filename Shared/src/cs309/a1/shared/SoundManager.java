@@ -201,7 +201,8 @@ public class SoundManager {
 		@Override
 		public void onInit(int status) {
 			if(status == TextToSpeech.SUCCESS){
-				int langResult = tts.setLanguage(Locale.US);
+				//int langResult = tts.setLanguage(Locale.US);
+				int langResult = tts.setLanguage(Locale.CANADA);
 				//TODO get from preferences change locale to other things? like uk, french, german?
 				if(langResult == TextToSpeech.LANG_MISSING_DATA || langResult == TextToSpeech.LANG_NOT_SUPPORTED){
 					if (Util.isDebugBuild()) {

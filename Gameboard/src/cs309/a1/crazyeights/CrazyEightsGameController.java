@@ -415,6 +415,18 @@ public class CrazyEightsGameController implements GameController {
 	 */
 	private void refreshPlayers() {
 		Player pTurn = players.get(whoseTurn);
+		
+		JSONObject discardObj = new JSONObject();
+		try {
+			//send the card on the discard pile
+			Card discard = game.getDiscardPileTop();
+			discardObj.put(SUIT, discard.getSuit());
+			discardObj.put(VALUE, discard.getValue());
+			discardObj.put(RESOURCE_ID, discard.getResourceId());
+			discardObj.put(ID, discard.getIdNum());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
 
 		for (Player p : players) {
 			if (Util.isDebugBuild()) {
@@ -429,7 +441,11 @@ public class CrazyEightsGameController implements GameController {
 				// Maybe add more refresh info here
 
 				arr.put(refreshInfo);
-
+				
+				//send the card on the discard pile
+				arr.put(discardObj);
+				
+				//send all the cards in the players hand
 				for (Card c : p.getCards()) {
 					JSONObject obj = new JSONObject();
 					obj.put(SUIT, c.getSuit());
@@ -440,7 +456,6 @@ public class CrazyEightsGameController implements GameController {
 					arr.put(obj);
 				}
 
-				arr.toString();
 				server.write(Constants.REFRESH, arr.toString(), p.getId());
 			} catch (JSONException e) {
 				e.printStackTrace();
