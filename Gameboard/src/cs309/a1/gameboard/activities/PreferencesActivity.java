@@ -6,6 +6,7 @@ import static cs309.a1.shared.Constants.LANGUAGE_CANADA;
 import static cs309.a1.shared.Constants.LANGUAGE_FRANCE;
 import static cs309.a1.shared.Constants.LANGUAGE_GERMAN;
 import static cs309.a1.shared.Constants.LANGUAGE_US;
+import static cs309.a1.shared.Constants.LANGUAGE_UK;
 import static cs309.a1.shared.Constants.NUMBER_OF_COMPUTERS;
 import static cs309.a1.shared.Constants.PREFERENCES;
 import static cs309.a1.shared.Constants.SOUND_EFFECTS;
@@ -34,7 +35,7 @@ public class PreferencesActivity extends Activity{
 	private SharedPreferences.Editor prefsEditor;
 	private RadioButton myOption1, myOption2, myOption3, myOption4;
 	private RadioButton myOptionEasy, myOptionMedium, myOptionHard;
-	private RadioButton myOptionLang1, myOptionLang2, myOptionLang3, myOptionLang4;
+	private RadioButton myOptionLang1, myOptionLang2, myOptionLang3, myOptionLang4, myOptionLang5;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -157,6 +158,7 @@ public class PreferencesActivity extends Activity{
 		myOptionLang2 = (RadioButton)findViewById(R.id.langUS);
 		myOptionLang3 = (RadioButton)findViewById(R.id.langFrance);
 		myOptionLang4 = (RadioButton)findViewById(R.id.langGerman);
+		myOptionLang5 = (RadioButton)findViewById(R.id.langUK);
 		
 		//Get the current language that the user has set in the preferences
 		String language = sharedPref.getString(LANGUAGE, LANGUAGE_US);
@@ -167,15 +169,17 @@ public class PreferencesActivity extends Activity{
 		}
 		
 		//based on the value of the language from the preferences set the correct radio button
-		if(language.equals(LANGUAGE_CANADA))
+		if(language.equals(LANGUAGE_CANADA)){
 			myOptionLang1.setChecked(true);
-		else if(language.equals(LANGUAGE_US)){
+		}else if(language.equals(LANGUAGE_US)){
 			myOptionLang2.setChecked(true);
-		}
-		else if(language.equals(LANGUAGE_FRANCE))
+		}else if(language.equals(LANGUAGE_FRANCE)){
 			myOptionLang3.setChecked(true);
-		else if(language.equals(LANGUAGE_GERMAN))
+		}else if(language.equals(LANGUAGE_GERMAN)){
 			myOptionLang4.setChecked(true);
+		}else if(language.equals(LANGUAGE_UK)){
+			myOptionLang5.setChecked(true);
+		}
 		
 		//OK button on the preferences screen
 		Button ok = (Button)findViewById(R.id.ok);
@@ -201,32 +205,37 @@ public class PreferencesActivity extends Activity{
 				
 				//set number of computers				//set number of computers based on the radio button checked
 				//update the shared preferences with the value checked by the user
-				if(myOption1.isActivated() == true)
+				if(myOption1.isActivated() == true){
 					prefsEditor.putInt(NUMBER_OF_COMPUTERS, 1);
-				else if(myOption2.isChecked() == true)
+				}else if(myOption2.isChecked() == true){
 					prefsEditor.putInt(NUMBER_OF_COMPUTERS, 2);
-				else if(myOption3.isChecked() == true)
+				}else if(myOption3.isChecked() == true){
 					prefsEditor.putInt(NUMBER_OF_COMPUTERS, 3);
-				else if(myOption4.isChecked() == true)
+				}else if(myOption4.isChecked() == true){
 					prefsEditor.putInt(NUMBER_OF_COMPUTERS, 4);
+				}
 				
 				//set difficulty of computers to preferences
-				if(myOptionEasy.isChecked() == true)
+				if(myOptionEasy.isChecked() == true){
 					prefsEditor.putInt(DIFFICULTY_OF_COMPUTERS, 1);
-				else if(myOptionMedium.isChecked() == true)
+				}else if(myOptionMedium.isChecked() == true){
 					prefsEditor.putInt(DIFFICULTY_OF_COMPUTERS, 2);
-				else if(myOptionHard.isChecked() == true)
+				}else if(myOptionHard.isChecked() == true){
 					prefsEditor.putInt(DIFFICULTY_OF_COMPUTERS, 3);
+				}
 				
 				//set language to preferences
-				if(myOptionLang1.isChecked())
+				if(myOptionLang1.isChecked()){
 					prefsEditor.putString(LANGUAGE, LANGUAGE_CANADA);
-				else if(myOptionLang2.isChecked())
+				}else if(myOptionLang2.isChecked()){
 					prefsEditor.putString(LANGUAGE, LANGUAGE_US);
-				else if(myOptionLang3.isChecked())
+				}else if(myOptionLang3.isChecked()){
 					prefsEditor.putString(LANGUAGE, LANGUAGE_FRANCE);
-				else if(myOptionLang4.isChecked())
+				}else if(myOptionLang4.isChecked()){
 					prefsEditor.putString(LANGUAGE, LANGUAGE_GERMAN);
+				}else if(myOptionLang5.isChecked()){
+					prefsEditor.putString(LANGUAGE, LANGUAGE_UK);
+				}
 				
 				//commit the changes to the shared preferences
 				prefsEditor.commit();

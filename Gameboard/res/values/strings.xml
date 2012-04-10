@@ -41,9 +41,10 @@ To use this application properly, download the application titled “Crazy Eight
 	<string name="Medium">Medium</string>
 	<string name="Hard">Hard</string>
 	<string name="difficultyComputers">Difficulty of Computers</string>
-	<string name="lang">Language</string>
+	<string name="lang">Locale</string>
 	<string name="langCanada">Canada</string>
 	<string name="langUS">US</string>
+	<string name="langUK">UK</string>
 	<string name="langFrance">France</string>
 	<string name="langGerman">German</string>
 	<string name="ok">OK</string>
