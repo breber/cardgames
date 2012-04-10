@@ -27,9 +27,15 @@ To use this application properly, download the application titled “Crazy Eight
     <!-- Pause Activity -->
     <string name="resume">Resume</string>
     
+    <!-- Preferences Activity -->
+    <string name="preferencesActivityTitle">Preferences</string>
+    
     <!-- Game Results Activity -->
     <string name="gameResultsTitle">Game Over</string>
     <string name="playerNWon">%s Wins!</string>
     <string name="exitGame">Exit Game</string>
+    
+	<!-- Main Menu -->
+	<string name="preferences">Preferences</string>
 
 </resources>

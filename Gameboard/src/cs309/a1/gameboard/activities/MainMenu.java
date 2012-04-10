@@ -52,6 +52,15 @@ public class MainMenu extends Activity {
 				startActivity(aboutButtonClick);
 			}
 		});
+		
+		Button preferences = (Button) findViewById(R.id.btPref);
+		preferences.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent preferencesButtonClick = new Intent(MainMenu.this,	PreferencesActivity.class);
+				startActivity(preferencesButtonClick);
+			}
+		});
 	}
 
 	/* (non-Javadoc)
