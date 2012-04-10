@@ -194,7 +194,6 @@ public class CrazyEightsGameController implements GameController {
 	/* (non-Javadoc)
 	 * @see cs309.a1.shared.GameController#handleBroadcastReceive(android.content.Context, android.content.Intent)
 	 */
-	@Override
 	public void handleBroadcastReceive(Context context, Intent intent) {
 		String action = intent.getAction();
 
@@ -241,7 +240,6 @@ public class CrazyEightsGameController implements GameController {
 	/* (non-Javadoc)
 	 * @see cs309.a1.shared.GameController#handleActivityResult(int, int, android.content.Intent)
 	 */
-	@Override
 	public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == GameboardActivity.DISCONNECTED) {
 			if (resultCode == Activity.RESULT_CANCELED) {
@@ -286,7 +284,6 @@ public class CrazyEightsGameController implements GameController {
 	/* (non-Javadoc)
 	 * @see cs309.a1.shared.GameController#pause()
 	 */
-	@Override
 	public void pause() {
 		for (int i = 0; i < game.getNumPlayers(); i++) {
 			server.write(Constants.PAUSE, null, players.get(i).getId());
@@ -296,10 +293,18 @@ public class CrazyEightsGameController implements GameController {
 	/* (non-Javadoc)
 	 * @see cs309.a1.shared.GameController#unpause()
 	 */
-	@Override
 	public void unpause() {
 		for (int i = 0; i < game.getNumPlayers(); i++) {
 			server.write(Constants.UNPAUSE, null, players.get(i).getId());
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see cs309.a1.shared.GameController#sendGameEnd()
+	 */
+	public void sendGameEnd(){
+		for (int i = 0; i < game.getNumPlayers(); i++) {
+			server.write(Constants.END_GAME, null, players.get(i).getId());
 		}
 	}
 
@@ -326,7 +331,7 @@ public class CrazyEightsGameController implements GameController {
 		}
 
 		gameContext.highlightPlayer(whoseTurn+1);
-
+		
 		Card onDiscard = game.getDiscardPileTop();
 		if (onDiscard.getValue() == 7) {
 			onDiscard = new Card(suitChosen, onDiscard.getValue(),
@@ -375,7 +380,7 @@ public class CrazyEightsGameController implements GameController {
 	private void drawCard() {
 		//play draw card sound
 		mySM.drawCardSound();
-
+		
 		Card tmpCard = game.draw(players.get(whoseTurn));
 
 		if (Util.isDebugBuild()) {
@@ -390,7 +395,6 @@ public class CrazyEightsGameController implements GameController {
 
 	/**
 	 * This will take in the received card and discard it
-	 * 
 	 * @param object
 	 */
 	private void discardReceivedCard(String object) {

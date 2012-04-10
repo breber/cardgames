@@ -292,7 +292,7 @@ public class GameboardActivity extends Activity {
 
 				// TODO: send a message to the handhelds letting them know the
 				// game is over...
-
+				gameController.sendGameEnd();
 				setResult(RESULT_OK);
 				finish();
 			} else {

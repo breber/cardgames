@@ -29,5 +29,10 @@ public interface GameController {
 	 * Un-pauses all the players
 	 */
 	public void unpause();
+	
+	/**
+	 * Tell the players to end the game
+	 */
+	public void sendGameEnd();
 
 }

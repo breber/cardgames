@@ -35,14 +35,15 @@ public class Constants {
 	public static final int REFRESH = 5;
 	public static final int PAUSE = 6;
 	public static final int UNPAUSE = 7;
+	public static final int END_GAME = 8;
 
 	// these are bluetooth messages types that can be sent by Player
-	public static final int PLAY_CARD = 8;
-	public static final int DRAW_CARD = 9;
-	public static final int PLAY_EIGHT_C = 10;
-	public static final int PLAY_EIGHT_D = 11;
-	public static final int PLAY_EIGHT_H = 12;
-	public static final int PLAY_EIGHT_S = 13;
+	public static final int PLAY_CARD = 9;
+	public static final int DRAW_CARD = 10;
+	public static final int PLAY_EIGHT_C = 11;
+	public static final int PLAY_EIGHT_D = 12;
+	public static final int PLAY_EIGHT_H = 13;
+	public static final int PLAY_EIGHT_S = 14;
 
 
 

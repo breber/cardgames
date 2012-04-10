@@ -84,9 +84,14 @@ public class ShowCardsActivity extends Activity {
 					Intent i = new Intent(ShowCardsActivity.this, ConnectionFailActivity.class);
 					startActivityForResult(i, DISCONNECTED);
 				}
+				
+				//TODO these constants should be in global
 			}else if (messageType == Constants.PAUSE){
 				Intent pause = new Intent(ShowCardsActivity.this, PauseMenuActivity.class);
 				ShowCardsActivity.this.startActivityForResult(pause, PAUSE_GAME);
+			} else if (messageType == Constants.END_GAME){
+				ShowCardsActivity.this.setResult(RESULT_OK);
+				finish();			
 			} else {
 				// Give it up to the player controller to deal with
 				playerController.handleBroadcastReceive(context, intent);
