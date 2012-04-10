@@ -3,7 +3,6 @@ package cs309.a1.crazyeights;
 public class Constants {
 
 	public static final int NUMBER_OF_CARDS_PER_HAND = 5;
-	public static final int NAME_MAX_CHARACTERS = 10;
 
 	public static final int SUIT_CLUBS = 0;
 	public static final int SUIT_DIAMONDS = 1;
