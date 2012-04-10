@@ -155,7 +155,7 @@ public class CrazyEightsTabletGame implements Game {
 
 		//Make copy of discard pile to be new shuffled deck
 		//add to the shuffled deck in case there are still some cards left that are unaccounted for
-		Collections.copy(shuffledDeck, discardPile);
+		shuffledDeck.addAll(discardPile);
 
 		if (Util.isDebugBuild()) {
 			Log.d(TAG, "shuffleDiscardPile: shuffledDeck: " + shuffledDeck.size() + " - discardPile: " + discardPile.size());

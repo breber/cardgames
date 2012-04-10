@@ -23,7 +23,6 @@ public class Constants {
 	public static final String MESSAGE_TYPE = "messagetype";
 	public static final String TURN = "isturn";
 	public static final String PLAYER_NAME = "playername";
-	public static final String DISCARD_CARD_ID = "discardcardid";
 
 	public static final int GET_PLAYER_NAME = "getPlayerName".hashCode();
 

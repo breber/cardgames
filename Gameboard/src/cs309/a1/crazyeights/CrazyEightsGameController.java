@@ -386,7 +386,6 @@ public class CrazyEightsGameController implements GameController {
 
 	/**
 	 * This will take in the received card and discard it
-	 * 
 	 * @param object
 	 */
 	private void discardReceivedCard(String object) {
@@ -474,6 +473,7 @@ public class CrazyEightsGameController implements GameController {
 		List<Card> cards = players.get(whoseTurn).getCards();
 		Card cardSelected = null;
 		
+		//computer with difficulty 0
 		if(players.get(whoseTurn).getComputerDifficulty() < 0){
 			for (Card c : cards) {
 				if (gameRules.checkCard(c, onDiscard)) {
@@ -481,17 +481,25 @@ public class CrazyEightsGameController implements GameController {
 					break;
 				}
 			}
+			if (cardSelected != null && cardSelected.getValue() == 7) {
+				int[] suits = new int[4];
+				int maxSuitIndex = 0;
+				for (Card c : cards) {
+					if (!c.equals(cardSelected) ) {
+						suits[c.getSuit()]++;
+						if(suits[c.getSuit()] > suits[maxSuitIndex]){
+							maxSuitIndex = c.getSuit();
+						}
+					}
+				}
+				suitChosen = maxSuitIndex;
+			}
+		} else if (players.get(whoseTurn).getComputerDifficulty() == 1){
+			
 		}
 
-		// TODO handle 8 playing.
 
 		if (cardSelected != null) {
-
-			// TODO handle 8 playing.
-			if (cardSelected.getValue() == 7) {
-				suitChosen = cardSelected.getSuit();
-			}
-
 			//play sound for playing a card
 			mySM.playCardSound();
 
