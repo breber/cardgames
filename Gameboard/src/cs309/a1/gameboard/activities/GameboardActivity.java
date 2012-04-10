@@ -22,11 +22,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import cs309.a1.shared.Constants;
 import cs309.a1.crazyeights.CrazyEightsGameController;
 import cs309.a1.crazyeights.CrazyEightsTabletGame;
 import cs309.a1.gameboard.R;
 import cs309.a1.shared.Card;
+import cs309.a1.shared.Constants;
 import cs309.a1.shared.GameController;
 import cs309.a1.shared.Player;
 import cs309.a1.shared.Util;
@@ -114,7 +114,10 @@ public class GameboardActivity extends Activity {
 	 * This is the TextViews for all the player names
 	 */
 	private TextView[] playerTextViews = new TextView[4];
-	
+
+	/**
+	 * The SharedPreferences used to store preferences for the game
+	 */
 	private SharedPreferences sharedPreferences;
 
 	/**
@@ -150,7 +153,7 @@ public class GameboardActivity extends Activity {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
@@ -176,6 +179,8 @@ public class GameboardActivity extends Activity {
 			}
 		});
 
+		// Register the BroadcastReceiver to handle all
+		// messages from the Bluetooth module
 		registerReceiver();
 
 		bts = BluetoothServer.getInstance(this);
@@ -184,7 +189,8 @@ public class GameboardActivity extends Activity {
 		List<Player> players = new ArrayList<Player>();
 		List<String> devices = bts.getConnectedDevices();
 
-		// this method will handle setting up player names
+		// Get the list of players and their addresses from the
+		// Intent data (from the ConnectActivity)
 		NameDevWrapper[] playerNames = getPlayerNames(getIntent());
 		int i;
 		for (i = 0; i < numOfConnections; i++) {
@@ -208,6 +214,7 @@ public class GameboardActivity extends Activity {
 			}
 		}
 
+		// Setup the rest of the Computer players based on the preferences
 		int numComputers = sharedPreferences.getInt(Constants.NUMBER_OF_COMPUTERS, 1);
 		int computerDifficulty = sharedPreferences.getInt(Constants.DIFFICULTY_OF_COMPUTERS, 0);
 		for (int j = i; j < 4 && (j - i < numComputers); j++) {
@@ -225,12 +232,11 @@ public class GameboardActivity extends Activity {
 		// the GameController now handles the setup of the game.
 		gameController = new CrazyEightsGameController(this, bts, players, refresh);
 
+		// Draw the names from the Game on the gameboard
 		updateNamesOnGameboard();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see android.app.Activity#onBackPressed()
 	 */
 	@Override
@@ -239,9 +245,7 @@ public class GameboardActivity extends Activity {
 		startActivityForResult(intent, QUIT_GAME);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see android.app.Activity#onDestroy()
 	 */
 	@Override
@@ -259,12 +263,19 @@ public class GameboardActivity extends Activity {
 		super.onDestroy();
 	}
 
+	/**
+	 * Register the BroadcastReceiver for MESSAGE_RX_INTENTs and
+	 * STATE_CHANGE_INTENTs.
+	 */
 	public void registerReceiver() {
 		// Register the receiver for message/state change intents
 		registerReceiver(receiver, new IntentFilter(ConnectionConstants.MESSAGE_RX_INTENT));
 		registerReceiver(receiver, new IntentFilter(ConnectionConstants.STATE_CHANGE_INTENT));
 	}
 
+	/**
+	 * Unregister the BroadcastReceiver from all messages
+	 */
 	public void unregisterReceiver() {
 		// Unregister the receiver
 		try {
@@ -274,11 +285,8 @@ public class GameboardActivity extends Activity {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onActivityResult(int, int,
-	 * android.content.Intent)
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -291,9 +299,10 @@ public class GameboardActivity extends Activity {
 				// On the Pause Menu, they selected something that will end
 				// the game, so Finish this activity
 
-				// TODO: send a message to the handhelds letting them know the
-				// game is over...
+				// Let the users know that the game is over
 				gameController.sendGameEnd();
+
+				// And finish this activity
 				setResult(RESULT_OK);
 				finish();
 			} else {
@@ -301,8 +310,7 @@ public class GameboardActivity extends Activity {
 			}
 		} else if (requestCode == DECLARE_WINNER) {
 			// We are coming back from the winner screen, so just go back to the
-			// main menu
-			// no matter what the result is.
+			// main menu no matter what the result is.
 			setResult(RESULT_OK);
 			finish();
 		} else {
@@ -317,7 +325,7 @@ public class GameboardActivity extends Activity {
 	/**
 	 * This method will get all the player names from the intent and set them up
 	 * on the gameboard.xml with the text views
-	 * 
+	 *
 	 * @return List of player names
 	 */
 	public NameDevWrapper[] getPlayerNames(Intent intent) {
@@ -335,7 +343,14 @@ public class GameboardActivity extends Activity {
 		return playerNames;
 	}
 
+	/**
+	 * Update the names that are displayed on the Gameboard.
+	 *
+	 * This data is pulled from the Game instance
+	 */
 	public void updateNamesOnGameboard() {
+		// TODO: if crazy eights? i am wondering if we want to just make an instance
+		// of Game in this class since we use it a couple times...
 		List<Player> players = CrazyEightsTabletGame.getInstance().getPlayers();
 		for (int i = 0; i < 4; i++) {
 			if (i < players.size()) {
@@ -349,11 +364,9 @@ public class GameboardActivity extends Activity {
 
 	/**
 	 * Places a card in the specified location on the game board
-	 * 
-	 * @param location
-	 *            Location to place the card
-	 * @param newCard
-	 *            Card to be placed on the game board
+	 *
+	 * @param location Location to place the card
+	 * @param newCard Card to be placed on the game board
 	 */
 	public void placeCard(int location, Card newCard) {
 		// TODO: do we want to move the layouts into an array so that
@@ -456,30 +469,30 @@ public class GameboardActivity extends Activity {
 
 				/*
 				 * TextView iv = null;
-				 * 
+				 *
 				 * if(handSize == MAX_DISPLAYED + 1) { RelativeLayout rl =
 				 * (RelativeLayout) findViewById(R.layout.gameboard);
-				 * 
+				 *
 				 * iv = new TextView(this);
-				 * 
+				 *
 				 * RelativeLayout.LayoutParams params = new
 				 * RelativeLayout.LayoutParams(20, 20);
-				 * 
+				 *
 				 * ImageView fullCard = (ImageView)
 				 * findViewById((location-1)*MAX_DISPLAYED + 1);
-				 * 
+				 *
 				 * int[] viewLocation = new int[2];
 				 * fullCard.getLocationOnScreen(viewLocation); params.leftMargin
 				 * = viewLocation[0]; params.topMargin = viewLocation[1];
-				 * 
+				 *
 				 * iv.setBackgroundColor(R.color.black);
 				 * iv.setTextColor(R.color.gold);
-				 * 
+				 *
 				 * iv.setId(1000*(location+1));
-				 * 
+				 *
 				 * rl.addView(iv, params); } else { iv = (TextView)
 				 * findViewById(1000*(location+1)); }
-				 * 
+				 *
 				 * iv.setText("+" + (handSize - MAX_DISPLAYED));
 				 */
 			}
@@ -602,7 +615,7 @@ public class GameboardActivity extends Activity {
 
 	/**
 	 * Removes a card from specified location on the game board
-	 * 
+	 *
 	 * @param location
 	 *            Location from which card should be removed
 	 */
@@ -659,7 +672,7 @@ public class GameboardActivity extends Activity {
 
 	/**
 	 * Highlight the name of the person whose turn it is
-	 * 
+	 *
 	 * @param playerNumber the player whose turn it is
 	 */
 	public void highlightPlayer(int playerNumber) {

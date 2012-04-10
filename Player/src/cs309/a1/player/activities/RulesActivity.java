@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 import cs309.a1.player.R;
-import cs309.a1.shared.SoundManager;
 
 /**
  * This activity will display the Game Rules

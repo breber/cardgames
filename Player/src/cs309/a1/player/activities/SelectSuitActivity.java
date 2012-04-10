@@ -15,7 +15,7 @@ import cs309.a1.player.R;
  * The popup displayed when a user plays an 8-Card.
  * It allows the user to choose which suit they want
  * to change it to.
- * 
+ *
  * Activity Results:
  * 		Constants.SUIT_SPADES   - If the user chose spades
  * 		Constants.SUIT_HEARTS   - If the user chose hearts
@@ -73,6 +73,5 @@ public class SelectSuitActivity extends Activity{
 	public void onBackPressed() {
 		setResult(RESULT_OK);
 		finish();
-		// Do nothing. They have to choose a new suit
 	}
 }

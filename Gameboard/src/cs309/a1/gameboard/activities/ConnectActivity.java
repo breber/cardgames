@@ -106,7 +106,7 @@ public class ConnectActivity extends Activity {
 	private int positionToFill = -1;
 
 	/**
-	 * The BroadcastReceiver that handles state change messages from the Bluetooth module
+	 * The BroadcastReceiver that handles state change messages from the Connection module
 	 */
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
@@ -124,11 +124,15 @@ public class ConnectActivity extends Activity {
 						JSONObject obj = new JSONObject(object);
 						String playerName = obj.getString(PLAYER_NAME);
 
+						// If positionToFill is not -1, we are reconnecting
+						// so we want to place this newly connected user in
+						// this position
 						if (positionToFill != -1) {
 							playerIds.set(positionToFill, deviceAddress);
 						} else {
 							playerIds.add(deviceAddress);
 						}
+
 						playerNames.put(deviceAddress, playerName);
 					} catch (JSONException ex) {
 						ex.printStackTrace();
@@ -185,12 +189,16 @@ public class ConnectActivity extends Activity {
 		// names and positions
 		if (isReconnectScreen) {
 			if (Util.isDebugBuild()) {
-				Toast.makeText(this, "Is Reconnect...", Toast.LENGTH_SHORT).show();
+				Log.d(TAG, "Reconnecting...");
 			}
 			// TODO: if crazy eights?
 			currentGame = CrazyEightsTabletGame.getInstance();
 
+			// First, we get the list of players from the game
 			List<Player> players = currentGame.getPlayers();
+
+			// We then sort them by their position so that we
+			// can place them in the right place on this screen
 			Collections.sort(players, new Comparator<Player>() {
 				@Override
 				public int compare(Player lhs, Player rhs) {
@@ -198,8 +206,11 @@ public class ConnectActivity extends Activity {
 				}
 			});
 
+			// We now get the address of the player that was disconnected
 			String disconnectedPlayer = getIntent().getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
 
+			// Now loop through the players and update our internal lists
+			// with their names and ids
 			for (int i = 0; i < players.size(); i++) {
 				Player p = players.get(i);
 
@@ -212,6 +223,7 @@ public class ConnectActivity extends Activity {
 					positionToFill = p.getPosition() - 1;
 				}
 
+				// Update our lists so we can update the UI
 				playerIds.add(p.getId());
 				playerNames.put(p.getId(), p.getName());
 			}
@@ -250,25 +262,30 @@ public class ConnectActivity extends Activity {
 					// Send a message to all connected devices saying that the game is beginning
 					mConnectionServer.write(BluetoothConstants.MSG_TYPE_INIT, null);
 
-					// Start the Gameboard activity
-					Intent gameIntent = new Intent(ConnectActivity.this, GameboardActivity.class);
-					int i = 0;
-					for (String s : playerIds) {
-						if (i == 0) {
-							gameIntent.putExtra(Constants.PLAYER_1, new String[] { s, playerNames.get(s) });
-						} else if (i == 1) {
-							gameIntent.putExtra(Constants.PLAYER_2, new String[] { s, playerNames.get(s) });
-						} else if (i == 2) {
-							gameIntent.putExtra(Constants.PLAYER_3, new String[] { s, playerNames.get(s) });
-						} else if (i == 3) {
-							gameIntent.putExtra(Constants.PLAYER_4, new String[] { s, playerNames.get(s) });
-						}
-						i++;
-					}
-
+					// If this is not a reconnect activity, then we want to start
+					// the gameboard
 					if (!isReconnectScreen) {
+						// Start the Gameboard activity
+						Intent gameIntent = new Intent(ConnectActivity.this, GameboardActivity.class);
+						int i = 0;
+						for (String s : playerIds) {
+							if (i == 0) {
+								gameIntent.putExtra(Constants.PLAYER_1, new String[] { s, playerNames.get(s) });
+							} else if (i == 1) {
+								gameIntent.putExtra(Constants.PLAYER_2, new String[] { s, playerNames.get(s) });
+							} else if (i == 2) {
+								gameIntent.putExtra(Constants.PLAYER_3, new String[] { s, playerNames.get(s) });
+							} else if (i == 3) {
+								gameIntent.putExtra(Constants.PLAYER_4, new String[] { s, playerNames.get(s) });
+							}
+							i++;
+						}
+
 						startActivity(gameIntent);
 					} else {
+						// Otherwise, we will update the actual player object
+						// with the new name and MAC address, so gameplay
+						// can continue as usual
 						List<Player> players = currentGame.getPlayers();
 						Collections.sort(players, new Comparator<Player>() {
 							@Override
@@ -285,7 +302,7 @@ public class ConnectActivity extends Activity {
 					}
 
 					// Finish this activity so we can't get back here when pressing the back button
-					setResult(RESULT_OK, gameIntent);
+					setResult(RESULT_OK);
 					finish();
 				}
 			}
@@ -311,11 +328,11 @@ public class ConnectActivity extends Activity {
 
 	/**
 	 * Returns whether or not a game can be started or not
-	 * 
+	 *
 	 * - There needs to be at least 2 devices connected
-	 * 
 	 * - If this is a debug build, allow just one connection
-	 * 
+	 * - All connected players need to have submitted a name
+	 *
 	 * @return whether a game can be started or not
 	 */
 	private boolean canStartGame() {
