@@ -168,7 +168,7 @@ public class CrazyEightsGameController implements GameController {
 	 */
 	private void placeInitialCards() {
 		mySM.shuffleCardsSound();
-		
+
 		// If it is a debug build, show the cards face up so that we can
 		// verify that the tablet has the same cards as the player
 		if (Util.isDebugBuild()) {
@@ -254,14 +254,14 @@ public class CrazyEightsGameController implements GameController {
 				Intent i = new Intent(gameContext, ConnectActivity.class);
 				gameContext.startActivityForResult(i, CHOOSE_PLAYER);
 
-				// TODO: we probably want to do something with the broadcast
-				// receiver
-				// like unregister it so that we don't pop up messages while at
-				// the choose player screen...
+				// Unregister the receiver so that we don't get an annoying
+				// popup when we are on the activity
+				gameContext.unregisterReceiver();
 			}
 
 			return true;
 		} else if (requestCode == CHOOSE_PLAYER) {
+			gameContext.registerReceiver();
 			// TODO: update the player with the new id
 		} else if (requestCode == PLAY_COMPUTER_TURN) {
 			playComputerTurn();
@@ -357,7 +357,7 @@ public class CrazyEightsGameController implements GameController {
 		Intent gameResults = new Intent(gameContext, GameResultsActivity.class);
 		gameResults.putExtra(GameResultsActivity.WINNER_NAME, game.getPlayers().get(whoWon).getName());
 		gameContext.startActivityForResult(gameResults, DECLARE_WINNER);
-		// TODO start ending activity
+		gameContext.unregisterReceiver();
 	}
 
 	/**
@@ -366,9 +366,9 @@ public class CrazyEightsGameController implements GameController {
 	 */
 	private void drawCard() {
 		Card tmpCard = game.draw(players.get(whoseTurn));
-		
+
 		mySM.drawCardSound();
-		
+
 		// TODO may need to make this a generic back of card
 		gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
 		server.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
@@ -393,7 +393,7 @@ public class CrazyEightsGameController implements GameController {
 		} catch (JSONException ex) {
 			ex.printStackTrace();
 		}
-		
+
 		mySM.playCardSound();
 		gameContext.placeCard(0, tmpCard);
 	}
@@ -461,10 +461,10 @@ public class CrazyEightsGameController implements GameController {
 			if (cardSelected.getValue() == 7) {
 				suitChosen = cardSelected.getSuit();
 			}
-			
+
 			//play sound for playing a card
 			mySM.playCardSound();
-			
+
 			gameContext.removeCard(players.get(whoseTurn).getPosition());
 			game.discard(players.get(whoseTurn), cardSelected);
 			gameContext.placeCard(0, cardSelected);

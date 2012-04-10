@@ -164,9 +164,7 @@ public class GameboardActivity extends Activity {
 			}
 		});
 
-		// Register the receiver for message/state change intents
-		registerReceiver(receiver, new IntentFilter(ConnectionConstants.MESSAGE_RX_INTENT));
-		registerReceiver(receiver, new IntentFilter(ConnectionConstants.STATE_CHANGE_INTENT));
+		registerReceiver();
 
 		bts = BluetoothServer.getInstance(this);
 
@@ -239,6 +237,21 @@ public class GameboardActivity extends Activity {
 		}
 
 		super.onDestroy();
+	}
+
+	public void registerReceiver() {
+		// Register the receiver for message/state change intents
+		registerReceiver(receiver, new IntentFilter(ConnectionConstants.MESSAGE_RX_INTENT));
+		registerReceiver(receiver, new IntentFilter(ConnectionConstants.STATE_CHANGE_INTENT));
+	}
+
+	public void unregisterReceiver() {
+		// Unregister the receiver
+		try {
+			unregisterReceiver(receiver);
+		} catch (IllegalArgumentException e) {
+			// We didn't get far enough to register the receiver
+		}
 	}
 
 	/*
