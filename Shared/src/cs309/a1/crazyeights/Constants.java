@@ -44,9 +44,19 @@ public class Constants {
 	public static final int PLAY_EIGHT_D = 12;
 	public static final int PLAY_EIGHT_H = 13;
 	public static final int PLAY_EIGHT_S = 14;
-
-
-
+	
+	public static final String LANGUAGE_US = "US"; 
+	public static final String LANGUAGE_GERMAN = "GERMAN"; 
+	public static final String LANGUAGE_FRANCE = "FRANCE"; 
+	public static final String LANGUAGE_CANADA = "CANADA"; 
+	
+	public static final String PREFERENCES = "PREFERENCES"; 
+	public static final String DIFFICULTY_OF_COMPUTERS = "DIFFICULTY OF COMPUTERS"; 
+	public static final String SOUND_EFFECTS = "SOUND EFFECTS"; 
+	public static final String SPEECH_VOLUME = "SPEECH VOLUME"; 
+	public static final String LANGUAGE = "LANGUAGE"; 
+	public static final String NUMBER_OF_COMPUTERS = "NUMBER OF COMPUTERS";
+	
 	/**
 	 * the time you wait in between computer turns
 	 */

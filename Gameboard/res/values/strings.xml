@@ -29,6 +29,24 @@ To use this application properly, download the application titled “Crazy Eight
     
     <!-- Preferences Activity -->
     <string name="preferencesActivityTitle">Preferences</string>
+    <string name="Volume">Game Volume</string>
+	<string name="soundEffects">Sound Effects</string>
+	<string name="SpeechVolume">Speech Volume</string>
+	<string name="NumComputers">Maximum Number of Computer Players</string>
+	<string name="one">1</string>
+	<string name="two">2</string>
+	<string name="three">3</string>
+	<string name="four">4</string>
+	<string name="Easy">Easy</string>
+	<string name="Medium">Medium</string>
+	<string name="Hard">Hard</string>
+	<string name="difficultyComputers">Difficulty of Computers</string>
+	<string name="lang">Language</string>
+	<string name="langCanada">Canada</string>
+	<string name="langUS">US</string>
+	<string name="langFrance">France</string>
+	<string name="langGerman">German</string>
+	<string name="ok">OK</string>
     
     <!-- Game Results Activity -->
     <string name="gameResultsTitle">Game Over</string>
