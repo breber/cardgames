@@ -22,6 +22,7 @@ public class Constants {
 	public static final String ID = "id";
 	public static final String MESSAGE_TYPE = "messagetype";
 	public static final String TURN = "isturn";
+	public static final String PLAYER_NAME = "playername";
 
 	public static final int GET_PLAYER_NAME = "getPlayerName".hashCode();
 
@@ -44,7 +45,7 @@ public class Constants {
 	public static final int PLAY_EIGHT_H = 12;
 	public static final int PLAY_EIGHT_S = 13;
 
-	public static final String PLAYER_NAME = "playername";
+
 
 	/**
 	 * the time you wait in between computer turns

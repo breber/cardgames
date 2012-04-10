@@ -209,7 +209,8 @@ public class CrazyEightsPlayerController implements PlayerController {
 					JSONArray arr = new JSONArray(object);
 					JSONObject refreshInfo = arr.getJSONObject(0);
 					isTurn = refreshInfo.getBoolean(Constants.TURN);
-					// if add more refresh info add more here
+					playerName = refreshInfo.getString(Constants.PLAYER_NAME);
+					// add more refresh info here
 
 					playerContext.removeAllCards();
 

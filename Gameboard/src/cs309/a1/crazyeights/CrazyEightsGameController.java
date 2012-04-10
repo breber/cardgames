@@ -425,6 +425,7 @@ public class CrazyEightsGameController implements GameController {
 				JSONArray arr = new JSONArray();
 				JSONObject refreshInfo = new JSONObject();
 				refreshInfo.put(Constants.TURN, pTurn.equals(p));
+				refreshInfo.put(Constants.PLAYER_NAME, p.getName());
 				// Maybe add more refresh info here
 
 				arr.put(refreshInfo);
