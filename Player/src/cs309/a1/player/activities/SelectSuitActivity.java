@@ -71,6 +71,8 @@ public class SelectSuitActivity extends Activity{
 
 	@Override
 	public void onBackPressed() {
+		setResult(RESULT_OK);
+		finish();
 		// Do nothing. They have to choose a new suit
 	}
 }

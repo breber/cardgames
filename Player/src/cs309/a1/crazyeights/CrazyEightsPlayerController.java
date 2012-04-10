@@ -4,7 +4,6 @@ import static cs309.a1.crazyeights.Constants.CARD_DRAWN;
 import static cs309.a1.crazyeights.Constants.ID;
 import static cs309.a1.crazyeights.Constants.IS_TURN;
 import static cs309.a1.crazyeights.Constants.LOSER;
-import static cs309.a1.crazyeights.Constants.PAUSE;
 import static cs309.a1.crazyeights.Constants.REFRESH;
 import static cs309.a1.crazyeights.Constants.SETUP;
 import static cs309.a1.crazyeights.Constants.SUIT;
@@ -17,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -27,7 +27,6 @@ import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.Toast;
 import cs309.a1.player.activities.GameResultsActivity;
-import cs309.a1.player.activities.PauseMenuActivity;
 import cs309.a1.player.activities.SelectSuitActivity;
 import cs309.a1.player.activities.ShowCardsActivity;
 import cs309.a1.shared.Card;
@@ -303,6 +302,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	 */
 	public void handleActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CHOOSE_SUIT) {
+			boolean isSuitChosen = true;
 			switch (resultCode) {
 			case Constants.SUIT_CLUBS:
 				connection.write(Constants.PLAY_EIGHT_C, cardSelected);
@@ -316,17 +316,23 @@ public class CrazyEightsPlayerController implements PlayerController {
 			case Constants.SUIT_SPADES:
 				connection.write(Constants.PLAY_EIGHT_S, cardSelected);
 				break;
+			case Activity.RESULT_OK:
+				isSuitChosen = false;
+				break;
 			}
-			playerContext.removeFromHand(cardSelected.getIdNum());
-			if (Util.isDebugBuild()) {
-				Toast.makeText(playerContext.getApplicationContext(),
-						"Played: " + cardSelected.getSuit() + " "
-								+ cardSelected.getValue(), 100);
+			
+			if(isSuitChosen){
+				playerContext.removeFromHand(cardSelected.getIdNum());
+				if (Util.isDebugBuild()) {
+					Toast.makeText(playerContext.getApplicationContext(),
+							"Played: " + cardSelected.getSuit() + " "
+									+ cardSelected.getValue(), 100);
+				}
+	
+				cardSelected = null;
+				setButtonsEnabled(false);
+				isTurn = false;
 			}
-
-			cardSelected = null;
-			setButtonsEnabled(false);
-			isTurn = false;
 		} 
 	}
 
