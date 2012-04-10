@@ -1,6 +1,6 @@
 package cs309.a1.crazyeights.test;
 
-import static cs309.a1.crazyeights.Constants.NUMBER_OF_CARDS_PER_HAND;
+import static cs309.a1.crazyeights.C8Constants.NUMBER_OF_CARDS_PER_HAND;
 import static cs309.a1.shared.CardGame.CRAZY_EIGHTS;
 import static org.junit.Assert.assertEquals;
 
@@ -355,7 +355,7 @@ public class CrazyEightsTabletGameTest {
 		
 		game.shuffleDiscardPile();
 		assertEquals("Testing size of the discard pile", 1, game.getDiscardPile().size());
-		assertEquals("Testing size of the shuffled deck", 40, game.getShuffledDeck().size());
+		assertEquals("Testing size of the shuffled deck", 43, game.getShuffledDeck().size());
 		
 	}
 	
@@ -400,11 +400,11 @@ public class CrazyEightsTabletGameTest {
 		
 		game.dropPlayer("Mac Address");
 		
-		assertEquals("Testing size of players hand", 0, p.getCards().size());
-		assertEquals("Testing size of players hand", 0, p.getNumCards());
-		assertEquals("Testing size of the discard pile", 6, game.getDiscardPile().size());
+		assertEquals("Testing size of players hand", 5, p.getCards().size());
+		assertEquals("Testing size of players hand", 5, p.getNumCards());
+		assertEquals("Testing size of the discard pile", 1, game.getDiscardPile().size());
 		assertEquals("Testing size of the shuffled deck", 43, game.getShuffledDeck().size());
-		assertEquals("Testing size of players", 1, game.getPlayers().size());		
+		assertEquals("Testing size of players", 2, game.getPlayers().size());		
 	}
 	
 	@Test
@@ -436,7 +436,7 @@ public class CrazyEightsTabletGameTest {
 		
 		game.dropPlayer("Mac Address");
 		
-		assertEquals("Testing number of players", 1, game.getNumPlayers());
+		assertEquals("Testing number of players", 2, game.getNumPlayers());
 		
 	}
 	
