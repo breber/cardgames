@@ -288,16 +288,10 @@ public class CrazyEightsTabletGame implements Game {
 		}
 
 		if (p != null) {
-			List<Card> cards = p.getCards();
-
-			//player is in the list of current players
-			players.remove(p);
-
-			//add all of the players cards to the discard pile
-			discardPile.addAll(cards);
-
-			//remove all of the cards from the players hand and set the number of cards to 0
-			cards.removeAll(cards);
+			p.setIsComputer(true);
+			
+			//TODO get diff from preferences
+			p.setComputerDifficulty(0);
 		} else {
 			if (Util.isDebugBuild()) {
 				Log.d(TAG, "dropPlayer: couldn't find player with id: " + playerMacAddress);
