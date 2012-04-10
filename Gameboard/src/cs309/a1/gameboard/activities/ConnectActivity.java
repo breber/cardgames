@@ -25,10 +25,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-import cs309.a1.crazyeights.CrazyEightsTabletGame;
 import cs309.a1.gameboard.R;
 import cs309.a1.shared.Constants;
 import cs309.a1.shared.Game;
+import cs309.a1.shared.GameUtil;
 import cs309.a1.shared.Player;
 import cs309.a1.shared.TextView;
 import cs309.a1.shared.Util;
@@ -191,8 +191,8 @@ public class ConnectActivity extends Activity {
 			if (Util.isDebugBuild()) {
 				Log.d(TAG, "Reconnecting...");
 			}
-			// TODO: if crazy eights?
-			currentGame = CrazyEightsTabletGame.getInstance();
+
+			currentGame = GameUtil.getGameInstance();
 
 			// First, we get the list of players from the game
 			List<Player> players = currentGame.getPlayers();

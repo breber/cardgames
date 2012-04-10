@@ -12,10 +12,10 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import cs309.a1.shared.Constants;
 import cs309.a1.crazyeights.CrazyEightsPlayerController;
 import cs309.a1.player.R;
 import cs309.a1.shared.Card;
+import cs309.a1.shared.Constants;
 import cs309.a1.shared.PlayerController;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothClient;
@@ -84,14 +84,14 @@ public class ShowCardsActivity extends Activity {
 					Intent i = new Intent(ShowCardsActivity.this, ConnectionFailActivity.class);
 					startActivityForResult(i, DISCONNECTED);
 				}
-				
+
 				//TODO these constants should be in global
 			}else if (messageType == Constants.PAUSE){
 				Intent pause = new Intent(ShowCardsActivity.this, PauseMenuActivity.class);
 				ShowCardsActivity.this.startActivityForResult(pause, PAUSE_GAME);
 			} else if (messageType == Constants.END_GAME){
 				ShowCardsActivity.this.setResult(RESULT_OK);
-				finish();			
+				finish();
 			} else {
 				// Give it up to the player controller to deal with
 				playerController.handleBroadcastReceive(context, intent);
@@ -126,6 +126,7 @@ public class ShowCardsActivity extends Activity {
 		Button draw = (Button) findViewById(R.id.btDrawCard);
 
 		// TODO: if crazyeights
+		//		playerController = GameUtil.getPlayerControllerInstance(this, play, draw, connection, cardHand);
 		playerController = new CrazyEightsPlayerController(this, play, draw, connection, cardHand);
 
 		// Start the connection screen from here so that we can register the message receive
@@ -203,7 +204,7 @@ public class ShowCardsActivity extends Activity {
 
 	/**
 	 * Adds and displays a card in the player's hand
-	 * 
+	 *
 	 * @param newCard Card to be added to the hand
 	 */
 	public void addCard(Card newCard) {
@@ -239,7 +240,7 @@ public class ShowCardsActivity extends Activity {
 	/**
 	 * Set the selected card. This will highlight the selected
 	 * card, and clear the highlight from any other cards.
-	 * 
+	 *
 	 * @param cardId - the currently selected card
 	 */
 	public void setSelected(int cardId) {
@@ -269,7 +270,7 @@ public class ShowCardsActivity extends Activity {
 
 	/**
 	 * Removes card from player's hand
-	 * 
+	 *
 	 * @param idNum ID number of the card to be removed
 	 */
 	public void removeFromHand(int idNum) {

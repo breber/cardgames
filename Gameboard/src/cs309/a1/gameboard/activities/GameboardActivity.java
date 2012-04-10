@@ -23,11 +23,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cs309.a1.crazyeights.CrazyEightsGameController;
-import cs309.a1.crazyeights.CrazyEightsTabletGame;
 import cs309.a1.gameboard.R;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.Constants;
 import cs309.a1.shared.GameController;
+import cs309.a1.shared.GameUtil;
 import cs309.a1.shared.Player;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
@@ -230,6 +230,8 @@ public class GameboardActivity extends Activity {
 		ImageButton refresh = (ImageButton) findViewById(R.id.gameboard_refresh);
 
 		// the GameController now handles the setup of the game.
+		// TODO: crazy eights
+		//		gameController = GameUtil.getGameControllerInstance(this, bts, player, refresh);
 		gameController = new CrazyEightsGameController(this, bts, players, refresh);
 
 		// Draw the names from the Game on the gameboard
@@ -349,9 +351,7 @@ public class GameboardActivity extends Activity {
 	 * This data is pulled from the Game instance
 	 */
 	public void updateNamesOnGameboard() {
-		// TODO: if crazy eights? i am wondering if we want to just make an instance
-		// of Game in this class since we use it a couple times...
-		List<Player> players = CrazyEightsTabletGame.getInstance().getPlayers();
+		List<Player> players = GameUtil.getGameInstance().getPlayers();
 		for (int i = 0; i < 4; i++) {
 			if (i < players.size()) {
 				playerTextViews[i].setVisibility(View.VISIBLE);

@@ -69,6 +69,9 @@ public class SelectSuitActivity extends Activity{
 		});
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onBackPressed()
+	 */
 	@Override
 	public void onBackPressed() {
 		setResult(RESULT_OK);
