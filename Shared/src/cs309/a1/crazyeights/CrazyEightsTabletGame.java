@@ -1,6 +1,6 @@
 package cs309.a1.crazyeights;
 
-import static cs309.a1.crazyeights.Constants.NUMBER_OF_CARDS_PER_HAND;
+import static cs309.a1.crazyeights.C8Constants.NUMBER_OF_CARDS_PER_HAND;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,15 +1,15 @@
 package cs309.a1.gameboard.activities;
 
-import static cs309.a1.crazyeights.Constants.DIFFICULTY_OF_COMPUTERS;
-import static cs309.a1.crazyeights.Constants.LANGUAGE;
-import static cs309.a1.crazyeights.Constants.LANGUAGE_CANADA;
-import static cs309.a1.crazyeights.Constants.LANGUAGE_FRANCE;
-import static cs309.a1.crazyeights.Constants.LANGUAGE_GERMAN;
-import static cs309.a1.crazyeights.Constants.LANGUAGE_US;
-import static cs309.a1.crazyeights.Constants.NUMBER_OF_COMPUTERS;
-import static cs309.a1.crazyeights.Constants.PREFERENCES;
-import static cs309.a1.crazyeights.Constants.SOUND_EFFECTS;
-import static cs309.a1.crazyeights.Constants.SPEECH_VOLUME;
+import static cs309.a1.shared.Constants.DIFFICULTY_OF_COMPUTERS;
+import static cs309.a1.shared.Constants.LANGUAGE;
+import static cs309.a1.shared.Constants.LANGUAGE_CANADA;
+import static cs309.a1.shared.Constants.LANGUAGE_FRANCE;
+import static cs309.a1.shared.Constants.LANGUAGE_GERMAN;
+import static cs309.a1.shared.Constants.LANGUAGE_US;
+import static cs309.a1.shared.Constants.NUMBER_OF_COMPUTERS;
+import static cs309.a1.shared.Constants.PREFERENCES;
+import static cs309.a1.shared.Constants.SOUND_EFFECTS;
+import static cs309.a1.shared.Constants.SPEECH_VOLUME;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -196,10 +196,10 @@ public class PreferencesActivity extends Activity{
 				setResult(RESULT_OK);
 				
 				//put the new preferences in the shared preferences
-				prefsEditor.putBoolean(SOUND_EFFECTS, soundEffects.isChecked());
 				prefsEditor.putBoolean(SPEECH_VOLUME, speechVolume.isChecked());
+				prefsEditor.putBoolean(SOUND_EFFECTS, soundEffects.isChecked());
 				
-				//set number of computers based on the radio button checked
+				//set number of computers				//set number of computers based on the radio button checked
 				//update the shared preferences with the value checked by the user
 				if(myOption1.isActivated() == true)
 					prefsEditor.putInt(NUMBER_OF_COMPUTERS, 1);

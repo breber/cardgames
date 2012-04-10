@@ -1,14 +1,14 @@
 package cs309.a1.crazyeights;
 
-import static cs309.a1.crazyeights.Constants.CARD_DRAWN;
-import static cs309.a1.crazyeights.Constants.ID;
-import static cs309.a1.crazyeights.Constants.IS_TURN;
-import static cs309.a1.crazyeights.Constants.LOSER;
-import static cs309.a1.crazyeights.Constants.REFRESH;
-import static cs309.a1.crazyeights.Constants.SETUP;
-import static cs309.a1.crazyeights.Constants.SUIT;
-import static cs309.a1.crazyeights.Constants.VALUE;
-import static cs309.a1.crazyeights.Constants.WINNER;
+import static cs309.a1.shared.Constants.CARD_DRAWN;
+import static cs309.a1.shared.Constants.ID;
+import static cs309.a1.shared.Constants.IS_TURN;
+import static cs309.a1.shared.Constants.LOSER;
+import static cs309.a1.shared.Constants.REFRESH;
+import static cs309.a1.shared.Constants.SETUP;
+import static cs309.a1.shared.Constants.SUIT;
+import static cs309.a1.shared.Constants.VALUE;
+import static cs309.a1.shared.Constants.WINNER;
 
 import java.util.ArrayList;
 
@@ -31,6 +31,7 @@ import cs309.a1.player.activities.SelectSuitActivity;
 import cs309.a1.player.activities.ShowCardsActivity;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.CardTranslator;
+import cs309.a1.shared.Constants;
 import cs309.a1.shared.PlayerController;
 import cs309.a1.shared.Rules;
 import cs309.a1.shared.SoundManager;
@@ -313,16 +314,16 @@ public class CrazyEightsPlayerController implements PlayerController {
 			boolean isSuitChosen = true;
 			switch (resultCode) {
 			case Constants.SUIT_CLUBS:
-				connection.write(Constants.PLAY_EIGHT_C, cardSelected);
+				connection.write(C8Constants.PLAY_EIGHT_C, cardSelected);
 				break;
 			case Constants.SUIT_DIAMONDS:
-				connection.write(Constants.PLAY_EIGHT_D, cardSelected);
+				connection.write(C8Constants.PLAY_EIGHT_D, cardSelected);
 				break;
 			case Constants.SUIT_HEARTS:
-				connection.write(Constants.PLAY_EIGHT_H, cardSelected);
+				connection.write(C8Constants.PLAY_EIGHT_H, cardSelected);
 				break;
 			case Constants.SUIT_SPADES:
-				connection.write(Constants.PLAY_EIGHT_S, cardSelected);
+				connection.write(C8Constants.PLAY_EIGHT_S, cardSelected);
 				break;
 			case Activity.RESULT_OK:
 				isSuitChosen = false;

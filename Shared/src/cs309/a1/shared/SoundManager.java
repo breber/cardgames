@@ -1,9 +1,22 @@
 package cs309.a1.shared;
 
+import static cs309.a1.shared.Constants.PREFERENCES;
+import static cs309.a1.shared.Constants.SOUND_EFFECTS;
+import static cs309.a1.shared.Constants.SPEECH_VOLUME;
+import static cs309.a1.shared.Constants.DIFFICULTY_OF_COMPUTERS;
+import static cs309.a1.shared.Constants.LANGUAGE;
+import static cs309.a1.shared.Constants.LANGUAGE_CANADA;
+import static cs309.a1.shared.Constants.LANGUAGE_FRANCE;
+import static cs309.a1.shared.Constants.LANGUAGE_GERMAN;
+import static cs309.a1.shared.Constants.LANGUAGE_US;
+import static cs309.a1.shared.Constants.LANGUAGE_UK;
+import static cs309.a1.shared.Constants.NUMBER_OF_COMPUTERS;
+
 import java.util.Locale;
 import java.util.Random;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -39,6 +52,12 @@ public class SoundManager {
 	private static TextToSpeech tts;
 
 	boolean isTTSInitialized;
+	
+	private boolean isSoundFXOn = true;
+	
+	private boolean isTTSOn = true;
+	
+	private SharedPreferences sharedPreferences;
 
 	//constants for SoundManager
 
@@ -64,6 +83,10 @@ public class SoundManager {
 	 * @param context
 	 */
 	public SoundManager(Context context){
+		sharedPreferences = context.getSharedPreferences(PREFERENCES, Context.MODE_WORLD_WRITEABLE);
+		isSoundFXOn = sharedPreferences.getBoolean(SOUND_EFFECTS, true);
+		isTTSOn = sharedPreferences.getBoolean(SPEECH_VOLUME, true);
+		
 		soundpool = new SoundPool(5, AudioManager.STREAM_MUSIC, 100);
 		
 		//draw card sounds
@@ -103,34 +126,42 @@ public class SoundManager {
 	 * This will play the test sound
 	 */
 	public void playTestSound(){
-		soundpool.play(testSound, 1, 1, 1, 0, 1);
+		if(isSoundFXOn){
+			soundpool.play(testSound, 1, 1, 1, 0, 1);
+		}
 	}
 	
 	/**
 	 * plays the sound of a card being drawn. plays various sounds.
 	 */
 	public void drawCardSound(){
-		Random r1 = new Random();
-		int i = Math.abs(r1.nextInt() % 7);
-		soundpool.play(drawCardSounds[i], 1, 1, 1, 0, 1);
+		if(isSoundFXOn){
+			Random r1 = new Random();
+			int i = Math.abs(r1.nextInt() % 7);
+			soundpool.play(drawCardSounds[i], 1, 1, 1, 0, 1);
+		}
 	}
 	
 	/**
 	 * plays the sound of a card being played. plays various sounds.
 	 */
 	public void playCardSound(){
-		Random r1 = new Random();
-		int i = Math.abs(r1.nextInt() % 5);
-		soundpool.play(playCardSounds[i], 1, 1, 1, 0, 1);
+		if(isSoundFXOn){
+			Random r1 = new Random();
+			int i = Math.abs(r1.nextInt() % 5);
+			soundpool.play(playCardSounds[i], 1, 1, 1, 0, 1);
+		}
 	}
 	
 	/**
 	 * plays the sound of a card being played. plays various sounds.
 	 */
 	public void shuffleCardsSound(){
-		Random r1 = new Random();
-		int i = Math.abs(r1.nextInt() % 2);
-		soundpool.play(shuffleCardSounds[i], 1, 1, 1, 0, 1);
+		if(isSoundFXOn){
+			Random r1 = new Random();
+			int i = Math.abs(r1.nextInt() % 2);
+			soundpool.play(shuffleCardSounds[i], 1, 1, 1, 0, 1);			
+		}
 	}
 
 	public void playTesttts(){
@@ -144,7 +175,7 @@ public class SoundManager {
 	 * this string will be read aloud
 	 */
 	public void speak(String words){
-		if(isTTSInitialized){
+		if(isTTSInitialized && isTTSOn){
 			tts.speak(words, TextToSpeech.QUEUE_FLUSH, null);
 		}
 	}
@@ -168,12 +199,14 @@ public class SoundManager {
 	/**
 	 * This will play the theme music
 	 */
-	public static void playMusic(){
+	public void playMusic(){
 		//probably only do this on Tablet? since it would be really annoying to have
 		//multiple songs going on
 		//also this could be used to create sound effects for signaling whose turn it is.
-		mediaplayer.seekTo(0);
-		mediaplayer.start();
+		if(isSoundFXOn){
+			mediaplayer.seekTo(0);
+			mediaplayer.start();			
+		}
 	}
 
 	/**
@@ -201,9 +234,21 @@ public class SoundManager {
 		@Override
 		public void onInit(int status) {
 			if(status == TextToSpeech.SUCCESS){
-				//int langResult = tts.setLanguage(Locale.US);
-				int langResult = tts.setLanguage(Locale.CANADA_FRENCH);
-				//TODO get from preferences change locale to other things? like uk, french, german?
+				String lang = sharedPreferences.getString(LANGUAGE, LANGUAGE_US);
+				int langResult=-1;
+				
+				if(lang.equals(LANGUAGE_US)) {
+					langResult = tts.setLanguage(Locale.US);
+				} else if (lang.equals(LANGUAGE_GERMAN)) {
+					langResult = tts.setLanguage(Locale.GERMAN);
+				}  else if (lang.equals(LANGUAGE_FRANCE)) {
+					langResult = tts.setLanguage(Locale.FRANCE);
+				} else if (lang.equals(LANGUAGE_CANADA)) {
+					langResult = tts.setLanguage(Locale.CANADA);
+				} else if (lang.equals(LANGUAGE_UK)) {
+					langResult = tts.setLanguage(Locale.UK);
+				} 
+		
 				if(langResult == TextToSpeech.LANG_MISSING_DATA || langResult == TextToSpeech.LANG_NOT_SUPPORTED){
 					if (Util.isDebugBuild()) {
 						Log.d(TAG, "Language not available");

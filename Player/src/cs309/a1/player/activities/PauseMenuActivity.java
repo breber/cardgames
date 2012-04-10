@@ -6,8 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import cs309.a1.crazyeights.Constants;
 import cs309.a1.player.R;
+import cs309.a1.shared.Constants;
 import cs309.a1.shared.TextView;
 import cs309.a1.shared.connection.ConnectionConstants;
 

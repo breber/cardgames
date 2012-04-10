@@ -1,8 +1,8 @@
 package cs309.a1.crazyeights;
 
-import cs309.a1.shared.Rules;
 import cs309.a1.shared.Card;
-import cs309.a1.crazyeights.Constants;
+import cs309.a1.shared.Constants;
+import cs309.a1.shared.Rules;
 
 public class CrazyEightGameRules implements Rules{
 	

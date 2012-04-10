@@ -3,7 +3,7 @@ package cs309.a1.gameboard.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Toast;
-import cs309.a1.crazyeights.Constants;
+import cs309.a1.shared.Constants;
 import cs309.a1.shared.Util;
 
 /**

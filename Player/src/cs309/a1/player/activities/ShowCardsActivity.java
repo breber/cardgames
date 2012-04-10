@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import cs309.a1.crazyeights.Constants;
+import cs309.a1.shared.Constants;
 import cs309.a1.crazyeights.CrazyEightsPlayerController;
 import cs309.a1.player.R;
 import cs309.a1.shared.Card;

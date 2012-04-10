@@ -1,7 +1,7 @@
 package cs309.a1.player.activities;
 
-import static cs309.a1.crazyeights.Constants.GET_PLAYER_NAME;
-import static cs309.a1.crazyeights.Constants.PLAYER_NAME;
+import static cs309.a1.shared.Constants.GET_PLAYER_NAME;
+import static cs309.a1.shared.Constants.PLAYER_NAME;
 
 import org.json.JSONException;
 import org.json.JSONObject;

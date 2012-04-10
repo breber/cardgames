@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -21,7 +22,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import cs309.a1.crazyeights.Constants;
+import cs309.a1.shared.Constants;
 import cs309.a1.crazyeights.CrazyEightsGameController;
 import cs309.a1.crazyeights.CrazyEightsTabletGame;
 import cs309.a1.gameboard.R;
@@ -113,6 +114,8 @@ public class GameboardActivity extends Activity {
 	 * This is the TextViews for all the player names
 	 */
 	private TextView[] playerTextViews = new TextView[4];
+	
+	private SharedPreferences sharedPreferences;
 
 	/**
 	 * The BroadcastReceiver for handling messages from the Bluetooth connection
@@ -205,8 +208,7 @@ public class GameboardActivity extends Activity {
 			}
 		}
 
-		// TODO get from preferences to make users able to choose number of computers
-		int numComputers = 3;
+		int numComputers = sharedPreferences.getInt(Constants.NUMBER_OF_COMPUTERS, 1);
 		for (int j = i; j < 4 && (j - i < numComputers); j++) {
 			Player p = new Player();
 			p.setName("Computer " + (j - i + 1));
@@ -215,8 +217,6 @@ public class GameboardActivity extends Activity {
 			p.setIsComputer(true);
 			p.setComputerDifficulty(0);
 			players.add(p);
-			playerTextViews[j].setVisibility(View.VISIBLE);
-			playerTextViews[j].setText(p.getName());
 		}
 
 		ImageButton refresh = (ImageButton) findViewById(R.id.gameboard_refresh);

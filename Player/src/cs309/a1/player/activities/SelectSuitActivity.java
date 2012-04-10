@@ -1,9 +1,9 @@
 package cs309.a1.player.activities;
 
-import static cs309.a1.crazyeights.Constants.SUIT_CLUBS;
-import static cs309.a1.crazyeights.Constants.SUIT_DIAMONDS;
-import static cs309.a1.crazyeights.Constants.SUIT_HEARTS;
-import static cs309.a1.crazyeights.Constants.SUIT_SPADES;
+import static cs309.a1.shared.Constants.SUIT_CLUBS;
+import static cs309.a1.shared.Constants.SUIT_DIAMONDS;
+import static cs309.a1.shared.Constants.SUIT_HEARTS;
+import static cs309.a1.shared.Constants.SUIT_SPADES;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;

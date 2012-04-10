@@ -1,10 +1,10 @@
 package cs309.a1.crazyeights;
 
-import static cs309.a1.crazyeights.Constants.ID;
-import static cs309.a1.crazyeights.Constants.NUMBER_OF_CARDS_PER_HAND;
-import static cs309.a1.crazyeights.Constants.RESOURCE_ID;
-import static cs309.a1.crazyeights.Constants.SUIT;
-import static cs309.a1.crazyeights.Constants.VALUE;
+import static cs309.a1.shared.Constants.ID;
+import static cs309.a1.crazyeights.C8Constants.NUMBER_OF_CARDS_PER_HAND;
+import static cs309.a1.shared.Constants.RESOURCE_ID;
+import static cs309.a1.shared.Constants.SUIT;
+import static cs309.a1.shared.Constants.VALUE;
 import static cs309.a1.shared.CardGame.CRAZY_EIGHTS;
 
 import java.util.List;
@@ -28,6 +28,7 @@ import cs309.a1.gameboard.activities.GameboardActivity;
 import cs309.a1.gameboard.activities.PlayComputerTurnActivity;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.CardTranslator;
+import cs309.a1.shared.Constants;
 import cs309.a1.shared.Deck;
 import cs309.a1.shared.Game;
 import cs309.a1.shared.GameController;
@@ -206,22 +207,22 @@ public class CrazyEightsGameController implements GameController {
 				discardReceivedCard(object);
 				advanceTurn();
 				break;
-			case Constants.PLAY_EIGHT_C:
+			case C8Constants.PLAY_EIGHT_C:
 				suitChosen = Constants.SUIT_CLUBS;
 				discardReceivedCard(object);
 				advanceTurn();
 				break;
-			case Constants.PLAY_EIGHT_D:
+			case C8Constants.PLAY_EIGHT_D:
 				suitChosen = Constants.SUIT_DIAMONDS;
 				discardReceivedCard(object);
 				advanceTurn();
 				break;
-			case Constants.PLAY_EIGHT_H:
+			case C8Constants.PLAY_EIGHT_H:
 				suitChosen = Constants.SUIT_HEARTS;
 				discardReceivedCard(object);
 				advanceTurn();
 				break;
-			case Constants.PLAY_EIGHT_S:
+			case C8Constants.PLAY_EIGHT_S:
 				suitChosen = Constants.SUIT_SPADES;
 				discardReceivedCard(object);
 				advanceTurn();
@@ -490,7 +491,7 @@ public class CrazyEightsGameController implements GameController {
 				}
 			}
 			if (cardSelected != null && cardSelected.getValue() == 7) {
-				int[] suits = new int[4];
+				int[] suits = new int[5];
 				int maxSuitIndex = 0;
 				for (Card c : cards) {
 					if (!c.equals(cardSelected) ) {

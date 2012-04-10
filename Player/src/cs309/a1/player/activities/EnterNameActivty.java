@@ -1,6 +1,6 @@
 package cs309.a1.player.activities;
 
-import static cs309.a1.crazyeights.Constants.PLAYER_NAME;
+import static cs309.a1.shared.Constants.PLAYER_NAME;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

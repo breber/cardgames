@@ -1,9 +1,9 @@
 package cs309.a1.shared;
 
-import static cs309.a1.crazyeights.Constants.ID;
-import static cs309.a1.crazyeights.Constants.RESOURCE_ID;
-import static cs309.a1.crazyeights.Constants.SUIT;
-import static cs309.a1.crazyeights.Constants.VALUE;
+import static cs309.a1.shared.Constants.ID;
+import static cs309.a1.shared.Constants.RESOURCE_ID;
+import static cs309.a1.shared.Constants.SUIT;
+import static cs309.a1.shared.Constants.VALUE;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package cs309.a1.gameboard.activities;
 
-import static cs309.a1.crazyeights.Constants.PLAYER_NAME;
+import static cs309.a1.shared.Constants.PLAYER_NAME;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,9 +25,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-import cs309.a1.crazyeights.Constants;
 import cs309.a1.crazyeights.CrazyEightsTabletGame;
 import cs309.a1.gameboard.R;
+import cs309.a1.shared.Constants;
 import cs309.a1.shared.Game;
 import cs309.a1.shared.Player;
 import cs309.a1.shared.TextView;
