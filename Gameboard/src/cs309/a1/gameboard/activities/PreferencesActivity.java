@@ -28,13 +28,45 @@ import android.widget.Toast;
 import cs309.a1.gameboard.R;
 import cs309.a1.shared.Util;
 
+/**
+ * This class will be used as an activity for the preferences screen. Within this activity
+ * a user will be able to set up their options for the current game including chossing the
+ * locale, number of computer players, the difficult of the AI players, volume control and 
+ * options to enable and disable sounds.
+ */
 public class PreferencesActivity extends Activity{
 	
+	/**
+	 * An AudioManager object to be used for controlling the game volume
+	 */
 	private AudioManager audioManager;
+	
+	/**
+	 * A SharedPreferences object to get the preferences set by the user
+	 */
 	private SharedPreferences sharedPref;
+	
+	/**
+	 * A SharedPreferences editor for changing the game preferences based on user input
+	 */
 	private SharedPreferences.Editor prefsEditor;
+	
+	/**
+	 * Radio buttons to be used when selecting the number of computer players in the game
+	 * A user has the option to select 1-4
+	 */
 	private RadioButton myOption1, myOption2, myOption3, myOption4;
+	
+	/**
+	 * Radio buttons to be used when selecting the difficulty of the computer players
+	 * Users will be able to select Easy, Medium and Hard
+	 */
 	private RadioButton myOptionEasy, myOptionMedium, myOptionHard;
+	
+	/**
+	 * Radio buttons to select the locale of the text to speech object
+	 * Users will have a variety of locale options to select currently 1-5
+	 */
 	private RadioButton myOptionLang1, myOptionLang2, myOptionLang3, myOptionLang4, myOptionLang5;
 	
 	/* (non-Javadoc)
