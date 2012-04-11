@@ -355,7 +355,12 @@ public class GameboardActivity extends Activity {
 		for (int i = 0; i < 4; i++) {
 			if (i < players.size()) {
 				playerTextViews[i].setVisibility(View.VISIBLE);
-				playerTextViews[i].setText(players.get(i).getName());
+				int blankSpaces = (Constants.NAME_MAX_CHARS - players.get(i).getName().length())/2;
+				String spaces = "";
+				for (int x = 0; x < blankSpaces; x++) {
+					spaces += " ";
+				}
+				playerTextViews[i].setText(spaces + players.get(i).getName() + spaces);
 			} else {
 				playerTextViews[i].setVisibility(View.INVISIBLE);
 			}
