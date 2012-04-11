@@ -20,7 +20,7 @@ import cs309.a1.shared.activities.DeviceListActivity;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.connection.ConnectionClient;
 import cs309.a1.shared.connection.ConnectionConstants;
-import cs309.a1.shared.connection.ConnectionUtil;
+import cs309.a1.shared.connection.ConnectionFactory;
 
 /**
  * The Activity that initiates the device list, and then
@@ -157,7 +157,7 @@ public class ConnectActivity extends Activity {
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		ConnectionClient client = ConnectionUtil.getClientInstance(this);
+		ConnectionClient client = ConnectionFactory.getClientInstance(this);
 
 		if (requestCode == DEVICE_LIST_RESULT && resultCode != RESULT_CANCELED) {
 			// We are coming back from the device list, and it wasn't cancelled, so

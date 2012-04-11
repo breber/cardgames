@@ -2,7 +2,11 @@ package cs309.a1.shared;
 
 import java.util.List;
 
-
+/**
+ * The interface that will be implemented for each game this
+ * application supports. It provides methods for starting a
+ * game, drawing cards, shuffling etc.
+ */
 public interface Game {
 
 	/**

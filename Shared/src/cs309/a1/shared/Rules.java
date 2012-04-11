@@ -1,9 +1,11 @@
 package cs309.a1.shared;
 
-import cs309.a1.shared.Card;
-
+/**
+ * An interface that defines which card can be played next
+ * based on the current top discard pile card
+ */
 public interface Rules {
-	
+
 	/**
 	 * This method will check to see if a play is valid for the current game type
 	 * 
@@ -12,5 +14,5 @@ public interface Rules {
 	 * @return true if the play is valid and false otherwise
 	 */
 	public boolean checkCard(Card cardPlayed, Card onDiscard);
-	
+
 }

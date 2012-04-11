@@ -36,7 +36,6 @@ import cs309.a1.shared.Player;
 import cs309.a1.shared.Rules;
 import cs309.a1.shared.SoundManager;
 import cs309.a1.shared.Util;
-import cs309.a1.shared.bluetooth.BluetoothServer;
 import cs309.a1.shared.connection.ConnectionConstants;
 import cs309.a1.shared.connection.ConnectionServer;
 
@@ -123,15 +122,15 @@ public class CrazyEightsGameController implements GameController {
 	 * This will initialize a CrazyEightsGameController
 	 *
 	 * @param context Context of the GameBoardActivity
-	 * @param btsGiven The BluetoothServer that will be used
+	 * @param connectionGiven The ConnectionServer that will be used
 	 * @param playersGiven The players that will be used in the game
 	 * @param refreshGiven The refresh button which will be handled by this
 	 *            GameController
 	 */
-	public CrazyEightsGameController(GameboardActivity context,	BluetoothServer btsGiven,
+	public CrazyEightsGameController(GameboardActivity context,	ConnectionServer connectionGiven,
 			List<Player> playersGiven, ImageButton refreshGiven) {
 		gameContext = context;
-		server = btsGiven;
+		server = connectionGiven;
 		players = playersGiven;
 		refreshButton = refreshGiven;
 

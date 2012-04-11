@@ -2,6 +2,11 @@ package cs309.a1.shared.connection;
 
 import java.util.List;
 
+/**
+ * A Server connection. This will manage connections of
+ * some sort with the many clients. The user will be able to connect,
+ * disconnect, send and receive messages through this interface.
+ */
 public interface ConnectionServer {
 
 	/**

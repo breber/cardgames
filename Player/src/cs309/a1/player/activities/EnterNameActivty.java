@@ -56,6 +56,9 @@ public class EnterNameActivty extends Activity {
 		});
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onBackPressed()
+	 */
 	@Override
 	public void onBackPressed() {
 		// They chose not to enter a name

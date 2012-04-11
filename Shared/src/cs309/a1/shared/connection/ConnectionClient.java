@@ -1,5 +1,10 @@
 package cs309.a1.shared.connection;
 
+/**
+ * A Client connection. This will manage a connection of
+ * some sort with the server. The user will be able to connect,
+ * disconnect, send and receive messages through this interface.
+ */
 public interface ConnectionClient {
 
 	/**

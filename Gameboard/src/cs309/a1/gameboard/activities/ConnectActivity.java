@@ -28,14 +28,14 @@ import android.widget.Toast;
 import cs309.a1.gameboard.R;
 import cs309.a1.shared.Constants;
 import cs309.a1.shared.Game;
-import cs309.a1.shared.GameUtil;
+import cs309.a1.shared.GameFactory;
 import cs309.a1.shared.Player;
 import cs309.a1.shared.TextView;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.connection.ConnectionConstants;
+import cs309.a1.shared.connection.ConnectionFactory;
 import cs309.a1.shared.connection.ConnectionServer;
-import cs309.a1.shared.connection.ConnectionUtil;
 
 /**
  * This Activity will show how many players are connected, and
@@ -182,7 +182,7 @@ public class ConnectActivity extends Activity {
 
 		// Get the BluetoothAdapter for doing operations with Bluetooth
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		mConnectionServer = ConnectionUtil.getServerInstance(this);
+		mConnectionServer = ConnectionFactory.getServerInstance(this);
 		isReconnectScreen = getIntent().getBooleanExtra(IS_RECONNECT, false);
 
 		// If this is a reconnect activity, we will have to update the players
@@ -192,7 +192,7 @@ public class ConnectActivity extends Activity {
 				Log.d(TAG, "Reconnecting...");
 			}
 
-			currentGame = GameUtil.getGameInstance();
+			currentGame = GameFactory.getGameInstance();
 
 			// First, we get the list of players from the game
 			List<Player> players = currentGame.getPlayers();

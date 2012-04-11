@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import cs309.a1.crazyeights.CrazyEightsCardTranslator;
 
+/**
+ * Represents a deck of cards
+ */
 public class Deck {
 
 	/**
@@ -12,12 +15,13 @@ public class Deck {
 	private ArrayList<Card> cardImages;
 
 	/**
-	 * game type
+	 * The type of game being played
 	 */
 	private CardGame gameName;
 
 	/**
 	 * Constructor to create a deck for the given card name
+	 * 
 	 * @param name the name of the card game based on the enum value
 	 */
 	public Deck(CardGame name) {

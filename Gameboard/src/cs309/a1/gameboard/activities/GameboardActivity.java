@@ -29,12 +29,13 @@ import cs309.a1.gameboard.R;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.Constants;
 import cs309.a1.shared.GameController;
-import cs309.a1.shared.GameUtil;
+import cs309.a1.shared.GameFactory;
 import cs309.a1.shared.Player;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.bluetooth.BluetoothServer;
 import cs309.a1.shared.connection.ConnectionConstants;
+import cs309.a1.shared.connection.ConnectionServer;
 
 public class GameboardActivity extends Activity {
 
@@ -66,9 +67,9 @@ public class GameboardActivity extends Activity {
 	private static final int DECLARE_WINNER = Math.abs("DECLARE_WINNER".hashCode());
 
 	/**
-	 * The BluetoothServer that sends and receives messages from other devices
+	 * The ConnectionServer that sends and receives messages from other devices
 	 */
-	private BluetoothServer bts;
+	private ConnectionServer connection;
 
 	/**
 	 * The maximum number of cards to be displayed on longest sides of tablet
@@ -185,13 +186,13 @@ public class GameboardActivity extends Activity {
 		// messages from the Bluetooth module
 		registerReceiver();
 
-		bts = BluetoothServer.getInstance(this);
+		connection = BluetoothServer.getInstance(this);
 
 		sharedPreferences = getSharedPreferences(PREFERENCES, MODE_WORLD_READABLE);
 
-		int numOfConnections = bts.getConnectedDeviceCount();
+		int numOfConnections = connection.getConnectedDeviceCount();
 		List<Player> players = new ArrayList<Player>();
-		List<String> devices = bts.getConnectedDevices();
+		List<String> devices = connection.getConnectedDevices();
 
 		// Get the list of players and their addresses from the
 		// Intent data (from the ConnectActivity)
@@ -235,8 +236,8 @@ public class GameboardActivity extends Activity {
 
 		// the GameController now handles the setup of the game.
 		// TODO: crazy eights
-		//		gameController = GameUtil.getGameControllerInstance(this, bts, player, refresh);
-		gameController = new CrazyEightsGameController(this, bts, players, refresh);
+		//		gameController = GameUtil.getGameControllerInstance(this, connection, player, refresh);
+		gameController = new CrazyEightsGameController(this, connection, players, refresh);
 
 		// Draw the names from the Game on the gameboard
 		updateNamesOnGameboard();
@@ -257,7 +258,9 @@ public class GameboardActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		// Disconnect Bluetooth connection
-		BluetoothServer.getInstance(this).disconnect();
+		if (connection != null) {
+			connection.disconnect();
+		}
 
 		// Unregister the receiver
 		try {
@@ -355,7 +358,7 @@ public class GameboardActivity extends Activity {
 	 * This data is pulled from the Game instance
 	 */
 	public void updateNamesOnGameboard() {
-		List<Player> players = GameUtil.getGameInstance().getPlayers();
+		List<Player> players = GameFactory.getGameInstance().getPlayers();
 		for (int i = 0; i < 4; i++) {
 			if (i < players.size()) {
 				playerTextViews[i].setVisibility(View.VISIBLE);
@@ -625,8 +628,7 @@ public class GameboardActivity extends Activity {
 	/**
 	 * Removes a card from specified location on the game board
 	 *
-	 * @param location
-	 *            Location from which card should be removed
+	 * @param location Location from which card should be removed
 	 */
 	public void removeCard(int location) {
 		// TODO: do we want to move the layouts into an array so that

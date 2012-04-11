@@ -12,7 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 public class Player {
 
 	private List<Card> cards;
@@ -36,35 +35,36 @@ public class Player {
 		return cards.size();
 	}
 
-	public void addCard(Card card){
+	public void addCard(Card card) {
 		cards.add(card);
 	}
-	
-	public boolean getIsComputer(){
+
+	public boolean getIsComputer() {
 		return this.isComputer;
 	}
-	
-	public void setIsComputer(boolean isComp){
+
+	public void setIsComputer(boolean isComp) {
 		isComputer = isComp;
 	}
-	
-	public int getComputerDifficulty(){
+
+	public int getComputerDifficulty() {
 		return computerDifficulty;
 	}
 
-	public void setComputerDifficulty(int dif){
+	public void setComputerDifficulty(int dif) {
 		computerDifficulty = dif;
 	}
-	
+
 	/**
-	 * This method will remove a card from a players hand by object matching using a loop
-	 * that checks every card in the players hand
+	 * This method will remove a card from a players hand by object matching
+	 * using a loop that checks every card in the players hand
 	 * 
-	 * @param card the card to be removed from the players hand
+	 * @param card
+	 *            the card to be removed from the players hand
 	 */
-	public void removeCard(Card card){
-		for(Card c : cards){
-			if(c.getIdNum() == card.getIdNum()){
+	public void removeCard(Card card) {
+		for (Card c : cards) {
+			if (c.getIdNum() == card.getIdNum()) {
 				cards.remove(c);
 				return;
 			}
@@ -86,18 +86,19 @@ public class Player {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
-	public int getPosition(){
+
+	public int getPosition() {
 		return position;
 	}
-	
-	public void setPosition(int position){
+
+	public void setPosition(int position) {
 		this.position = position;
 	}
 
 	/**
-	 * This toString() method will override the default toString() method. This will return a 
-	 * JSON object that is in the form of a string which will be easy for decoding
+	 * This toString() method will override the default toString() method. This
+	 * will return a JSON object that is in the form of a string which will be
+	 * easy for decoding
 	 * 
 	 * @return a string representation of a player object
 	 */

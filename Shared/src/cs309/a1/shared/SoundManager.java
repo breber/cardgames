@@ -1,16 +1,14 @@
 package cs309.a1.shared;
 
-import static cs309.a1.shared.Constants.PREFERENCES;
-import static cs309.a1.shared.Constants.SOUND_EFFECTS;
-import static cs309.a1.shared.Constants.SPEECH_VOLUME;
-import static cs309.a1.shared.Constants.DIFFICULTY_OF_COMPUTERS;
 import static cs309.a1.shared.Constants.LANGUAGE;
 import static cs309.a1.shared.Constants.LANGUAGE_CANADA;
 import static cs309.a1.shared.Constants.LANGUAGE_FRANCE;
 import static cs309.a1.shared.Constants.LANGUAGE_GERMAN;
-import static cs309.a1.shared.Constants.LANGUAGE_US;
 import static cs309.a1.shared.Constants.LANGUAGE_UK;
-import static cs309.a1.shared.Constants.NUMBER_OF_COMPUTERS;
+import static cs309.a1.shared.Constants.LANGUAGE_US;
+import static cs309.a1.shared.Constants.PREFERENCES;
+import static cs309.a1.shared.Constants.SOUND_EFFECTS;
+import static cs309.a1.shared.Constants.SPEECH_VOLUME;
 
 import java.util.Locale;
 import java.util.Random;
@@ -52,11 +50,11 @@ public class SoundManager {
 	private static TextToSpeech tts;
 
 	boolean isTTSInitialized;
-	
+
 	private boolean isSoundFXOn = true;
-	
+
 	private boolean isTTSOn = true;
-	
+
 	private SharedPreferences sharedPreferences;
 
 	//constants for SoundManager
@@ -76,7 +74,7 @@ public class SoundManager {
 	private int[] drawCardSounds = new int[7];
 	private int[] playCardSounds = new int[5];
 	private int[] shuffleCardSounds = new int[2];
-	
+
 
 
 	/**
@@ -86,9 +84,9 @@ public class SoundManager {
 		sharedPreferences = context.getSharedPreferences(PREFERENCES, Context.MODE_WORLD_WRITEABLE);
 		isSoundFXOn = sharedPreferences.getBoolean(SOUND_EFFECTS, true);
 		isTTSOn = sharedPreferences.getBoolean(SPEECH_VOLUME, true);
-		
+
 		soundpool = new SoundPool(5, AudioManager.STREAM_MUSIC, 100);
-		
+
 		//draw card sounds
 		drawCardSounds[0] = soundpool.load(context, R.raw.draw_card_1, 1);
 		drawCardSounds[1] = soundpool.load(context, R.raw.draw_card_2, 1);
@@ -97,26 +95,26 @@ public class SoundManager {
 		drawCardSounds[4] = soundpool.load(context, R.raw.draw_card_5, 1);
 		drawCardSounds[5] = soundpool.load(context, R.raw.draw_card_6, 1);
 		drawCardSounds[6] = soundpool.load(context, R.raw.draw_card_7, 1);
-		
+
 		//card playing sounds
 		playCardSounds[0] = soundpool.load(context, R.raw.play_card_1, 1);
 		playCardSounds[1] = soundpool.load(context, R.raw.play_card_2, 1);
 		playCardSounds[2] = soundpool.load(context, R.raw.play_card_3, 1);
 		playCardSounds[3] = soundpool.load(context, R.raw.play_card_4, 1);
 		playCardSounds[4] = soundpool.load(context, R.raw.play_card_5, 1);
-		
+
 		//card shuffling sounds
 		shuffleCardSounds[0] = soundpool.load(context, R.raw.shuffling_cards_1, 1);
 		shuffleCardSounds[1] = soundpool.load(context, R.raw.shuffling_cards_2, 1);
-		
-		
+
+
 		mediaplayer = new MediaPlayer();
 		MyInitListener mil = new MyInitListener();
 		tts = new TextToSpeech(context.getApplicationContext(), mil);
 		isTTSInitialized = false;
 		testSound = soundpool.load(context, R.raw.sound_test, 1);
-		mediaplayer = MediaPlayer.create(context, R.raw.sound_test);		
-		
+		mediaplayer = MediaPlayer.create(context, R.raw.sound_test);
+
 
 	}
 
@@ -130,7 +128,7 @@ public class SoundManager {
 			soundpool.play(testSound, 1, 1, 1, 0, 1);
 		}
 	}
-	
+
 	/**
 	 * plays the sound of a card being drawn. plays various sounds.
 	 */
@@ -141,7 +139,7 @@ public class SoundManager {
 			soundpool.play(drawCardSounds[i], 1, 1, 1, 0, 1);
 		}
 	}
-	
+
 	/**
 	 * plays the sound of a card being played. plays various sounds.
 	 */
@@ -152,7 +150,7 @@ public class SoundManager {
 			soundpool.play(playCardSounds[i], 1, 1, 1, 0, 1);
 		}
 	}
-	
+
 	/**
 	 * plays the sound of a card being played. plays various sounds.
 	 */
@@ -160,7 +158,7 @@ public class SoundManager {
 		if(isSoundFXOn){
 			Random r1 = new Random();
 			int i = Math.abs(r1.nextInt() % 2);
-			soundpool.play(shuffleCardSounds[i], 1, 1, 1, 0, 1);			
+			soundpool.play(shuffleCardSounds[i], 1, 1, 1, 0, 1);
 		}
 	}
 
@@ -180,8 +178,8 @@ public class SoundManager {
 		}
 	}
 
-	
-	
+
+
 	/**
 	 * This function will tell a player it is their turn using various strings
 	 * @param name
@@ -205,7 +203,7 @@ public class SoundManager {
 		//also this could be used to create sound effects for signaling whose turn it is.
 		if(isSoundFXOn){
 			mediaplayer.seekTo(0);
-			mediaplayer.start();			
+			mediaplayer.start();
 		}
 	}
 
@@ -236,7 +234,7 @@ public class SoundManager {
 			if(status == TextToSpeech.SUCCESS){
 				String lang = sharedPreferences.getString(LANGUAGE, LANGUAGE_US);
 				int langResult=-1;
-				
+
 				if(lang.equals(LANGUAGE_US)) {
 					langResult = tts.setLanguage(Locale.US);
 				} else if (lang.equals(LANGUAGE_GERMAN)) {
@@ -247,8 +245,8 @@ public class SoundManager {
 					langResult = tts.setLanguage(Locale.CANADA);
 				} else if (lang.equals(LANGUAGE_UK)) {
 					langResult = tts.setLanguage(Locale.UK);
-				} 
-		
+				}
+
 				if(langResult == TextToSpeech.LANG_MISSING_DATA || langResult == TextToSpeech.LANG_NOT_SUPPORTED){
 					if (Util.isDebugBuild()) {
 						Log.d(TAG, "Language not available");
