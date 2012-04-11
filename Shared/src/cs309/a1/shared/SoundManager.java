@@ -21,6 +21,11 @@ import android.media.SoundPool;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
+/**
+ * This class is used to control the all of the sound in the game.
+ * It has several methods for playing specific sounds and for using 
+ * the Text To Speech feature of android
+ */
 public class SoundManager {
 
 	/**
@@ -49,15 +54,26 @@ public class SoundManager {
 	 */
 	private static TextToSpeech tts;
 
+	/**
+	 * This is how we can tell if the TTS has been initialized
+	 */
 	boolean isTTSInitialized;
 
+	/**
+	 * This will be obtained from the shared preference to see if the player wants sound fx
+	 */
 	private boolean isSoundFXOn = true;
 
+	/**
+	 * This will be obtained from the shared preference to see if the player wants to have TTS
+	 */
 	private boolean isTTSOn = true;
 
+	/**
+	 * This is how we will get the settings that the user has set.
+	 */
 	private SharedPreferences sharedPreferences;
 
-	//constants for SoundManager
 
 	/**
 	 * These are a joke, we can change them or honestly not have any vocal notification of it being your turn, it was just fun.
@@ -68,17 +84,38 @@ public class SoundManager {
 	 * "Wake up (player) and smell the waffles."
 	 */
 	private static final int NUM_TURN_STRINGS = 5;
+	
+	/**
+	 * Strings to be added before a player's name when announcing his or her turn
+	 */
 	private final String[] playerTurnBeforeName = {"Hey ","Yo ", " ", " ", "Wake up "};
+	
+	/**
+	 * Strings to be added after a player's name when announcing his or her turn
+	 */
 	private final String[] playerTurnAfterName = {" play a card!"," you are needed.", " get a job.", ", your turn.", " and smell the waffles."};
 
+	/**
+	 * array to store the soundpool IDs for the draw card sounds
+	 */
 	private int[] drawCardSounds = new int[7];
+	
+	/**
+	 * array to store the soundpool IDs for the play card sounds
+	 */
 	private int[] playCardSounds = new int[5];
+	
+	/**
+	 * array to store the soundpool IDs for the shuffle card sounds
+	 */
 	private int[] shuffleCardSounds = new int[2];
 
 
 
 	/**
+	 * this will initialize the SoundManager by initializing all the sound FX and the TTS object and obtaining user sound preferences
 	 * @param context
+	 * The context of the class to use the SoundManager
 	 */
 	public SoundManager(Context context){
 		sharedPreferences = context.getSharedPreferences(PREFERENCES, Context.MODE_WORLD_WRITEABLE);
@@ -118,17 +155,6 @@ public class SoundManager {
 
 	}
 
-
-
-	/**
-	 * This will play the test sound
-	 */
-	public void playTestSound(){
-		if(isSoundFXOn){
-			soundpool.play(testSound, 1, 1, 1, 0, 1);
-		}
-	}
-
 	/**
 	 * plays the sound of a card being drawn. plays various sounds.
 	 */
@@ -160,11 +186,6 @@ public class SoundManager {
 			int i = Math.abs(r1.nextInt() % 2);
 			soundpool.play(shuffleCardSounds[i], 1, 1, 1, 0, 1);
 		}
-	}
-
-	public void playTesttts(){
-		String test = "Hello, this is your text to speech library. Thank you for including me in your project.";
-		speak(test);
 	}
 
 	/**
@@ -200,7 +221,6 @@ public class SoundManager {
 	public void playMusic(){
 		//probably only do this on Tablet? since it would be really annoying to have
 		//multiple songs going on
-		//also this could be used to create sound effects for signaling whose turn it is.
 		if(isSoundFXOn){
 			mediaplayer.seekTo(0);
 			mediaplayer.start();
@@ -227,15 +247,20 @@ public class SoundManager {
 		tts.stop();
 	}
 
+	/**
+	 * this class will have the onInit method called when the TTS has been initialized then 
+	 * this method will finish the setup of TTS including getting the "dialect" or "Locale" of the voice
+	 */
 	private class MyInitListener  implements TextToSpeech.OnInitListener{
 
 		@Override
 		public void onInit(int status) {
 			if(status == TextToSpeech.SUCCESS){
+				//get the user preference
 				String lang = sharedPreferences.getString(LANGUAGE, LANGUAGE_US);
 				int langResult=-1;
 
-				if(lang.equals(LANGUAGE_US)) {
+				if(lang.equals(LANGUAGE_US)) { //default
 					langResult = tts.setLanguage(Locale.US);
 				} else if (lang.equals(LANGUAGE_GERMAN)) {
 					langResult = tts.setLanguage(Locale.GERMAN);
@@ -252,6 +277,7 @@ public class SoundManager {
 						Log.d(TAG, "Language not available");
 					}
 				} else{
+					//let us know that it is safe to use it now
 					isTTSInitialized = true;
 				}
 			} else if (Util.isDebugBuild()) {
