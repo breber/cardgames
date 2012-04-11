@@ -11,6 +11,8 @@ import static cs309.a1.shared.Constants.NUMBER_OF_COMPUTERS;
 import static cs309.a1.shared.Constants.PREFERENCES;
 import static cs309.a1.shared.Constants.SOUND_EFFECTS;
 import static cs309.a1.shared.Constants.SPEECH_VOLUME;
+import static cs309.a1.shared.Constants.GAME_TYPE;
+import static cs309.a1.shared.Constants.CRAZY_EIGHTS;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -68,6 +70,11 @@ public class PreferencesActivity extends Activity{
 	 * Users will have a variety of locale options to select currently 1-5
 	 */
 	private RadioButton myOptionLang1, myOptionLang2, myOptionLang3, myOptionLang4, myOptionLang5;
+	
+	/**
+	 * Radio buttons used to select the game type such as Crazy Eights
+	 */
+	private RadioButton myGameOption1;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -213,6 +220,15 @@ public class PreferencesActivity extends Activity{
 			myOptionLang5.setChecked(true);
 		}
 		
+		//value of the game type based upon the radio button
+		String game_type = sharedPref.getString(GAME_TYPE, CRAZY_EIGHTS);
+		
+		myGameOption1 = (RadioButton)findViewById(R.id.gameCrazyEights);
+		
+		if(game_type.equals(CRAZY_EIGHTS)){
+			myGameOption1.setChecked(true);
+		}
+		
 		//OK button on the preferences screen
 		Button ok = (Button)findViewById(R.id.ok);
 		
@@ -267,6 +283,10 @@ public class PreferencesActivity extends Activity{
 					prefsEditor.putString(LANGUAGE, LANGUAGE_GERMAN);
 				}else if(myOptionLang5.isChecked()){
 					prefsEditor.putString(LANGUAGE, LANGUAGE_UK);
+				}
+				
+				if(myGameOption1.isChecked()){
+					prefsEditor.putString(GAME_TYPE, CRAZY_EIGHTS);
 				}
 				
 				//commit the changes to the shared preferences

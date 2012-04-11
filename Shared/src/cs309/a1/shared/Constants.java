@@ -129,6 +129,16 @@ public class Constants {
 	 */
 	public static final String NUMBER_OF_COMPUTERS = "NUMBER OF COMPUTERS";
 	
+	/**
+	 * A constant to represent a key in the shared preferences for the game type
+	 */
+	public static final String GAME_TYPE="GAME TYPE";
+	
+	/**
+	 * A constant to represent a key in the shared preferences for the game type crazy eights
+	 */
+	public static final String CRAZY_EIGHTS="CRAZY EIGHTS";
+	
 	/* AI Constants */
 	/**
 	 * The time you wait in between computer turns

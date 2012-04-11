@@ -217,6 +217,31 @@
                     android:text="@string/langUK"
                     android:textColor="@color/black" />
             </RadioGroup>
+        </TableRow><TableRow>
+
+            <TextView
+                android:id="@+id/textViewGameType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dip"
+                android:text="@string/Game"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/black" />
+
+            <RadioGroup
+                android:id="@+id/gameOption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/gameCrazyEights"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/gameCrazyEights"
+                    android:textColor="@color/black" />
+            </RadioGroup>
         </TableRow>
 
         <cs309.a1.shared.Button
