@@ -33,7 +33,6 @@ public class Constants {
 	public static final int CARD_DRAWN = 2;
 	public static final int WINNER = 3;
 	public static final int LOSER = 4;
-
 	public static final int REFRESH = 5;
 	public static final int PAUSE = 6;
 	public static final int UNPAUSE = 7;
@@ -43,14 +42,14 @@ public class Constants {
 	public static final int PLAY_CARD = 9;
 	public static final int DRAW_CARD = 10;
 	
+	//Language Options
 	public static final String LANGUAGE_US = "US"; 
 	public static final String LANGUAGE_GERMAN = "GERMAN"; 
 	public static final String LANGUAGE_FRANCE = "FRANCE"; 
 	public static final String LANGUAGE_CANADA = "CANADA"; 
-	
-	//TODO Jamie add this one please.
 	public static final String LANGUAGE_UK = "UK";
 	
+	//Preferences Options
 	public static final String PREFERENCES = "PREFERENCES"; 
 	public static final String DIFFICULTY_OF_COMPUTERS = "DIFFICULTY OF COMPUTERS"; 
 	public static final String SOUND_EFFECTS = "SOUND EFFECTS"; 
