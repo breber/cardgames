@@ -1,5 +1,7 @@
 package cs309.a1.gameboard.activities;
 
+import static cs309.a1.shared.Constants.PREFERENCES;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -184,6 +186,8 @@ public class GameboardActivity extends Activity {
 		registerReceiver();
 
 		bts = BluetoothServer.getInstance(this);
+
+		sharedPreferences = getSharedPreferences(PREFERENCES, MODE_WORLD_READABLE);
 
 		int numOfConnections = bts.getConnectedDeviceCount();
 		List<Player> players = new ArrayList<Player>();
