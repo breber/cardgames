@@ -38,7 +38,10 @@ public class PauseMenuActivity extends Activity {
 			if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
 				int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
 
-				if (messageType == Constants.UNPAUSE || messageType == Constants.REFRESH) {
+				if (messageType == Constants.END_GAME) {
+					PauseMenuActivity.this.setResult(RESULT_CANCELED);
+					PauseMenuActivity.this.finish();
+				} else if (messageType == Constants.UNPAUSE || messageType == Constants.REFRESH) {
 					PauseMenuActivity.this.setResult(RESULT_OK);
 					PauseMenuActivity.this.finish();
 				}
