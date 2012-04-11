@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import cs309.a1.crazyeights.CrazyEightsPlayerController;
 import cs309.a1.player.R;
@@ -231,6 +232,7 @@ public class ShowCardsActivity extends Activity {
 			toAdd.setImageResource(cardHand.get(i).getResourceId());
 			toAdd.setId(cardHand.get(i).getIdNum());
 			toAdd.setAdjustViewBounds(true);
+			toAdd.setScaleType(ScaleType.CENTER_INSIDE);
 			toAdd.setOnLongClickListener(playerController.getCardLongClickListener());
 
 			// Add a 5 px border around the image
