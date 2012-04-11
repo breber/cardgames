@@ -300,6 +300,9 @@ public class GameboardActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == QUIT_GAME && resultCode == RESULT_OK) {
+			// Let the users know that the game is over
+			gameController.sendGameEnd();
+			
 			// Finish this activity
 			setResult(RESULT_OK);
 			finish();
@@ -318,6 +321,9 @@ public class GameboardActivity extends Activity {
 				gameController.unpause();
 			}
 		} else if (requestCode == DECLARE_WINNER) {
+			//TODO should we send the players anything here? or how are we handling this
+			// right now I think if we close the gameboard the player will say waiting to reconnect?
+			
 			// We are coming back from the winner screen, so just go back to the
 			// main menu no matter what the result is.
 			setResult(RESULT_OK);
