@@ -2,7 +2,9 @@ package cs309.a1.shared;
 
 public class Constants {
 	
+	// GUI
 	public static final int NAME_MAX_CHARS = 10;
+	public static final double CARD_IMAGE_SCALE = 125.0/480.0;
 	
 	public static final int SUIT_CLUBS = 0;
 	public static final int SUIT_DIAMONDS = 1;

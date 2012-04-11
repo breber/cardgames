@@ -217,7 +217,10 @@ public class ShowCardsActivity extends Activity {
 
 		// convert dip to pixels
 		final float dpsToPixScale = getApplicationContext().getResources().getDisplayMetrics().density;
-		int pixels = (int) (125 * dpsToPixScale + 0.5f);
+		//int pixels = (int) (size.x * Constants.CARD_IMAGE_SCALE * dpsToPixScale + 0.5f);
+		//int pixels = (int) (125 * dpsToPixScale + 0.5f);
+		final int screen_width = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
+		int pixels = (int) (screen_width * Constants.CARD_IMAGE_SCALE * dpsToPixScale + 0.5f);
 
 		// edit layout attributes
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(pixels, LinearLayout.LayoutParams.WRAP_CONTENT);
