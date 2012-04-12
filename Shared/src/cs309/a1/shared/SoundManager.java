@@ -83,6 +83,7 @@ public class SoundManager {
 	 * "(player) your turn."
 	 * "Wake up (player) and smell the waffles."
 	 */
+	//TODO  should move them the strings.xml thing
 	private static final int NUM_TURN_STRINGS = 5;
 	
 	/**
@@ -219,8 +220,6 @@ public class SoundManager {
 	 * This will play the theme music
 	 */
 	public void playMusic(){
-		//probably only do this on Tablet? since it would be really annoying to have
-		//multiple songs going on
 		if(isSoundFXOn){
 			mediaplayer.seekTo(0);
 			mediaplayer.start();

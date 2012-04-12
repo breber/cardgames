@@ -41,6 +41,8 @@ import cs309.a1.shared.connection.ConnectionServer;
 
 /**
  * This is the GameController for the game of Crazy Eights
+ * responsible for bluetooth send and receive game info, advancing turns, and
+ * handling game state
  */
 public class CrazyEightsGameController implements GameController {
 
@@ -329,17 +331,13 @@ public class CrazyEightsGameController implements GameController {
 			return;
 		}
 
-		if (Util.isDebugBuild()) {
-			// for debugging to see number of cards
-			Log.d(TAG, "player " + game.getPlayers().get(whoseTurn).getCards().size() + " cards.");
-		}
-
 		if (whoseTurn < game.getNumPlayers() - 1) {
 			whoseTurn++;
 		} else {
 			whoseTurn = 0;
 		}
 
+		//highlight whose turn it is
 		gameContext.highlightPlayer(whoseTurn+1);
 
 		Card onDiscard = game.getDiscardPileTop();
@@ -349,6 +347,7 @@ public class CrazyEightsGameController implements GameController {
 		}
 
 		if (players.get(whoseTurn).getIsComputer()) {
+			//play turn for computer player
 			Intent computerTurn = new Intent(gameContext, PlayComputerTurnActivity.class);
 			gameContext.startActivityForResult(computerTurn, PLAY_COMPUTER_TURN);
 		} else {
@@ -405,7 +404,7 @@ public class CrazyEightsGameController implements GameController {
 
 	/**
 	 * This will take in the received card and discard it
-	 * @param object
+	 * @param object This object is a JSON object that has been received as a discarded card
 	 */
 	private void discardReceivedCard(String object) {
 		Card tmpCard = new Card(0, 0, 0, 0);
@@ -481,7 +480,13 @@ public class CrazyEightsGameController implements GameController {
 	}
 
 	/**
-	 *
+	 * This will play for a computer player based on the difficulty level. either play or draw a card.
+	 * This will be called after the PlayComputerTurnActivity has waited for the appropriate amount of time.
+	 * level 0 	should just loop through the cards to find one that it is allowed to play
+	 * 			very basic, randomly play a card if able or draw if not able
+	 * level 1 	nothing yet
+	 * 
+	 * level 2 	nothing yet
 	 */
 	private void playComputerTurn() {
 		Card onDiscard = game.getDiscardPileTop();
@@ -512,20 +517,26 @@ public class CrazyEightsGameController implements GameController {
 				}
 				suitChosen = maxSuitIndex;
 			}
+			
+		//computer difficulty 1
 		} else if (players.get(whoseTurn).getComputerDifficulty() == 1){
 
+			
+		//computer difficulty 2 or greater
+		} else if (players.get(whoseTurn).getComputerDifficulty() >= 2){
+			
 		}
 
 
 		if (cardSelected != null) {
-			//play sound for playing a card
+			//Play Card
 			mySM.playCardSound();
 
 			gameContext.removeCard(players.get(whoseTurn).getPosition());
 			game.discard(players.get(whoseTurn), cardSelected);
 			gameContext.placeCard(0, cardSelected);
 		} else {
-			//play sound for drawing a card
+			//Draw Card
 			mySM.drawCardSound();
 
 			Card tmpCard = game.draw(players.get(whoseTurn));
