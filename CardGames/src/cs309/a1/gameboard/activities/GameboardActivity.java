@@ -1,10 +1,16 @@
 package cs309.a1.gameboard.activities;
 
+import static cs309.a1.shared.Constants.ID;
 import static cs309.a1.shared.Constants.PREFERENCES;
+import static cs309.a1.shared.Constants.SUIT;
+import static cs309.a1.shared.Constants.VALUE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -24,7 +30,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import cs309.a1.R;
+import cs309.a1.crazyeights.C8Constants;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.Constants;
 import cs309.a1.shared.GameController;
@@ -103,8 +111,8 @@ public class GameboardActivity extends Activity {
 
 	/**
 	 * This will handle the specific logic of the game chosen, it will follow
-	 * the turn logic and bluetooth communication with players and also control
-	 * the current gameboard state
+	 * the turn logic and Bluetooth communication with players and also control
+	 * the current game board state
 	 */
 	private GameController gameController;
 
@@ -134,7 +142,7 @@ public class GameboardActivity extends Activity {
 			if (Util.isDebugBuild()) {
 				Log.d(TAG, "onReceive: " + action);
 			}
-
+			
 			if (ConnectionConstants.STATE_CHANGE_INTENT.equals(action)) {
 				// Handle a state change
 				int newState = intent.getIntExtra(ConnectionConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_NONE);
@@ -170,6 +178,8 @@ public class GameboardActivity extends Activity {
 		playerTextViews[1] = (TextView) findViewById(R.id.player2text);
 		playerTextViews[2] = (TextView) findViewById(R.id.player3text);
 		playerTextViews[3] = (TextView) findViewById(R.id.player4text);
+		
+		
 
 		// Add the handler for the pause button
 		ImageButton pause = (ImageButton) findViewById(R.id.gameboard_pause);
@@ -240,6 +250,7 @@ public class GameboardActivity extends Activity {
 		// Draw the names from the Game on the gameboard
 		updateNamesOnGameboard();
 	}
+	
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onBackPressed()
@@ -397,7 +408,27 @@ public class GameboardActivity extends Activity {
 
 		// place in discard pile
 		if (location == 0) {
+
 			ImageView discard = (ImageView) findViewById(R.id.discardpile);
+			TextView suitView = (TextView)findViewById(R.id.gameboard_suit);
+			if(Util.isDebugBuild()){				
+				Toast.makeText(this, newCard.getSuit()+"", Toast.LENGTH_SHORT).show();
+			}
+			
+			int suit_num = newCard.getSuit();
+			
+			if(suit_num == 0){
+				suitView.setText("Clubs");
+			}else if(suit_num == 1){
+				suitView.setText("Diamonds");
+			}else if(suit_num == 2){
+				suitView.setText("Hearts");
+			}else if(suit_num == 3){
+				suitView.setText("Spades");
+			}else{
+				suitView.setText("Choose Suit");
+			}
+			
 			discard.setImageResource(newCard.getResourceId());
 		}
 
@@ -707,6 +738,7 @@ public class GameboardActivity extends Activity {
 
 		highlightedPlayer.setTextColor(Color.WHITE);
 	}
+	
 
 	/**
 	 * A class that contains a device name and id

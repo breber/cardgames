@@ -8,6 +8,9 @@ import org.junit.Test;
 import cs309.a1.crazyeights.CrazyEightGameRules;
 import cs309.a1.shared.Card;
 
+/**
+ * This class will test the rules of the crazy eights game
+ */
 public class CrazyEightsRulesTest {
 
 	private CrazyEightGameRules r;
@@ -22,6 +25,9 @@ public class CrazyEightsRulesTest {
 		 r = new CrazyEightGameRules();
 	}
 	
+	/**
+	 * Test a valid discard of card of the same suit
+	 */
 	@Test
 	public void testValidDiscardSameSuit(){
 		discardTop = new Card(0, 10, 12, 0);
@@ -30,6 +36,9 @@ public class CrazyEightsRulesTest {
 		assertEquals("Testing same suit discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 	
+	/**
+	 * Test a valid discard of card of the same suit
+	 */
 	@Test
 	public void testValidDiscardSameSuit2(){
 		discardTop = new Card(1, 10, 12, 0);
@@ -38,6 +47,9 @@ public class CrazyEightsRulesTest {
 		assertEquals("Testing same suit discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 	
+	/**
+	 * Test a valid discard of card of the same suit
+	 */
 	@Test
 	public void testValidDiscardSameSuit3(){
 		discardTop = new Card(2, 10, 12, 0);
@@ -46,6 +58,9 @@ public class CrazyEightsRulesTest {
 		assertEquals("Testing same suit discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 	
+	/**
+	 * Test a valid discard of card of the same suit
+	 */
 	@Test
 	public void testValidDiscardSameSuit4(){
 		discardTop = new Card(3, 10, 12, 0);
@@ -54,6 +69,9 @@ public class CrazyEightsRulesTest {
 		assertEquals("Testing same suit discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 	
+	/**
+	 * Test an invalid discard
+	 */
 	@Test
 	public void testInvalidDiscard(){
 		discardTop = new Card(0, 10, 12, 0);
@@ -62,6 +80,9 @@ public class CrazyEightsRulesTest {
 		assertEquals("Testing indiscard.", false, r.checkCard(toDiscard, discardTop));
 	}
 	
+	/**
+	 * Test a valid discard of card of the same number
+	 */
 	@Test
 	public void testValidDiscardSameNumber(){
 		discardTop = new Card(1, 15, 12, 0);
@@ -70,6 +91,9 @@ public class CrazyEightsRulesTest {
 		assertEquals("Testing same value discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 	
+	/**
+	 * Test a valid discard of card of the same number
+	 */
 	@Test
 	public void testValidDiscardSameNumber2(){
 		discardTop = new Card(1, 14, 12, 0);
@@ -78,6 +102,9 @@ public class CrazyEightsRulesTest {
 		assertEquals("Testing same value discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 	
+	/**
+	 * Test a valid discard of card of the same number
+	 */
 	@Test
 	public void testValidDiscardSameNumber3(){
 		discardTop = new Card(1, 0, 12, 0);
@@ -86,6 +113,9 @@ public class CrazyEightsRulesTest {
 		assertEquals("Testing same value discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 	
+	/**
+	 * Test a valid discard of a joker
+	 */
 	@Test
 	public void testValidDiscardJoker(){
 		discardTop = new Card(0, 0, 12, 0);
@@ -94,6 +124,9 @@ public class CrazyEightsRulesTest {
 		assertEquals("Testing joker discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 	
+	/**
+	 * Test a valid discard of a joker
+	 */
 	@Test
 	public void testValidDiscardJoker2(){
 		discardTop = new Card(4, 0, 12, 0);
@@ -102,6 +135,9 @@ public class CrazyEightsRulesTest {
 		assertEquals("Testing joker discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 	
+	/**
+	 * Test a valid discard of an eight
+	 */
 	@Test
 	public void testValidDiscardEight(){
 		discardTop = new Card(1, 0, 12, 0);
@@ -110,6 +146,9 @@ public class CrazyEightsRulesTest {
 		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 	
+	/**
+	 * Test a valid discard of an eight
+	 */
 	@Test
 	public void testValidDiscardEight2(){
 		discardTop = new Card(1, 0, 12, 0);
@@ -118,6 +157,9 @@ public class CrazyEightsRulesTest {
 		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 	
+	/**
+	 * Test a valid discard of an eight
+	 */
 	@Test
 	public void testValidDiscardEight3(){
 		discardTop = new Card(1, 0, 12, 0);
@@ -126,6 +168,9 @@ public class CrazyEightsRulesTest {
 		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 	
+	/**
+	 * Test a valid discard of an eight
+	 */
 	@Test
 	public void testValidDiscardEight4(){
 		discardTop = new Card(1, 0, 12, 0);
@@ -134,6 +179,9 @@ public class CrazyEightsRulesTest {
 		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 	
+	/**
+	 * Test a null card
+	 */
 	@Test
 	public void testCardNull(){
 		discardTop = null;
@@ -142,6 +190,9 @@ public class CrazyEightsRulesTest {
 		assertEquals("Testing null card.", false, r.checkCard(toDiscard, discardTop));
 	}
 	
+	/**
+	 * Test to see if the discard pile is null
+	 */
 	@Test
 	public void testDiscardPileNull(){
 		discardTop = new Card(1, 0, 12, 0);

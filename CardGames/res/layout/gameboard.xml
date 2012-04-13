@@ -2,23 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/wooden_top"
     android:keepScreenOn="true"
-    android:orientation="horizontal" 
-    android:background="@drawable/wooden_top">
+    android:orientation="horizontal" >
 
     <LinearLayout
-        	android:orientation="vertical"
-        	android:gravity="top|center_horizontal"
-        	android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:layout_centerHorizontal="true" >
-	    <LinearLayout
-	        android:id="@+id/player3ll"
-	        android:orientation="horizontal"
-			android:gravity="top|center_horizontal"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content" >
-			<!--  
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="top|center_horizontal"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/player3ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="top|center_horizontal"
+            android:orientation="horizontal" >
+
+            <!--
 			<ImageView
 			    android:src="@drawable/back_blue_1"
 			    android:layout_width="125dip"
@@ -28,47 +30,52 @@
 			    android:src="@drawable/back_blue_1"
 			    android:layout_width="125dip"
 			    android:layout_height="wrap_content"
-			    android:adjustViewBounds="true" />-->
-		</LinearLayout>
-		<cs309.a1.shared.TextView
-		    android:id="@+id/player3text"
-		    android:text="@string/player_3" 
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:textColor="#000000"
-		    android:textSize="50sp"
-		    android:textStyle="bold"
-		    android:gravity="bottom|center_horizontal"
-		    android:rotation="180"
-		    android:padding="10sp"
-		    android:visibility="invisible" />
-	</LinearLayout>
-	
-    <LinearLayout 
-        android:orientation="vertical"
-	    android:gravity="bottom|center_horizontal" 
-	    android:layout_height="wrap_content"
-	    android:layout_width="wrap_content"
-		android:layout_centerHorizontal="true"
-		android:layout_alignParentBottom="true">
-		<cs309.a1.shared.TextView
-		    android:id="@+id/player1text"
-		    android:text="@string/player_1" 
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:textColor="#000000"
-		    android:textSize="50sp"
-		    android:textStyle="bold"
-		    android:gravity="top|center_horizontal"
-		    android:paddingBottom="10sp"
-		    android:visibility="invisible" />
-	    <LinearLayout 
-	        android:id="@+id/player1ll"
-	        android:orientation="horizontal"
-	        android:gravity="bottom" 
-	        android:layout_height="wrap_content"
-			android:layout_width="wrap_content" >
-			<!--  
+			    android:adjustViewBounds="true" />
+            -->
+        </LinearLayout>
+
+        <cs309.a1.shared.TextView
+            android:id="@+id/player3text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="bottom|center_horizontal"
+            android:padding="10sp"
+            android:rotation="180"
+            android:text="@string/player_3"
+            android:textColor="#000000"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="bottom|center_horizontal"
+        android:orientation="vertical" >
+
+        <cs309.a1.shared.TextView
+            android:id="@+id/player1text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="top|center_horizontal"
+            android:paddingBottom="10sp"
+            android:text="@string/player_1"
+            android:textColor="#000000"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+        <LinearLayout
+            android:id="@+id/player1ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:orientation="horizontal" >
+
+            <!--
 	        <ImageView
 			    android:src="@drawable/back_blue_1"
 			    android:layout_width="125dip"
@@ -78,85 +85,91 @@
 			    android:src="@drawable/back_blue_1"
 			    android:layout_width="125dip"
 			    android:layout_height="wrap_content"
-			    android:adjustViewBounds="true" />-->
-			
-	    </LinearLayout>
+			    android:adjustViewBounds="true" />
+            -->
+
+        </LinearLayout>
     </LinearLayout>
-    
+
     <LinearLayout
-        android:orientation="horizontal"
-	    android:gravity="right|center_vertical"        
-	    android:layout_height="fill_parent"
-		android:layout_width="wrap_content"
-		android:layout_centerVertical="true"
-		android:layout_alignParentRight="true" >
-	    <cs309.a1.shared.TextView
-		    android:id="@+id/player2text"
-		    android:text="@string/player_2" 
-		    android:layout_width="wrap_content"
-		    android:layout_height="fill_parent"
-		    android:textColor="#000000"
-		    android:textSize="50sp"
-		    android:textStyle="bold"
-		    android:rotation="270"
-		    android:visibility="invisible"
-		    android:gravity="left|center_vertical" />
-	    <LinearLayout 
-	        android:id="@+id/player2ll"
-	        android:orientation="vertical"
-	        android:gravity="right"        
-	        android:layout_height="wrap_content"
-			android:layout_width="wrap_content" />
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:gravity="right|center_vertical"
+        android:orientation="horizontal" >
+
+        <cs309.a1.shared.TextView
+            android:id="@+id/player2text"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="left|center_vertical"
+            android:rotation="270"
+            android:text="@string/player_2"
+            android:textColor="#000000"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+        <LinearLayout
+            android:id="@+id/player2ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="vertical" />
     </LinearLayout>
-    
+
     <LinearLayout
-        android:orientation="horizontal"
-	    android:gravity="left|center_vertical"        
-	    android:layout_height="fill_parent"
-		android:layout_width="wrap_content"
-		android:layout_centerVertical="true"
-		android:layout_alignParentLeft="true" >
-	    <LinearLayout 
-	        android:id="@+id/player4ll"
-	        android:orientation="vertical"
-	        android:gravity="left"        
-	        android:layout_height="wrap_content"
-			android:layout_width="wrap_content" />
-	    <cs309.a1.shared.TextView
-		    android:id="@+id/player4text"
-		    android:text="@string/player_4" 
-		    android:layout_width="wrap_content"
-		    android:layout_height="fill_parent"
-		    android:textColor="#000000"
-		    android:textSize="50sp"
-		    android:textStyle="bold"
-		    android:rotation="90"
-		    android:visibility="invisible"
-		    android:gravity="left|center_vertical" /> 
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:gravity="left|center_vertical"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/player4ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:orientation="vertical" />
+
+        <cs309.a1.shared.TextView
+            android:id="@+id/player4text"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="left|center_vertical"
+            android:rotation="90"
+            android:text="@string/player_4"
+            android:textColor="#000000"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
     </LinearLayout>
-    
+
     <LinearLayout
-        android:orientation="horizontal"
-        android:gravity="center_vertical|center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" >  
-        
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal" >
+
         <ImageView
             android:id="@+id/drawpile"
-		    android:src="@drawable/back_blue_1"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:adjustViewBounds="true"
-		    android:paddingRight="100dip" />
-		<ImageView
-		    android:id="@+id/discardpile"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:adjustViewBounds="true" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:paddingRight="100dip"
+            android:src="@drawable/back_blue_1" />
+
+        <ImageView
+            android:id="@+id/discardpile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true" />
     </LinearLayout>
-	
+
     <ImageButton
         android:id="@+id/gameboard_pause"
         android:layout_width="wrap_content"
@@ -166,15 +179,28 @@
         android:background="@null"
         android:padding="5dip"
         android:src="@drawable/pause_button" />
-    
+
     <ImageButton
         android:id="@+id/gameboard_refresh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:background="@null"
         android:padding="5dip"
         android:src="@drawable/refresh_button" />
+
+
+    <cs309.a1.shared.TextView
+        android:id="@+id/gameboard_suit"
+        style="@style/GameButton"
+        android:layout_width="275dip"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="15dip"
+        android:padding="15dip"
+        android:text="" />
 
 </RelativeLayout>

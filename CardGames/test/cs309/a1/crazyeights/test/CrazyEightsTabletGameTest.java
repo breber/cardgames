@@ -19,6 +19,9 @@ import cs309.a1.shared.Deck;
 import cs309.a1.shared.Player;
 import cs309.a1.shared.Rules;
 
+/**
+ * This class will test the game logic behind the crazy eights game
+ */
 public class CrazyEightsTabletGameTest {
 
 	private CrazyEightsTabletGame game;

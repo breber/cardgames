@@ -265,11 +265,11 @@ public class PreferencesActivity extends Activity{
 
 				//set difficulty of computers to preferences
 				if(myOptionEasy.isChecked() == true){
-					prefsEditor.putInt(DIFFICULTY_OF_COMPUTERS, 1);
+					prefsEditor.putInt(DIFFICULTY_OF_COMPUTERS, 0);
 				}else if(myOptionMedium.isChecked() == true){
-					prefsEditor.putInt(DIFFICULTY_OF_COMPUTERS, 2);
+					prefsEditor.putInt(DIFFICULTY_OF_COMPUTERS, 1);
 				}else if(myOptionHard.isChecked() == true){
-					prefsEditor.putInt(DIFFICULTY_OF_COMPUTERS, 3);
+					prefsEditor.putInt(DIFFICULTY_OF_COMPUTERS, 2);
 				}
 
 				//set language to preferences

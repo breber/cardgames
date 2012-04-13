@@ -6,8 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cs309.a1.crazyeights.CrazyEightsCardTranslator;
-import cs309.a1.shared.R;
+import cs309.a1.R;
 
+/**
+ * This class will test the resource id translations
+ */
 public class CrazyEightsCardTranslatorTest {
 
 	private CrazyEightsCardTranslator t;

@@ -13,8 +13,13 @@ import org.junit.Test;
 
 import cs309.a1.shared.Card;
 import cs309.a1.shared.Deck;
-import cs309.a1.shared.R;
+import cs309.a1.R;
 
+/**
+ * This class will test the crazy eights game deck
+ * @author jamiekujawa
+ *
+ */
 public class CrazyEightsGameDeckTest {
 
 	private Deck deck;

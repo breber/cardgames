@@ -20,6 +20,7 @@ public interface GameController {
 	 *            context of the bluetooth broadcast
 	 * @param intent
 	 *            intent of the bluetooth broadcast, message is stored here
+	 * @return 
 	 */
 	public void handleBroadcastReceive(Context context, Intent intent);
 
