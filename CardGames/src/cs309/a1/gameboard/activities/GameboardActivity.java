@@ -382,6 +382,26 @@ public class GameboardActivity extends Activity {
 		}
 	}
 
+	public void updateSuit(int suit){
+		TextView suitView = (TextView)findViewById(R.id.gameboard_suit);
+		if(Util.isDebugBuild()){				
+			Toast.makeText(this, suit+"", Toast.LENGTH_SHORT).show();
+		}
+		
+		if(suit == 0){
+			suitView.setText("Clubs");
+		}else if(suit == 1){
+			suitView.setText("Diamonds");
+		}else if(suit == 2){
+			suitView.setText("Hearts");
+		}else if(suit == 3){
+			suitView.setText("Spades");
+		}else{
+			suitView.setText("Choose Suit");
+		}
+		
+	}
+	
 	/**
 	 * Places a card in the specified location on the game board
 	 *
@@ -403,24 +423,6 @@ public class GameboardActivity extends Activity {
 		if (location == 0) {
 
 			ImageView discard = (ImageView) findViewById(R.id.discardpile);
-			TextView suitView = (TextView)findViewById(R.id.gameboard_suit);
-			if(Util.isDebugBuild()){
-				Toast.makeText(this, newCard.getSuit()+"", Toast.LENGTH_SHORT).show();
-			}
-
-			int suit_num = newCard.getSuit();
-
-			if(suit_num == 0){
-				suitView.setText("Clubs");
-			}else if(suit_num == 1){
-				suitView.setText("Diamonds");
-			}else if(suit_num == 2){
-				suitView.setText("Hearts");
-			}else if(suit_num == 3){
-				suitView.setText("Spades");
-			}else{
-				suitView.setText("Choose Suit");
-			}
 
 			discard.setImageResource(newCard.getResourceId());
 		}

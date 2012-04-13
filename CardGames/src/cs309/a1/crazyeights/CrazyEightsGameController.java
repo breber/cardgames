@@ -191,6 +191,7 @@ public class CrazyEightsGameController implements GameController {
 
 			gameContext.placeCard(0, game.getDiscardPileTop());
 		}
+		gameContext.updateSuit(game.getDiscardPileTop().getSuit());
 	}
 
 	/* (non-Javadoc)
@@ -320,6 +321,8 @@ public class CrazyEightsGameController implements GameController {
 		}
 	}
 
+	
+	
 	/**
 	 * This function will be called when a players turn is over It will change
 	 * whoseTurn to the next player and send them the message that it is their
@@ -345,7 +348,7 @@ public class CrazyEightsGameController implements GameController {
 			onDiscard = new Card(suitChosen, onDiscard.getValue(),
 					onDiscard.getResourceId(), onDiscard.getIdNum());
 		}
-
+		gameContext.updateSuit(onDiscard.getSuit());
 		if (players.get(whoseTurn).getIsComputer()) {
 			//play turn for computer player
 			Intent computerTurn = new Intent(gameContext, PlayComputerTurnActivity.class);
