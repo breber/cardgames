@@ -22,7 +22,8 @@
         android:textColor="@color/black"
         android:maxLength="10"
         android:hint="@string/enter_name_here"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:capitalize="words" />
 
     <cs309.a1.shared.Button
         android:id="@+id/ok"
