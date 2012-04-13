@@ -7,20 +7,19 @@ import android.view.View.OnLongClickListener;
 
 /**
  * The PlayerController is meant to be used inside the ShowCardsActivity on a player's device
- * This will handle the cards sent to the player and also will allow the player to play cards. 
- * This will check if a card can be played and allow the player to draw cards. Basically handles 
+ * This will handle the cards sent to the player and also will allow the player to play cards.
+ * This will check if a card can be played and allow the player to draw cards. Basically handles
  * the state of the player.
  */
 public interface PlayerController {
 
 	/**
-	 * This method is meant to be used inside the bluetooth broadcast receiver
-	 * to handle the bluetooth message
+	 * This method is handles messages received from the Connection module
 	 * 
 	 * @param context
-	 *            context of the bluetooth broadcast
+	 *            context of the broadcast
 	 * @param intent
-	 *            intent of the bluetooth broadcast, message is stored here
+	 *            intent from the broadcast, message is stored here
 	 */
 	public void handleBroadcastReceive(Context context, Intent intent);
 
@@ -41,29 +40,30 @@ public interface PlayerController {
 
 	/**
 	 * This will return the onClickListener for the play button.
-	 * @return
+	 * 
+	 * @return the onClickListener for the play button
 	 */
 	public View.OnClickListener getPlayOnClickListener();
 
 	/**
 	 * This will return the onClickListener for the Draw button
-	 * @return
+	 * 
+	 * @return the onClickListener for the draw button
 	 */
 	public View.OnClickListener getDrawOnClickListener();
 
 	/**
 	 * This will return the LongClickListener for selecting cards
-	 * @return
-	 * returns the long click listener for a card imageview each card will need to be given this
+	 * 
+	 * @return the long click listener for a card imageview each card will need to be given this
 	 */
 	public OnLongClickListener getCardLongClickListener();
-	
+
 	/**
 	 * This will set the player name to the name given
 	 * @param name
 	 * name of player
 	 */
 	public void setPlayerName(String name);
-
 
 }

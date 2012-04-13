@@ -16,7 +16,6 @@ import org.json.JSONObject;
  * This class will be used to represent a player. Each player will have a list of cards, a name,
  * an id for easy identification in the game, a position, whether or not they are a computer
  * and a difficulty if they are a computer.
- *
  */
 public class Player {
 
@@ -24,27 +23,27 @@ public class Player {
 	 * A list of card objects to represent the cards a player has
 	 */
 	private List<Card> cards;
-	
+
 	/**
 	 * A string to store the name of the user
 	 */
 	private String name;
-	
+
 	/**
 	 * A string to store the id of the user which will be represented by a MAC Address
 	 */
 	private String id;
-	
+
 	/**
 	 * The position of the current user on the gameboard
 	 */
 	private int position;
-	
+
 	/**
 	 * A boolean to set whether or not this player is a computer
 	 */
 	private boolean isComputer = false;
-	
+
 	/**
 	 * A variable to set the difficulty of the player if they are a computer
 	 */

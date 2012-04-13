@@ -21,6 +21,7 @@ import cs309.a1.R;
  * 		Constants.SUIT_HEARTS   - If the user chose hearts
  * 		Constants.SUIT_CLUBS    - If the user chose clubs
  * 		Constants.SUIT_DIAMONDS - If the user chose diamonds
+ * 		RESULT_OK				- If the user doesn't choose
  */
 public class SelectSuitActivity extends Activity{
 

@@ -9,21 +9,33 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * 
- * This class will be used to represent a card. Each card will have four different fields 
+ * This class will be used to represent a card. Each card will have four different fields
  * and will be identified through the use of the fields. Each card will have an image to represent
  * it and also a suit, value and id number.
- *
  */
 public class Card {
-
+	/**
+	 * The suit of this card
+	 */
 	private int suit;
+
+	/**
+	 * The value of the card, 0 - 12
+	 */
 	private int value;
+
+	/**
+	 * The resource id used to display as an image
+	 */
 	private int resourceId;
+
+	/**
+	 * The unique card id, 0 - 53
+	 */
 	private int idNum;
 
 	/**
-	 * This constructor will create and make a card object based upon the given 
+	 * This constructor will create and make a card object based upon the given
 	 * parameters. The suit, value and resource id all must match and follow a pattern
 	 * based upon the standard deck.
 	 * 
@@ -47,7 +59,7 @@ public class Card {
 	public int getSuit() {
 		return suit;
 	}
-	
+
 	/**
 	 * This method will set the suit of a given card
 	 * 
@@ -56,7 +68,7 @@ public class Card {
 	public void setSuit(int suit) {
 		this.suit = suit;
 	}
-	
+
 	/**
 	 * This method will return the value of the card object
 	 * 
@@ -65,7 +77,7 @@ public class Card {
 	public int getValue() {
 		return value;
 	}
-	
+
 	/**
 	 * This method will set the value of the card object
 	 * 
@@ -74,7 +86,7 @@ public class Card {
 	public void setValue(int value) {
 		this.value = value;
 	}
-	
+
 	/**
 	 * This method will return the resource id of a card object
 	 * 
@@ -83,7 +95,7 @@ public class Card {
 	public int getResourceId() {
 		return resourceId;
 	}
-	
+
 	/**
 	 * This method will set the resource id of a given card
 	 * 
@@ -92,7 +104,7 @@ public class Card {
 	public void setResourceId(int resourceId) {
 		this.resourceId = resourceId;
 	}
-	
+
 	/**
 	 * This method will return the id number of a card object
 	 * 
@@ -101,7 +113,7 @@ public class Card {
 	public int getIdNum() {
 		return idNum;
 	}
-	
+
 	/**
 	 * This method will set the id number of a card object
 	 * 

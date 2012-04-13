@@ -209,7 +209,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/langGerman"
                     android:textColor="@color/black" />
-                
+
                 <RadioButton
                     android:id="@+id/langUK"
                     android:layout_width="wrap_content"
@@ -217,7 +217,9 @@
                     android:text="@string/langUK"
                     android:textColor="@color/black" />
             </RadioGroup>
-        </TableRow><TableRow>
+        </TableRow>
+
+        <TableRow>
 
             <TextView
                 android:id="@+id/textViewGameType"
@@ -255,5 +257,4 @@
             android:text="@string/ok" />
     </TableLayout>
 
-    
 </LinearLayout>

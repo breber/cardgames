@@ -138,11 +138,7 @@ public class AcceptThread extends Thread {
 					}
 				}
 			}
-
-			Log.d(TAG, "done: while (continueChecking && serv.getState() != BluetoothConstants.STATE_CONNECTED)");
 		}
-
-		Log.d(TAG, "done: while (continueChecking)");
 	}
 
 	/**

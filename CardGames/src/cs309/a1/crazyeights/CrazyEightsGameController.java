@@ -489,7 +489,7 @@ public class CrazyEightsGameController implements GameController {
 		}
 
 		//this will check to see if the current player is a computer and the computer is not playing
-		if(players.get(whoseTurn).getIsComputer() == true && isComputerPlaying == false){
+		if (players.get(whoseTurn).getIsComputer() && !isComputerPlaying) {
 			Intent computerTurn = new Intent(gameContext, PlayComputerTurnActivity.class);
 			gameContext.startActivityForResult(computerTurn, PLAY_COMPUTER_TURN);
 			isComputerPlaying = true;
@@ -513,7 +513,7 @@ public class CrazyEightsGameController implements GameController {
 		Card cardSelected = null;
 
 		//computer with difficulty 0
-		if(players.get(whoseTurn).getComputerDifficulty() == 0){
+		if (players.get(whoseTurn).getComputerDifficulty() == 0) {
 			for (Card c : cards) {
 				if (gameRules.checkCard(c, onDiscard)) {
 					cardSelected = c;
@@ -524,9 +524,9 @@ public class CrazyEightsGameController implements GameController {
 				int[] suits = new int[5];
 				int maxSuitIndex = 0;
 				for (Card c : cards) {
-					if (!c.equals(cardSelected) ) {
+					if (!c.equals(cardSelected)) {
 						suits[c.getSuit()]++;
-						if(suits[c.getSuit()] > suits[maxSuitIndex]){
+						if (suits[c.getSuit()] > suits[maxSuitIndex]) {
 							maxSuitIndex = c.getSuit();
 						}
 					}
@@ -535,12 +535,12 @@ public class CrazyEightsGameController implements GameController {
 			}
 
 			//computer difficulty 1
-		} else if (players.get(whoseTurn).getComputerDifficulty() == 1){
-
+		} else if (players.get(whoseTurn).getComputerDifficulty() == 1) {
+			// TODO: implement
 
 			//computer difficulty 2 or greater
-		} else if (players.get(whoseTurn).getComputerDifficulty() >= 2){
-
+		} else if (players.get(whoseTurn).getComputerDifficulty() >= 2) {
+			// TODO: implement
 		}
 
 

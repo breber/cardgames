@@ -19,11 +19,10 @@
         android:id="@+id/name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:maxLength="10"
         android:hint="@string/enter_name_here"
         android:inputType="textPersonName"
-        android:capitalize="words" />
+        android:maxLength="10"
+        android:textColor="@color/black" />
 
     <cs309.a1.shared.Button
         android:id="@+id/ok"

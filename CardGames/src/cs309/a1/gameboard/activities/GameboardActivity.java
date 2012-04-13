@@ -146,9 +146,7 @@ public class GameboardActivity extends Activity {
 		}
 	};
 
-	/*
-	 * (non-Javadoc)
-	 *
+	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
@@ -315,9 +313,6 @@ public class GameboardActivity extends Activity {
 				gameController.unpause();
 			}
 		} else if (requestCode == DECLARE_WINNER) {
-			//TODO should we send the players anything here? or how are we handling this
-			// right now I think if we close the gameboard the player will say waiting to reconnect?
-
 			// We are coming back from the winner screen, so just go back to the
 			// main menu no matter what the result is.
 			setResult(RESULT_OK);
@@ -382,10 +377,10 @@ public class GameboardActivity extends Activity {
 	 */
 	public void updateSuit(int suit){
 		TextView suitView = (TextView)findViewById(R.id.gameboard_suit);
-		if(Util.isDebugBuild()){				
+		if(Util.isDebugBuild()){
 			Toast.makeText(this, suit+"", Toast.LENGTH_SHORT).show();
 		}
-		
+
 		//Based on the suit change the image
 		if(suit == 0){
 			suitView.setText("Clubs");
@@ -398,9 +393,9 @@ public class GameboardActivity extends Activity {
 		}else{
 			suitView.setText("Choose Suit");
 		}
-		
+
 	}
-	
+
 	/**
 	 * Places a card in the specified location on the game board
 	 *

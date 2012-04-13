@@ -24,8 +24,6 @@ public class AboutActivity extends Activity {
 
 		// Update the body text to the about text
 		TextView body = (TextView) findViewById(R.id.informationBody);
-
-		// TODO: update about text so that it covers both gameboard and player
 		body.setText(R.string.about_text_gameboard);
 	}
 }

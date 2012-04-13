@@ -48,20 +48,6 @@ public class GameResultsActivity extends Activity{
 				finish();
 			}
 		});
-
-		// TODO: do we want this button?
-		// Add a handler to the Exit Game button
-		Button exitGame = (Button) findViewById(R.id.btExit);
-		exitGame.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// When they click the main menu button, finish this activity,
-				// which will allow the ShowCardsActivity to finish leaving them back
-				// at the MainMenu
-				setResult(RESULT_OK);
-				finish();
-			}
-		});
 	}
 
 	/* (non-Javadoc)

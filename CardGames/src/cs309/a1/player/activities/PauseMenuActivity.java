@@ -36,6 +36,7 @@ public class PauseMenuActivity extends Activity {
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 
+			// Handle the end game, unpause and refresh messages from Bluetooth
 			if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
 				int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
 
