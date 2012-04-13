@@ -382,12 +382,19 @@ public class GameboardActivity extends Activity {
 		}
 	}
 
+	/**
+	 * This method will update the suit on the gameboard message center to show the player
+	 * the current suit of the last card played
+	 * 
+	 * @param suit the suit of the card in which to change the picture to
+	 */
 	public void updateSuit(int suit){
 		TextView suitView = (TextView)findViewById(R.id.gameboard_suit);
 		if(Util.isDebugBuild()){				
 			Toast.makeText(this, suit+"", Toast.LENGTH_SHORT).show();
 		}
 		
+		//Based on the suit change the image
 		if(suit == 0){
 			suitView.setText("Clubs");
 		}else if(suit == 1){
