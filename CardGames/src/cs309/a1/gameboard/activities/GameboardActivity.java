@@ -28,6 +28,7 @@ import android.widget.Toast;
 import cs309.a1.R;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.Constants;
+import cs309.a1.shared.Game;
 import cs309.a1.shared.GameController;
 import cs309.a1.shared.GameFactory;
 import cs309.a1.shared.Player;
@@ -237,7 +238,8 @@ public class GameboardActivity extends Activity {
 
 		// the GameController now handles the setup of the game.
 		gameController = GameFactory.getGameControllerInstance(this, connection, players, refresh);
-
+		Game game = GameFactory.getGameInstance();
+		game.setComputerDifficulty(computerDifficulty);
 		// Draw the names from the Game on the gameboard
 		updateNamesOnGameboard();
 	}

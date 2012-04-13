@@ -75,5 +75,17 @@ public interface Game {
 	 * @return a List of type Player
 	 */
 	public List<Player> getPlayers();
+	
+	/**
+	 * set the default computer difficulty
+	 * @param diff computer difficulty
+	 */
+	public void setComputerDifficulty(int diff);
+	
+	/**
+	 * get the default computer difficulty
+	 * @return the computer difficulty
+	 */
+	public int getComputerDifficulty();
 
 }
