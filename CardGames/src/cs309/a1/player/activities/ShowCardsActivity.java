@@ -151,14 +151,21 @@ public class ShowCardsActivity extends Activity {
 		// Disconnect Bluetooth connection
 		BluetoothClient.getInstance(this).disconnect();
 
+		unregisterReceiver();
+
+		super.onDestroy();
+	}
+
+	/**
+	 * Unregister the broadcast receiver
+	 */
+	public void unregisterReceiver() {
 		// Unregister all the receivers we may have registered
 		try {
 			unregisterReceiver(receiver);
 		} catch (IllegalArgumentException e) {
 			// We didn't get far enough to register the receiver
 		}
-
-		super.onDestroy();
 	}
 
 	/* (non-Javadoc)

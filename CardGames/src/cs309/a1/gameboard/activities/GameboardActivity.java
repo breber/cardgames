@@ -1,16 +1,10 @@
 package cs309.a1.gameboard.activities;
 
-import static cs309.a1.shared.Constants.ID;
 import static cs309.a1.shared.Constants.PREFERENCES;
-import static cs309.a1.shared.Constants.SUIT;
-import static cs309.a1.shared.Constants.VALUE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -32,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cs309.a1.R;
-import cs309.a1.crazyeights.C8Constants;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.Constants;
 import cs309.a1.shared.GameController;
@@ -142,7 +135,7 @@ public class GameboardActivity extends Activity {
 			if (Util.isDebugBuild()) {
 				Log.d(TAG, "onReceive: " + action);
 			}
-			
+
 			if (ConnectionConstants.STATE_CHANGE_INTENT.equals(action)) {
 				// Handle a state change
 				int newState = intent.getIntExtra(ConnectionConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_NONE);
@@ -178,8 +171,6 @@ public class GameboardActivity extends Activity {
 		playerTextViews[1] = (TextView) findViewById(R.id.player2text);
 		playerTextViews[2] = (TextView) findViewById(R.id.player3text);
 		playerTextViews[3] = (TextView) findViewById(R.id.player4text);
-		
-		
 
 		// Add the handler for the pause button
 		ImageButton pause = (ImageButton) findViewById(R.id.gameboard_pause);
@@ -250,7 +241,7 @@ public class GameboardActivity extends Activity {
 		// Draw the names from the Game on the gameboard
 		updateNamesOnGameboard();
 	}
-	
+
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onBackPressed()
@@ -310,6 +301,7 @@ public class GameboardActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == QUIT_GAME && resultCode == RESULT_OK) {
 			// Let the users know that the game is over
+			unregisterReceiver();
 			gameController.sendGameEnd();
 
 			// Finish this activity
@@ -319,6 +311,7 @@ public class GameboardActivity extends Activity {
 			if (resultCode == RESULT_CANCELED) {
 				// On the Pause Menu, they selected something that will end
 				// the game, so Finish this activity
+				unregisterReceiver();
 
 				// Let the users know that the game is over
 				gameController.sendGameEnd();
@@ -411,12 +404,12 @@ public class GameboardActivity extends Activity {
 
 			ImageView discard = (ImageView) findViewById(R.id.discardpile);
 			TextView suitView = (TextView)findViewById(R.id.gameboard_suit);
-			if(Util.isDebugBuild()){				
+			if(Util.isDebugBuild()){
 				Toast.makeText(this, newCard.getSuit()+"", Toast.LENGTH_SHORT).show();
 			}
-			
+
 			int suit_num = newCard.getSuit();
-			
+
 			if(suit_num == 0){
 				suitView.setText("Clubs");
 			}else if(suit_num == 1){
@@ -428,7 +421,7 @@ public class GameboardActivity extends Activity {
 			}else{
 				suitView.setText("Choose Suit");
 			}
-			
+
 			discard.setImageResource(newCard.getResourceId());
 		}
 
@@ -738,7 +731,7 @@ public class GameboardActivity extends Activity {
 
 		highlightedPlayer.setTextColor(Color.WHITE);
 	}
-	
+
 
 	/**
 	 * A class that contains a device name and id

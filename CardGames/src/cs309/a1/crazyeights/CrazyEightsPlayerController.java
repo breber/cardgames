@@ -149,6 +149,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	/* (non-Javadoc)
 	 * @see cs309.a1.shared.PlayerController#handleBroadcastReceive(android.content.Context, android.content.Intent)
 	 */
+	@Override
 	public void handleBroadcastReceive(Context context, Intent intent) {
 		String action = intent.getAction();
 
@@ -209,18 +210,18 @@ public class CrazyEightsPlayerController implements PlayerController {
 				try {
 					JSONArray arr = new JSONArray(object);
 					JSONObject refreshInfo = arr.getJSONObject(0);
-					isTurn = refreshInfo.getBoolean(Constants.TURN);			
+					isTurn = refreshInfo.getBoolean(Constants.TURN);
 					playerName = refreshInfo.getString(Constants.PLAYER_NAME);
 					// add more refresh info here
 
 					playerContext.removeAllCards();
-					
+
 					JSONObject obj = arr.getJSONObject(1);
 					int suit = obj.getInt(SUIT);
 					int value = obj.getInt(VALUE);
 					int id = obj.getInt(ID);
 					cardOnDiscard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
-					
+
 					//the 2nd through however many are the cards of the player
 					for (int i = 2; i < arr.length(); i++) {
 						obj = arr.getJSONObject(i);
@@ -236,14 +237,16 @@ public class CrazyEightsPlayerController implements PlayerController {
 				cardSelected = null;
 				break;
 			case WINNER:
-				Intent Winner = new Intent(playerContext, GameResultsActivity.class);
-				Winner.putExtra(GameResultsActivity.IS_WINNER, true);
-				playerContext.startActivityForResult(Winner, QUIT_GAME);
+				playerContext.unregisterReceiver();
+				Intent winner = new Intent(playerContext, GameResultsActivity.class);
+				winner.putExtra(GameResultsActivity.IS_WINNER, true);
+				playerContext.startActivityForResult(winner, QUIT_GAME);
 				break;
 			case LOSER:
-				Intent Loser = new Intent(playerContext, GameResultsActivity.class);
-				Loser.putExtra(GameResultsActivity.IS_WINNER, false);
-				playerContext.startActivityForResult(Loser, QUIT_GAME);
+				playerContext.unregisterReceiver();
+				Intent loser = new Intent(playerContext, GameResultsActivity.class);
+				loser.putExtra(GameResultsActivity.IS_WINNER, false);
+				playerContext.startActivityForResult(loser, QUIT_GAME);
 				break;
 			}
 		}
@@ -253,8 +256,10 @@ public class CrazyEightsPlayerController implements PlayerController {
 	/* (non-Javadoc)
 	 * @see cs309.a1.shared.PlayerController#getPlayOnClickListener()
 	 */
+	@Override
 	public View.OnClickListener getPlayOnClickListener() {
 		return new OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				if (isTurn && gameRules.checkCard(cardSelected, cardOnDiscard) && cardHand.size() != 0) {
 					// play card
@@ -287,8 +292,10 @@ public class CrazyEightsPlayerController implements PlayerController {
 	/* (non-Javadoc)
 	 * @see cs309.a1.shared.PlayerController#getDrawOnClickListener()
 	 */
+	@Override
 	public View.OnClickListener getDrawOnClickListener() {
 		return new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				if (isTurn) {
 					connection.write(Constants.DRAW_CARD, null);
@@ -302,6 +309,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	/* (non-Javadoc)
 	 * @see cs309.a1.shared.PlayerController#getCardLongClickListener()
 	 */
+	@Override
 	public OnLongClickListener getCardLongClickListener() {
 		return new CardSelectionClickListener();
 	}
@@ -309,6 +317,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	/* (non-Javadoc)
 	 * @see cs309.a1.shared.PlayerController#handleActivityResult(int, int, android.content.Intent)
 	 */
+	@Override
 	public void handleActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CHOOSE_SUIT) {
 			boolean isSuitChosen = true;
@@ -329,7 +338,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 				isSuitChosen = false;
 				break;
 			}
-			
+
 			if(isSuitChosen){
 				playerContext.removeFromHand(cardSelected.getIdNum());
 				if (Util.isDebugBuild()) {
@@ -337,12 +346,12 @@ public class CrazyEightsPlayerController implements PlayerController {
 							"Played: " + cardSelected.getSuit() + " "
 									+ cardSelected.getValue(), 100);
 				}
-	
+
 				cardSelected = null;
 				setButtonsEnabled(false);
 				isTurn = false;
 			}
-		} 
+		}
 	}
 
 	/**
@@ -360,6 +369,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	 * 
 	 * @param name - the player's name
 	 */
+	@Override
 	public void setPlayerName(String name) {
 		playerName = name;
 	}
@@ -369,6 +379,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	 * selected when it is LongClicked
 	 */
 	private class CardSelectionClickListener implements View.OnLongClickListener {
+		@Override
 		public boolean onLongClick(View v) {
 			// so this means they just selected the card.
 			// we could remove it from the hand below and place it so
