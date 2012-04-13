@@ -13,7 +13,9 @@ public class Constants {
 	 * A constant to limit the number of characters for a players name
 	 */
 	public static final int NAME_MAX_CHARS = 10;
-	public static final double CARD_IMAGE_SCALE = 125.0/480.0;
+	public static final int CARD_IMAGE_SCALE_SMALL = 200;
+	public static final int CARD_IMAGE_SCALE_MED = 400;
+	public static final int CARD_IMAGE_SCALE_LARGE = 500;
 	
 	/* Game Constants */
 	/**
