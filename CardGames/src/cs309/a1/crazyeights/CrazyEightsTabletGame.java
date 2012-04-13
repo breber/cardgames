@@ -1,7 +1,6 @@
 package cs309.a1.crazyeights;
 
 import static cs309.a1.crazyeights.C8Constants.NUMBER_OF_CARDS_PER_HAND;
-import static cs309.a1.shared.Constants.PREFERENCES;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,11 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
 import android.util.Log;
 import cs309.a1.shared.Card;
-import cs309.a1.shared.Constants;
 import cs309.a1.shared.Deck;
 import cs309.a1.shared.Game;
 import cs309.a1.shared.Player;
@@ -112,11 +108,13 @@ public class CrazyEightsTabletGame implements Game {
 	public void setShuffledDeck(ArrayList<Card> shuffledDeck) {
 		this.shuffledDeck = shuffledDeck;
 	}
-	
+
+	@Override
 	public void setComputerDifficulty(int diff){
 		this.computerDifficulty = diff;
 	}
-	
+
+	@Override
 	public int getComputerDifficulty(){
 		return this.computerDifficulty;
 	}
@@ -302,7 +300,7 @@ public class CrazyEightsTabletGame implements Game {
 
 		if (p != null) {
 			p.setIsComputer(true);
-			
+
 			p.setComputerDifficulty(computerDifficulty);
 		} else {
 			if (Util.isDebugBuild()) {
