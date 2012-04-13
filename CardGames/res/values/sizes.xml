@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="titleFont">50sp</dimen>
+    <dimen name="titlePaddingTopBottom">10dip</dimen>
+    <dimen name="popupTitle">45sp</dimen>
+    <dimen name="mainMenuSmallButtonText">30sp</dimen>
+    <dimen name="mainMenuLargeButtonText">35sp</dimen>
+    <dimen name="mainMenuSmallButtonPadding">35dip</dimen>
+    <dimen name="mainMenuLargeButtonPadding">15dip</dimen>
+    <dimen name="mainMenuButtonSpacing">8dip</dimen>
+    <dimen name="buttonTextSize">45sp</dimen>
+    <dimen name="listViewText">20sp</dimen>
+    <dimen name="popupMarginLeftRight">60dip</dimen>
+    <dimen name="infoTextViewPaddingLeftRight">40dip</dimen>
+    <dimen name="infoTextViewPaddingTopBottom">10dip</dimen>
+    
+    <string name="default_name">Anonymous</string>
+
+</resources>

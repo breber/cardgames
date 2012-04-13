@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/wooden_top"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/title_ref"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/title_bar" />
+
+    <ScrollView
+        style="@style/GameButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/infoTextViewPaddingTopBottom"
+        android:layout_marginLeft="@dimen/infoTextViewPaddingLeftRight"
+        android:layout_marginRight="@dimen/infoTextViewPaddingLeftRight"
+        android:layout_marginTop="@dimen/infoTextViewPaddingTopBottom" >
+
+        <cs309.a1.shared.TextView
+            android:id="@+id/informationBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_text_player"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black" />
+    </ScrollView>
+
+</LinearLayout>

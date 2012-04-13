@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:keepScreenOn="true"
+    android:orientation="horizontal" 
+    android:background="@drawable/wooden_top">
+
+    <LinearLayout
+        	android:orientation="vertical"
+        	android:gravity="top|center_horizontal"
+        	android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_centerHorizontal="true" >
+	    <LinearLayout
+	        android:id="@+id/player3ll"
+	        android:orientation="horizontal"
+			android:gravity="top|center_horizontal"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content" >
+			<!--  
+			<ImageView
+			    android:src="@drawable/back_blue_1"
+			    android:layout_width="125dip"
+			    android:layout_height="wrap_content"
+			    android:adjustViewBounds="true" />
+			<ImageView
+			    android:src="@drawable/back_blue_1"
+			    android:layout_width="125dip"
+			    android:layout_height="wrap_content"
+			    android:adjustViewBounds="true" />-->
+		</LinearLayout>
+		<cs309.a1.shared.TextView
+		    android:id="@+id/player3text"
+		    android:text="@string/player_3" 
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textColor="#000000"
+		    android:textSize="50sp"
+		    android:textStyle="bold"
+		    android:gravity="bottom|center_horizontal"
+		    android:rotation="180"
+		    android:padding="10sp"
+		    android:visibility="invisible" />
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:orientation="vertical"
+	    android:gravity="bottom|center_horizontal" 
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_alignParentBottom="true">
+		<cs309.a1.shared.TextView
+		    android:id="@+id/player1text"
+		    android:text="@string/player_1" 
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textColor="#000000"
+		    android:textSize="50sp"
+		    android:textStyle="bold"
+		    android:gravity="top|center_horizontal"
+		    android:paddingBottom="10sp"
+		    android:visibility="invisible" />
+	    <LinearLayout 
+	        android:id="@+id/player1ll"
+	        android:orientation="horizontal"
+	        android:gravity="bottom" 
+	        android:layout_height="wrap_content"
+			android:layout_width="wrap_content" >
+			<!--  
+	        <ImageView
+			    android:src="@drawable/back_blue_1"
+			    android:layout_width="125dip"
+			    android:layout_height="wrap_content"
+			    android:adjustViewBounds="true" />
+			<ImageView
+			    android:src="@drawable/back_blue_1"
+			    android:layout_width="125dip"
+			    android:layout_height="wrap_content"
+			    android:adjustViewBounds="true" />-->
+			
+	    </LinearLayout>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:orientation="horizontal"
+	    android:gravity="right|center_vertical"        
+	    android:layout_height="fill_parent"
+		android:layout_width="wrap_content"
+		android:layout_centerVertical="true"
+		android:layout_alignParentRight="true" >
+	    <cs309.a1.shared.TextView
+		    android:id="@+id/player2text"
+		    android:text="@string/player_2" 
+		    android:layout_width="wrap_content"
+		    android:layout_height="fill_parent"
+		    android:textColor="#000000"
+		    android:textSize="50sp"
+		    android:textStyle="bold"
+		    android:rotation="270"
+		    android:visibility="invisible"
+		    android:gravity="left|center_vertical" />
+	    <LinearLayout 
+	        android:id="@+id/player2ll"
+	        android:orientation="vertical"
+	        android:gravity="right"        
+	        android:layout_height="wrap_content"
+			android:layout_width="wrap_content" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:orientation="horizontal"
+	    android:gravity="left|center_vertical"        
+	    android:layout_height="fill_parent"
+		android:layout_width="wrap_content"
+		android:layout_centerVertical="true"
+		android:layout_alignParentLeft="true" >
+	    <LinearLayout 
+	        android:id="@+id/player4ll"
+	        android:orientation="vertical"
+	        android:gravity="left"        
+	        android:layout_height="wrap_content"
+			android:layout_width="wrap_content" />
+	    <cs309.a1.shared.TextView
+		    android:id="@+id/player4text"
+		    android:text="@string/player_4" 
+		    android:layout_width="wrap_content"
+		    android:layout_height="fill_parent"
+		    android:textColor="#000000"
+		    android:textSize="50sp"
+		    android:textStyle="bold"
+		    android:rotation="90"
+		    android:visibility="invisible"
+		    android:gravity="left|center_vertical" /> 
+    </LinearLayout>
+    
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" >  
+        
+        <ImageView
+            android:id="@+id/drawpile"
+		    android:src="@drawable/back_blue_1"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:adjustViewBounds="true"
+		    android:paddingRight="100dip" />
+		<ImageView
+		    android:id="@+id/discardpile"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:adjustViewBounds="true" />
+    </LinearLayout>
+	
+    <ImageButton
+        android:id="@+id/gameboard_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@null"
+        android:padding="5dip"
+        android:src="@drawable/pause_button" />
+    
+    <ImageButton
+        android:id="@+id/gameboard_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:background="@null"
+        android:padding="5dip"
+        android:src="@drawable/refresh_button" />
+
+</RelativeLayout>

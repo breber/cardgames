@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/wooden_top"
+    android:gravity="center_vertical|center_horizontal"
+    android:keepScreenOn="true"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/title_ref"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/title_ref"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical" >
+
+        <cs309.a1.shared.Button
+            android:id="@+id/btCreate"
+            style="@style/MainMenuLargerButton"
+            android:layout_marginLeft="@dimen/mainMenuLargeButtonPadding"
+            android:layout_marginRight="@dimen/mainMenuLargeButtonPadding"
+            android:layout_marginTop="@dimen/mainMenuButtonSpacing"
+            android:text="@string/CreateGame" />
+
+        <cs309.a1.shared.Button
+            android:id="@+id/btJoin"
+            style="@style/MainMenuSmallerButton"
+            android:layout_marginBottom="@dimen/mainMenuButtonSpacing"
+            android:layout_marginLeft="@dimen/mainMenuSmallButtonPadding"
+            android:layout_marginRight="@dimen/mainMenuSmallButtonPadding"
+            android:layout_marginTop="@dimen/mainMenuButtonSpacing"
+            android:text="@string/Play" />
+
+        <cs309.a1.shared.Button
+            android:id="@+id/btRules"
+            style="@style/MainMenuSmallerButton"
+            android:layout_marginBottom="@dimen/mainMenuButtonSpacing"
+            android:layout_marginLeft="@dimen/mainMenuSmallButtonPadding"
+            android:layout_marginRight="@dimen/mainMenuSmallButtonPadding"
+            android:text="@string/Rules" />
+
+        <cs309.a1.shared.Button
+            android:id="@+id/btAbout"
+            style="@style/MainMenuSmallerButton"
+            android:layout_marginBottom="@dimen/mainMenuButtonSpacing"
+            android:layout_marginLeft="@dimen/mainMenuSmallButtonPadding"
+            android:layout_marginRight="@dimen/mainMenuSmallButtonPadding"
+            android:text="@string/About" />
+
+        <cs309.a1.shared.Button
+            android:id="@+id/btPref"
+            style="@style/MainMenuSmallerButton"
+            android:layout_marginBottom="@dimen/mainMenuButtonSpacing"
+            android:layout_marginLeft="@dimen/mainMenuSmallButtonPadding"
+            android:layout_marginRight="@dimen/mainMenuSmallButtonPadding"
+            android:text="@string/preferences" />
+    </LinearLayout>
+
+</RelativeLayout>

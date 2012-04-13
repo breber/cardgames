@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/popupStyle"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginLeft="@dimen/popupMarginLeftRight"
+    android:layout_marginRight="@dimen/popupMarginLeftRight"
+    android:orientation="vertical" >
+
+    <cs309.a1.shared.TextView
+        android:id="@+id/promptDialogTitle"
+        style="@style/popupTitleTextLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal" >
+
+        <cs309.a1.shared.Button
+            android:id="@+id/affirmative"
+            style="@style/GameButtonBlack"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dip"
+            android:layout_marginRight="35dip"
+            android:layout_marginTop="5dip"
+            android:layout_weight="1"
+            android:text="@string/yes" />
+
+        <cs309.a1.shared.Button
+            android:id="@+id/negative"
+            style="@style/GameButtonBlack"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:layout_weight="1"
+            android:text="@string/no" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/popupStyle"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginLeft="@dimen/popupMarginLeftRight"
+    android:layout_marginRight="@dimen/popupMarginLeftRight"
+    android:orientation="vertical" >
+
+    <cs309.a1.shared.TextView
+        style="@style/popupTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/enter_name" />
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:maxLength="10"
+        android:hint="@string/enter_name_here"
+        android:inputType="textPersonName" />
+
+    <cs309.a1.shared.Button
+        android:id="@+id/ok"
+        style="@style/GameButtonBlack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dip"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="5dip"
+        android:text="@string/ok" />
+
+</LinearLayout>

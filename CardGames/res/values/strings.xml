@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Card Games</string>
+
+    <!-- Main Menu -->
+    <string name="Play">Play</string>
+    <string name="CreateGame">Create Game</string>
+    <string name="Rules">Rules</string>
+    <string name="About">About</string>
+
+    <!-- Rules Activity -->
+    <string name="rulesActivityTitle">Rules</string>
+    <string name="game_rules_text">The basic game of Crazy Eights is played with a standard deck of 52 cards. Each player will be dealt five cards and the rest of the cards will be put into a draw pile which is placed face down on the playing table. After the cards are dealt, one card will be taken from and placed next to the draw pile face up. This will serve as the discard pile.
+
+The game will start with player 1 and continue in a counterclockwise fashion around the table. During each turn a player will either need to play a pile from his/her hand or select one card from the draw pile.
+\n\n
+Basic Game Play:\n	
+1. If the top card is not an eight then a player must play a card that matches suit or the number of the last card in the discard pile.\n
+2. An eight of any suit may be played at anytime during a players turn. If they choose to play an eight they must declare a suit.\n
+3. If an eight is present on the top of the discard pile then a card of the declared suit or another eight can be played.\n
+4. A draw will serve as a turn if a player cannot play a card.\n
+5. If the first card turned up for the discard pile is an eight, any card from player 1’s hand can be played as the first card. After this, the standard above rules apply.\n
+\n
+
+The first player to successfully get rid of all of their cards wins the game. If at any point in the game the draw pile is empty, all of the cards from the discard pile except for the top card will be re-shuffled to form a new draw pile.</string>
+
+    <!-- About Activity -->
+    <string name="aboutActivityTitle">About</string>
+
+    <!-- Pause Menu Activity -->
+    <string name="pauseGameTitle">Pause</string>
+
+    <!-- Quit Application Activity -->
+    <string name="exit_application">Are you sure you want to quit the application?</string>
+
+    <!-- Quit Game Activity -->
+    <string name="quit">Are you sure you want to quit the current game?</string>
+
+    <!-- Generic Strings -->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="cancel">Cancel</string>
+    <string name="main_menu">Main Menu</string>
+
+    <!-- Device List -->
+    <string name="scanning">Scanning for Devices</string>
+    <string name="no_devices_found">No devices found</string>
+    <string name="title_device_list">Device List</string>
+    <string name="button_scan">Scan for devices</string>
+
+    <!-- About Activity -->
+    <string name="about_text_player">This 2-4 player game requires one Android tablet per game and one Android device per player, all of which should have Bluetooth capabilities.  The tablet will serve as the game board, and each of the player’s devices will contain their hands of cards.  The tablet will connect to each of the devices via Bluetooth, and it will handle all logic and communication between these devices.  
+
+To use this application properly, download the application titled “Crazy Eights Game Board” to the tablet that will serve as the game host.  Once this has been done, first select Create Game from the Main Menu of the tablet, and then select Join Game from the Main Menu on each player’s device, including this one.  Players should then choose the host tablet from the connection list that will appear on their screens.  Press the Start button on the host tablet’s connection screen when all players have been connected in order to start the game.</string>
+
+    <!-- Connect Screen Handheld -->
+    <string name="waitingForGame">Waiting for game to begin…</string>
+
+    <!-- Show Cards Activity -->
+    <string name="Draw">Draw</string>
+
+    <!-- Select Suit Activity -->
+    <string name="selectsuit">Please select a suit</string>
+    <string name="Spades">Spades</string>
+    <string name="Hearts">Hearts</string>
+    <string name="Clubs">Clubs</string>
+    <string name="Diamonds">Diamonds</string>
+
+    <!-- Pause Activity -->
+    <string name="gamePaused">Paused</string>
+
+    <!-- Disconnected Activity -->
+    <string name="waiting">Waiting to reconnect…</string>
+
+    <!-- Game Results -->
+    <string name="winner">You Won!</string>
+    <string name="loser">You Lost :(</string>
+
+    <!-- Enter Name Activity -->
+    <string name="enter_name">Please enter your name</string>
+    <string name="ok">OK</string>
+    <string name="enter_name_here">Enter your name here</string>
+    
+    
+    
+    
+    
+        <!-- About Activity -->
+    <string name="about_text_gameboard">This 2-4 player game requires one Android tablet per game and one Android device per player, all of which should have Bluetooth capabilities.  The tablet will serve as the game board, and each of the player’s devices will contain their hands of cards.  The tablet will connect to each of the devices via Bluetooth, and it will handle all logic and communication between these devices.  
+
+To use this application properly, download the application titled “Crazy Eights Player” to the devices that each player will be using.  Once this has been done, first select Create Game from the Main Menu of this application, and then select Join Game from the Main Menu on each player’s device.  Players should then choose this device from the connection list that will appear on their screens.  Press the Start button on this device’s connection screen when all players have been connected in order to start the game.</string>
+
+    <!-- Connect Devices -->
+    <string name="start">Start</string>
+    <string name="deviceName">Device Name: </string>
+    <string name="connecting">Connecting&#8230;</string>
+
+    <!-- Gameboard Activity -->
+    <string name="player_1">Player 1</string>
+    <string name="player_2">Player 2</string>
+    <string name="player_3">Player 3</string>
+    <string name="player_4">Player 4</string>
+
+    <!-- Disconnected Player -->
+    <string name="reconnect">Reconnect</string>
+    <string name="drop_player">Drop Player</string>
+    <string name="player_lost">A player has been disconnected</string>
+
+    <!-- Pause Activity -->
+    <string name="resume">Resume</string>
+    
+    <!-- Preferences Activity -->
+    <string name="preferencesActivityTitle">Preferences</string>
+    <string name="Volume">Game Volume</string>
+	<string name="soundEffects">Sound Effects</string>
+	<string name="SpeechVolume">Speech Volume</string>
+	<string name="NumComputers">Maximum Number of Computer Players</string>
+	<string name="one">1</string>
+	<string name="two">2</string>
+	<string name="three">3</string>
+	<string name="four">4</string>
+	<string name="Easy">Easy</string>
+	<string name="Medium">Medium</string>
+	<string name="Hard">Hard</string>
+	<string name="difficultyComputers">Difficulty of Computers</string>
+	<string name="lang">Locale</string>
+	<string name="langCanada">Canada</string>
+	<string name="langUS">US</string>
+	<string name="langUK">UK</string>
+	<string name="langFrance">France</string>
+	<string name="langGerman">German</string>
+	<string name="Game">Game</string>
+	<string name="gameCrazyEights">Crazy Eights</string>
+    
+    <!-- Game Results Activity -->
+    <string name="gameResultsTitle">Game Over</string>
+    <string name="playerNWon">%s Wins!</string>
+    <string name="exitGame">Exit Game</string>
+    
+	<!-- Main Menu -->
+	<string name="preferences">Preferences</string>
+
+</resources>
