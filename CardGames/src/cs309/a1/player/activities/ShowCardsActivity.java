@@ -8,6 +8,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -226,18 +229,37 @@ public class ShowCardsActivity extends Activity {
 		//int pixels = (int) (size.x * Constants.CARD_IMAGE_SCALE * dpsToPixScale + 0.5f);
 		//int pixels = (int) (125 * dpsToPixScale + 0.5f);
 		final int screen_width = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
-		int pixels = (int) (screen_width * Constants.CARD_IMAGE_SCALE * dpsToPixScale + 0.5f);
+		
+		int scale;
+		
+		if(screen_width >= 720) scale = 550;
+		else if(screen_width >= 500) scale = 400;
+		else scale = 175;
+		
+		int pixels = (int) (scale * dpsToPixScale + 0.5f);
 
 		// edit layout attributes
-		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(pixels, LinearLayout.LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, pixels);
 
 		for (int i = 0; i < cardHand.size(); i++) {
+			
+			Bitmap original = BitmapFactory.decodeResource(getResources(), cardHand.get(i).getResourceId());
+			int orgWidth = original.getWidth();
+			int orgHeight = original.getHeight();
+			float newHeight = pixels;
+			
+			float scalePercentage = newHeight/orgHeight;
+			
+			Matrix matrix = new Matrix();
+			matrix.postScale(scalePercentage, scalePercentage);
+			
+			Bitmap resizedCard = Bitmap.createBitmap(original, 0, 0, orgWidth, orgHeight, matrix, true);
+			
 			// create ImageView to hold Card
 			ImageView toAdd = new ImageView(this);
-			toAdd.setImageResource(cardHand.get(i).getResourceId());
+			toAdd.setImageBitmap(resizedCard);
 			toAdd.setId(cardHand.get(i).getIdNum());
 			toAdd.setAdjustViewBounds(true);
-			toAdd.setScaleType(ScaleType.CENTER_INSIDE);
 			toAdd.setOnLongClickListener(playerController.getCardLongClickListener());
 
 			// Add a 5 px border around the image
