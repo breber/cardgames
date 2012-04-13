@@ -119,7 +119,7 @@ public class CrazyEightsGameController implements GameController {
 	 * The sound manager
 	 */
 	private SoundManager mySM;
-	
+
 	/**
 	 * This is how to tell if a play computer turn activity is currently running
 	 */
@@ -257,9 +257,6 @@ public class CrazyEightsGameController implements GameController {
 				String playerId = data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
 				game.dropPlayer(playerId);
 				refreshPlayers();
-				
-				// TODO: should the UI be updated?
-				// TODO: if this was the last player, should we go to the main menu?
 			} else if (resultCode == Activity.RESULT_OK) {
 				// We chose to add a new player, so start the ConnectActivity
 				// with the deviceId and isReconnect parameters
@@ -328,8 +325,8 @@ public class CrazyEightsGameController implements GameController {
 		}
 	}
 
-	
-	
+
+
 	/**
 	 * This function will be called when a players turn is over It will change
 	 * whoseTurn to the next player and send them the message that it is their
@@ -490,7 +487,7 @@ public class CrazyEightsGameController implements GameController {
 				e.printStackTrace();
 			}
 		}
-		
+
 		//this will check to see if the current player is a computer and the computer is not playing
 		if(players.get(whoseTurn).getIsComputer() == true && isComputerPlaying == false){
 			Intent computerTurn = new Intent(gameContext, PlayComputerTurnActivity.class);
@@ -537,11 +534,11 @@ public class CrazyEightsGameController implements GameController {
 				suitChosen = maxSuitIndex;
 			}
 
-		//computer difficulty 1
+			//computer difficulty 1
 		} else if (players.get(whoseTurn).getComputerDifficulty() == 1){
 
 
-		//computer difficulty 2 or greater
+			//computer difficulty 2 or greater
 		} else if (players.get(whoseTurn).getComputerDifficulty() >= 2){
 
 		}
