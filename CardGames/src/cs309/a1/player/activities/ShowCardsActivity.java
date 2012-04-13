@@ -14,7 +14,6 @@ import android.graphics.Matrix;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import cs309.a1.R;
 import cs309.a1.shared.Card;
