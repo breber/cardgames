@@ -119,6 +119,11 @@ public class CrazyEightsGameController implements GameController {
 	 * The sound manager
 	 */
 	private SoundManager mySM;
+	
+	/**
+	 * This is how to tell if a play computer turn activity is currently running
+	 */
+	private boolean isComputerPlaying = false;
 
 	/**
 	 * This will initialize a CrazyEightsGameController
@@ -251,7 +256,8 @@ public class CrazyEightsGameController implements GameController {
 				// We chose to drop the player, so let the Game know to do that
 				String playerId = data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
 				game.dropPlayer(playerId);
-
+				refreshPlayers();
+				
 				// TODO: should the UI be updated?
 				// TODO: if this was the last player, should we go to the main menu?
 			} else if (resultCode == Activity.RESULT_OK) {
@@ -284,6 +290,7 @@ public class CrazyEightsGameController implements GameController {
 			// sure everyone has the latest information
 			refreshPlayers();
 		} else if (requestCode == PLAY_COMPUTER_TURN) {
+			isComputerPlaying = false;
 			playComputerTurn();
 			advanceTurn();
 		}
@@ -350,9 +357,12 @@ public class CrazyEightsGameController implements GameController {
 		}
 		gameContext.updateSuit(onDiscard.getSuit());
 		if (players.get(whoseTurn).getIsComputer()) {
-			//play turn for computer player
-			Intent computerTurn = new Intent(gameContext, PlayComputerTurnActivity.class);
-			gameContext.startActivityForResult(computerTurn, PLAY_COMPUTER_TURN);
+			//play turn for computer player if not already
+			if(!isComputerPlaying){
+				Intent computerTurn = new Intent(gameContext, PlayComputerTurnActivity.class);
+				gameContext.startActivityForResult(computerTurn, PLAY_COMPUTER_TURN);
+				isComputerPlaying = true;
+			}
 		} else {
 			// tell the player it is their turn.
 			server.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn).getId());
@@ -480,8 +490,14 @@ public class CrazyEightsGameController implements GameController {
 				e.printStackTrace();
 			}
 		}
+		
+		//this will check to see if the current player is a computer and the computer is not playing
+		if(players.get(whoseTurn).getIsComputer() == true && isComputerPlaying == false){
+			Intent computerTurn = new Intent(gameContext, PlayComputerTurnActivity.class);
+			gameContext.startActivityForResult(computerTurn, PLAY_COMPUTER_TURN);
+			isComputerPlaying = true;
+		}
 	}
-
 	/**
 	 * This will play for a computer player based on the difficulty level. either play or draw a card.
 	 * This will be called after the PlayComputerTurnActivity has waited for the appropriate amount of time.
