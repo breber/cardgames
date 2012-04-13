@@ -497,7 +497,7 @@ public class CrazyEightsGameController implements GameController {
 		Card cardSelected = null;
 
 		//computer with difficulty 0
-		if(players.get(whoseTurn).getComputerDifficulty() < 0){
+		if(players.get(whoseTurn).getComputerDifficulty() == 0){
 			for (Card c : cards) {
 				if (gameRules.checkCard(c, onDiscard)) {
 					cardSelected = c;
