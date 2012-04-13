@@ -74,16 +74,6 @@ public class GameboardActivity extends Activity {
 	private ConnectionServer connection;
 
 	/**
-	 * The maximum number of cards to be displayed on longest sides of tablet
-	 */
-	private static final int MAX_DISPLAYED = 13;
-
-	/**
-	 * The maximum number of cards to be displayed on shortest sides of tablet
-	 */
-	private static final int MAX_DIS_SIDES = 7;
-
-	/**
 	 * The number of cards in player 1's hand
 	 */
 	private int player1cards;
@@ -457,7 +447,7 @@ public class GameboardActivity extends Activity {
 				if (location == 1) {
 					toAdd.setId(handSize);
 				} else {
-					toAdd.setId(2 * MAX_DISPLAYED + handSize);
+					toAdd.setId(2 * Constants.MAX_DISPLAYED + handSize);
 				}
 				toAdd.setAdjustViewBounds(true);
 				ll.addView(toAdd, lp);
@@ -465,7 +455,7 @@ public class GameboardActivity extends Activity {
 
 			// create half-sized card image to add to hand if current card count
 			// is less than display limit
-			else if (handSize <= MAX_DISPLAYED) {
+			else if (handSize <= Constants.MAX_DISPLAYED) {
 
 				Bitmap verticalCard = BitmapFactory.decodeResource(getResources(), newCard.getResourceId());
 				Matrix tempMatrix = new Matrix();
@@ -478,7 +468,7 @@ public class GameboardActivity extends Activity {
 							verticalCard.getWidth() / 2,
 							verticalCard.getHeight(), tempMatrix, true);
 					ImageView toAdd = new ImageView(this);
-					toAdd.setId(2 * MAX_DISPLAYED + handSize);
+					toAdd.setId(2 * Constants.MAX_DISPLAYED + handSize);
 					toAdd.setImageBitmap(halfCard);
 
 					lp = new LinearLayout.LayoutParams(pixels / 2,
@@ -521,7 +511,7 @@ public class GameboardActivity extends Activity {
 				/*
 				 * TextView iv = null;
 				 *
-				 * if(handSize == MAX_DISPLAYED + 1) { RelativeLayout rl =
+				 * if(handSize == Constants.MAX_DISPLAYED + 1) { RelativeLayout rl =
 				 * (RelativeLayout) findViewById(R.layout.gameboard);
 				 *
 				 * iv = new TextView(this);
@@ -530,7 +520,7 @@ public class GameboardActivity extends Activity {
 				 * RelativeLayout.LayoutParams(20, 20);
 				 *
 				 * ImageView fullCard = (ImageView)
-				 * findViewById((location-1)*MAX_DISPLAYED + 1);
+				 * findViewById((location-1)*Constants.MAX_DISPLAYED + 1);
 				 *
 				 * int[] viewLocation = new int[2];
 				 * fullCard.getLocationOnScreen(viewLocation); params.leftMargin
@@ -544,7 +534,7 @@ public class GameboardActivity extends Activity {
 				 * rl.addView(iv, params); } else { iv = (TextView)
 				 * findViewById(1000*(location+1)); }
 				 *
-				 * iv.setText("+" + (handSize - MAX_DISPLAYED));
+				 * iv.setText("+" + (handSize - Constants.MAX_DISPLAYED));
 				 */
 			}
 		}
@@ -574,9 +564,9 @@ public class GameboardActivity extends Activity {
 
 				ImageView toAdd = new ImageView(this);
 				if (location == 2)
-					toAdd.setId(MAX_DISPLAYED + handSize);
+					toAdd.setId(Constants.MAX_DISPLAYED + handSize);
 				else
-					toAdd.setId(3 * MAX_DISPLAYED + handSize);
+					toAdd.setId(3 * Constants.MAX_DISPLAYED + handSize);
 				toAdd.setImageBitmap(horCard);
 
 				lp = new LinearLayout.LayoutParams(
@@ -587,7 +577,7 @@ public class GameboardActivity extends Activity {
 
 			// create horizontal half-cards to display if maximum display count
 			// has not been reached
-			else if (handSize <= MAX_DIS_SIDES) {
+			else if (handSize <= Constants.MAX_DIS_SIDES) {
 
 				Bitmap horCard;
 
@@ -608,7 +598,7 @@ public class GameboardActivity extends Activity {
 					ll.removeAllViews();
 					for (int i = 1; i < handSize; i++) {
 						ImageView toAdd = new ImageView(this);
-						toAdd.setId(3 * MAX_DISPLAYED + i + 1);
+						toAdd.setId(3 * Constants.MAX_DISPLAYED + i + 1);
 						toAdd.setImageBitmap(horCard);
 
 						lp = new LinearLayout.LayoutParams((int) conversion,
@@ -626,7 +616,7 @@ public class GameboardActivity extends Activity {
 							verticalCard2.getHeight(), tempMatrix2, true);
 
 					ImageView toAdd = new ImageView(this);
-					toAdd.setId(3 * MAX_DISPLAYED + 1);
+					toAdd.setId(3 * Constants.MAX_DISPLAYED + 1);
 					toAdd.setImageBitmap(horCard2);
 
 					lp = new LinearLayout.LayoutParams(
@@ -642,7 +632,7 @@ public class GameboardActivity extends Activity {
 							verticalCard.getWidth() / 2,
 							verticalCard.getHeight(), tempMatrix, true);
 					ImageView toAdd = new ImageView(this);
-					toAdd.setId(MAX_DISPLAYED + handSize);
+					toAdd.setId(Constants.MAX_DISPLAYED + handSize);
 					toAdd.setImageBitmap(horCard);
 
 					lp = new LinearLayout.LayoutParams((int) conversion,
@@ -679,7 +669,7 @@ public class GameboardActivity extends Activity {
 		if (location == 1) {
 			ll = (LinearLayout) findViewById(R.id.player1ll);
 			handSize = --player1cards;
-			if (handSize < MAX_DISPLAYED) {
+			if (handSize < Constants.MAX_DISPLAYED) {
 				if (handSize == 0) {
 					ll.removeView(findViewById(1));
 				} else {
@@ -692,8 +682,8 @@ public class GameboardActivity extends Activity {
 		else if (location == 2) {
 			ll = (LinearLayout) findViewById(R.id.player2ll);
 			handSize = --player2cards;
-			if (handSize < MAX_DIS_SIDES) {
-				ll.removeView(findViewById(MAX_DISPLAYED + handSize + 1));
+			if (handSize < Constants.MAX_DIS_SIDES) {
+				ll.removeView(findViewById(Constants.MAX_DISPLAYED + handSize + 1));
 			}
 		}
 
@@ -701,8 +691,8 @@ public class GameboardActivity extends Activity {
 		else if (location == 3) {
 			ll = (LinearLayout) findViewById(R.id.player3ll);
 			handSize = --player3cards;
-			if (handSize < MAX_DISPLAYED) {
-				ll.removeView(findViewById(2 * MAX_DISPLAYED + handSize + 1));
+			if (handSize < Constants.MAX_DISPLAYED) {
+				ll.removeView(findViewById(2 * Constants.MAX_DISPLAYED + handSize + 1));
 			}
 		}
 
@@ -710,11 +700,11 @@ public class GameboardActivity extends Activity {
 		else {
 			ll = (LinearLayout) findViewById(R.id.player4ll);
 			handSize = --player4cards;
-			if (handSize < MAX_DIS_SIDES) {
+			if (handSize < Constants.MAX_DIS_SIDES) {
 				if (handSize == 0) {
-					ll.removeView(findViewById(3 * MAX_DISPLAYED + 1));
+					ll.removeView(findViewById(3 * Constants.MAX_DISPLAYED + 1));
 				} else {
-					ll.removeView(findViewById(3 * MAX_DISPLAYED + handSize + 1));
+					ll.removeView(findViewById(3 * Constants.MAX_DISPLAYED + handSize + 1));
 				}
 			}
 		}

@@ -17,6 +17,16 @@ public class Constants {
 	public static final int CARD_IMAGE_SCALE_MED = 400;
 	public static final int CARD_IMAGE_SCALE_LARGE = 500;
 	
+	/**
+	 * The maximum number of cards to be displayed on longest sides of tablet
+	 */
+	public static final int MAX_DISPLAYED = 13;
+	
+	/**
+	 * The maximum number of cards to be displayed on shortest sides of tablet
+	 */
+	public static final int MAX_DIS_SIDES = 7;
+	
 	/* Game Constants */
 	/**
 	 * A constant to represent the Clubs suit

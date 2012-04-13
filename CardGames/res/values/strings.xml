@@ -49,11 +49,6 @@ The first player to successfully get rid of all of their cards wins the game. If
     <string name="title_device_list">Device List</string>
     <string name="button_scan">Scan for devices</string>
 
-    <!-- About Activity -->
-    <string name="about_text_player">This 2-4 player game requires one Android tablet per game and one Android device per player, all of which should have Bluetooth capabilities.  The tablet will serve as the game board, and each of the player’s devices will contain their hands of cards.  The tablet will connect to each of the devices via Bluetooth, and it will handle all logic and communication between these devices.  
-
-To use this application properly, download the application titled “Crazy Eights Game Board” to the tablet that will serve as the game host.  Once this has been done, first select Create Game from the Main Menu of the tablet, and then select Join Game from the Main Menu on each player’s device, including this one.  Players should then choose the host tablet from the connection list that will appear on their screens.  Press the Start button on the host tablet’s connection screen when all players have been connected in order to start the game.</string>
-
     <!-- Connect Screen Handheld -->
     <string name="waitingForGame">Waiting for game to begin…</string>
 
@@ -84,9 +79,8 @@ To use this application properly, download the application titled “Crazy Eight
     <string name="default_name">Anonymous</string>
 
     <!-- About Activity -->
-    <string name="about_text_gameboard">This 2-4 player game requires one Android tablet per game and one Android device per player, all of which should have Bluetooth capabilities.  The tablet will serve as the game board, and each of the player’s devices will contain their hands of cards.  The tablet will connect to each of the devices via Bluetooth, and it will handle all logic and communication between these devices.  
-
-To use this application properly, download the application titled “Crazy Eights Player” to the devices that each player will be using.  Once this has been done, first select Create Game from the Main Menu of this application, and then select Join Game from the Main Menu on each player’s device.  Players should then choose this device from the connection list that will appear on their screens.  Press the Start button on this device’s connection screen when all players have been connected in order to start the game.</string>
+    <string name="about_text_gameboard">This 2-4 player card game application requires one Android tablet per game and one Android device of any kind per player, all of which should have Bluetooth capabilities.  The tablet will serve as the game board, and each of the player’s devices will contain their hands of cards.  The tablet will connect to each of the devices via Bluetooth, and it will handle all logic and communication between these devices.\n\nTo start a game, press Create Game on the tablet that you will be using as your game board. All of the players’ devices should have a button that says Play on their Main Menu, which they should press to display a list of Bluetooth devices nearby. They should then select the tablet’s Bluetooth ID (appears on top left corner of tablet screen) from the device list to initiate a connection. Once a connection has been established between the tablet and a device, the player will be prompted to enter their name. Once all connected players have entered their name, the Start button can be pressed on the tablet and the game will begin.
+    </string>
 
     <!-- Connect Devices -->
     <string name="start">Start</string>

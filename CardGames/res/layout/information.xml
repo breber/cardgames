@@ -25,7 +25,7 @@
             android:id="@+id/informationBody"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/about_text_player"
+            android:text="@string/about_text_gameboard"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/black" />
     </ScrollView>
