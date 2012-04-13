@@ -231,8 +231,8 @@ public class ShowCardsActivity extends Activity {
 		
 		int scale;
 		
-		if(screen_width >= 720) scale = 550;
-		else if(screen_width >= 500) scale = 400;
+		if(screen_width >= 720) scale = 175;
+		else if(screen_width >= 500) scale = 175;
 		else scale = 175;
 		
 		int pixels = (int) (scale * dpsToPixScale + 0.5f);
