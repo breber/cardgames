@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <dimen name="titleFont">50sp</dimen>
+    <dimen name="titlePaddingTopBottom">20dip</dimen>
+    <dimen name="mainMenuSmallButtonText">20sp</dimen>
+    <dimen name="mainMenuLargeButtonText">30sp</dimen>
+    <dimen name="mainMenuSmallButtonPadding">85dip</dimen>
+    <dimen name="mainMenuLargeButtonPadding">75dip</dimen>
+    <dimen name="mainMenuButtonSpacing">15dip</dimen>
+    <dimen name="popupMarginLeftRight">100dip</dimen>
+    
+</resources>

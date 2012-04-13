@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="titleFont">50sp</dimen>
+    <dimen name="titleFont">40sp</dimen>
     <dimen name="titlePaddingTopBottom">10dip</dimen>
     <dimen name="popupTitle">45sp</dimen>
     <dimen name="mainMenuSmallButtonText">30sp</dimen>
