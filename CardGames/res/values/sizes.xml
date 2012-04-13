@@ -11,10 +11,8 @@
     <dimen name="mainMenuButtonSpacing">8dip</dimen>
     <dimen name="buttonTextSize">45sp</dimen>
     <dimen name="listViewText">20sp</dimen>
-    <dimen name="popupMarginLeftRight">60dip</dimen>
+    <dimen name="popupMarginLeftRight">50dip</dimen>
     <dimen name="infoTextViewPaddingLeftRight">40dip</dimen>
     <dimen name="infoTextViewPaddingTopBottom">10dip</dimen>
-    
-    <string name="default_name">Anonymous</string>
 
 </resources>

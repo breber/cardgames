@@ -81,12 +81,9 @@ To use this application properly, download the application titled “Crazy Eight
     <string name="enter_name">Please enter your name</string>
     <string name="ok">OK</string>
     <string name="enter_name_here">Enter your name here</string>
-    
-    
-    
-    
-    
-        <!-- About Activity -->
+    <string name="default_name">Anonymous</string>
+
+    <!-- About Activity -->
     <string name="about_text_gameboard">This 2-4 player game requires one Android tablet per game and one Android device per player, all of which should have Bluetooth capabilities.  The tablet will serve as the game board, and each of the player’s devices will contain their hands of cards.  The tablet will connect to each of the devices via Bluetooth, and it will handle all logic and communication between these devices.  
 
 To use this application properly, download the application titled “Crazy Eights Player” to the devices that each player will be using.  Once this has been done, first select Create Game from the Main Menu of this application, and then select Join Game from the Main Menu on each player’s device.  Players should then choose this device from the connection list that will appear on their screens.  Press the Start button on this device’s connection screen when all players have been connected in order to start the game.</string>
@@ -94,7 +91,7 @@ To use this application properly, download the application titled “Crazy Eight
     <!-- Connect Devices -->
     <string name="start">Start</string>
     <string name="deviceName">Device Name: </string>
-    <string name="connecting">Connecting&#8230;</string>
+    <string name="connecting">Connecting…</string>
 
     <!-- Gameboard Activity -->
     <string name="player_1">Player 1</string>
@@ -109,36 +106,36 @@ To use this application properly, download the application titled “Crazy Eight
 
     <!-- Pause Activity -->
     <string name="resume">Resume</string>
-    
+
     <!-- Preferences Activity -->
     <string name="preferencesActivityTitle">Preferences</string>
     <string name="Volume">Game Volume</string>
-	<string name="soundEffects">Sound Effects</string>
-	<string name="SpeechVolume">Speech Volume</string>
-	<string name="NumComputers">Maximum Number of Computer Players</string>
-	<string name="one">1</string>
-	<string name="two">2</string>
-	<string name="three">3</string>
-	<string name="four">4</string>
-	<string name="Easy">Easy</string>
-	<string name="Medium">Medium</string>
-	<string name="Hard">Hard</string>
-	<string name="difficultyComputers">Difficulty of Computers</string>
-	<string name="lang">Locale</string>
-	<string name="langCanada">Canada</string>
-	<string name="langUS">US</string>
-	<string name="langUK">UK</string>
-	<string name="langFrance">France</string>
-	<string name="langGerman">German</string>
-	<string name="Game">Game</string>
-	<string name="gameCrazyEights">Crazy Eights</string>
-    
+    <string name="soundEffects">Sound Effects</string>
+    <string name="SpeechVolume">Speech Volume</string>
+    <string name="NumComputers">Maximum Number of Computer Players</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
+    <string name="Easy">Easy</string>
+    <string name="Medium">Medium</string>
+    <string name="Hard">Hard</string>
+    <string name="difficultyComputers">Difficulty of Computers</string>
+    <string name="lang">Locale</string>
+    <string name="langCanada">Canada</string>
+    <string name="langUS">US</string>
+    <string name="langUK">UK</string>
+    <string name="langFrance">France</string>
+    <string name="langGerman">German</string>
+    <string name="Game">Game</string>
+    <string name="gameCrazyEights">Crazy Eights</string>
+
     <!-- Game Results Activity -->
     <string name="gameResultsTitle">Game Over</string>
     <string name="playerNWon">%s Wins!</string>
     <string name="exitGame">Exit Game</string>
-    
-	<!-- Main Menu -->
-	<string name="preferences">Preferences</string>
+
+    <!-- Main Menu -->
+    <string name="preferences">Preferences</string>
 
 </resources>
