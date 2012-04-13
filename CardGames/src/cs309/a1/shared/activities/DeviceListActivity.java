@@ -299,6 +299,10 @@ public class DeviceListActivity extends Activity {
 	 * @return whether they have a service running on BluetoothConstants.MY_UUID
 	 */
 	private boolean checkUuids(BluetoothDevice dev) {
+		if (dev == null || dev.getUuids() == null) {
+			return false;
+		}
+
 		for (ParcelUuid uuid : dev.getUuids()) {
 			if (BluetoothConstants.MY_UUID.equals(uuid.getUuid())) {
 				if (Util.isDebugBuild()) {
