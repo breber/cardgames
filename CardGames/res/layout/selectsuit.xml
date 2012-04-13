@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/popupStyle"
-    android:layout_width="fill_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:padding="10dip"
     android:layout_marginLeft="@dimen/popupMarginLeftRight"
     android:layout_marginRight="@dimen/popupMarginLeftRight"
     android:orientation="vertical" >
 
     <cs309.a1.shared.TextView
         style="@style/popupTitleTextLarge"
-        android:layout_width="616dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical|center_horizontal"
         android:text="@string/selectsuit" />
@@ -24,7 +25,7 @@
         <cs309.a1.shared.Button
             android:id="@+id/Hearts"
             style="@style/GameButtonBlack"
-            android:layout_width="225dip"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dip"
             android:layout_marginRight="10dip"
@@ -35,7 +36,7 @@
         <cs309.a1.shared.Button
             android:id="@+id/Spades"
             style="@style/GameButtonBlack"
-            android:layout_width="225dip"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
@@ -52,7 +53,7 @@
         <cs309.a1.shared.Button
             android:id="@+id/Clubs"
             style="@style/GameButtonBlack"
-            android:layout_width="225dip"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dip"
             android:layout_marginRight="10dip"
@@ -63,7 +64,7 @@
         <cs309.a1.shared.Button
             android:id="@+id/Diamonds"
             style="@style/GameButtonBlack"
-            android:layout_width="225dip"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
