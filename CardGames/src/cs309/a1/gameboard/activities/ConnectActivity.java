@@ -41,6 +41,10 @@ import cs309.a1.shared.connection.ConnectionServer;
 /**
  * This Activity will show how many players are connected, and
  * will allow them to start the game if there are enough players.
+ * 
+ * Activity Results:
+ * 		RESULT_OK - if the Start Game button was pressed
+ * 		RESULT_CANCELLED - if the user backed out of the Activity
  */
 public class ConnectActivity extends Activity {
 
@@ -321,10 +325,13 @@ public class ConnectActivity extends Activity {
 							}
 						});
 
+						// We will update the player's name, id, and
+						// the fact that they are not a computer
 						if (positionToFill != -1) {
 							Player p = players.get(positionToFill);
 							p.setId(playerIds.get(positionToFill));
 							p.setName(playerNames.get(playerIds.get(positionToFill)));
+							p.setIsComputer(false);
 						}
 					}
 
@@ -334,7 +341,15 @@ public class ConnectActivity extends Activity {
 				}
 			}
 		});
+	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onBackPressed()
+	 */
+	@Override
+	public void onBackPressed() {
+		setResult(RESULT_CANCELED);
+		finish();
 	}
 
 	/* (non-Javadoc)
@@ -427,7 +442,7 @@ public class ConnectActivity extends Activity {
 				Toast.makeText(this, playerNames.get(s), Toast.LENGTH_SHORT).show();
 			}
 
-			if (NO_NAME_SELECTED.equals(playerNames.get(s))) {
+			if (NO_NAME_SELECTED.equals(playerNames.get(s)) || i == positionToFill) {
 				// The user hasn't selected a name yet, so show the spinning progress bar
 				// Set this user's device as the "on" screen
 				playerImageViews[i].setImageResource(R.drawable.on_device);

@@ -265,6 +265,10 @@ public class CrazyEightsGameController implements GameController {
 				i.putExtra(ConnectionConstants.KEY_DEVICE_ID, data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID));
 				gameContext.startActivityForResult(i, CHOOSE_PLAYER);
 
+				// We will initially drop the player, to handle the case where they don't actually
+				// reconnect a player in the Connect Screen.
+				game.dropPlayer(data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID));
+
 				// Unregister the receiver so that we don't get an annoying
 				// popup when we are on the activity
 				gameContext.unregisterReceiver();
