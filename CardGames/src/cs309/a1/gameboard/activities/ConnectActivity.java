@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import cs309.a1.R;
 import cs309.a1.shared.Constants;
@@ -42,6 +43,7 @@ import cs309.a1.shared.connection.ConnectionServer;
  * will allow them to start the game if there are enough players.
  */
 public class ConnectActivity extends Activity {
+
 	/**
 	 * Logcat debug tag
 	 */
@@ -51,6 +53,11 @@ public class ConnectActivity extends Activity {
 	 * The request code to keep track of the Bluetooth request enable intent
 	 */
 	private static final int REQUEST_ENABLE_BT = Math.abs("REQUEST_BLUETOOTH".hashCode());
+
+	/**
+	 * The value used as the name in the map for when a user hasn't entered a name yet
+	 */
+	private static final String NO_NAME_SELECTED = "NO_NAME_SELECTED";
 
 	/**
 	 * Indicates whether this is a reconnect or a regular connect
@@ -68,6 +75,12 @@ public class ConnectActivity extends Activity {
 	 * the names of the players.
 	 */
 	private TextView[] playerTextViews = new TextView[4];
+
+	/**
+	 * An array of ProgressBars. These are the progress bars inside the ImageViews
+	 * that will display when a player is connected, but hasn't submitted a name yet.
+	 */
+	private ProgressBar[] playerProgressBars = new ProgressBar[4];
 
 	/**
 	 * A reference to the BluetoothAdapter. This allows us to check if Bluetooth is enabled.
@@ -116,6 +129,10 @@ public class ConnectActivity extends Activity {
 
 			String action = intent.getAction();
 
+			if (Util.isDebugBuild()) {
+				Log.d(TAG, "onReceive: " + action);
+			}
+
 			if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
 				if (messageType == Constants.GET_PLAYER_NAME) {
 					String deviceAddress = intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
@@ -129,8 +146,6 @@ public class ConnectActivity extends Activity {
 						// this position
 						if (positionToFill != -1) {
 							playerIds.set(positionToFill, deviceAddress);
-						} else {
-							playerIds.add(deviceAddress);
 						}
 
 						playerNames.put(deviceAddress, playerName);
@@ -140,12 +155,19 @@ public class ConnectActivity extends Activity {
 				}
 			} else if (ConnectionConstants.STATE_CHANGE_INTENT.equals(action)) {
 				int state = intent.getIntExtra(ConnectionConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_LISTEN);
+				String deviceId = intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
+
+				if (Util.isDebugBuild()) {
+					Log.d(TAG, "onReceive: [" + deviceId + "]: new state = " + state);
+				}
 
 				// If we are now in the LISTEN state, remove the player's name from the list
-				if (state == BluetoothConstants.STATE_LISTEN) {
-					String deviceID = intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
-					playerNames.remove(deviceID);
-					playerIds.remove(deviceID);
+				if (state == BluetoothConstants.STATE_LISTEN || state == BluetoothConstants.STATE_NONE) {
+					playerNames.remove(deviceId);
+					playerIds.remove(deviceId);
+				} else if (state == BluetoothConstants.STATE_CONNECTED) {
+					playerNames.put(deviceId, NO_NAME_SELECTED);
+					playerIds.add(deviceId);
 				}
 			}
 
@@ -178,6 +200,11 @@ public class ConnectActivity extends Activity {
 		playerTextViews[1] = (TextView) findViewById(R.id.connectDeviceP2TextView);
 		playerTextViews[2] = (TextView) findViewById(R.id.connectDeviceP3TextView);
 		playerTextViews[3] = (TextView) findViewById(R.id.connectDeviceP4TextView);
+
+		playerProgressBars[0] = (ProgressBar) findViewById(R.id.connectDeviceP1ProgressBar);
+		playerProgressBars[1] = (ProgressBar) findViewById(R.id.connectDeviceP2ProgressBar);
+		playerProgressBars[2] = (ProgressBar) findViewById(R.id.connectDeviceP3ProgressBar);
+		playerProgressBars[3] = (ProgressBar) findViewById(R.id.connectDeviceP4ProgressBar);
 
 
 		// Get the BluetoothAdapter for doing operations with Bluetooth
@@ -400,10 +427,17 @@ public class ConnectActivity extends Activity {
 				Toast.makeText(this, playerNames.get(s), Toast.LENGTH_SHORT).show();
 			}
 
-			if (connected.contains(s)) {
+			if (NO_NAME_SELECTED.equals(playerNames.get(s))) {
+				// The user hasn't selected a name yet, so show the spinning progress bar
+				// Set this user's device as the "on" screen
+				playerImageViews[i].setImageResource(R.drawable.on_device);
+				playerTextViews[i].setVisibility(View.INVISIBLE);
+				playerProgressBars[i].setVisibility(View.VISIBLE);
+			} else if (connected.contains(s)) {
 				// Set this user's device as the "on" screen
 				playerImageViews[i].setImageResource(R.drawable.on_device);
 				playerTextViews[i].setVisibility(View.VISIBLE);
+				playerProgressBars[i].setVisibility(View.INVISIBLE);
 
 				// Show either the Default name, or the player chosen
 				// name on their device
@@ -415,7 +449,17 @@ public class ConnectActivity extends Activity {
 			} else {
 				playerImageViews[i].setImageResource(R.drawable.off_device);
 				playerTextViews[i].setVisibility(View.INVISIBLE);
+				playerProgressBars[i].setVisibility(View.INVISIBLE);
 			}
+
+			i++;
+		}
+
+		// For the rest of the devices, set them to off
+		while (i < 4) {
+			playerImageViews[i].setImageResource(R.drawable.off_device);
+			playerTextViews[i].setVisibility(View.INVISIBLE);
+			playerProgressBars[i].setVisibility(View.INVISIBLE);
 
 			i++;
 		}
