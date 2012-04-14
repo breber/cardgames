@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_marginLeft="@dimen/popupMarginLeftRight"
-    android:layout_marginRight="@dimen/popupMarginLeftRight" >
+    android:layout_marginRight="@dimen/popupMarginLeftRight"
+    android:keepScreenOn="true" >
 
     <ProgressBar
         android:id="@+id/progressDialogProgressbar"
