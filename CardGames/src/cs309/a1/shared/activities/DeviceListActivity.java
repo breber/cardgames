@@ -3,6 +3,7 @@ package cs309.a1.shared.activities;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -298,6 +299,7 @@ public class DeviceListActivity extends Activity {
 	 * @param dev the remote Bluetooth device
 	 * @return whether they have a service running on BluetoothConstants.MY_UUID
 	 */
+	@TargetApi(15)
 	private boolean checkUuids(BluetoothDevice dev) {
 		if (dev == null || dev.getUuids() == null) {
 			return false;

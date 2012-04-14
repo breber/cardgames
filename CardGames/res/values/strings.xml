@@ -40,14 +40,12 @@ The first player to successfully get rid of all of their cards wins the game. If
     <!-- Generic Strings -->
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="cancel">Cancel</string>
     <string name="main_menu">Main Menu</string>
 
     <!-- Device List -->
     <string name="scanning">Scanning for Devices</string>
     <string name="no_devices_found">No devices found</string>
     <string name="title_device_list">Device List</string>
-    <string name="button_scan">Scan for devices</string>
 
     <!-- Connect Screen Handheld -->
     <string name="waitingForGame">Waiting for game to begin…</string>
@@ -124,9 +122,7 @@ The first player to successfully get rid of all of their cards wins the game. If
     <string name="gameCrazyEights">Crazy Eights</string>
 
     <!-- Game Results Activity -->
-    <string name="gameResultsTitle">Game Over</string>
     <string name="playerNWon">%s Wins!</string>
-    <string name="exitGame">Exit Game</string>
 
     <!-- Main Menu -->
     <string name="preferences">Preferences</string>
