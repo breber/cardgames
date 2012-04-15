@@ -4,9 +4,9 @@
     <!-- A %s represents the player's name -->
     <string-array name="phrases">
         <item>Hey %s, play a card</item>
-        <item>Yo %s you are needed</item>
-        <item>%s get a job</item>
-        <item>Wake up %s and smell the waffles</item>
+        <item>Hey %s, it is your turn</item>
+        <item>%s go!</item>
+        <item>%s please play</item>
         <item>%s your turn</item>
     </string-array>
 
