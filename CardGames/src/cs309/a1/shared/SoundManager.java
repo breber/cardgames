@@ -76,17 +76,17 @@ public class SoundManager {
 	private final String[] playerTurnPrompt;
 
 	/**
-	 * array to store the soundpool IDs for the draw card sounds
+	 * array to store the SoundPool IDs for the draw card sounds
 	 */
 	private int[] drawCardSounds;
 
 	/**
-	 * array to store the soundpool IDs for the play card sounds
+	 * array to store the SoundPool IDs for the play card sounds
 	 */
 	private int[] playCardSounds;
 
 	/**
-	 * array to store the soundpool IDs for the shuffle card sounds
+	 * array to store the SoundPool IDs for the shuffle card sounds
 	 */
 	private int[] shuffleCardSounds;
 

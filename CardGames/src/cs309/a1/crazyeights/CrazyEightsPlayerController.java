@@ -100,7 +100,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	private Button draw;
 
 	/**
-	 * The bluetooth client that is used to send messages to the GameBoard
+	 * The client that is used to send messages to the GameBoard 
 	 */
 	private ConnectionClient connection;
 
@@ -110,7 +110,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	private CardTranslator ct;
 
 	/**
-	 * This is a soundmanager instance that can do text to speech and other
+	 * This is a SoundManager instance that can do text to speech and other
 	 * sounds.
 	 */
 	private SoundManager mySM;
@@ -126,7 +126,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	 * @param context This is an instance of the ShowCardsActivity
 	 * @param playGiven The Play button
 	 * @param drawGiven The Draw button
-	 * @param btcGiven The bluetooth client
+	 * @param connectionGiven The connection client
 	 * @param cardHandGiven The list of cards that this player has
 	 */
 	public CrazyEightsPlayerController(Context context, Button playGiven,
@@ -265,7 +265,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 					if (cardSelected.getValue() == 7) {
 						Intent selectSuit = new Intent(playerContext, SelectSuitActivity.class);
 						playerContext.startActivityForResult(selectSuit, CHOOSE_SUIT);
-						// go to the onactivityresult to finish this turn
+						// go to the onActivityResult to finish this turn
 					} else {
 						connection.write(Constants.PLAY_CARD, cardSelected);
 						Toast.makeText(playerContext.getApplicationContext(),
@@ -374,15 +374,12 @@ public class CrazyEightsPlayerController implements PlayerController {
 	}
 
 	/**
-	 * This will be used for each card imageview and will allow the card to be
+	 * This will be used for each card ImageView and will allow the card to be
 	 * selected when it is LongClicked
 	 */
 	private class CardSelectionClickListener implements View.OnLongClickListener {
 		@Override
 		public boolean onLongClick(View v) {
-			// so this means they just selected the card.
-			// we could remove it from the hand below and place it so
-
 			// Show an animation indicating the card was selected
 			ScaleAnimation scale = new ScaleAnimation((float) 1.2, (float) 1.2,	(float) 1.2, (float) 1.2);
 			scale.scaleCurrentDuration(5);

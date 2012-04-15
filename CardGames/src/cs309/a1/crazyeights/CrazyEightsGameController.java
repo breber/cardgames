@@ -545,7 +545,9 @@ public class CrazyEightsGameController implements GameController {
 
 		//computer difficulty Medium
 		} else if (players.get(whoseTurn).getComputerDifficulty().equals(Constants.MEDIUM) 
-				|| players.get(whoseTurn).getComputerDifficulty().equals(Constants.HARD)  ) { //TODO remove HARD from here once HARD is added below
+				|| players.get(whoseTurn).getComputerDifficulty().equals(Constants.HARD)  ) { 
+			//TODO remove HARD from here once HARD is added below
+			
 			List<Card> sameSuit = new ArrayList<Card>();
 			List<Card> sameNum = new ArrayList<Card>();
 			List<Card> special = new ArrayList<Card>();
