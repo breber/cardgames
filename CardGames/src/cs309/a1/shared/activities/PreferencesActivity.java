@@ -265,8 +265,15 @@ public class PreferencesActivity extends Activity {
 		setResult(RESULT_OK);
 		
 		// put the new preferences in the shared preferences
-		prefsEditor.putBoolean(SPEECH_VOLUME, speechVolume.isChecked());
-		prefsEditor.putBoolean(SOUND_EFFECTS, soundEffects.isChecked());
+		//add the sound effects preference
+		if(soundEffects != null){			
+			prefsEditor.putBoolean(SOUND_EFFECTS, soundEffects.isChecked());
+		}
+		
+		//add the speech volume preference
+		if(speechVolume != null){			
+			prefsEditor.putBoolean(SPEECH_VOLUME, speechVolume.isChecked());
+		}
 		
 		// set number of computers
 		if(numComputerSpinner != null){
