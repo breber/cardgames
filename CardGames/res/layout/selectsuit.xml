@@ -28,35 +28,27 @@
             android:src="@drawable/heartsuitimage"
             android:layout_width="@dimen/selectSuitImage"
             android:layout_height="wrap_content"
-            android:paddingRight="5dip"
-            android:paddingBottom="10dip" 
-            android:paddingTop="10dip"
+            android:layout_marginRight="5dip"
             android:adjustViewBounds="true" />
         <ImageView 
             android:id="@+id/clubSuit"
             android:src="@drawable/clubsuitimage"
             android:layout_width="@dimen/selectSuitImage"
             android:layout_height="wrap_content"
-            android:paddingRight="5dip"
-            android:paddingBottom="10dip"
-            android:paddingTop="10dip"
+            android:layout_marginRight="5dip"
             android:adjustViewBounds="true" />
         <ImageView 
             android:id="@+id/diamondSuit"
             android:src="@drawable/diamondsuitimage"
             android:layout_width="@dimen/selectSuitImage"
             android:layout_height="wrap_content"
-            android:paddingRight="5dip"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
+            android:layout_marginRight="5dip"
             android:adjustViewBounds="true" />
         <ImageView 
             android:id="@+id/spadeSuit"
             android:src="@drawable/spadesuitimage"
             android:layout_width="@dimen/selectSuitImage"
             android:layout_height="wrap_content"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
             android:adjustViewBounds="true" />
         
     </LinearLayout>
