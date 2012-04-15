@@ -1,4 +1,4 @@
-package cs309.a1.gameboard.activities;
+package cs309.a1.shared.activities;
 
 import static cs309.a1.shared.Constants.CONNECTION_TYPE;
 import static cs309.a1.shared.Constants.CRAZY_EIGHTS;

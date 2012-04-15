@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import cs309.a1.R;
 import cs309.a1.gameboard.activities.ConnectActivity;
-import cs309.a1.gameboard.activities.PreferencesActivity;
 import cs309.a1.player.activities.ShowCardsActivity;
 import cs309.a1.shared.Util;
 
@@ -81,17 +81,15 @@ public class MainMenu extends Activity {
 		});
 
 		// Set the listener for the preferences button
-		Button preferences = (Button) findViewById(R.id.btPref);
-
-		if (preferences != null) {
-			preferences.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent preferencesButtonClick = new Intent(MainMenu.this,	PreferencesActivity.class);
-					startActivity(preferencesButtonClick);
-				}
-			});
-		}
+		ImageButton preferences = (ImageButton) findViewById(R.id.titleSettingsButton);
+		preferences.setVisibility(View.VISIBLE);
+		preferences.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent preferencesButtonClick = new Intent(MainMenu.this, PreferencesActivity.class);
+				startActivity(preferencesButtonClick);
+			}
+		});
 	}
 
 

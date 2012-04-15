@@ -131,7 +131,7 @@
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.CrazyEights" />
         <activity
-            android:name=".gameboard.activities.PreferencesActivity"
+            android:name=".shared.activities.PreferencesActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.CrazyEights" />

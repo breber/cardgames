@@ -52,14 +52,6 @@
             android:layout_marginLeft="@dimen/mainMenuSmallButtonPadding"
             android:layout_marginRight="@dimen/mainMenuSmallButtonPadding"
             android:text="@string/About" />
-
-        <cs309.a1.shared.Button
-            android:id="@+id/btPref"
-            style="@style/MainMenuSmallerButton"
-            android:layout_marginBottom="@dimen/mainMenuButtonSpacing"
-            android:layout_marginLeft="@dimen/mainMenuSmallButtonPadding"
-            android:layout_marginRight="@dimen/mainMenuSmallButtonPadding"
-            android:text="@string/preferences" />
     </LinearLayout>
 
 </RelativeLayout>
