@@ -8,7 +8,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ImageView;
 import cs309.a1.R;
 
 /**
@@ -34,7 +34,8 @@ public class SelectSuitActivity extends Activity{
 		setContentView(R.layout.selectsuit);
 
 		// Set the listener for the spade button
-		Button spade = (Button) findViewById(R.id.Spades);
+		ImageView spade = (ImageView) findViewById(R.id.spadeSuit);
+		spade.setClickable(true);
 		spade.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -44,7 +45,8 @@ public class SelectSuitActivity extends Activity{
 		});
 
 		// Set the listener for the heart button
-		Button heart = (Button) findViewById(R.id.Hearts);
+		ImageView heart = (ImageView) findViewById(R.id.heartSuit);
+		heart.setClickable(true);
 		heart.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -54,7 +56,9 @@ public class SelectSuitActivity extends Activity{
 		});
 
 		// Set the listener for the club button
-		Button club = (Button) findViewById(R.id.Clubs);
+		//Button club = (Button) findViewById(R.id.Clubs);
+		ImageView club = (ImageView) findViewById(R.id.clubSuit);
+		club.setClickable(true);
 		club.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -64,7 +68,9 @@ public class SelectSuitActivity extends Activity{
 		});
 
 		// Set the listener for the diamond button
-		Button diamond = (Button) findViewById(R.id.Diamonds);
+		//Button diamond = (Button) findViewById(R.id.Diamonds);
+		ImageView diamond = (ImageView) findViewById(R.id.diamondSuit);
+		diamond.setClickable(true);
 		diamond.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

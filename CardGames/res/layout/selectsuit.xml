@@ -23,6 +23,25 @@
         android:gravity="center_vertical|center_horizontal"
         android:orientation="horizontal" >
 
+        <ImageView 
+            android:id="@+id/heartSuit"
+            android:src="@drawable/heartsuitimage"
+            android:layout_width="@dimen/selectSuitImage"
+            android:layout_height="wrap_content"
+            android:paddingRight="5dip"
+            android:paddingBottom="10dip" 
+            android:paddingTop="10dip"
+            android:adjustViewBounds="true" />
+        <ImageView 
+            android:id="@+id/clubSuit"
+            android:src="@drawable/clubsuitimage"
+            android:layout_width="@dimen/selectSuitImage"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dip"
+            android:paddingBottom="10dip"
+            android:paddingTop="10dip"
+            android:adjustViewBounds="true" />
+        <!--  
         <cs309.a1.shared.Button
             android:id="@+id/Hearts"
             style="@style/GameButtonBlack"
@@ -42,7 +61,7 @@
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
             android:text="@string/Spades"
-            android:textSize="25sp" />
+            android:textSize="25sp" />-->
     </LinearLayout>
 
     <LinearLayout
@@ -51,6 +70,23 @@
         android:gravity="center_vertical|center_horizontal"
         android:orientation="horizontal" >
 
+        <ImageView 
+            android:id="@+id/diamondSuit"
+            android:src="@drawable/diamondsuitimage"
+            android:layout_width="@dimen/selectSuitImage"
+            android:layout_height="wrap_content"
+            android:paddingRight="5dip"
+            android:paddingBottom="10dip"
+            android:adjustViewBounds="true" />
+        <ImageView 
+            android:id="@+id/spadeSuit"
+            android:src="@drawable/spadesuitimage"
+            android:layout_width="@dimen/selectSuitImage"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dip"
+            android:paddingBottom="10dip"
+            android:adjustViewBounds="true" />
+        <!--  
         <cs309.a1.shared.Button
             android:id="@+id/Clubs"
             style="@style/GameButtonBlack"
@@ -70,7 +106,7 @@
             android:layout_marginBottom="5dip"
             android:layout_marginTop="5dip"
             android:text="@string/Diamonds"
-            android:textSize="25sp" />
+            android:textSize="25sp" /> -->
     </LinearLayout>
 
 </LinearLayout>
