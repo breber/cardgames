@@ -186,7 +186,7 @@ public class SoundManager {
 	public void sayTurn(String name) {
 		Random rand = new Random();
 		int i = Math.abs(rand.nextInt() % playerTurnPrompt.length);
-		tts.speak(playerTurnPrompt[i].replace("%s", name), TextToSpeech.QUEUE_FLUSH, null);
+		speak(playerTurnPrompt[i].replace("%s", name) );
 	}
 
 	/**
