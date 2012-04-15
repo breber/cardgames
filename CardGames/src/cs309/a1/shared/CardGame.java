@@ -5,6 +5,9 @@ package cs309.a1.shared;
  */
 public enum CardGame {
 
+	/**
+	 * enum to represent the card game crazy eights
+	 */
 	CRAZY_EIGHTS
 
 }
