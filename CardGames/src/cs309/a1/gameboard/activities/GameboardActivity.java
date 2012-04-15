@@ -38,6 +38,11 @@ import cs309.a1.shared.connection.ConnectionConstants;
 import cs309.a1.shared.connection.ConnectionFactory;
 import cs309.a1.shared.connection.ConnectionServer;
 
+/**
+ * The Activity that the user will spend the most time in.  This
+ * is where the Game logic happens, and each player will be able to
+ * play a turn.
+ */
 public class GameboardActivity extends Activity {
 
 	/**

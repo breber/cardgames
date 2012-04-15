@@ -39,6 +39,9 @@ import cs309.a1.shared.Util;
 import cs309.a1.shared.connection.ConnectionClient;
 import cs309.a1.shared.connection.ConnectionConstants;
 
+/**
+ * The PlayerController implementation for Crazy Eights
+ */
 public class CrazyEightsPlayerController implements PlayerController {
 
 	/**
