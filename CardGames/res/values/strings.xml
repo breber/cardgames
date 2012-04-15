@@ -139,24 +139,20 @@ The first player to successfully get rid of all of their cards wins the game. If
         <item>France</item>
         <item>Canada</item>
     </string-array>
-    
     <string-array name="computer_difficulty_array">
         <item>Easy</item>
         <item>Medium</item>
         <item>Hard</item>
     </string-array>
-    
     <string-array name="num_computer_array">
         <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
     </string-array>
-    
     <string-array name="game_array">
         <item>Crazy Eights</item>
     </string-array>
-    
     <string-array name="connection_array">
         <item>WiFi</item>
         <item>Bluetooth</item>

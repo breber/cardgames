@@ -23,34 +23,36 @@
         android:gravity="center_vertical|center_horizontal"
         android:orientation="horizontal" >
 
-        <ImageView 
+        <ImageView
             android:id="@+id/heartSuit"
-            android:src="@drawable/heartsuitimage"
             android:layout_width="@dimen/selectSuitImage"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dip"
-            android:adjustViewBounds="true" />
-        <ImageView 
+            android:adjustViewBounds="true"
+            android:src="@drawable/heartsuitimage" />
+
+        <ImageView
             android:id="@+id/clubSuit"
-            android:src="@drawable/clubsuitimage"
             android:layout_width="@dimen/selectSuitImage"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dip"
-            android:adjustViewBounds="true" />
-        <ImageView 
+            android:adjustViewBounds="true"
+            android:src="@drawable/clubsuitimage" />
+
+        <ImageView
             android:id="@+id/diamondSuit"
-            android:src="@drawable/diamondsuitimage"
             android:layout_width="@dimen/selectSuitImage"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dip"
-            android:adjustViewBounds="true" />
-        <ImageView 
+            android:adjustViewBounds="true"
+            android:src="@drawable/diamondsuitimage" />
+
+        <ImageView
             android:id="@+id/spadeSuit"
-            android:src="@drawable/spadesuitimage"
             android:layout_width="@dimen/selectSuitImage"
             android:layout_height="wrap_content"
-            android:adjustViewBounds="true" />
-        
+            android:adjustViewBounds="true"
+            android:src="@drawable/spadesuitimage" />
     </LinearLayout>
 
 </LinearLayout>

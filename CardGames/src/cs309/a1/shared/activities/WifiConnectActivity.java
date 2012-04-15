@@ -11,14 +11,13 @@ import cs309.a1.R;
 import cs309.a1.shared.TextView;
 
 /**
- * This Activity lists all devices that are discoverable, or paired and
- * in range. The user can then select which device they want to connect
+ * This Activity allows a user to type in the IP address they want to connect
  * to, and the address of that device is returned in the result Intent.
  *
  * Activity Results:
  * 		RESULT_OK - If the user chose a device
  * 					The Device's MAC address will be in the result
- * 					Intent with the key DeviceListActivity.EXTRA_DEVICE_ADDRESS
+ * 					Intent with the key WifiConnectActivity.EXTRA_DEVICE_ADDRESS
  *
  * 		RESULT_CANCELLED - If no device was chosen
  */

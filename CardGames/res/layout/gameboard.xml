@@ -190,7 +190,7 @@
         android:padding="5dip"
         android:src="@drawable/refresh_button" />
 
-    <!--  
+    <!--
     <cs309.a1.shared.TextView
         android:id="@+id/gameboard_suit"
         style="@style/GameButton"
@@ -201,13 +201,15 @@
         android:layout_margin="15dip"
         android:gravity="center_horizontal"
         android:padding="15dip"
-        android:text="" /> -->
-        
+        android:text="" />
+    -->
+
     <ImageView
         android:id="@+id/gameboard_suit"
         android:layout_width="125dp"
         android:layout_height="125dp"
-        android:padding="5dip"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:padding="5dip" />
+
 </RelativeLayout>
