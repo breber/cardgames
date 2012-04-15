@@ -32,6 +32,9 @@ public class PauseMenuActivity extends Activity {
 	 * The BroadcastReceiver for handling messages from the Bluetooth connection
 	 */
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
+		/* (non-Javadoc)
+		 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
+		 */
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();

@@ -37,6 +37,9 @@ public class SelectSuitActivity extends Activity{
 		ImageView spade = (ImageView) findViewById(R.id.spadeSuit);
 		spade.setClickable(true);
 		spade.setOnClickListener(new OnClickListener() {
+			/* (non-Javadoc)
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
 			@Override
 			public void onClick(View v) {
 				setResult(SUIT_SPADES);
@@ -48,6 +51,9 @@ public class SelectSuitActivity extends Activity{
 		ImageView heart = (ImageView) findViewById(R.id.heartSuit);
 		heart.setClickable(true);
 		heart.setOnClickListener(new OnClickListener() {
+			/* (non-Javadoc)
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
 			@Override
 			public void onClick(View v) {
 				setResult(SUIT_HEARTS);
@@ -60,6 +66,9 @@ public class SelectSuitActivity extends Activity{
 		ImageView club = (ImageView) findViewById(R.id.clubSuit);
 		club.setClickable(true);
 		club.setOnClickListener(new OnClickListener() {
+			/* (non-Javadoc)
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
 			@Override
 			public void onClick(View v) {
 				setResult(SUIT_CLUBS);
@@ -72,6 +81,9 @@ public class SelectSuitActivity extends Activity{
 		ImageView diamond = (ImageView) findViewById(R.id.diamondSuit);
 		diamond.setClickable(true);
 		diamond.setOnClickListener(new OnClickListener() {
+			/* (non-Javadoc)
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
 			@Override
 			public void onClick(View v) {
 				setResult(SUIT_DIAMONDS);

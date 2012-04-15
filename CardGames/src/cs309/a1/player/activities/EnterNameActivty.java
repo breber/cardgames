@@ -35,6 +35,9 @@ public class EnterNameActivty extends Activity {
 		//create button for the view
 		Button ok = (Button) findViewById(R.id.ok);
 		ok.setOnClickListener(new OnClickListener() {
+			/* (non-Javadoc)
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
 			@Override
 			public void onClick(View v) {
 				EditText name = (EditText) findViewById(R.id.name);

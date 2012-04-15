@@ -45,6 +45,9 @@ public class GameResultsActivity extends Activity {
 		// Add a handler to the Main Menu button
 		Button mainMenu = (Button) findViewById(R.id.btMainMenu);
 		mainMenu.setOnClickListener(new OnClickListener() {
+			/* (non-Javadoc)
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
 			@Override
 			public void onClick(View v) {
 				// When they click the main menu button, finish this activity,
