@@ -78,6 +78,46 @@
         <TableRow>
 
             <cs309.a1.shared.TextView
+                android:id="@+id/textNumComputers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dip"
+                android:text="@string/NumComputers"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/black" />
+
+            <Spinner
+                android:id="@+id/spinnerNumComputers"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:entries="@array/num_computer_array"
+		        android:prompt="@string/NumComputers" />
+            
+        </TableRow>
+
+        <TableRow>
+
+            <cs309.a1.shared.TextView
+                android:id="@+id/textComputerDifficulty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dip"
+                android:text="@string/difficultyComputers"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/black" />
+
+           <Spinner
+                android:id="@+id/difficultyOption"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:entries="@array/computer_difficulty_array"
+		        android:prompt="@string/difficultyComputers" />
+           
+        </TableRow>
+
+        <TableRow>
+
+            <cs309.a1.shared.TextView
                 android:id="@+id/textViewLang"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -116,7 +156,7 @@
             
         </TableRow>
         
-    	<TableRow>
+     	<TableRow>
 
             <cs309.a1.shared.TextView
                 android:id="@+id/textViewConnectionType"

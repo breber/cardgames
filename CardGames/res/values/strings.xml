@@ -124,6 +124,7 @@ The first player to successfully get rid of all of their cards wins the game. If
     <string name="langGerman">German</string>
     <string name="Game">Game</string>
     <string name="gameCrazyEights">Crazy Eights</string>
+    <string name="connectionType">Connection Type</string>
 
     <!-- Game Results Activity -->
     <string name="playerNWon">%s Wins!</string>
@@ -157,7 +158,7 @@ The first player to successfully get rid of all of their cards wins the game. If
     
     <string-array name="connection_array">
         <item>WiFi</item>
-        <item>BlueTooth</item>
+        <item>Bluetooth</item>
     </string-array>
 
 </resources>

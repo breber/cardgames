@@ -121,11 +121,35 @@ public class Constants {
 	 */
 	public static final String DIFFICULTY_OF_COMPUTERS = "DIFFICULTY OF COMPUTERS"; 
 	
+	/**
+	 * A constant representing the computer difficulty easy
+	 */
 	public static final String EASY = "Easy"; 
 	
+	/**
+	 * A constant representing the computer difficulty medium
+	 */
 	public static final String MEDIUM = "Medium"; 
 	
+	/**
+	 * A constant representing the computer difficulty hard
+	 */
 	public static final String HARD = "Hard"; 
+	
+	/**
+	 * A constant representing the connection type for the shared preferences
+	 */
+	public static final String CONNECTION_TYPE = "CONNECTION TYPE"; 
+	
+	/**
+	 * A constant representing the connection type bluetooth
+	 */
+	public static final String BLUETOOTH = "Bluetooth";
+	
+	/**
+	 * A constant representing the connection type wifi
+	 */
+	public static final String WIFI = "WiFi";
 	
 	/**
 	 * A constant to represent a key in the shared preferences for the sound effects option
