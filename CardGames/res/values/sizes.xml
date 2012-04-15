@@ -3,7 +3,7 @@
 
     <dimen name="titleFont">40sp</dimen>
     <dimen name="titlePaddingTopBottom">10dip</dimen>
-    <dimen name="popupTitle">45sp</dimen>
+    <dimen name="popupTitle">35sp</dimen>
     <dimen name="mainMenuSmallButtonText">30sp</dimen>
     <dimen name="mainMenuLargeButtonText">35sp</dimen>
     <dimen name="mainMenuSmallButtonPadding">35dip</dimen>
