@@ -138,14 +138,18 @@ public class PreferencesActivity extends Activity {
 		// Sound effects checkbox object
 		CheckBox soundEffects = (CheckBox) findViewById(R.id.checkBoxSoundEffects);
 
-		// set the check box to it's preference
-		soundEffects.setChecked(sharedPref.getBoolean(SOUND_EFFECTS, true));
+		if(soundEffects != null){			
+			// set the check box to it's preference
+			soundEffects.setChecked(sharedPref.getBoolean(SOUND_EFFECTS, true));
+		}
 
 		// speech check box
 		CheckBox speechVolume = (CheckBox) findViewById(R.id.checkBoxSpeechVolume);
 
-		// set the check box to it's preference
-		speechVolume.setChecked(sharedPref.getBoolean(SPEECH_VOLUME, true));
+		if(speechVolume != null){			
+			// set the check box to it's preference
+			speechVolume.setChecked(sharedPref.getBoolean(SPEECH_VOLUME, true));
+		}
 
 		// Number of Computers from the shared preferences		
 		numComputerSpinner = (Spinner)findViewById(R.id.spinnerNumComputers);

@@ -48,23 +48,6 @@
             <TableRow>
 
                 <cs309.a1.shared.TextView
-                    android:id="@+id/textViewSoundEffects"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="10dip"
-                    android:text="@string/soundEffects"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@color/black" />
-
-                <CheckBox
-                    android:id="@+id/checkBoxSoundEffects"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </TableRow>
-
-            <TableRow>
-
-                <cs309.a1.shared.TextView
                     android:id="@+id/textViewSpeechVolume"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
