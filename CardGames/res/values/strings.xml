@@ -59,10 +59,6 @@ The first player to successfully get rid of all of their cards wins the game. If
 
     <!-- Select Suit Activity -->
     <string name="selectsuit">Please select a suit</string>
-    <string name="Spades">Spades</string>
-    <string name="Hearts">Hearts</string>
-    <string name="Clubs">Clubs</string>
-    <string name="Diamonds">Diamonds</string>
 
     <!-- Pause Activity -->
     <string name="gamePaused">Paused</string>
@@ -108,29 +104,13 @@ The first player to successfully get rid of all of their cards wins the game. If
     <string name="soundEffects">Sound Effects</string>
     <string name="SpeechVolume">Speech Volume</string>
     <string name="NumComputers">Maximum Number of Computer Players</string>
-    <string name="one">1</string>
-    <string name="two">2</string>
-    <string name="three">3</string>
-    <string name="four">4</string>
-    <string name="Easy">Easy</string>
-    <string name="Medium">Medium</string>
-    <string name="Hard">Hard</string>
     <string name="difficultyComputers">Difficulty of Computers</string>
     <string name="lang">Locale</string>
-    <string name="langCanada">Canada</string>
-    <string name="langUS">US</string>
-    <string name="langUK">UK</string>
-    <string name="langFrance">France</string>
-    <string name="langGerman">German</string>
     <string name="Game">Game</string>
-    <string name="gameCrazyEights">Crazy Eights</string>
     <string name="connectionType">Connection Type</string>
 
     <!-- Game Results Activity -->
     <string name="playerNWon">%s Wins!</string>
-
-    <!-- Main Menu -->
-    <string name="preferences">Preferences</string>
 
     <string-array name="locale_array">
         <item>US</item>
