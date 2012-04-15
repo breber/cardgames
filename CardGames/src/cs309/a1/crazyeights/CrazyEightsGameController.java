@@ -410,15 +410,21 @@ public class CrazyEightsGameController implements GameController {
 		mySM.drawCardSound();
 
 		Card tmpCard = game.draw(players.get(whoseTurn));
-
-		if (Util.isDebugBuild()) {
-			gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
+		
+		if(tmpCard != null){
+			if (Util.isDebugBuild()) {
+				gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
+			} else {
+				//generic back of card
+				gameContext.placeCard(players.get(whoseTurn).getPosition(), new Card(5, 0,	R.drawable.back_blue_1, 54));
+			}
+	
+			server.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
 		} else {
-			//generic back of card
-			gameContext.placeCard(players.get(whoseTurn).getPosition(), new Card(5, 0,	R.drawable.back_blue_1, 54));
+			// there are no cards to draw so make it no longer that players turn and refresh the players
+			advanceTurn(); //TODO test this when all cards are drawn
+			refreshPlayers();
 		}
-
-		server.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
 	}
 
 	/**
@@ -632,15 +638,18 @@ public class CrazyEightsGameController implements GameController {
 			gameContext.placeCard(0, cardSelected);
 		} else {
 			//Draw Card
-			mySM.drawCardSound();
-
 			Card tmpCard = game.draw(players.get(whoseTurn));
-
-			if (Util.isDebugBuild()) {
-				gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
-			} else {
-				//generic back of card
-				gameContext.placeCard(players.get(whoseTurn).getPosition(), new Card(5, 0,	R.drawable.back_blue_1, 54));
+			
+			//if card is null then there are no cards to draw so just move on and allow the turn to advance
+			if(tmpCard != null) { 
+				mySM.drawCardSound();
+	
+				if (Util.isDebugBuild()) {
+					gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
+				} else {
+					//generic back of card
+					gameContext.placeCard(players.get(whoseTurn).getPosition(), new Card(5, 0,	R.drawable.back_blue_1, 54));
+				}
 			}
 		}
 	}
