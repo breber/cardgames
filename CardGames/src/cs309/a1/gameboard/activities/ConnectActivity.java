@@ -219,6 +219,8 @@ public class ConnectActivity extends Activity {
 		mConnectionServer = ConnectionFactory.getServerInstance(this);
 		isReconnectScreen = getIntent().getBooleanExtra(IS_RECONNECT, false);
 
+		WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+
 		// If this is a reconnect activity, we will have to update the players
 		// names and positions
 		if (isReconnectScreen) {
@@ -274,6 +276,9 @@ public class ConnectActivity extends Activity {
 		if (!mBluetoothAdapter.isEnabled() && ConnectionFactory.getConnectionType() == ConnectionType.BLUETOOTH) {
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+		} else if (!wifiManager.isWifiEnabled() && ConnectionFactory.getConnectionType() == ConnectionType.WIFI) {
+			// Wifi is not currently enabled, so try and enable it
+			wifiManager.setWifiEnabled(true);
 		} else {
 			// Everything is already enabled, so put ourselves in listening mode
 			startListeningForDevices();

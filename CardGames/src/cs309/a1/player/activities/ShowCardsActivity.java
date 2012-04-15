@@ -87,10 +87,11 @@ public class ShowCardsActivity extends Activity {
 					Intent i = new Intent(ShowCardsActivity.this, ConnectionFailActivity.class);
 					startActivityForResult(i, DISCONNECTED);
 				}
-			} else if (messageType == Constants.PAUSE){
+			} else if (messageType == Constants.PAUSE) {
 				Intent pause = new Intent(ShowCardsActivity.this, PauseMenuActivity.class);
 				ShowCardsActivity.this.startActivityForResult(pause, PAUSE_GAME);
-			} else if (messageType == Constants.END_GAME){
+			} else if (messageType == Constants.END_GAME) {
+				unregisterReceiver();
 				ShowCardsActivity.this.setResult(RESULT_OK);
 				finish();
 			} else {

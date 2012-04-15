@@ -29,7 +29,6 @@ public class WifiConnectActivity extends Activity {
 	 */
 	public static String EXTRA_DEVICE_ADDRESS = "deviceAddress";
 
-
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */

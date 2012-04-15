@@ -11,6 +11,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.widget.Toast;
 import cs309.a1.R;
@@ -133,6 +134,9 @@ public class ConnectActivity extends Activity {
 			Intent showDeviceList = new Intent(this, DeviceListActivity.class);
 			startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
 		} else if (type == ConnectionType.WIFI) {
+			WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+			manager.setWifiEnabled(true);
+
 			// Show popup telling the user to enter the IP address of the tablet to connect to
 			Intent showDeviceList = new Intent(this, WifiConnectActivity.class);
 			startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
