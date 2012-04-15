@@ -396,7 +396,8 @@ public class ConnectActivity extends Activity {
 		List<String> devices = mConnectionServer.getConnectedDevices();
 		int numNames = 0;
 		for (int i = 0; i < numPlayers; i++) {
-			if (playerNames.containsKey(devices.get(i))) {
+			if (playerNames.containsKey(devices.get(i)) &&
+					!NO_NAME_SELECTED.equals(playerNames.get(devices.get(i)))) {
 				numNames++;
 			}
 		}
