@@ -83,8 +83,20 @@ public class ConnectActivity extends Activity {
 				// because we are no longer connected like we used to be
 				readyToStart = false;
 
-				Intent showDeviceList = new Intent(ConnectActivity.this, DeviceListActivity.class);
-				startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
+				ConnectionType type = ConnectionFactory.getConnectionType(ConnectActivity.this);
+
+				if (type == ConnectionType.BLUETOOTH) {
+					// Show the device list
+					Intent showDeviceList = new Intent(ConnectActivity.this, DeviceListActivity.class);
+					startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
+				} else if (type == ConnectionType.WIFI) {
+					WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+					manager.setWifiEnabled(true);
+
+					// Show popup telling the user to enter the IP address of the tablet to connect to
+					Intent showDeviceList = new Intent(ConnectActivity.this, WifiConnectActivity.class);
+					startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
+				}
 			}
 		}
 	};
