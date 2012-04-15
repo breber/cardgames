@@ -34,7 +34,6 @@ import cs309.a1.shared.GameFactory;
 import cs309.a1.shared.Player;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.activities.QuitGameActivity;
-import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.connection.ConnectionConstants;
 import cs309.a1.shared.connection.ConnectionFactory;
 import cs309.a1.shared.connection.ConnectionServer;
@@ -95,7 +94,7 @@ public class GameboardActivity extends Activity {
 
 	/**
 	 * This will handle the specific logic of the game chosen, it will follow
-	 * the turn logic and Bluetooth communication with players and also control
+	 * the turn logic and Connection communication with players and also control
 	 * the current game board state
 	 */
 	private GameController gameController;
@@ -116,7 +115,7 @@ public class GameboardActivity extends Activity {
 	private SharedPreferences sharedPreferences;
 
 	/**
-	 * The BroadcastReceiver for handling messages from the Bluetooth connection
+	 * The BroadcastReceiver for handling messages from the Connection connection
 	 */
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
@@ -129,11 +128,11 @@ public class GameboardActivity extends Activity {
 
 			if (ConnectionConstants.STATE_CHANGE_INTENT.equals(action)) {
 				// Handle a state change
-				int newState = intent.getIntExtra(ConnectionConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_NONE);
+				int newState = intent.getIntExtra(ConnectionConstants.KEY_STATE_MESSAGE, ConnectionConstants.STATE_NONE);
 
 				// If the new state is anything but connected, display the
 				// "You have been disconnected" screen
-				if (newState != BluetoothConstants.STATE_CONNECTED) {
+				if (newState != ConnectionConstants.STATE_CONNECTED) {
 					Intent i = new Intent(GameboardActivity.this, ConnectionFailActivity.class);
 					i.putExtra(ConnectionConstants.KEY_DEVICE_ID, intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID));
 					startActivityForResult(i, DISCONNECTED);
@@ -173,7 +172,7 @@ public class GameboardActivity extends Activity {
 		});
 
 		// Register the BroadcastReceiver to handle all
-		// messages from the Bluetooth module
+		// messages from the Connection module
 		registerReceiver();
 
 		connection = ConnectionFactory.getServerInstance(this);
@@ -247,7 +246,7 @@ public class GameboardActivity extends Activity {
 	 */
 	@Override
 	protected void onDestroy() {
-		// Disconnect Bluetooth connection
+		// Disconnect Connection
 		if (connection != null) {
 			connection.disconnect();
 		}

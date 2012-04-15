@@ -18,7 +18,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,10 +36,10 @@ import cs309.a1.shared.GameFactory;
 import cs309.a1.shared.Player;
 import cs309.a1.shared.TextView;
 import cs309.a1.shared.Util;
-import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.connection.ConnectionConstants;
 import cs309.a1.shared.connection.ConnectionFactory;
 import cs309.a1.shared.connection.ConnectionServer;
+import cs309.a1.shared.connection.ConnectionType;
 
 /**
  * This Activity will show how many players are connected, and
@@ -158,7 +161,7 @@ public class ConnectActivity extends Activity {
 					}
 				}
 			} else if (ConnectionConstants.STATE_CHANGE_INTENT.equals(action)) {
-				int state = intent.getIntExtra(ConnectionConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_LISTEN);
+				int state = intent.getIntExtra(ConnectionConstants.KEY_STATE_MESSAGE, ConnectionConstants.STATE_LISTEN);
 				String deviceId = intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
 
 				if (Util.isDebugBuild()) {
@@ -166,10 +169,10 @@ public class ConnectActivity extends Activity {
 				}
 
 				// If we are now in the LISTEN state, remove the player's name from the list
-				if (state == BluetoothConstants.STATE_LISTEN || state == BluetoothConstants.STATE_NONE) {
+				if (state == ConnectionConstants.STATE_LISTEN || state == ConnectionConstants.STATE_NONE) {
 					playerNames.remove(deviceId);
 					playerIds.remove(deviceId);
-				} else if (state == BluetoothConstants.STATE_CONNECTED) {
+				} else if (state == ConnectionConstants.STATE_CONNECTED) {
 					playerNames.put(deviceId, NO_NAME_SELECTED);
 					playerIds.add(deviceId);
 				}
@@ -267,19 +270,26 @@ public class ConnectActivity extends Activity {
 			updatePlayersConnected();
 		}
 
-		// If Bluetooth isn't enabled, request that it be enabled
-		if (!mBluetoothAdapter.isEnabled()) {
+		// If Bluetooth isn't enabled, request that it be enabled (if we are currently using Bluetooth)
+		if (!mBluetoothAdapter.isEnabled() && ConnectionFactory.getConnectionType() == ConnectionType.BLUETOOTH) {
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
 		} else {
-			// Bluetooth is already enabled, so put ourselves in listening mode
+			// Everything is already enabled, so put ourselves in listening mode
 			startListeningForDevices();
 		}
 
 		// Display this device's name so that users know which device to connect
 		// to on their own device.
 		TextView tv = (TextView) findViewById(R.id.myName);
-		tv.setText(getResources().getString(R.string.deviceName) + "\n" + mBluetoothAdapter.getName());
+
+		if (ConnectionFactory.getConnectionType() == ConnectionType.BLUETOOTH) {
+			tv.setText(getResources().getString(R.string.deviceName) + "\n" + mBluetoothAdapter.getName());
+		} else if (ConnectionFactory.getConnectionType() == ConnectionType.WIFI) {
+			WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+			WifiInfo info = manager.getConnectionInfo();
+			tv.setText(getResources().getString(R.string.deviceName) + "\n" + Formatter.formatIpAddress(info.getIpAddress()));
+		}
 
 		// Set up the start button
 		Button startButton = (Button) findViewById(R.id.startButton);
@@ -291,10 +301,9 @@ public class ConnectActivity extends Activity {
 					mConnectionServer.stopListening();
 
 					// Send a message to all connected devices saying that the game is beginning
-					mConnectionServer.write(BluetoothConstants.MSG_TYPE_INIT, null);
+					mConnectionServer.write(ConnectionConstants.MSG_TYPE_INIT, null);
 
-					// If this is not a reconnect activity, then we want to start
-					// the gameboard
+					// If this is not a reconnect activity, then we want to start the gameboard
 					if (!isReconnectScreen) {
 						// Start the Gameboard activity
 						Intent gameIntent = new Intent(ConnectActivity.this, GameboardActivity.class);
@@ -381,7 +390,7 @@ public class ConnectActivity extends Activity {
 		int numPlayers = mConnectionServer.getConnectedDeviceCount();
 		List<String> devices = mConnectionServer.getConnectedDevices();
 		int numNames = 0;
-		for (int i = 0; i<numPlayers; i++) {
+		for (int i = 0; i < numPlayers; i++) {
 			if (playerNames.containsKey(devices.get(i))) {
 				numNames++;
 			}
@@ -404,7 +413,9 @@ public class ConnectActivity extends Activity {
 			Log.d(TAG, "startListeningForDevices");
 		}
 
-		Util.ensureDiscoverable(this, mBluetoothAdapter);
+		if (ConnectionFactory.getConnectionType() == ConnectionType.BLUETOOTH) {
+			Util.ensureDiscoverable(this, mBluetoothAdapter);
+		}
 		mConnectionServer.startListening();
 	}
 

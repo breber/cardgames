@@ -1,12 +1,11 @@
-package cs309.a1.shared.bluetooth;
+package cs309.a1.shared.wifi;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.HashMap;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
@@ -15,7 +14,7 @@ import cs309.a1.shared.connection.ConnectionConstants;
 
 /**
  * This thread runs while listening for incoming connections. When it finds
- * a new device that wants to connect, it will create a new BluetoothConnectionService
+ * a new device that wants to connect, it will create a new WifiConnectionService
  * for that device, and add it to the HashMap that was provided. It will run until
  * someone tells it to stop.
  */
@@ -28,23 +27,18 @@ public class AcceptThread extends Thread {
 	/**
 	 *  The local server socket
 	 */
-	private BluetoothServerSocket mmServerSocket;
+	private ServerSocket mmServerSocket;
 
 	/**
-	 * The BluetoothAdapter used to query Bluetooth information
-	 */
-	private final BluetoothAdapter mAdapter;
-
-	/**
-	 * The Handler that each BluetoothConnectionService will get
+	 * The Handler that each WifiConnectionService will get
 	 */
 	private final Handler mHandler;
 
 	/**
-	 * A reference to a HashMap of MAC addresses to BluetoothConnectionServices
+	 * A reference to a HashMap of MAC addresses to WifiConnectionServices
 	 * that is passed in by the calling server.
 	 */
-	private final HashMap<String, BluetoothConnectionService> mConnections;
+	private final HashMap<String, WifiConnectionService> mConnections;
 
 	/**
 	 * The context of this thread
@@ -60,19 +54,17 @@ public class AcceptThread extends Thread {
 	 * Create a new AcceptThread
 	 * 
 	 * @param ctx The context of this thread
-	 * @param adapter The BluetoothAdapter to use for Bluetooth information
-	 * @param handler The handler to assign each BluetoothConnectionService
-	 * @param services A map of MAC addresses to BluetoothConnectionService
+	 * @param handler The handler to assign each WifiConnectionService
+	 * @param services A map of MAC addresses to WifiConnectionService
 	 */
-	public AcceptThread(Context ctx, BluetoothAdapter adapter, Handler handler, HashMap<String, BluetoothConnectionService> services) {
-		mAdapter = adapter;
+	public AcceptThread(Context ctx, Handler handler, HashMap<String, WifiConnectionService> services) {
 		mConnections = services;
 		mContext = ctx;
 		mHandler = handler;
 
 		// Create a new listening server socket
 		try {
-			mmServerSocket = mAdapter.listenUsingRfcommWithServiceRecord(BluetoothConstants.SOCKET_NAME, BluetoothConstants.MY_UUID);
+			mmServerSocket = new ServerSocket(WifiConstants.PORT_NUMBER);
 		} catch (IOException e) {
 			Log.e(TAG, "Socket listen() failed", e);
 		}
@@ -90,8 +82,8 @@ public class AcceptThread extends Thread {
 		setName("AcceptThread");
 
 		while (continueChecking) {
-			BluetoothConnectionService serv = new BluetoothConnectionService(mContext, mHandler);
-			BluetoothSocket socket = null;
+			WifiConnectionService serv = new WifiConnectionService(mContext, mHandler);
+			Socket socket = null;
 
 			serv.start();
 
@@ -118,8 +110,8 @@ public class AcceptThread extends Thread {
 						case ConnectionConstants.STATE_LISTEN:
 						case ConnectionConstants.STATE_CONNECTING:
 							// Situation normal. Start the connected thread.
-							BluetoothDevice dev = socket.getRemoteDevice();
-							mConnections.put(dev.getAddress(), serv);
+							InetAddress dev = socket.getInetAddress();
+							mConnections.put(dev.getHostAddress(), serv);
 							serv.connected(socket, dev);
 							break;
 						case ConnectionConstants.STATE_NONE:

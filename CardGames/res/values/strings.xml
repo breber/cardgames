@@ -46,6 +46,10 @@ The first player to successfully get rid of all of their cards wins the game. If
     <string name="scanning">Scanning for Devices</string>
     <string name="no_devices_found">No devices found</string>
     <string name="title_device_list">Device List</string>
+    
+    <!-- Wifi Connect Activity -->
+    <string name="enterIpAddress">Enter IP Address of Server</string>
+    <string name="ipAddress">***.***.***.***</string>
 
     <!-- Connect Screen Handheld -->
     <string name="waitingForGame">Waiting for game to begin…</string>

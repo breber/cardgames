@@ -22,7 +22,6 @@ import cs309.a1.shared.GameFactory;
 import cs309.a1.shared.PlayerController;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.activities.QuitGameActivity;
-import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.connection.ConnectionClient;
 import cs309.a1.shared.connection.ConnectionConstants;
 import cs309.a1.shared.connection.ConnectionFactory;
@@ -72,7 +71,7 @@ public class ShowCardsActivity extends Activity {
 	private LinearLayout playerHandLayout;
 
 	/**
-	 * The BroadcastReceiver for handling messages from the Bluetooth connection
+	 * The BroadcastReceiver for handling messages from the connection module
 	 */
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
@@ -81,10 +80,10 @@ public class ShowCardsActivity extends Activity {
 			int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
 			if (ConnectionConstants.STATE_CHANGE_INTENT.equals(action)) {
 				// Handle a state change
-				int newState = intent.getIntExtra(ConnectionConstants.KEY_STATE_MESSAGE, BluetoothConstants.STATE_NONE);
+				int newState = intent.getIntExtra(ConnectionConstants.KEY_STATE_MESSAGE, ConnectionConstants.STATE_NONE);
 
 				// If the new state is anything but connected, display the "You have been disconnected" screen
-				if (newState != BluetoothConstants.STATE_CONNECTED) {
+				if (newState != ConnectionConstants.STATE_CONNECTED) {
 					Intent i = new Intent(ShowCardsActivity.this, ConnectionFailActivity.class);
 					startActivityForResult(i, DISCONNECTED);
 				}
@@ -115,7 +114,7 @@ public class ShowCardsActivity extends Activity {
 		// Register the receiver for message/state change intents
 		registerReceiver(receiver, new IntentFilter(ConnectionConstants.MESSAGE_RX_INTENT));
 
-		// Get an instance of the BluetoothClient so that we can
+		// Get an instance of the ConnectionClient so that we can
 		// send messages back to the tablet
 		connection = ConnectionFactory.getClientInstance(this);
 
@@ -154,7 +153,7 @@ public class ShowCardsActivity extends Activity {
 		if (connection != null) {
 			connection.disconnect();
 		}
-		
+
 		unregisterReceiver();
 
 		super.onDestroy();

@@ -1,6 +1,10 @@
 package cs309.a1.shared;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.Comparator;
+import java.util.Enumeration;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -65,6 +69,29 @@ public class Util {
 			discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3600);
 			ctx.startActivity(discoverableIntent);
 		}
+	}
+
+	/**
+	 * Get this device's IP address
+	 * 
+	 * @return the ip address of this device
+	 */
+	public static String getLocalIpAddress() {
+		try {
+			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+				NetworkInterface intf = en.nextElement();
+				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+					InetAddress inetAddress = enumIpAddr.nextElement();
+					if (!inetAddress.isLoopbackAddress()) {
+						return inetAddress.getHostAddress();
+					}
+				}
+			}
+		} catch (SocketException ex) {
+			Log.e(TAG_GENERIC, ex.toString());
+		}
+
+		return null;
 	}
 
 	/**

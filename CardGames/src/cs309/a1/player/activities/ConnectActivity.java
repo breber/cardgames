@@ -17,14 +17,15 @@ import cs309.a1.R;
 import cs309.a1.shared.TextView;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.activities.DeviceListActivity;
-import cs309.a1.shared.bluetooth.BluetoothConstants;
+import cs309.a1.shared.activities.WifiConnectActivity;
 import cs309.a1.shared.connection.ConnectionClient;
 import cs309.a1.shared.connection.ConnectionConstants;
 import cs309.a1.shared.connection.ConnectionFactory;
+import cs309.a1.shared.connection.ConnectionType;
 
 /**
  * The Activity that initiates the device list, and then
- * waits for the Bluetooth connection to be made, and finally
+ * waits for the connection to be made, and finally
  * waits for the game to begin before moving on to display
  * the user's hand.
  *
@@ -40,7 +41,7 @@ public class ConnectActivity extends Activity {
 	private static int DEVICE_LIST_RESULT = Math.abs(DeviceListActivity.class.getName().hashCode());
 
 	/**
-	 * Indicates whether the game is ready to start (a Bluetooth connection has been established)
+	 * Indicates whether the game is ready to start (a connection has been established)
 	 */
 	private boolean readyToStart = false;
 
@@ -52,7 +53,7 @@ public class ConnectActivity extends Activity {
 
 	/**
 	 * The BroadcastReceiver that handles state change messages from the
-	 * Bluetooth module.
+	 * Connection module.
 	 */
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
@@ -63,9 +64,9 @@ public class ConnectActivity extends Activity {
 				Toast.makeText(ConnectActivity.this, "onReceive " + currentState, Toast.LENGTH_LONG).show();
 			}
 
-			// If the Bluetooth state is connected, update the message displayed,
+			// If the Connection state is connected, update the message displayed,
 			// and register a new receiver to handle the game initiation message
-			if (currentState == BluetoothConstants.STATE_CONNECTED) {
+			if (currentState == ConnectionConstants.STATE_CONNECTED) {
 				readyToStart = true;
 
 				TextView tv = (TextView) findViewById(R.id.progressDialogText);
@@ -74,9 +75,9 @@ public class ConnectActivity extends Activity {
 				Intent getName = new Intent(ConnectActivity.this, EnterNameActivty.class);
 				startActivityForResult(getName, GET_PLAYER_NAME);
 
-				// Register the receiver for receiving messages from Bluetooth
+				// Register the receiver for receiving messages from Connection
 				registerReceiver(gameStartReceiver, new IntentFilter(ConnectionConstants.MESSAGE_RX_INTENT));
-			} else if (currentState == BluetoothConstants.STATE_LISTEN) {
+			} else if (currentState == ConnectionConstants.STATE_LISTEN) {
 				// If we went back to the listen state, display the device list
 				// because we are no longer connected like we used to be
 				readyToStart = false;
@@ -89,17 +90,17 @@ public class ConnectActivity extends Activity {
 
 	/**
 	 * The BroadcastReceiver that handles the game initiation message
-	 * from the Bluetooth module
+	 * from the Connection module
 	 */
 	private BroadcastReceiver gameStartReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, 0);
 
-			// If we have a Bluetooth connection, and this message is indicating
+			// If we have a connection, and this message is indicating
 			// that the game has been initiated by the tablet, start the ShowCardsActivity
 			// and finish this Activity.
-			if (readyToStart && messageType == BluetoothConstants.MSG_TYPE_INIT) {
+			if (readyToStart && messageType == ConnectionConstants.MSG_TYPE_INIT) {
 				// We connected just fine, so bring them to the ShowCardsActivity, and close
 				// this activity out.
 
@@ -125,9 +126,17 @@ public class ConnectActivity extends Activity {
 		TextView tv = (TextView) findViewById(R.id.progressDialogText);
 		tv.setText(R.string.connecting);
 
-		// Show the device list
-		Intent showDeviceList = new Intent(this, DeviceListActivity.class);
-		startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
+		ConnectionType type = ConnectionFactory.getConnectionType();
+
+		if (type == ConnectionType.BLUETOOTH) {
+			// Show the device list
+			Intent showDeviceList = new Intent(this, DeviceListActivity.class);
+			startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
+		} else if (type == ConnectionType.WIFI) {
+			// Show popup telling the user to enter the IP address of the tablet to connect to
+			Intent showDeviceList = new Intent(this, WifiConnectActivity.class);
+			startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
+		}
 
 		returnIntent = new Intent();
 	}
@@ -162,8 +171,8 @@ public class ConnectActivity extends Activity {
 		if (requestCode == DEVICE_LIST_RESULT && resultCode != RESULT_CANCELED) {
 			// We are coming back from the device list, and it wasn't cancelled, so
 			// grab the MAC address from the result intent, and start connection
-			String macAddress = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-			client.connect(macAddress);
+			String address = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+			client.connect(address);
 
 			// Start listening for connection state changes
 			registerReceiver(receiver, new IntentFilter(ConnectionConstants.STATE_CHANGE_INTENT));

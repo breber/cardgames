@@ -50,4 +50,29 @@ public class ConnectionConstants {
 	 * because only Bluetooth needs to know about it
 	 */
 	public static final String KEY_MSG_DATA = "DATA";
+
+	/**
+	 * The messageType that indicates that the game is ready to begin
+	 */
+	public static final int MSG_TYPE_INIT = Integer.MAX_VALUE;
+
+	/**
+	 * Indicates that the BluetoothConnectionService is inactive
+	 */
+	public static final int STATE_NONE = 0;
+
+	/**
+	 * Indicates that the BluetoothConnectionService is listening for connections
+	 */
+	public static final int STATE_LISTEN = 1;
+
+	/**
+	 * Indicates that the BluetoothConnectionService is trying to connect to a device
+	 */
+	public static final int STATE_CONNECTING = 2;
+
+	/**
+	 * Indicates that the BluetoothConnectionService is currently connected to a device
+	 */
+	public static final int STATE_CONNECTED = 3;
 }

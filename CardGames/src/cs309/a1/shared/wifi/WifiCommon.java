@@ -1,4 +1,4 @@
-package cs309.a1.shared.bluetooth;
+package cs309.a1.shared.wifi;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,7 +8,7 @@ import cs309.a1.shared.connection.ConnectionConstants;
 /**
  * Common methods for Bluetooth Client and Server
  */
-public abstract class BluetoothCommon {
+public abstract class WifiCommon {
 
 	/**
 	 * Perform a write operation
@@ -17,7 +17,7 @@ public abstract class BluetoothCommon {
 	 * @param obj the object to write
 	 * @return whether the message was written or not
 	 */
-	protected boolean performWrite(BluetoothConnectionService service, int messageType, Object obj) {
+	protected boolean performWrite(WifiConnectionService service, int messageType, Object obj) {
 		// If we aren't connected, return false
 		if (service.getState() != ConnectionConstants.STATE_CONNECTED) {
 			return false;

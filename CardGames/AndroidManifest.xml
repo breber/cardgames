@@ -8,8 +8,14 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="14" />
 
+    <!-- For Bluetooth Mode -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <!-- For Wifi Mode -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -116,6 +122,11 @@
             android:name=".shared.activities.DeviceListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_device_list"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.CrazyEights" />
+        <activity
+            android:name=".shared.activities.WifiConnectActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.CrazyEights" />
         <activity

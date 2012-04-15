@@ -1,27 +1,25 @@
-package cs309.a1.shared.bluetooth;
+package cs309.a1.shared.wifi;
 
-import java.util.UUID;
 
 /**
  * A class of constants that should be used when interacting
  * with the Bluetooth module.
  */
-public class BluetoothConstants {
+public class WifiConstants {
 	/**
 	 * Generic Bluetooth Logcat tag
 	 */
-	public static final String TAG = BluetoothConstants.class.getName();
-
-	/**
-	 * The UUID of the Bluetooth port that the server will be listening on and the client
-	 * will be connecting from.
-	 */
-	public static final UUID MY_UUID = UUID.fromString("9d6b7fe4-d2cd-37f9-950b-0aad096c2d57");
+	public static final String TAG = WifiConstants.class.getName();
 
 	/**
 	 *  Name for the SDP record when creating server socket
 	 */
 	public static final String SOCKET_NAME = "CardGames";
+
+	/**
+	 * The port number to use
+	 */
+	public static final int PORT_NUMBER = 1234;
 
 	/**
 	 * The constant used internally from the BluetoothConnectionService

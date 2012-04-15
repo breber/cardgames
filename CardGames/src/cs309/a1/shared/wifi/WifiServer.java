@@ -1,11 +1,10 @@
-package cs309.a1.shared.bluetooth;
+package cs309.a1.shared.wifi;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,26 +21,21 @@ import cs309.a1.shared.connection.ConnectionServer;
  * It connects to up to 4 other Bluetooth devices (running the client), and then
  * communicates with any number of them (by sending messages and receiving messages).
  */
-public class BluetoothServer extends BluetoothCommon implements ConnectionServer {
+public class WifiServer extends WifiCommon implements ConnectionServer {
 	/**
 	 * The Logcat Debug tag
 	 */
-	private static final String TAG = BluetoothServer.class.getName();
+	private static final String TAG = WifiServer.class.getName();
 
 	/**
 	 * The Singleton instance of this class
 	 */
-	private static BluetoothServer instance = null;
+	private static WifiServer instance = null;
 
 	/**
 	 * A map of MAC addresses to their corresponding BluetoothConnectionServices
 	 */
-	private HashMap<String, BluetoothConnectionService> services;
-
-	/**
-	 * The BluetoothAdapter used to query Bluetooth information
-	 */
-	private BluetoothAdapter mBluetoothAdapter;
+	private HashMap<String, WifiConnectionService> services;
 
 	/**
 	 * The Thread that runs while listening for connections
@@ -67,7 +61,7 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 
 			Bundle data = msg.getData();
 			switch (msg.what) {
-			case BluetoothConstants.STATE_MESSAGE:
+			case WifiConstants.STATE_MESSAGE:
 				// When the state of the Bluetooth connection has changed
 				// let all the listeners know that this has happened
 				Intent i = new Intent(ConnectionConstants.STATE_CHANGE_INTENT);
@@ -75,7 +69,7 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 				i.putExtra(ConnectionConstants.KEY_DEVICE_ID, data.getString(ConnectionConstants.KEY_DEVICE_ID));
 				mContext.sendBroadcast(i);
 				break;
-			case BluetoothConstants.READ_MESSAGE:
+			case WifiConstants.READ_MESSAGE:
 				Intent i1 = new Intent(ConnectionConstants.MESSAGE_RX_INTENT);
 				i1.putExtra(ConnectionConstants.KEY_MESSAGE_TYPE, data.getInt(ConnectionConstants.KEY_MESSAGE_TYPE));
 				i1.putExtra(ConnectionConstants.KEY_MESSAGE_RX, data.getString(ConnectionConstants.KEY_MESSAGE_RX));
@@ -91,11 +85,10 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 	 * 
 	 * @param ctx
 	 */
-	private BluetoothServer(Context ctx) {
+	private WifiServer(Context ctx) {
 		mContext = ctx;
-		services = new HashMap<String, BluetoothConnectionService>();
-		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		mAcceptThread = new AcceptThread(mContext, mBluetoothAdapter, mHandler, services);
+		services = new HashMap<String, WifiConnectionService>();
+		mAcceptThread = new AcceptThread(mContext, mHandler, services);
 	}
 
 	/**
@@ -104,9 +97,9 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 	 * @param ctx the Context of this BluetoothServer
 	 * @return the BluetoothServer
 	 */
-	public static BluetoothServer getInstance(Context ctx) {
+	public static WifiServer getInstance(Context ctx) {
 		if (instance == null) {
-			instance = new BluetoothServer(ctx);
+			instance = new WifiServer(ctx);
 		}
 
 		return instance;
@@ -119,7 +112,7 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 	public void startListening() {
 		// Start the AcceptThread which listens for incoming connection requests
 		if (mAcceptThread == null) {
-			mAcceptThread = new AcceptThread(mContext, mBluetoothAdapter, mHandler, services);
+			mAcceptThread = new AcceptThread(mContext, mHandler, services);
 		}
 
 		mAcceptThread.start();
@@ -142,7 +135,7 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 	@Override
 	public void disconnect() {
 		// Disconnect connections
-		for (BluetoothConnectionService serv : services.values()) {
+		for (WifiConnectionService serv : services.values()) {
 			serv.stop();
 		}
 
@@ -170,7 +163,7 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 		HashSet<String> toRet = new HashSet<String>();
 
 		for (String s : services.keySet()) {
-			BluetoothConnectionService service = services.get(s);
+			WifiConnectionService service = services.get(s);
 
 			if (service.getState() == ConnectionConstants.STATE_CONNECTED) {
 				toRet.add(s);
@@ -193,7 +186,7 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 		// If the caller didn't provide any addresses, send the message to all
 		// connected devices
 		if (address.length == 0) {
-			for (BluetoothConnectionService service : services.values()) {
+			for (WifiConnectionService service : services.values()) {
 				if (!performWrite(service, messageType, obj)) {
 					retVal = false;
 				}
@@ -201,7 +194,7 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 		} else {
 			// Otherwise send it out to the devices specified in address
 			for (String addr : address) {
-				BluetoothConnectionService service = services.get(addr);
+				WifiConnectionService service = services.get(addr);
 
 				if (service != null) {
 					if (!performWrite(service, messageType, obj)) {
