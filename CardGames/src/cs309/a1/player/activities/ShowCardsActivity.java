@@ -155,6 +155,7 @@ public class ShowCardsActivity extends Activity {
 			connection.disconnect();
 		}
 
+		// Unregister broadcast receivers
 		unregisterReceiver();
 
 		super.onDestroy();

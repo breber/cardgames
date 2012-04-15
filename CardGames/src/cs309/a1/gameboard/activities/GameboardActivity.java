@@ -199,7 +199,7 @@ public class GameboardActivity extends Activity {
 				p.setId(devices.get(deviceIndex));
 			}
 			p.setName(playerNames[i].name);
-			p.setPosition(i + 1);// TODO make the users able to choose this
+			p.setPosition(i + 1);
 			players.add(p);
 
 			// Show the user names we got back
@@ -209,7 +209,6 @@ public class GameboardActivity extends Activity {
 		}
 
 		// Setup the rest of the Computer players based on the preferences
-		//TODO computer Difficulty is string
 		int numComputers = sharedPreferences.getInt(Constants.NUMBER_OF_COMPUTERS, 1);
 		String computerDifficulty = sharedPreferences.getString(Constants.DIFFICULTY_OF_COMPUTERS, Constants.EASY);
 		for (int j = i; j < 4 && (j - i < numComputers); j++) {

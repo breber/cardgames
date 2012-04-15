@@ -13,8 +13,7 @@ import cs309.a1.shared.Util;
  */
 public class PlayComputerTurnActivity extends Activity {
 
-	/*
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
@@ -27,6 +26,7 @@ public class PlayComputerTurnActivity extends Activity {
 				Toast.makeText(this, "Sleep interrupted", Toast.LENGTH_SHORT);
 			}
 		}
+
 		setResult(RESULT_OK);
 		finish();
 	}

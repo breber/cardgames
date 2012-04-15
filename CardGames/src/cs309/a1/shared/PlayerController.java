@@ -16,10 +16,8 @@ public interface PlayerController {
 	/**
 	 * This method is handles messages received from the Connection module
 	 * 
-	 * @param context
-	 *            context of the broadcast
-	 * @param intent
-	 *            intent from the broadcast, message is stored here
+	 * @param context context of the broadcast
+	 * @param intent intent from the broadcast, message is stored here
 	 */
 	public void handleBroadcastReceive(Context context, Intent intent);
 
@@ -27,14 +25,10 @@ public interface PlayerController {
 	 * This will allow the GameController to handle whenever an activity
 	 * finishes and returns to the gameboard
 	 * 
-	 * @param requestCode
-	 *            the request code used to start the activity that we are
+	 * @param requestCode the request code used to start the activity that we are
 	 *            getting the result of
-	 * @param resultCode
-	 *            the result code from the activity
-	 * @param data
-	 *            the intent which may contain data from the activity that has
-	 *            finished
+	 * @param resultCode the result code from the activity
+	 * @param data the intent which may contain data from the activity that has finished
 	 */
 	public void handleActivityResult(int requestCode, int resultCode, Intent data);
 
@@ -55,14 +49,14 @@ public interface PlayerController {
 	/**
 	 * This will return the LongClickListener for selecting cards
 	 * 
-	 * @return the long click listener for a card imageview each card will need to be given this
+	 * @return the long click listener for a card ImageView each card will need to be given this
 	 */
 	public OnLongClickListener getCardLongClickListener();
 
 	/**
 	 * This will set the player name to the name given
-	 * @param name
-	 * name of player
+	 * 
+	 * @param name name of player
 	 */
 	public void setPlayerName(String name);
 

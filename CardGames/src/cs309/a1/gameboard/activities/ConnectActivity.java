@@ -438,7 +438,6 @@ public class ConnectActivity extends Activity {
 			startListeningForDevices();
 		} else if (resultCode != RESULT_OK && requestCode == REQUEST_ENABLE_BT) {
 			// The user didn't enable bluetooth - send them back to main menu
-			// TODO: is this what we want to do?
 			setResult(RESULT_CANCELED);
 			finish();
 		} else {

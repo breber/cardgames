@@ -46,7 +46,6 @@ public class Deck {
 	 * @return the id of the image representing the back of a card
 	 */
 	public int getCardBackID() {
-
 		int cardId = 0;
 
 		switch(gameName) {

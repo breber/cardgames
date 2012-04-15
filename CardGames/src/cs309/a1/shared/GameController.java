@@ -13,14 +13,11 @@ import android.content.Intent;
 public interface GameController {
 
 	/**
-	 * This method is meant to be used inside the bluetooth broadcast receiver
-	 * to handle the bluetooth message
+	 * This method is meant to be used inside the broadcast receiver
+	 * to handle messages from the connection module
 	 * 
-	 * @param context
-	 *            context of the bluetooth broadcast
-	 * @param intent
-	 *            intent of the bluetooth broadcast, message is stored here
-	 * @return 
+	 * @param context context of the broadcast
+	 * @param intent intent of the broadcast, message is stored here
 	 */
 	public void handleBroadcastReceive(Context context, Intent intent);
 
@@ -28,17 +25,12 @@ public interface GameController {
 	 * This will allow the GameController to handle whenever an activity
 	 * finishes and returns to the gameboard
 	 * 
-	 * @param requestCode
-	 *            the request code used to start the activity that we are
+	 * @param requestCode the request code used to start the activity that we are
 	 *            getting the result of
-	 * @param resultCode
-	 *            the result code from the activity
-	 * @param data
-	 *            the intent which may contain data from the activity that has
-	 *            finished
+	 * @param resultCode the result code from the activity
+	 * @param data the intent which may contain data from the activity that has finished
 	 */
-	public boolean handleActivityResult(int requestCode, int resultCode,
-			Intent data);
+	public boolean handleActivityResult(int requestCode, int resultCode, Intent data);
 
 	/**
 	 * Sends a pause message to all the players so they are not able to play
