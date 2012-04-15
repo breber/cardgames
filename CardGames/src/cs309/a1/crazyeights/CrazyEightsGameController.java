@@ -520,7 +520,7 @@ public class CrazyEightsGameController implements GameController {
 		Card cardSelected = null;
 
 		//computer with difficulty 0
-		if (players.get(whoseTurn).getComputerDifficulty() == 0) {
+		if (players.get(whoseTurn).getComputerDifficulty().equals(Constants.EASY)) {
 			for (Card c : cards) {
 				if (gameRules.checkCard(c, onDiscard)) {
 					cardSelected = c;
@@ -544,7 +544,8 @@ public class CrazyEightsGameController implements GameController {
 			}
 
 		//computer difficulty 1
-		} else if (players.get(whoseTurn).getComputerDifficulty() >= 1) { //TODO change this to == once there has been added difficulty of 2
+		} else if (players.get(whoseTurn).getComputerDifficulty().equals(Constants.MEDIUM) 
+				|| players.get(whoseTurn).getComputerDifficulty().equals(Constants.HARD)  ) { //TODO remove HARD from here once HARD is added below
 			List<Card> sameSuit = new ArrayList<Card>();
 			List<Card> sameNum = new ArrayList<Card>();
 			List<Card> special = new ArrayList<Card>();
@@ -593,7 +594,7 @@ public class CrazyEightsGameController implements GameController {
 				boolean hasAnotherCardWithIndex = false;
 				for (Card c : sameSuit) {
 					for (Card c1 : cards) {
-						if (c.getValue() == c1.getValue()){
+						if (c.getValue() == c1.getValue() && suits[c.getSuit()] <= suits[c1.getValue()] ){
 							cardSelected = c;
 							hasAnotherCardWithIndex = true;
 							break;
@@ -611,7 +612,7 @@ public class CrazyEightsGameController implements GameController {
 			} // else { no card selected } 
 
 		//computer difficulty 2 or greater
-		} else if (players.get(whoseTurn).getComputerDifficulty() >= 2) {
+		} else if (players.get(whoseTurn).getComputerDifficulty().equals(Constants.HARD)) {
 			// TODO: implement right now 2 is handled by the difficulty of 1
 		}
 

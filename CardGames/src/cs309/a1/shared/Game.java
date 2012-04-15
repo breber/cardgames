@@ -80,12 +80,12 @@ public interface Game {
 	 * set the default computer difficulty
 	 * @param diff computer difficulty
 	 */
-	public void setComputerDifficulty(int diff);
+	public void setComputerDifficulty(String diff);
 	
 	/**
 	 * get the default computer difficulty
 	 * @return the computer difficulty
 	 */
-	public int getComputerDifficulty();
+	public String getComputerDifficulty();
 
 }

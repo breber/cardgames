@@ -47,7 +47,7 @@ public class Player {
 	/**
 	 * A variable to set the difficulty of the player if they are a computer
 	 */
-	private int computerDifficulty = 0;
+	private String computerDifficulty = Constants.EASY;
 
 	/**
 	 * A default player constructor. A fields will be set with getters and setters
@@ -106,18 +106,18 @@ public class Player {
 	/**
 	 * A method to get the difficulty of a computer player
 	 * 
-	 * @return an integer 1-3 representing easy, medium or hard
+	 * @return an String representing easy, medium or hard
 	 */
-	public int getComputerDifficulty() {
+	public String getComputerDifficulty() {
 		return computerDifficulty;
 	}
 
 	/**
 	 * A method to set the difficulty of a computer player
 	 * 
-	 * @param dif an integer 1-3 representing easy, medium or hard
+	 * @param dif an String representing easy, medium or hard
 	 */
-	public void setComputerDifficulty(int dif) {
+	public void setComputerDifficulty(String dif) {
 		computerDifficulty = dif;
 	}
 

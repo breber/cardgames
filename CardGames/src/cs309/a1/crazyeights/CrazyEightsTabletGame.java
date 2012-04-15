@@ -10,6 +10,7 @@ import java.util.Random;
 
 import android.util.Log;
 import cs309.a1.shared.Card;
+import cs309.a1.shared.Constants;
 import cs309.a1.shared.Deck;
 import cs309.a1.shared.Game;
 import cs309.a1.shared.Player;
@@ -24,7 +25,7 @@ public class CrazyEightsTabletGame implements Game {
 	private List<Player> players;
 	private Deck gameDeck;
 	private Rules rules;
-	private int computerDifficulty = 0;
+	private String computerDifficulty = Constants.EASY;
 
 	private Iterator<Card> iter;
 
@@ -110,12 +111,12 @@ public class CrazyEightsTabletGame implements Game {
 	}
 
 	@Override
-	public void setComputerDifficulty(int diff){
+	public void setComputerDifficulty(String diff){
 		this.computerDifficulty = diff;
 	}
 
 	@Override
-	public int getComputerDifficulty(){
+	public String getComputerDifficulty(){
 		return this.computerDifficulty;
 	}
 
@@ -300,7 +301,6 @@ public class CrazyEightsTabletGame implements Game {
 
 		if (p != null) {
 			p.setIsComputer(true);
-
 			p.setComputerDifficulty(computerDifficulty);
 		} else {
 			if (Util.isDebugBuild()) {

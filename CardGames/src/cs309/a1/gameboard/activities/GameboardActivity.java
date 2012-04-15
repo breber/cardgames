@@ -209,8 +209,9 @@ public class GameboardActivity extends Activity {
 		}
 
 		// Setup the rest of the Computer players based on the preferences
+		//TODO computer Difficulty is string
 		int numComputers = sharedPreferences.getInt(Constants.NUMBER_OF_COMPUTERS, 1);
-		int computerDifficulty = sharedPreferences.getInt(Constants.DIFFICULTY_OF_COMPUTERS, 0);
+		String computerDifficulty = sharedPreferences.getString(Constants.DIFFICULTY_OF_COMPUTERS, Constants.EASY);
 		for (int j = i; j < 4 && (j - i < numComputers); j++) {
 			Player p = new Player();
 			p.setName("Computer " + (j - i + 1));
