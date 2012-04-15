@@ -13,6 +13,7 @@ import static cs309.a1.shared.Constants.NUMBER_OF_COMPUTERS;
 import static cs309.a1.shared.Constants.PREFERENCES;
 import static cs309.a1.shared.Constants.SOUND_EFFECTS;
 import static cs309.a1.shared.Constants.SPEECH_VOLUME;
+import static cs309.a1.shared.Constants.EASY;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,11 +21,13 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import cs309.a1.R;
@@ -75,6 +78,11 @@ public class PreferencesActivity extends Activity {
 	 * Radio buttons used to select the game type such as Crazy Eights
 	 */
 	private RadioButton myGameOption1;
+	
+	private Spinner numComputerSpinner;
+	private Spinner localeSpinner;
+	private Spinner gameSpinner;
+	private Spinner difficultySpinner;
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -148,91 +156,85 @@ public class PreferencesActivity extends Activity {
 		// set the check box to it's preference
 		speechVolume.setChecked(sharedPref.getBoolean(SPEECH_VOLUME, true));
 
-		// Number of Computers from the shared preferences
-		int checkNum = sharedPref.getInt(NUMBER_OF_COMPUTERS, 1);
+		// Number of Computers from the shared preferences		
+		numComputerSpinner = (Spinner)findViewById(R.id.spinnerNumComputers);
+		Integer numberOfComputers = sharedPref.getInt(NUMBER_OF_COMPUTERS, 1);
+		ArrayAdapter numCompAdapter = (ArrayAdapter) numComputerSpinner.getAdapter();
+		int spinnerPosition = numCompAdapter.getPosition(numberOfComputers.toString());
+		numComputerSpinner.setSelection(spinnerPosition);
 
-		// Radio button options for the number of computers
-		myOption1 = (RadioButton) findViewById(R.id.radio1);
-		myOption3 = (RadioButton) findViewById(R.id.radio2);
-		myOption2 = (RadioButton) findViewById(R.id.radio3);
-		myOption4 = (RadioButton) findViewById(R.id.radio4);
-
-		// based on which value the shared preferences returns then set the
-		// radio button to checked
-		switch (checkNum) {
-		case 1:
-			myOption1.setChecked(true);
-			break;
-		case 2:
-			myOption2.setChecked(true);
-			break;
-		case 3:
-			myOption3.setChecked(true);
-			break;
-		case 4:
-			myOption4.setChecked(true);
-			break;
-		}
 
 		// Difficulty of Computers Radio buttons
-		myOptionEasy = (RadioButton) findViewById(R.id.radioEasy);
-		myOptionMedium = (RadioButton) findViewById(R.id.radioMedium);
-		myOptionHard = (RadioButton) findViewById(R.id.radioHard);
+//		myOptionEasy = (RadioButton) findViewById(R.id.radioEasy);
+//		myOptionMedium = (RadioButton) findViewById(R.id.radioMedium);
+//		myOptionHard = (RadioButton) findViewById(R.id.radioHard);
 
 		// get the value of the option from the shared preferences
-		int difficulty = sharedPref.getInt(DIFFICULTY_OF_COMPUTERS, 1);
-
+		String difficulty = sharedPref.getString(DIFFICULTY_OF_COMPUTERS, EASY);
+		difficultySpinner = (Spinner)findViewById(R.id.difficultyOption);
+		ArrayAdapter<String> difficultyAdapter = (ArrayAdapter<String>) difficultySpinner.getAdapter(); //cast to an ArrayAdapter
+		int difficultyPosition = difficultyAdapter.getPosition(difficulty);
+		System.out.println(difficultyPosition);
+		difficultySpinner.setSelection(difficultyPosition);
+		
 		// based on the value of the preference set the correct radio button to
 		// checked
-		switch (difficulty) {
-		case 1:
-			myOptionEasy.setChecked(true);
-			break;
-		case 2:
-			myOptionMedium.setChecked(true);
-			break;
-		case 3:
-			myOptionHard.setChecked(true);
-			break;
-		}
+//		switch (difficulty) {
+//		case 1:
+//			myOptionEasy.setChecked(true);
+//			break;
+//		case 2:
+//			myOptionMedium.setChecked(true);
+//			break;
+//		case 3:
+//			myOptionHard.setChecked(true);
+//			break;
+//		}
 
 		// Language Radio button options
-		myOptionLang1 = (RadioButton) findViewById(R.id.langCanada);
-		myOptionLang2 = (RadioButton) findViewById(R.id.langUS);
-		myOptionLang3 = (RadioButton) findViewById(R.id.langFrance);
-		myOptionLang4 = (RadioButton) findViewById(R.id.langGerman);
-		myOptionLang5 = (RadioButton) findViewById(R.id.langUK);
+//		myOptionLang1 = (RadioButton) findViewById(R.id.langCanada);
+//		myOptionLang2 = (RadioButton) findViewById(R.id.langUS);
+//		myOptionLang3 = (RadioButton) findViewById(R.id.langFrance);
+//		myOptionLang4 = (RadioButton) findViewById(R.id.langGerman);
+//		myOptionLang5 = (RadioButton) findViewById(R.id.langUK);
 
 		// Get the current language that the user has set in the preferences
-		String language = sharedPref.getString(LANGUAGE, LANGUAGE_US);
 
+
+		// based on the value of the language from the preferences set the
+		// correct radio button
+		localeSpinner = (Spinner)findViewById(R.id.langOption);
+		String language = sharedPref.getString(LANGUAGE, LANGUAGE_US);
+		
 		// display the message
 		if (Util.isDebugBuild()) {
 			Toast.makeText(this, language, Toast.LENGTH_SHORT).show();
 		}
-
-		// based on the value of the language from the preferences set the
-		// correct radio button
-		if (language.equals(LANGUAGE_CANADA)) {
-			myOptionLang1.setChecked(true);
-		} else if (language.equals(LANGUAGE_US)) {
-			myOptionLang2.setChecked(true);
-		} else if (language.equals(LANGUAGE_FRANCE)) {
-			myOptionLang3.setChecked(true);
-		} else if (language.equals(LANGUAGE_GERMAN)) {
-			myOptionLang4.setChecked(true);
-		} else if (language.equals(LANGUAGE_UK)) {
-			myOptionLang5.setChecked(true);
-		}
+		
+		ArrayAdapter<String> localeAdapter = (ArrayAdapter<String>) localeSpinner.getAdapter(); //cast to an ArrayAdapter
+		int localePosition = localeAdapter.getPosition(language);
+		localeSpinner.setSelection(localePosition);
+//		if (language.equals(LANGUAGE_CANADA)) {
+//			myOptionLang1.setChecked(true);
+//		} else if (language.equals(LANGUAGE_US)) {
+//			myOptionLang2.setChecked(true);
+//		} else if (language.equals(LANGUAGE_FRANCE)) {
+//			myOptionLang3.setChecked(true);
+//		} else if (language.equals(LANGUAGE_GERMAN)) {
+//			myOptionLang4.setChecked(true);
+//		} else if (language.equals(LANGUAGE_UK)) {
+//			myOptionLang5.setChecked(true);
+//		}
 
 		// value of the game type based upon the radio button
 		String game_type = sharedPref.getString(GAME_TYPE, CRAZY_EIGHTS);
 
-		myGameOption1 = (RadioButton) findViewById(R.id.gameCrazyEights);
-
-		if (game_type.equals(CRAZY_EIGHTS)) {
-			myGameOption1.setChecked(true);
-		}
+		//myGameOption1 = (RadioButton) findViewById(R.id.gameCrazyEights);
+		gameSpinner = (Spinner)findViewById(R.id.gameOption);
+		
+		ArrayAdapter<String> gameAdapter = (ArrayAdapter<String>) gameSpinner.getAdapter(); //cast to an ArrayAdapter
+		int gamePosition = localeAdapter.getPosition(game_type);
+		gameSpinner.setSelection(gamePosition);
 
 		// OK button on the preferences screen
 		Button ok = (Button) findViewById(R.id.ok);
@@ -258,42 +260,47 @@ public class PreferencesActivity extends Activity {
 
 				// set number of computers based on the radio button checked
 				// update the shared preferences with the value checked by the user
-				if (myOption1.isChecked()) {
-					prefsEditor.putInt(NUMBER_OF_COMPUTERS, 1);
-				} else if (myOption2.isChecked()) {
-					prefsEditor.putInt(NUMBER_OF_COMPUTERS, 2);
-				} else if (myOption3.isChecked()) {
-					prefsEditor.putInt(NUMBER_OF_COMPUTERS, 3);
-				} else if (myOption4.isChecked()) {
-					prefsEditor.putInt(NUMBER_OF_COMPUTERS, 4);
-				}
+//				if (myOption1.isChecked()) {
+//					prefsEditor.putInt(NUMBER_OF_COMPUTERS, 1);
+//				} else if (myOption2.isChecked()) {
+//					prefsEditor.putInt(NUMBER_OF_COMPUTERS, 2);
+//				} else if (myOption3.isChecked()) {
+//					prefsEditor.putInt(NUMBER_OF_COMPUTERS, 3);
+//				} else if (myOption4.isChecked()) {
+//					prefsEditor.putInt(NUMBER_OF_COMPUTERS, 4);
+//				}
+				
+				prefsEditor.putInt(NUMBER_OF_COMPUTERS, Integer.parseInt((String) numComputerSpinner.getSelectedItem()));
 
 				// set difficulty of computers to preferences
-				if (myOptionEasy.isChecked()) {
-					prefsEditor.putInt(DIFFICULTY_OF_COMPUTERS, 0);
-				} else if (myOptionMedium.isChecked()) {
-					prefsEditor.putInt(DIFFICULTY_OF_COMPUTERS, 1);
-				} else if (myOptionHard.isChecked()) {
-					prefsEditor.putInt(DIFFICULTY_OF_COMPUTERS, 2);
-				}
+//				if (myOptionEasy.isChecked()) {
+//					prefsEditor.putInt(DIFFICULTY_OF_COMPUTERS, 0);
+//				} else if (myOptionMedium.isChecked()) {
+//					prefsEditor.putInt(DIFFICULTY_OF_COMPUTERS, 1);
+//				} else if (myOptionHard.isChecked()) {
+//					prefsEditor.putInt(DIFFICULTY_OF_COMPUTERS, 2);
+//				}
+				
+				prefsEditor.putString(DIFFICULTY_OF_COMPUTERS, (String)difficultySpinner.getSelectedItem());
 
 				// set language to preferences
-				if (myOptionLang1.isChecked()) {
-					prefsEditor.putString(LANGUAGE, LANGUAGE_CANADA);
-				} else if (myOptionLang2.isChecked()) {
-					prefsEditor.putString(LANGUAGE, LANGUAGE_US);
-				} else if (myOptionLang3.isChecked()) {
-					prefsEditor.putString(LANGUAGE, LANGUAGE_FRANCE);
-				} else if (myOptionLang4.isChecked()) {
-					prefsEditor.putString(LANGUAGE, LANGUAGE_GERMAN);
-				} else if (myOptionLang5.isChecked()) {
-					prefsEditor.putString(LANGUAGE, LANGUAGE_UK);
-				}
+//				if (myOptionLang1.isChecked()) {
+//					prefsEditor.putString(LANGUAGE, LANGUAGE_CANADA);
+//				} else if (myOptionLang2.isChecked()) {
+//					prefsEditor.putString(LANGUAGE, LANGUAGE_US);
+//				} else if (myOptionLang3.isChecked()) {
+//					prefsEditor.putString(LANGUAGE, LANGUAGE_FRANCE);
+//				} else if (myOptionLang4.isChecked()) {
+//					prefsEditor.putString(LANGUAGE, LANGUAGE_GERMAN);
+//				} else if (myOptionLang5.isChecked()) {
+//					prefsEditor.putString(LANGUAGE, LANGUAGE_UK);
+//				}
+				prefsEditor.putString(LANGUAGE, (String)localeSpinner.getSelectedItem());
 
-				if (myGameOption1.isChecked()) {
-					prefsEditor.putString(GAME_TYPE, CRAZY_EIGHTS);
-				}
-
+//				if (myGameOption1.isChecked()) {
+//					prefsEditor.putString(GAME_TYPE, CRAZY_EIGHTS);
+//				}
+				prefsEditor.putString(GAME_TYPE, (String)gameSpinner.getSelectedItem());
 				// commit the changes to the shared preferences
 				prefsEditor.commit();
 

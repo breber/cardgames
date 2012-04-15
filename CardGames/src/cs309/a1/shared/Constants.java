@@ -92,17 +92,17 @@ public class Constants {
 	/**
 	 * A string representing the German locale
 	 */
-	public static final String LANGUAGE_GERMAN = "GERMAN";
+	public static final String LANGUAGE_GERMAN = "German";
 	
 	/**
 	 * A string representing the France locale
 	 */
-	public static final String LANGUAGE_FRANCE = "FRANCE"; 
+	public static final String LANGUAGE_FRANCE = "France"; 
 	
 	/**
 	 * A string representing the Canada locale
 	 */
-	public static final String LANGUAGE_CANADA = "CANADA"; 
+	public static final String LANGUAGE_CANADA = "Canada"; 
 	
 	/**
 	 * A string representing the UK locale
@@ -120,6 +120,12 @@ public class Constants {
 	 * A constant representing the difficulty of the AI players in the game for the preferences
 	 */
 	public static final String DIFFICULTY_OF_COMPUTERS = "DIFFICULTY OF COMPUTERS"; 
+	
+	public static final String EASY = "Easy"; 
+	
+	public static final String MEDIUM = "Medium"; 
+	
+	public static final String HARD = "Hard"; 
 	
 	/**
 	 * A constant to represent a key in the shared preferences for the sound effects option
@@ -149,7 +155,7 @@ public class Constants {
 	/**
 	 * A constant to represent a key in the shared preferences for the game type crazy eights
 	 */
-	public static final String CRAZY_EIGHTS="CRAZY EIGHTS";
+	public static final String CRAZY_EIGHTS="Crazy Eights";
 	
 	/* AI Constants */
 	/**

@@ -46,7 +46,7 @@ The first player to successfully get rid of all of their cards wins the game. If
     <string name="scanning">Scanning for Devices</string>
     <string name="no_devices_found">No devices found</string>
     <string name="title_device_list">Device List</string>
-    
+
     <!-- Wifi Connect Activity -->
     <string name="enterIpAddress">Enter IP Address of Server</string>
     <string name="ipAddress">***.***.***.***</string>
@@ -130,5 +130,34 @@ The first player to successfully get rid of all of their cards wins the game. If
 
     <!-- Main Menu -->
     <string name="preferences">Preferences</string>
+
+    <string-array name="locale_array">
+        <item>US</item>
+        <item>UK</item>
+        <item>German</item>
+        <item>France</item>
+        <item>Canada</item>
+    </string-array>
+    
+    <string-array name="computer_difficulty_array">
+        <item>Easy</item>
+        <item>Medium</item>
+        <item>Hard</item>
+    </string-array>
+    
+    <string-array name="num_computer_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    
+    <string-array name="game_array">
+        <item>Crazy Eights</item>
+    </string-array>
+    
+    <string-array name="connection_array">
+        <item>WiFi</item>
+        <item>BlueTooth</item>
+    </string-array>
 
 </resources>

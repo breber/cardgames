@@ -86,41 +86,13 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/black" />
 
-            <RadioGroup
-                android:id="@+id/radioNumComputers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <cs309.a1.shared.RadioButton
-                    android:id="@+id/radio1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/one"
-                    android:textColor="@color/black" />
-
-                <cs309.a1.shared.RadioButton
-                    android:id="@+id/radio2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/two"
-                    android:textColor="@color/black" />
-
-                <cs309.a1.shared.RadioButton
-                    android:id="@+id/radio3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/three"
-                    android:textColor="@color/black" />
-
-                <cs309.a1.shared.RadioButton
-                    android:id="@+id/radio4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/four"
-                    android:textColor="@color/black" />
-            </RadioGroup>
+            <Spinner
+                android:id="@+id/spinnerNumComputers"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:entries="@array/num_computer_array"
+		        android:prompt="@string/NumComputers" />
+            
         </TableRow>
 
         <TableRow>
@@ -134,34 +106,13 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/black" />
 
-            <RadioGroup
-                android:id="@+id/radioDifficulty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <cs309.a1.shared.RadioButton
-                    android:id="@+id/radioEasy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/Easy"
-                    android:textColor="@color/black" />
-
-                <cs309.a1.shared.RadioButton
-                    android:id="@+id/radioMedium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Medium"
-                    android:textColor="@color/black" />
-
-                <cs309.a1.shared.RadioButton
-                    android:id="@+id/radioHard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Hard"
-                    android:textColor="@color/black" />
-            </RadioGroup>
+           <Spinner
+                android:id="@+id/difficultyOption"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:entries="@array/computer_difficulty_array"
+		        android:prompt="@string/difficultyComputers" />
+           
         </TableRow>
 
         <TableRow>
@@ -175,48 +126,13 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/black" />
 
-            <RadioGroup
+ 			<Spinner
                 android:id="@+id/langOption"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:entries="@array/locale_array"
+		        android:prompt="@string/lang" />
 
-                <cs309.a1.shared.RadioButton
-                    android:id="@+id/langCanada"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/langCanada"
-                    android:textColor="@color/black" />
-
-                <cs309.a1.shared.RadioButton
-                    android:id="@+id/langUS"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/langUS"
-                    android:textColor="@color/black" />
-
-                <cs309.a1.shared.RadioButton
-                    android:id="@+id/langFrance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/langFrance"
-                    android:textColor="@color/black" />
-
-                <cs309.a1.shared.RadioButton
-                    android:id="@+id/langGerman"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/langGerman"
-                    android:textColor="@color/black" />
-
-                <cs309.a1.shared.RadioButton
-                    android:id="@+id/langUK"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/langUK"
-                    android:textColor="@color/black" />
-            </RadioGroup>
         </TableRow>
 
         <TableRow>
@@ -230,20 +146,14 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/black" />
 
-            <RadioGroup
-                android:id="@+id/gameOption"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
 
-                <cs309.a1.shared.RadioButton
-                    android:id="@+id/gameCrazyEights"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/gameCrazyEights"
-                    android:textColor="@color/black" />
-            </RadioGroup>
+            <Spinner
+                android:id="@+id/gameOption"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:entries="@array/game_array"
+		        android:prompt="@string/Game" />
+            
         </TableRow>
 
         <cs309.a1.shared.Button
