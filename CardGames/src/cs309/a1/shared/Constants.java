@@ -13,8 +13,20 @@ public class Constants {
 	 * A constant to limit the number of characters for a players name
 	 */
 	public static final int NAME_MAX_CHARS = 10;
+	
+	/**
+	 * The display size of a card on a small handheld
+	 */
 	public static final int CARD_IMAGE_SCALE_SMALL = 200;
+	
+	/**
+	 * The display size of a card on a medium handheld
+	 */
 	public static final int CARD_IMAGE_SCALE_MED = 400;
+	
+	/**
+	 * The display size of a card on a large handheld
+	 */
 	public static final int CARD_IMAGE_SCALE_LARGE = 500;
 	
 	/**
