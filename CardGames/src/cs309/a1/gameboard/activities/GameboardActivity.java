@@ -668,11 +668,7 @@ public class GameboardActivity extends Activity {
 			ll = (LinearLayout) findViewById(R.id.player1ll);
 			handSize = --player1cards;
 			if (handSize < Constants.MAX_DISPLAYED) {
-				if (handSize == 0) {
-					ll.removeView(findViewById(1));
-				} else {
-					ll.removeView(findViewById(handSize + 1));
-				}
+				ll.removeView(findViewById(handSize + 1));
 			}
 		}
 
@@ -699,11 +695,7 @@ public class GameboardActivity extends Activity {
 			ll = (LinearLayout) findViewById(R.id.player4ll);
 			handSize = --player4cards;
 			if (handSize < Constants.MAX_DIS_SIDES) {
-				if (handSize == 0) {
-					ll.removeView(findViewById(3 * Constants.MAX_DISPLAYED + 1));
-				} else {
-					ll.removeView(findViewById(3 * Constants.MAX_DISPLAYED + handSize + 1));
-				}
+				ll.removeView(findViewById(3 * Constants.MAX_DISPLAYED + handSize + 1));
 			}
 		}
 	}
