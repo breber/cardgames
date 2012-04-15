@@ -272,11 +272,13 @@ public class ConnectActivity extends Activity {
 			updatePlayersConnected();
 		}
 
+		ConnectionType currentType = ConnectionFactory.getConnectionType(this);
+
 		// If Bluetooth isn't enabled, request that it be enabled (if we are currently using Bluetooth)
-		if (!mBluetoothAdapter.isEnabled() && ConnectionFactory.getConnectionType() == ConnectionType.BLUETOOTH) {
+		if (!mBluetoothAdapter.isEnabled() && currentType == ConnectionType.BLUETOOTH) {
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-		} else if (!wifiManager.isWifiEnabled() && ConnectionFactory.getConnectionType() == ConnectionType.WIFI) {
+		} else if (!wifiManager.isWifiEnabled() && currentType == ConnectionType.WIFI) {
 			// Wifi is not currently enabled, so try and enable it
 			wifiManager.setWifiEnabled(true);
 		} else {
@@ -288,9 +290,9 @@ public class ConnectActivity extends Activity {
 		// to on their own device.
 		TextView tv = (TextView) findViewById(R.id.myName);
 
-		if (ConnectionFactory.getConnectionType() == ConnectionType.BLUETOOTH) {
+		if (currentType == ConnectionType.BLUETOOTH) {
 			tv.setText(getResources().getString(R.string.deviceName) + "\n" + mBluetoothAdapter.getName());
-		} else if (ConnectionFactory.getConnectionType() == ConnectionType.WIFI) {
+		} else if (currentType == ConnectionType.WIFI) {
 			WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 			WifiInfo info = manager.getConnectionInfo();
 			tv.setText(getResources().getString(R.string.deviceName) + "\n" + Formatter.formatIpAddress(info.getIpAddress()));
@@ -419,7 +421,7 @@ public class ConnectActivity extends Activity {
 			Log.d(TAG, "startListeningForDevices");
 		}
 
-		if (ConnectionFactory.getConnectionType() == ConnectionType.BLUETOOTH) {
+		if (ConnectionFactory.getConnectionType(this) == ConnectionType.BLUETOOTH) {
 			Util.ensureDiscoverable(this, mBluetoothAdapter);
 		}
 		mConnectionServer.startListening();

@@ -129,7 +129,7 @@
             android:name=".shared.activities.WifiConnectActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.CrazyEights" />
+            android:theme="@style/Theme.CrazyEights.Dialog" />
         <activity
             android:name=".shared.activities.PreferencesActivity"
             android:configChanges="orientation|keyboardHidden"

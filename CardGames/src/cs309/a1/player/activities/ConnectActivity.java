@@ -127,7 +127,7 @@ public class ConnectActivity extends Activity {
 		TextView tv = (TextView) findViewById(R.id.progressDialogText);
 		tv.setText(R.string.connecting);
 
-		ConnectionType type = ConnectionFactory.getConnectionType();
+		ConnectionType type = ConnectionFactory.getConnectionType(this);
 
 		if (type == ConnectionType.BLUETOOTH) {
 			// Show the device list

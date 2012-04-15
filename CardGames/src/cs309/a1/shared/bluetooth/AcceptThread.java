@@ -154,10 +154,12 @@ public class AcceptThread extends Thread {
 		continueChecking = false;
 
 		// Close the server socket
-		try {
-			mmServerSocket.close();
-		} catch (IOException e) {
-			Log.e(TAG, "Socket close() of server failed", e);
+		if (mmServerSocket != null) {
+			try {
+				mmServerSocket.close();
+			} catch (IOException e) {
+				Log.e(TAG, "Socket close() of server failed", e);
+			}
 		}
 	}
 }
