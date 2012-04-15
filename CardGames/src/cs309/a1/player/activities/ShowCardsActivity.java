@@ -22,10 +22,10 @@ import cs309.a1.shared.GameFactory;
 import cs309.a1.shared.PlayerController;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.activities.QuitGameActivity;
-import cs309.a1.shared.bluetooth.BluetoothClient;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
 import cs309.a1.shared.connection.ConnectionClient;
 import cs309.a1.shared.connection.ConnectionConstants;
+import cs309.a1.shared.connection.ConnectionFactory;
 
 /**
  * This is the Activity that handles Game Play
@@ -117,7 +117,7 @@ public class ShowCardsActivity extends Activity {
 
 		// Get an instance of the BluetoothClient so that we can
 		// send messages back to the tablet
-		connection = BluetoothClient.getInstance(this);
+		connection = ConnectionFactory.getClientInstance(this);
 
 		// Set up the Layout for the cards
 		playerHandLayout = (LinearLayout) findViewById(R.id.playerCardContainer);
@@ -150,9 +150,11 @@ public class ShowCardsActivity extends Activity {
 	 */
 	@Override
 	protected void onDestroy() {
-		// Disconnect Bluetooth connection
-		BluetoothClient.getInstance(this).disconnect();
-
+		// Disconnect connection
+		if (connection != null) {
+			connection.disconnect();
+		}
+		
 		unregisterReceiver();
 
 		super.onDestroy();
@@ -228,32 +230,32 @@ public class ShowCardsActivity extends Activity {
 		//int pixels = (int) (size.x * Constants.CARD_IMAGE_SCALE * dpsToPixScale + 0.5f);
 		//int pixels = (int) (125 * dpsToPixScale + 0.5f);
 		final int screen_width = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
-		
+
 		int scale;
-		
-		if((float)screen_width/dpsToPixScale >= 720) scale = Constants.CARD_IMAGE_SCALE_LARGE;
-		else if((float)screen_width/dpsToPixScale >= 500) scale = Constants.CARD_IMAGE_SCALE_MED;
+
+		if(screen_width/dpsToPixScale >= 720) scale = Constants.CARD_IMAGE_SCALE_LARGE;
+		else if(screen_width/dpsToPixScale >= 500) scale = Constants.CARD_IMAGE_SCALE_MED;
 		else scale = Constants.CARD_IMAGE_SCALE_SMALL;
-		
+
 		int pixels = (int) (scale * dpsToPixScale + 0.5f);
 
 		// edit layout attributes
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, pixels);
 
 		for (int i = 0; i < cardHand.size(); i++) {
-			
+
 			Bitmap original = BitmapFactory.decodeResource(getResources(), cardHand.get(i).getResourceId());
 			int orgWidth = original.getWidth();
 			int orgHeight = original.getHeight();
 			float newHeight = pixels;
-			
+
 			float scalePercentage = newHeight/orgHeight;
-			
+
 			Matrix matrix = new Matrix();
 			matrix.postScale(scalePercentage, scalePercentage);
-			
+
 			Bitmap resizedCard = Bitmap.createBitmap(original, 0, 0, orgWidth, orgHeight, matrix, true);
-			
+
 			// create ImageView to hold Card
 			ImageView toAdd = new ImageView(this);
 			toAdd.setImageBitmap(resizedCard);

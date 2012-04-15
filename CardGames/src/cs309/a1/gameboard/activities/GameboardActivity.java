@@ -35,8 +35,8 @@ import cs309.a1.shared.Player;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.activities.QuitGameActivity;
 import cs309.a1.shared.bluetooth.BluetoothConstants;
-import cs309.a1.shared.bluetooth.BluetoothServer;
 import cs309.a1.shared.connection.ConnectionConstants;
+import cs309.a1.shared.connection.ConnectionFactory;
 import cs309.a1.shared.connection.ConnectionServer;
 
 public class GameboardActivity extends Activity {
@@ -176,7 +176,7 @@ public class GameboardActivity extends Activity {
 		// messages from the Bluetooth module
 		registerReceiver();
 
-		connection = BluetoothServer.getInstance(this);
+		connection = ConnectionFactory.getServerInstance(this);
 
 		sharedPreferences = getSharedPreferences(PREFERENCES, MODE_WORLD_READABLE);
 
