@@ -7,6 +7,7 @@ import static cs309.a1.shared.Constants.RESOURCE_ID;
 import static cs309.a1.shared.Constants.SUIT;
 import static cs309.a1.shared.Constants.VALUE;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -504,11 +505,13 @@ public class CrazyEightsGameController implements GameController {
 	 * This will be called after the PlayComputerTurnActivity has waited for the appropriate amount of time.
 	 * level 0 	should just loop through the cards to find one that it is allowed to play
 	 * 			very basic, randomly play a card if able or draw if not able
-	 * level 1 	nothing yet
+	 * level 1 	chooses first the cards of the same suit, then cards of the same index of a different suit, 
+	 * 			then a special card as a last resort. if a suit of the same index 
 	 *
 	 * level 2 	nothing yet
 	 */
-	private void playComputerTurn() {
+	private void playComputerTurn() {	
+		
 		Card onDiscard = game.getDiscardPileTop();
 		if (onDiscard.getValue() == 7) {
 			onDiscard = new Card(suitChosen, onDiscard.getValue(), onDiscard.getResourceId(), onDiscard.getIdNum());
@@ -524,6 +527,8 @@ public class CrazyEightsGameController implements GameController {
 					break;
 				}
 			}
+			
+			
 			if (cardSelected != null && cardSelected.getValue() == 7) {
 				int[] suits = new int[5];
 				int maxSuitIndex = 0;
@@ -538,13 +543,76 @@ public class CrazyEightsGameController implements GameController {
 				suitChosen = maxSuitIndex;
 			}
 
-			//computer difficulty 1
-		} else if (players.get(whoseTurn).getComputerDifficulty() == 1) {
-			// TODO: implement
+		//computer difficulty 1
+		} else if (players.get(whoseTurn).getComputerDifficulty() >= 1) { //TODO change this to == once there has been added difficulty of 2
+			List<Card> sameSuit = new ArrayList<Card>();
+			List<Card> sameNum = new ArrayList<Card>();
+			List<Card> special = new ArrayList<Card>();
+			
+			int suits[] = new int[5];
+			int maxSuitIndex = 0;
+			
+			for (Card c : cards) {
+				//checks for 8s and jokers
+				if( (c.getValue() == 7 || c.getSuit() == Constants.SUIT_JOKER) && gameRules.checkCard(c, onDiscard) ){
+					special.add(c);
+					continue;
+				} 
+				
+				//this gets the number of cards of each suit
+				suits[c.getSuit()]++;
+				if (suits[c.getSuit()] > suits[maxSuitIndex]) {
+					maxSuitIndex = c.getSuit();
+				}
+				
+				//checks for cards of the same suit then cards of the same index
+				if (c.getSuit() == onDiscard.getSuit() && gameRules.checkCard(c, onDiscard) ) {
+					sameSuit.add(c);
+				} else if (c.getValue() == onDiscard.getValue() && gameRules.checkCard(c, onDiscard) ) {
+					sameNum.add(c);
+				}
+			}
+			
+			//see if there is more of another suit that the computer can change it to.
+			boolean moreOfOtherSuit = false;
+			for (Card c : sameNum) {
+				if (suits[c.getSuit()] > suits[onDiscard.getSuit()]){
+					moreOfOtherSuit = true;
+				}
+			}
+			
+			if (moreOfOtherSuit && sameNum.size() > 0 ) { //choose a card of the same number that we can change the suit with
+				cardSelected = sameNum.get(0);
+				for (Card c : sameNum) {
+					if (suits[c.getSuit()] > suits[cardSelected.getSuit()]){
+						cardSelected = c;
+					}
+				}
+			} else if (sameSuit.size() > 0) { //choose a card of the same suit
+				cardSelected = sameSuit.get(0);
+				boolean hasAnotherCardWithIndex = false;
+				for (Card c : sameSuit) {
+					for (Card c1 : cards) {
+						if (c.getValue() == c1.getValue()){
+							cardSelected = c;
+							hasAnotherCardWithIndex = true;
+							break;
+						}
+					}
+					if (hasAnotherCardWithIndex) {
+						break;
+					}
+				}
+			} else if (special.size() > 0){ //play a special card as last resort
+				cardSelected = special.get(0);
+				if (cardSelected != null && cardSelected.getValue() == 7) {
+					suitChosen = maxSuitIndex;
+				}
+			} // else { no card selected } 
 
-			//computer difficulty 2 or greater
+		//computer difficulty 2 or greater
 		} else if (players.get(whoseTurn).getComputerDifficulty() >= 2) {
-			// TODO: implement
+			// TODO: implement right now 2 is handled by the difficulty of 1
 		}
 
 
