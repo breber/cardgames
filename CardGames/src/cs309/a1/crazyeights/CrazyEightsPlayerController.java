@@ -166,7 +166,6 @@ public class CrazyEightsPlayerController implements PlayerController {
 				// Parse the Message if it was the original setup
 				try {
 					JSONArray arr = new JSONArray(object);
-					arr.getJSONObject(0);
 					for (int i = 0; i < arr.length(); i++) {
 						JSONObject obj = arr.getJSONObject(i);
 						int suit = obj.getInt(SUIT);
