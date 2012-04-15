@@ -65,34 +65,122 @@ public class Constants {
 	 */
 	public static final int SUIT_JOKER = 4;
 	
+	/**
+	 * This is used by the connections screen to pass the player 1 name that have been entered
+	 */
 	public static final String PLAYER_1 = "player1";
+	
+	/**
+	 * This is used by the connections screen to pass the player 2 name that have been entered
+	 */
 	public static final String PLAYER_2 = "player2";
+	
+	/**
+	 * This is used by the connections screen to pass the player 3 name that have been entered
+	 */
 	public static final String PLAYER_3 = "player3";
+	
+	/**
+	 * This is used by the connections screen to pass the player 4 name that have been entered
+	 */
 	public static final String PLAYER_4 = "player4";
 	
+	/* JSON keys */
+	/**
+	 *  this is a JSON key for the suit of a card
+	 */
 	public static final String SUIT = "suit";
+	
+	/**
+	 * this is a JSON key for the value of a card
+	 */
 	public static final String VALUE = "value";
+	
+	/**
+	 * this is a JSON key for the resource id of a card
+	 */
 	public static final String RESOURCE_ID = "resourceid";
+	
+	/**
+	 * this is a JSON key for a card id  
+	 */
 	public static final String ID = "id";
+	
+	/**
+	 * this is the key for message type this is used to obtain the message type information 
+	 * from the message sent over wireless
+	 */
 	public static final String MESSAGE_TYPE = "messagetype";
+	
+	/**
+	 * this is a JSON key for getting the isTurn boolean
+	 */
 	public static final String TURN = "isturn";
+	
+	/**
+	 * this is a JSON key for getting the player name
+	 */
 	public static final String PLAYER_NAME = "playername";
-
+	
+	/**
+	 * this is a request code for the get EnterNameActivity
+	 */
 	public static final int GET_PLAYER_NAME = "getPlayerName".hashCode();
 
-	// these are bluetooth message types that can be sent by the GameBoard
+	/* wireless connection message codes */
+	/**
+	 * message type for setting up a game
+	 */
 	public static final int SETUP = 0;
+	
+	/**
+	 * message type for telling a player it is their turn
+	 */
 	public static final int IS_TURN = 1;
+	
+	/**
+	 * message type for sending the card that was drawn
+	 */
 	public static final int CARD_DRAWN = 2;
+	
+	/**
+	 * message type telling the player they won
+	 */
 	public static final int WINNER = 3;
+	
+	/**
+	 * message type telling the player they lost
+	 */
 	public static final int LOSER = 4;
+	
+	/**
+	 * message type for refreshing the game state by re-sending cards and whose turn it is to all players
+	 */
 	public static final int REFRESH = 5;
+	
+	/**
+	 * message type for pausing the game
+	 */
 	public static final int PAUSE = 6;
+	
+	/**
+	 * message type for unpausing the game
+	 */
 	public static final int UNPAUSE = 7;
+	
+	/**
+	 * message type for telling the players to end their game
+	 */
 	public static final int END_GAME = 8;
 
-	// these are bluetooth messages types that can be sent by Player
+	/**
+	 * message types that a player sends when playing a card
+	 */
 	public static final int PLAY_CARD = 9;
+	
+	/**
+	 * message type that a player sends when requesting to draw a card
+	 */
 	public static final int DRAW_CARD = 10;
 	
 	/* Language Options */
@@ -195,7 +283,7 @@ public class Constants {
 	
 	/* AI Constants */
 	/**
-	 * The time you wait in between computer turns
+	 * The time you wait in between computer turns, about 1 and a half seconds now
 	 */
 	public static final long COMPUTER_WAIT_TIME = 1500;
 }
