@@ -40,6 +40,9 @@ public class PauseMenuActivity extends Activity {
 		// Set up the button handler for the rules button
 		Button rules = (Button) findViewById(R.id.btRules);
 		rules.setOnClickListener(new OnClickListener() {
+			/* (non-Javadoc)
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
 			@Override
 			public void onClick(View v) {
 				Intent ruleButtonClick = new Intent(PauseMenuActivity.this, RulesActivity.class);
@@ -50,6 +53,9 @@ public class PauseMenuActivity extends Activity {
 		// Set up the button handler for the "resume" button
 		Button resume = (Button) findViewById(R.id.btResume);
 		resume.setOnClickListener(new OnClickListener() {
+			/* (non-Javadoc)
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
 			@Override
 			public void onClick(View v) {
 				setResult(RESULT_OK);
@@ -60,6 +66,9 @@ public class PauseMenuActivity extends Activity {
 		// Set up the handler for the "Main menu" button
 		Button mainMenu = (Button) findViewById(R.id.btMainMenu);
 		mainMenu.setOnClickListener(new OnClickListener() {
+			/* (non-Javadoc)
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
 			@Override
 			public void onClick(View v) {
 				// Start the "Are you sure you want to quit the game?" activity

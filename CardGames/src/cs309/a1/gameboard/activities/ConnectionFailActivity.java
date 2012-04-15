@@ -45,6 +45,9 @@ public class ConnectionFailActivity extends Activity {
 		// with a status of RESULT_CANCELLED
 		Button dropPlayer = (Button) findViewById(R.id.dropPlayer);
 		dropPlayer.setOnClickListener(new OnClickListener() {
+			/* (non-Javadoc)
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
 			@Override
 			public void onClick(View v) {
 				setResult(RESULT_CANCELED, resultIntent);
@@ -56,6 +59,9 @@ public class ConnectionFailActivity extends Activity {
 		// with a status of RESULT_OK
 		Button reconnect = (Button) findViewById(R.id.reconnect);
 		reconnect.setOnClickListener(new OnClickListener() {
+			/* (non-Javadoc)
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
 			@Override
 			public void onClick(View v) {
 				setResult(RESULT_OK, resultIntent);

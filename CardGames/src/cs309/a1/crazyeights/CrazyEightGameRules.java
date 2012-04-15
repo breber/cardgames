@@ -14,10 +14,11 @@ public class CrazyEightGameRules implements Rules{
 	 * @return true if the card played on the discard pile is valid else false
 	 */
 	public boolean checkCard(Card cardPlayed, Card onDiscard){
+		
+		//check to see if a card is null or the discard pile is null
 		if(cardPlayed == null || onDiscard == null){
 			return false;
 		}
-		//TODO need way to know what color the 8 changed it to
 		
 		//joker and 8 are always accepted
 		if(cardPlayed.getSuit() == Constants.SUIT_JOKER || cardPlayed.getValue() == 7){ //this 7 is the card value of an 8

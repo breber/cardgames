@@ -163,6 +163,9 @@ public class GameboardActivity extends Activity {
 		// Add the handler for the pause button
 		ImageButton pause = (ImageButton) findViewById(R.id.gameboard_pause);
 		pause.setOnClickListener(new OnClickListener() {
+			/* (non-Javadoc)
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
 			@Override
 			public void onClick(View v) {
 				gameController.pause();
