@@ -731,13 +731,30 @@ public class GameboardActivity extends Activity {
 	 * A class that contains a device name and id
 	 */
 	private class NameDevWrapper {
+		/**
+		 * Create a NameDevWrapper from a string array
+		 * 
+		 * 		playerName[0] = deviceId
+		 * 		playerName[1] = name
+		 * 
+		 * @param playerName an array of a device id and a name
+		 * 			as defined above
+		 */
 		public NameDevWrapper(String[] playerName) {
 			if (playerName != null) {
 				name = playerName[1];
 				deviceId = playerName[0];
 			}
 		}
+
+		/**
+		 * The name of this NameDevWrapper
+		 */
 		public String name;
+
+		/**
+		 * The device ID of this NameDevWrapper
+		 */
 		public String deviceId;
 	}
 
