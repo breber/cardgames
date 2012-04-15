@@ -1,5 +1,6 @@
 package cs309.a1.gameboard.activities;
 
+import static cs309.a1.shared.Constants.CONNECTION_TYPE;
 import static cs309.a1.shared.Constants.CRAZY_EIGHTS;
 import static cs309.a1.shared.Constants.DIFFICULTY_OF_COMPUTERS;
 import static cs309.a1.shared.Constants.EASY;
@@ -11,16 +12,12 @@ import static cs309.a1.shared.Constants.PREFERENCES;
 import static cs309.a1.shared.Constants.SOUND_EFFECTS;
 import static cs309.a1.shared.Constants.SPEECH_VOLUME;
 import static cs309.a1.shared.Constants.WIFI;
-import static cs309.a1.shared.Constants.CONNECTION_TYPE;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -158,7 +155,8 @@ public class PreferencesActivity extends Activity {
 			Integer numberOfComputers = sharedPref.getInt(NUMBER_OF_COMPUTERS, 1);
 			
 			//make an array adapter of all options specified in the xml
-			ArrayAdapter numCompAdapter = (ArrayAdapter) numComputerSpinner.getAdapter();
+			@SuppressWarnings("unchecked")
+			ArrayAdapter<String> numCompAdapter = (ArrayAdapter<String>) numComputerSpinner.getAdapter();
 			
 			//find the current position
 			int spinnerPosition = numCompAdapter.getPosition(numberOfComputers.toString());
@@ -176,6 +174,7 @@ public class PreferencesActivity extends Activity {
 			String difficulty = sharedPref.getString(DIFFICULTY_OF_COMPUTERS, EASY);
 			
 			//make an array adapter of all options specified in the xml
+			@SuppressWarnings("unchecked")
 			ArrayAdapter<String> difficultyAdapter = (ArrayAdapter<String>) difficultySpinner.getAdapter(); //cast to an ArrayAdapter
 			
 			//find the current position of the preference
@@ -200,6 +199,7 @@ public class PreferencesActivity extends Activity {
 			}
 			
 			//make an array adapter of all options specified in the xml
+			@SuppressWarnings("unchecked")
 			ArrayAdapter<String> localeAdapter = (ArrayAdapter<String>) localeSpinner.getAdapter(); //cast to an ArrayAdapter
 			
 			//get the position of the current item
@@ -219,6 +219,7 @@ public class PreferencesActivity extends Activity {
 			String game_type = sharedPref.getString(GAME_TYPE, CRAZY_EIGHTS);
 			
 			//make an array adapter of all options specified in the xml
+			@SuppressWarnings("unchecked")
 			ArrayAdapter<String> gameAdapter = (ArrayAdapter<String>) gameSpinner.getAdapter(); //cast to an ArrayAdapter
 			
 			//get the current position of the selected item
@@ -236,6 +237,7 @@ public class PreferencesActivity extends Activity {
 			String connection_type = sharedPref.getString(CONNECTION_TYPE, WIFI);
 			
 			//make an array adapter of all options specified in the xml
+			@SuppressWarnings("unchecked")
 			ArrayAdapter<String> gameAdapter = (ArrayAdapter<String>) connectionSpinner.getAdapter(); //cast to an ArrayAdapter
 			
 			//get the current position of the selected item
@@ -244,60 +246,54 @@ public class PreferencesActivity extends Activity {
 			//set the option checked based on the preferences
 			connectionSpinner.setSelection(connectionPosition);
 		}
-
-		// OK button on the preferences screen
-		Button ok = (Button) findViewById(R.id.ok);
-
-		// On click listener for the ok button
-		ok.setOnClickListener(new OnClickListener() {
-			/* (non-Javadoc)
-			 * @see android.view.View.OnClickListener#onClick(android.view.View)
-			 */
-			@Override
-			public void onClick(View v) {
-
-				// get the values for the sound options from the preferences
-				CheckBox soundEffects = (CheckBox) findViewById(R.id.checkBoxSoundEffects);
-				CheckBox speechVolume = (CheckBox) findViewById(R.id.checkBoxSpeechVolume);
-
-				// set the result of the activity
-				setResult(RESULT_OK);
-
-				// put the new preferences in the shared preferences
-				prefsEditor.putBoolean(SPEECH_VOLUME, speechVolume.isChecked());
-				prefsEditor.putBoolean(SOUND_EFFECTS, soundEffects.isChecked());
-
-				// set number of computers
-				if(numComputerSpinner != null){
-					prefsEditor.putInt(NUMBER_OF_COMPUTERS, Integer.parseInt((String) numComputerSpinner.getSelectedItem()));
-				}
-				
-				// set difficulty of computers to preferences	
-				if(difficultySpinner != null){
-					prefsEditor.putString(DIFFICULTY_OF_COMPUTERS, (String)difficultySpinner.getSelectedItem());
-				}
-					
-				// set language to preferences
-				if(localeSpinner != null){
-					prefsEditor.putString(LANGUAGE, (String)localeSpinner.getSelectedItem());
-				}
-				
-				//set game type
-				if(gameSpinner != null){
-					prefsEditor.putString(GAME_TYPE, (String)gameSpinner.getSelectedItem());
-				}
-				
-				//set connection type
-				if(gameSpinner != null){
-					prefsEditor.putString(CONNECTION_TYPE, (String)connectionSpinner.getSelectedItem());
-				}
-				
-				// commit the changes to the shared preferences
-				prefsEditor.commit();
-
-				// finish the activity
-				finish();
-			}
-		});
+	}
+	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onBackPressed()
+	 */
+	@Override
+	public void onBackPressed() {
+		// get the values for the sound options from the preferences
+		CheckBox soundEffects = (CheckBox) findViewById(R.id.checkBoxSoundEffects);
+		CheckBox speechVolume = (CheckBox) findViewById(R.id.checkBoxSpeechVolume);
+		
+		// set the result of the activity
+		setResult(RESULT_OK);
+		
+		// put the new preferences in the shared preferences
+		prefsEditor.putBoolean(SPEECH_VOLUME, speechVolume.isChecked());
+		prefsEditor.putBoolean(SOUND_EFFECTS, soundEffects.isChecked());
+		
+		// set number of computers
+		if(numComputerSpinner != null){
+			prefsEditor.putInt(NUMBER_OF_COMPUTERS, Integer.parseInt((String) numComputerSpinner.getSelectedItem()));
+		}
+		
+		// set difficulty of computers to preferences	
+		if(difficultySpinner != null){
+			prefsEditor.putString(DIFFICULTY_OF_COMPUTERS, (String)difficultySpinner.getSelectedItem());
+		}
+		
+		// set language to preferences
+		if(localeSpinner != null){
+			prefsEditor.putString(LANGUAGE, (String)localeSpinner.getSelectedItem());
+		}
+		
+		//set game type
+		if(gameSpinner != null){
+			prefsEditor.putString(GAME_TYPE, (String)gameSpinner.getSelectedItem());
+		}
+		
+		//set connection type
+		if(gameSpinner != null){
+			prefsEditor.putString(CONNECTION_TYPE, (String)connectionSpinner.getSelectedItem());
+		}
+		
+		// commit the changes to the shared preferences
+		prefsEditor.commit();
+		
+		// finish the activity
+		finish();
+		
 	}
 }

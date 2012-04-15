@@ -88,11 +88,10 @@
 
             <Spinner
                 android:id="@+id/spinnerNumComputers"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:entries="@array/num_computer_array"
-		        android:prompt="@string/NumComputers" />
-            
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/num_computer_array"
+                android:prompt="@string/NumComputers" />
         </TableRow>
 
         <TableRow>
@@ -106,13 +105,12 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/black" />
 
-           <Spinner
+            <Spinner
                 android:id="@+id/difficultyOption"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:entries="@array/computer_difficulty_array"
-		        android:prompt="@string/difficultyComputers" />
-           
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/computer_difficulty_array"
+                android:prompt="@string/difficultyComputers" />
         </TableRow>
 
         <TableRow>
@@ -126,13 +124,12 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/black" />
 
- 			<Spinner
+            <Spinner
                 android:id="@+id/langOption"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:entries="@array/locale_array"
-		        android:prompt="@string/lang" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/locale_array"
+                android:prompt="@string/lang" />
         </TableRow>
 
         <TableRow>
@@ -146,17 +143,15 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/black" />
 
-
             <Spinner
                 android:id="@+id/gameOption"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:entries="@array/game_array"
-		        android:prompt="@string/Game" />
-            
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/game_array"
+                android:prompt="@string/Game" />
         </TableRow>
-        
-     	<TableRow>
+
+        <TableRow>
 
             <cs309.a1.shared.TextView
                 android:id="@+id/textViewConnectionType"
@@ -167,25 +162,13 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/black" />
 
-
             <Spinner
                 android:id="@+id/connectionOption"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:entries="@array/connection_array"
-		        android:prompt="@string/connectionType" />
-            
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/connection_array"
+                android:prompt="@string/connectionType" />
         </TableRow>
-
-        <cs309.a1.shared.Button
-            android:id="@+id/ok"
-            style="@style/GameButtonBlack"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dip"
-            android:layout_marginTop="5dip"
-            android:layout_weight="1"
-            android:text="@string/ok" />
     </TableLayout>
 
 </LinearLayout>

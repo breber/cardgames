@@ -137,15 +137,6 @@
             
         </TableRow>
 
-        <cs309.a1.shared.Button
-            android:id="@+id/ok"
-            style="@style/GameButtonBlack"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dip"
-            android:layout_marginTop="5dip"
-            android:layout_weight="1"
-            android:text="@string/ok" />
     </TableLayout>
 
 </LinearLayout>
