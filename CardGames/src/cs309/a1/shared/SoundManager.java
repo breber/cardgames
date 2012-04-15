@@ -15,6 +15,7 @@ import java.util.Random;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -23,9 +24,9 @@ import android.util.Log;
 import cs309.a1.R;
 
 /**
- * This class is used to control the all of the sound in the game.
- * It has several methods for playing specific sounds and for using
- * the Text To Speech feature of android
+ * This class is used to control the all of the sound in the game. It has
+ * several methods for playing specific sounds and for using the Text To Speech
+ * feature of android
  */
 public class SoundManager {
 
@@ -33,7 +34,6 @@ public class SoundManager {
 	 * The Logcat Debug tag
 	 */
 	private static final String TAG = SoundManager.class.getName();
-
 
 	/**
 	 * This has a bunch of sounds that can be played
@@ -70,77 +70,62 @@ public class SoundManager {
 	 */
 	private SharedPreferences sharedPreferences;
 
-
 	/**
-	 * These are a joke, we can change them or honestly not have any vocal notification of it being your turn, it was just fun.
-	 * "Hey (player) play a card"
-	 * "Yo (player) you are needed."
-	 * "(player) get a job."
-	 * "(player) your turn."
-	 * "Wake up (player) and smell the waffles."
+	 * Strings to be spoken when it is a player's turn
 	 */
-	//TODO  should move them the strings.xml thing
-	private static final int NUM_TURN_STRINGS = 5;
-
-	/**
-	 * Strings to be added before a player's name when announcing his or her turn
-	 */
-	private final String[] playerTurnBeforeName = {"Hey ","Yo ", " ", " ", "Wake up "};
-
-	/**
-	 * Strings to be added after a player's name when announcing his or her turn
-	 */
-	private final String[] playerTurnAfterName = {" play a card!"," you are needed.", " get a job.", ", your turn.", " and smell the waffles."};
+	private final String[] playerTurnPrompt;
 
 	/**
 	 * array to store the soundpool IDs for the draw card sounds
 	 */
-	private int[] drawCardSounds = new int[7];
+	private int[] drawCardSounds;
 
 	/**
 	 * array to store the soundpool IDs for the play card sounds
 	 */
-	private int[] playCardSounds = new int[5];
+	private int[] playCardSounds;
 
 	/**
 	 * array to store the soundpool IDs for the shuffle card sounds
 	 */
-	private int[] shuffleCardSounds = new int[2];
-
-
+	private int[] shuffleCardSounds;
 
 	/**
-	 * this will initialize the SoundManager by initializing all the sound FX and the TTS object and obtaining user sound preferences
-	 * @param context
-	 * The context of the class to use the SoundManager
+	 * this will initialize the SoundManager by initializing all the sound FX
+	 * and the TTS object and obtaining user sound preferences
+	 * 
+	 * @param context The context of the class to use the SoundManager
 	 */
-	public SoundManager(Context context){
+	public SoundManager(Context context) {
 		sharedPreferences = context.getSharedPreferences(PREFERENCES, Context.MODE_WORLD_WRITEABLE);
 		isSoundFXOn = sharedPreferences.getBoolean(SOUND_EFFECTS, true);
 		isTTSOn = sharedPreferences.getBoolean(SPEECH_VOLUME, true);
 
 		soundpool = new SoundPool(5, AudioManager.STREAM_MUSIC, 100);
 
-		//draw card sounds
-		drawCardSounds[0] = soundpool.load(context, R.raw.draw_card_1, 1);
-		drawCardSounds[1] = soundpool.load(context, R.raw.draw_card_2, 1);
-		drawCardSounds[2] = soundpool.load(context, R.raw.draw_card_3, 1);
-		drawCardSounds[3] = soundpool.load(context, R.raw.draw_card_4, 1);
-		drawCardSounds[4] = soundpool.load(context, R.raw.draw_card_5, 1);
-		drawCardSounds[5] = soundpool.load(context, R.raw.draw_card_6, 1);
-		drawCardSounds[6] = soundpool.load(context, R.raw.draw_card_7, 1);
+		// Initialize the strings to speak when it is a users turn
+		playerTurnPrompt = context.getResources().getStringArray(R.array.phrases);
 
-		//card playing sounds
-		playCardSounds[0] = soundpool.load(context, R.raw.play_card_1, 1);
-		playCardSounds[1] = soundpool.load(context, R.raw.play_card_2, 1);
-		playCardSounds[2] = soundpool.load(context, R.raw.play_card_3, 1);
-		playCardSounds[3] = soundpool.load(context, R.raw.play_card_4, 1);
-		playCardSounds[4] = soundpool.load(context, R.raw.play_card_5, 1);
+		// draw card sounds
+		TypedArray drawSounds = context.getResources().obtainTypedArray(R.array.drawCard);
+		drawCardSounds = new int[drawSounds.length()];
+		for (int i = 0; i < drawCardSounds.length; i++) {
+			drawCardSounds[i] = soundpool.load(context, drawSounds.getResourceId(i, 0), 1);
+		}
 
-		//card shuffling sounds
-		shuffleCardSounds[0] = soundpool.load(context, R.raw.shuffling_cards_1, 1);
-		shuffleCardSounds[1] = soundpool.load(context, R.raw.shuffling_cards_2, 1);
+		// card playing sounds
+		TypedArray playSounds = context.getResources().obtainTypedArray(R.array.playCard);
+		playCardSounds = new int[playSounds.length()];
+		for (int i = 0; i < playCardSounds.length; i++) {
+			playCardSounds[i] = soundpool.load(context, playSounds.getResourceId(i, 0), 1);
+		}
 
+		// card shuffling sounds
+		TypedArray shuffleSounds = context.getResources().obtainTypedArray(R.array.shuffle);
+		shuffleCardSounds = new int[shuffleSounds.length()];
+		for (int i = 0; i < shuffleCardSounds.length; i++) {
+			shuffleCardSounds[i] = soundpool.load(context, shuffleSounds.getResourceId(i, 0), 1);
+		}
 
 		mediaplayer = new MediaPlayer();
 		MyInitListener mil = new MyInitListener();
@@ -152,10 +137,10 @@ public class SoundManager {
 	/**
 	 * plays the sound of a card being drawn. plays various sounds.
 	 */
-	public void drawCardSound(){
-		if(isSoundFXOn){
-			Random r1 = new Random();
-			int i = Math.abs(r1.nextInt() % 7);
+	public void drawCardSound() {
+		if (isSoundFXOn) {
+			Random rand = new Random();
+			int i = Math.abs(rand.nextInt() % drawCardSounds.length);
 			soundpool.play(drawCardSounds[i], 1, 1, 1, 0, 1);
 		}
 	}
@@ -163,10 +148,10 @@ public class SoundManager {
 	/**
 	 * plays the sound of a card being played. plays various sounds.
 	 */
-	public void playCardSound(){
-		if(isSoundFXOn){
-			Random r1 = new Random();
-			int i = Math.abs(r1.nextInt() % 5);
+	public void playCardSound() {
+		if (isSoundFXOn) {
+			Random rand = new Random();
+			int i = Math.abs(rand.nextInt() % playCardSounds.length);
 			soundpool.play(playCardSounds[i], 1, 1, 1, 0, 1);
 		}
 	}
@@ -174,46 +159,41 @@ public class SoundManager {
 	/**
 	 * plays the sound of a card being played. plays various sounds.
 	 */
-	public void shuffleCardsSound(){
-		if(isSoundFXOn){
-			Random r1 = new Random();
-			int i = Math.abs(r1.nextInt() % 2);
+	public void shuffleCardsSound() {
+		if (isSoundFXOn) {
+			Random rand = new Random();
+			int i = Math.abs(rand.nextInt() % shuffleCardSounds.length);
 			soundpool.play(shuffleCardSounds[i], 1, 1, 1, 0, 1);
 		}
 	}
 
 	/**
 	 * This will use TextToSpeech to say the string out loud
-	 * @param words
-	 * this string will be read aloud
+	 *
+	 * @param words this string will be read aloud
 	 */
-	public void speak(String words){
-		if(isTTSInitialized && isTTSOn){
+	public void speak(String words) {
+		if (isTTSInitialized && isTTSOn) {
 			tts.speak(words, TextToSpeech.QUEUE_FLUSH, null);
 		}
 	}
 
-
-
 	/**
 	 * This function will tell a player it is their turn using various strings
-	 * @param name
-	 * the name of the player
+	 * 
+	 * @param name the name of the player
 	 */
-	public void sayTurn(String name){
-		Random r1 = new Random();
-		int i = Math.abs(r1.nextInt() % NUM_TURN_STRINGS);
-		String words = playerTurnBeforeName[i] + name + playerTurnAfterName[i];
-		tts.speak(words, TextToSpeech.QUEUE_FLUSH, null);
+	public void sayTurn(String name) {
+		Random rand = new Random();
+		int i = Math.abs(rand.nextInt() % playerTurnPrompt.length);
+		tts.speak(playerTurnPrompt[i].replace("%s", name), TextToSpeech.QUEUE_FLUSH, null);
 	}
-
-
 
 	/**
 	 * This will play the theme music
 	 */
-	public void playMusic(){
-		if(isSoundFXOn){
+	public void playMusic() {
+		if (isSoundFXOn) {
 			mediaplayer.seekTo(0);
 			mediaplayer.start();
 		}
@@ -222,8 +202,8 @@ public class SoundManager {
 	/**
 	 * This will stop the music from playing
 	 */
-	public void stopMusic(){
-		if(mediaplayer.isPlaying()){
+	public void stopMusic() {
+		if (mediaplayer.isPlaying()) {
 			mediaplayer.stop();
 		}
 	}
@@ -231,8 +211,8 @@ public class SoundManager {
 	/**
 	 * This should make all sounds stop playing
 	 */
-	public void stopAllSound(){
-		if(mediaplayer.isPlaying()){
+	public void stopAllSound() {
+		if (mediaplayer.isPlaying()) {
 			mediaplayer.stop();
 		}
 		soundpool.autoPause();
@@ -240,23 +220,24 @@ public class SoundManager {
 	}
 
 	/**
-	 * this class will have the onInit method called when the TTS has been initialized then
-	 * this method will finish the setup of TTS including getting the "dialect" or "Locale" of the voice
+	 * this class will have the onInit method called when the TTS has been
+	 * initialized then this method will finish the setup of TTS including
+	 * getting the "dialect" or "Locale" of the voice
 	 */
-	private class MyInitListener  implements TextToSpeech.OnInitListener{
+	private class MyInitListener implements TextToSpeech.OnInitListener {
 
 		@Override
 		public void onInit(int status) {
-			if(status == TextToSpeech.SUCCESS){
-				//get the user preference
+			if (status == TextToSpeech.SUCCESS) {
+				// get the user preference
 				String lang = sharedPreferences.getString(LANGUAGE, LANGUAGE_US);
-				int langResult=-1;
+				int langResult = -1;
 
-				if(lang.equals(LANGUAGE_US)) { //default
+				if (lang.equals(LANGUAGE_US)) { // default
 					langResult = tts.setLanguage(Locale.US);
 				} else if (lang.equals(LANGUAGE_GERMAN)) {
 					langResult = tts.setLanguage(Locale.GERMAN);
-				}  else if (lang.equals(LANGUAGE_FRANCE)) {
+				} else if (lang.equals(LANGUAGE_FRANCE)) {
 					langResult = tts.setLanguage(Locale.FRANCE);
 				} else if (lang.equals(LANGUAGE_CANADA)) {
 					langResult = tts.setLanguage(Locale.CANADA);
@@ -264,19 +245,18 @@ public class SoundManager {
 					langResult = tts.setLanguage(Locale.UK);
 				}
 
-				if(langResult == TextToSpeech.LANG_MISSING_DATA || langResult == TextToSpeech.LANG_NOT_SUPPORTED){
+				if (langResult == TextToSpeech.LANG_MISSING_DATA
+						|| langResult == TextToSpeech.LANG_NOT_SUPPORTED) {
 					if (Util.isDebugBuild()) {
 						Log.d(TAG, "Language not available");
 					}
-				} else{
-					//let us know that it is safe to use it now
+				} else {
+					// let us know that it is safe to use it now
 					isTTSInitialized = true;
 				}
 			} else if (Util.isDebugBuild()) {
 				Log.d(TAG, "Text To Speech did not initialize correctly");
 			}
-
 		}
-
 	}
 }
