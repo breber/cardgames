@@ -262,7 +262,7 @@ public class ShowCardsActivity extends Activity {
 			toAdd.setImageBitmap(resizedCard);
 			toAdd.setId(cardHand.get(i).getIdNum());
 			toAdd.setAdjustViewBounds(true);
-			toAdd.setOnLongClickListener(playerController.getCardLongClickListener());
+			toAdd.setOnClickListener(playerController.getCardClickListener());
 
 			// Add a 5 px border around the image
 			toAdd.setPadding(5, 5, 5, 5);

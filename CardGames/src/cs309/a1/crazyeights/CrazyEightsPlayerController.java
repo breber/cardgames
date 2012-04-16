@@ -22,7 +22,6 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.Toast;
@@ -103,7 +102,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	private Button draw;
 
 	/**
-	 * The client that is used to send messages to the GameBoard 
+	 * The client that is used to send messages to the GameBoard
 	 */
 	private ConnectionClient connection;
 
@@ -309,10 +308,10 @@ public class CrazyEightsPlayerController implements PlayerController {
 	}
 
 	/* (non-Javadoc)
-	 * @see cs309.a1.shared.PlayerController#getCardLongClickListener()
+	 * @see cs309.a1.shared.PlayerController#getCardClickListener()
 	 */
 	@Override
-	public OnLongClickListener getCardLongClickListener() {
+	public OnClickListener getCardClickListener() {
 		return new CardSelectionClickListener();
 	}
 
@@ -378,11 +377,11 @@ public class CrazyEightsPlayerController implements PlayerController {
 
 	/**
 	 * This will be used for each card ImageView and will allow the card to be
-	 * selected when it is LongClicked
+	 * selected when it is Clicked
 	 */
-	private class CardSelectionClickListener implements View.OnLongClickListener {
+	private class CardSelectionClickListener implements View.OnClickListener {
 		@Override
-		public boolean onLongClick(View v) {
+		public void onClick(View v) {
 			// Show an animation indicating the card was selected
 			ScaleAnimation scale = new ScaleAnimation((float) 1.2, (float) 1.2,	(float) 1.2, (float) 1.2);
 			scale.scaleCurrentDuration(5);
@@ -396,8 +395,6 @@ public class CrazyEightsPlayerController implements PlayerController {
 					cardSelected = cardHand.get(i);
 				}
 			}
-
-			return true;
 		}
 	}
 }

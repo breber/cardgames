@@ -3,7 +3,7 @@ package cs309.a1.shared;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
-import android.view.View.OnLongClickListener;
+import android.view.View.OnClickListener;
 
 /**
  * The PlayerController is meant to be used inside the ShowCardsActivity on a player's device
@@ -47,11 +47,11 @@ public interface PlayerController {
 	public View.OnClickListener getDrawOnClickListener();
 
 	/**
-	 * This will return the LongClickListener for selecting cards
+	 * This will return the ClickListener for selecting cards
 	 * 
-	 * @return the long click listener for a card ImageView each card will need to be given this
+	 * @return the click listener for a card ImageView each card will need to be given this
 	 */
-	public OnLongClickListener getCardLongClickListener();
+	public OnClickListener getCardClickListener();
 
 	/**
 	 * This will set the player name to the name given
