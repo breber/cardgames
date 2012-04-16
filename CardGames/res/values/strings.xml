@@ -68,7 +68,7 @@ The first player to successfully get rid of all of their cards wins the game. If
 
     <!-- Game Results -->
     <string name="winner">You Won!</string>
-    <string name="loser">You Lost :(</string>
+    <string name="loser">You Lost</string>
 
     <!-- Enter Name Activity -->
     <string name="enter_name">Please enter your name</string>
