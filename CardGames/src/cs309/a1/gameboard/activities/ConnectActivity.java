@@ -116,6 +116,11 @@ public class ConnectActivity extends Activity {
 	private boolean isReconnectScreen = false;
 
 	/**
+	 * Is this a reconnect, or a regular setup?
+	 */
+	private boolean isReconnected = false;
+
+	/**
 	 * The current game if this is a reconnect
 	 */
 	private Game currentGame = null;
@@ -137,7 +142,9 @@ public class ConnectActivity extends Activity {
 			String action = intent.getAction();
 
 			if (Util.isDebugBuild()) {
-				Log.d(TAG, "onReceive: " + action);
+				Log.d(TAG, "onReceive: action: " + action);
+				Log.d(TAG, "onReceive: msgType: " + messageType);
+				Log.d(TAG, "onReceive: PLAYERNAME: " + Constants.GET_PLAYER_NAME);
 			}
 
 			if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
@@ -148,14 +155,26 @@ public class ConnectActivity extends Activity {
 						JSONObject obj = new JSONObject(object);
 						String playerName = obj.getString(PLAYER_NAME);
 
+						if (Util.isDebugBuild()) {
+							Log.d(TAG, "onReceive: deviceAddress: " + deviceAddress);
+							Log.d(TAG, "onReceive: newPlayerName: " + playerName);
+							Log.d(TAG, "onReceive: positionToFill: " + positionToFill);
+						}
+
 						// If positionToFill is not -1, we are reconnecting
 						// so we want to place this newly connected user in
 						// this position
 						if (positionToFill != -1) {
 							playerIds.set(positionToFill, deviceAddress);
+							isReconnected = true;
 						}
 
 						playerNames.put(deviceAddress, playerName);
+
+						if (Util.isDebugBuild()) {
+							Log.d(TAG, "onReceive: playerNames: " + playerNames);
+							Log.d(TAG, "onReceive: playerIds: " + playerIds);
+						}
 					} catch (JSONException ex) {
 						ex.printStackTrace();
 					}
@@ -427,7 +446,12 @@ public class ConnectActivity extends Activity {
 		if (ConnectionFactory.getConnectionType(this) == ConnectionType.BLUETOOTH) {
 			Util.ensureDiscoverable(this, mBluetoothAdapter);
 		}
-		mConnectionServer.startListening();
+
+		if (isReconnectScreen) {
+			mConnectionServer.startListening(1);
+		} else {
+			mConnectionServer.startListening(4);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -463,7 +487,12 @@ public class ConnectActivity extends Activity {
 				Toast.makeText(this, playerNames.get(s), Toast.LENGTH_SHORT).show();
 			}
 
-			if (NO_NAME_SELECTED.equals(playerNames.get(s)) || i == positionToFill) {
+			// Make sure we don't try and access indexes that are out of bounds
+			if (i >= 4) {
+				break;
+			}
+
+			if (NO_NAME_SELECTED.equals(playerNames.get(s)) || (i == positionToFill && !isReconnected)) {
 				// The user hasn't selected a name yet, so show the spinning progress bar
 				// Set this user's device as the "on" screen
 				playerImageViews[i].setImageResource(R.drawable.on_device);

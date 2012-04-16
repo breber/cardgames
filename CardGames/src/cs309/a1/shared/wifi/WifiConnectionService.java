@@ -277,7 +277,7 @@ public class WifiConnectionService {
 			// given BluetoothDevice
 			try {
 				tmp = new Socket(device, WifiConstants.PORT_NUMBER);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				Log.e(TAG, "Socket create() failed", e);
 			}
 			mmSocket = tmp;
@@ -290,6 +290,13 @@ public class WifiConnectionService {
 		public void run() {
 			if (Util.isDebugBuild()) {
 				Log.i(TAG, "BEGIN mConnectThread");
+			}
+
+			// If the socket is null, restart the service to cause the state to change
+			if (mmSocket == null) {
+				// Start the service over to restart listening mode
+				WifiConnectionService.this.start();
+				return;
 			}
 
 			setName("ConnectThread-" + mmDevice.getAddress());
@@ -307,10 +314,12 @@ public class WifiConnectionService {
 		 * Cancel the current operation
 		 */
 		public void cancel() {
-			try {
-				mmSocket.close();
-			} catch (IOException e) {
-				Log.e(TAG, "close() of connect socket failed", e);
+			if (mmSocket != null) {
+				try {
+					mmSocket.close();
+				} catch (IOException e) {
+					Log.e(TAG, "close() of connect socket failed", e);
+				}
 			}
 		}
 	}
@@ -375,6 +384,12 @@ public class WifiConnectionService {
 			byte[] buffer = new byte[1024];
 			int bytes;
 
+			// If either of the streams are null, restart the service causing the state to change
+			if (mmInStream == null || mmOutStream == null) {
+				WifiConnectionService.this.start();
+				return;
+			}
+
 			// Keep listening to the InputStream while connected
 			while (true) {
 				try {
@@ -424,10 +439,12 @@ public class WifiConnectionService {
 		 * @param buffer The bytes to write
 		 */
 		public void write(byte[] buffer) {
-			try {
-				mmOutStream.write(buffer);
-			} catch (IOException e) {
-				Log.e(TAG, "Exception during write", e);
+			if (mmOutStream != null) {
+				try {
+					mmOutStream.write(buffer);
+				} catch (IOException e) {
+					Log.e(TAG, "Exception during write", e);
+				}
 			}
 		}
 
@@ -435,12 +452,14 @@ public class WifiConnectionService {
 		 * Cancel the current operation
 		 */
 		public void cancel() {
-			try {
-				mmSocket.shutdownOutput();
-				mmSocket.shutdownInput();
-				mmSocket.close();
-			} catch (IOException e) {
-				Log.e(TAG, "close() of connect socket failed", e);
+			if (mmSocket != null) {
+				try {
+					mmSocket.shutdownOutput();
+					mmSocket.shutdownInput();
+					mmSocket.close();
+				} catch (IOException e) {
+					Log.e(TAG, "close() of connect socket failed", e);
+				}
 			}
 		}
 	}

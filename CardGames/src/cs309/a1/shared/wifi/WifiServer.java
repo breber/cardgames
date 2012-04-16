@@ -3,6 +3,7 @@ package cs309.a1.shared.wifi;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
@@ -88,7 +89,7 @@ public class WifiServer extends WifiCommon implements ConnectionServer {
 	private WifiServer(Context ctx) {
 		mContext = ctx;
 		services = new HashMap<String, WifiConnectionService>();
-		mAcceptThread = new AcceptThread(mContext, mHandler, services);
+		mAcceptThread = new AcceptThread(mContext, mHandler, services, 4);
 	}
 
 	/**
@@ -106,13 +107,13 @@ public class WifiServer extends WifiCommon implements ConnectionServer {
 	}
 
 	/* (non-Javadoc)
-	 * @see cs309.a1.shared.connection.ConnectionServer#startListening()
+	 * @see cs309.a1.shared.connection.ConnectionServer#startListening(int)
 	 */
 	@Override
-	public void startListening() {
+	public void startListening(int maxConnections) {
 		// Start the AcceptThread which listens for incoming connection requests
 		if (mAcceptThread == null) {
-			mAcceptThread = new AcceptThread(mContext, mHandler, services);
+			mAcceptThread = new AcceptThread(mContext, mHandler, services, maxConnections);
 		}
 
 		mAcceptThread.start();
@@ -161,6 +162,17 @@ public class WifiServer extends WifiCommon implements ConnectionServer {
 		}
 
 		HashSet<String> toRet = new HashSet<String>();
+
+		Iterator<String> iter = services.keySet().iterator();
+		while (iter.hasNext()) {
+			String temp = iter.next();
+			WifiConnectionService service = services.get(temp);
+
+			if (service.getState() == ConnectionConstants.STATE_LISTEN
+					|| service.getState() == ConnectionConstants.STATE_NONE) {
+				iter.remove();
+			}
+		}
 
 		for (String s : services.keySet()) {
 			WifiConnectionService service = services.get(s);

@@ -57,18 +57,25 @@ public class AcceptThread extends Thread {
 	private boolean continueChecking = true;
 
 	/**
+	 * The max number of connections to accept
+	 */
+	private int maxConnections = 0;
+
+	/**
 	 * Create a new AcceptThread
 	 * 
 	 * @param ctx The context of this thread
 	 * @param adapter The BluetoothAdapter to use for Bluetooth information
 	 * @param handler The handler to assign each BluetoothConnectionService
 	 * @param services A map of MAC addresses to BluetoothConnectionService
+	 * @param maxConnections the maximum number of connections to accept
 	 */
-	public AcceptThread(Context ctx, BluetoothAdapter adapter, Handler handler, HashMap<String, BluetoothConnectionService> services) {
+	public AcceptThread(Context ctx, BluetoothAdapter adapter, Handler handler, HashMap<String, BluetoothConnectionService> services, int maxConnections) {
 		mAdapter = adapter;
 		mConnections = services;
 		mContext = ctx;
 		mHandler = handler;
+		this.maxConnections = maxConnections;
 
 		// Create a new listening server socket
 		try {
@@ -86,21 +93,22 @@ public class AcceptThread extends Thread {
 		if (Util.isDebugBuild()) {
 			Log.d(TAG, "Socket BEGIN mAcceptThread" + this);
 		}
+		int i = 0;
 
 		setName("AcceptThread");
 
-		while (continueChecking) {
+		while (continueChecking && i < maxConnections) {
 			BluetoothConnectionService serv = new BluetoothConnectionService(mContext, mHandler);
 			BluetoothSocket socket = null;
 
 			serv.start();
 
 			// Listen to the server socket if we're not connected
-			while (continueChecking && serv.getState() != ConnectionConstants.STATE_CONNECTED) {
+			while (continueChecking && serv.getState() != ConnectionConstants.STATE_CONNECTED && i < maxConnections) {
 				try {
 					// This is a blocking call and will only return on a
 					// successful connection or an exception
-					Log.d(TAG, "mmServerSocket.accept() beginning " + socket);
+					Log.d(TAG, "mmServerSocket.accept() beginning - " + i);
 					socket = mmServerSocket.accept();
 					Log.d(TAG, "mmServerSocket.accept() completed " + socket);
 				} catch (IOException e) {
@@ -113,6 +121,7 @@ public class AcceptThread extends Thread {
 					if (Util.isDebugBuild()) {
 						Log.d(TAG, "the socket is not null! " + socket);
 					}
+
 					synchronized (AcceptThread.this) {
 						switch (serv.getState()) {
 						case ConnectionConstants.STATE_LISTEN:
@@ -121,6 +130,8 @@ public class AcceptThread extends Thread {
 							BluetoothDevice dev = socket.getRemoteDevice();
 							mConnections.put(dev.getAddress(), serv);
 							serv.connected(socket, dev);
+
+							i++;
 							break;
 						case ConnectionConstants.STATE_NONE:
 						case ConnectionConstants.STATE_CONNECTED:
@@ -132,13 +143,32 @@ public class AcceptThread extends Thread {
 							}
 							break;
 						}
-					}
-				} else {
-					if (Util.isDebugBuild()) {
-						Log.d(TAG, "the socket was null :( " + socket);
-					}
+					} // end synchronized
+				} // end socket != null
+
+				if (Util.isDebugBuild()) {
+					Log.d(TAG, "connecting: post socket != null : " + i + " / " + maxConnections);
+					Log.d(TAG, "connecting: post socket != null : " + (continueChecking && serv.getState() != ConnectionConstants.STATE_CONNECTED && i < maxConnections));
 				}
+
+			} // end while continue...
+
+			if (Util.isDebugBuild()) {
+				Log.d(TAG, "connecting: post while continue... : " + i + " / " + maxConnections);
+				Log.d(TAG, "connecting: post while continue... : " + (continueChecking && i < maxConnections));
 			}
+		} // end while...
+
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "connecting: post while" + i + " / " + maxConnections);
+			Log.d(TAG, "connecting: post while");
+		}
+
+		// Close the server socket
+		try {
+			mmServerSocket.close();
+		} catch (IOException e) {
+			Log.e(TAG, "Socket close() of server failed", e);
 		}
 	}
 
@@ -154,12 +184,10 @@ public class AcceptThread extends Thread {
 		continueChecking = false;
 
 		// Close the server socket
-		if (mmServerSocket != null) {
-			try {
-				mmServerSocket.close();
-			} catch (IOException e) {
-				Log.e(TAG, "Socket close() of server failed", e);
-			}
+		try {
+			mmServerSocket.close();
+		} catch (IOException e) {
+			Log.e(TAG, "Socket close() of server failed", e);
 		}
 	}
 }

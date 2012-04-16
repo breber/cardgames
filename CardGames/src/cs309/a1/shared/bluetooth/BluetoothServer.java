@@ -95,7 +95,7 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 		mContext = ctx;
 		services = new HashMap<String, BluetoothConnectionService>();
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		mAcceptThread = new AcceptThread(mContext, mBluetoothAdapter, mHandler, services);
+		mAcceptThread = new AcceptThread(mContext, mBluetoothAdapter, mHandler, services, 4);
 	}
 
 	/**
@@ -116,10 +116,10 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 	 * @see cs309.a1.shared.connection.ConnectionServer#startListening()
 	 */
 	@Override
-	public void startListening() {
+	public void startListening(int maxConnections) {
 		// Start the AcceptThread which listens for incoming connection requests
 		if (mAcceptThread == null) {
-			mAcceptThread = new AcceptThread(mContext, mBluetoothAdapter, mHandler, services);
+			mAcceptThread = new AcceptThread(mContext, mBluetoothAdapter, mHandler, services, maxConnections);
 		}
 
 		mAcceptThread.start();
