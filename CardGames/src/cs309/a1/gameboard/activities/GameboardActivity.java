@@ -141,6 +141,9 @@ public class GameboardActivity extends Activity {
 					Intent i = new Intent(GameboardActivity.this, ConnectionFailActivity.class);
 					i.putExtra(ConnectionConstants.KEY_DEVICE_ID, intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID));
 					startActivityForResult(i, DISCONNECTED);
+
+					// Pause the players
+					gameController.pause();
 				}
 			} else {
 				// We didn't handle the Broadcast message here, so pass it on to
@@ -728,7 +731,7 @@ public class GameboardActivity extends Activity {
 			highlightedPlayer = (TextView) findViewById(R.id.player4text);
 		}
 
-		highlightedPlayer.setTextColor(Color.WHITE);
+		highlightedPlayer.setTextColor(getResources().getColor(R.color.gold));
 	}
 
 

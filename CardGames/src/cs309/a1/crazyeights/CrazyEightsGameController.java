@@ -286,6 +286,9 @@ public class CrazyEightsGameController implements GameController {
 				Log.d(TAG, "onActivityResult: CHOOSE_PLAYER");
 			}
 
+			// Pause the players
+			unpause();
+
 			// Re-register the broadcast receivers
 			gameContext.registerReceiver();
 
@@ -410,7 +413,7 @@ public class CrazyEightsGameController implements GameController {
 		mySM.drawCardSound();
 
 		Card tmpCard = game.draw(players.get(whoseTurn));
-		
+
 		if(tmpCard != null){
 			if (Util.isDebugBuild()) {
 				gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
@@ -418,7 +421,7 @@ public class CrazyEightsGameController implements GameController {
 				//generic back of card
 				gameContext.placeCard(players.get(whoseTurn).getPosition(), new Card(5, 0,	R.drawable.back_blue_1, 54));
 			}
-	
+
 			server.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
 		} else {
 			// there are no cards to draw so make it no longer that players turn and refresh the players
@@ -554,9 +557,9 @@ public class CrazyEightsGameController implements GameController {
 
 			//computer difficulty Medium
 		} else if (players.get(whoseTurn).getComputerDifficulty().equals(Constants.MEDIUM)
-				|| players.get(whoseTurn).getComputerDifficulty().equals(Constants.HARD)  ) { 
+				|| players.get(whoseTurn).getComputerDifficulty().equals(Constants.HARD)  ) {
 			//TODO remove HARD from here once HARD is added below
-			
+
 			List<Card> sameSuit = new ArrayList<Card>();
 			List<Card> sameNum = new ArrayList<Card>();
 			List<Card> special = new ArrayList<Card>();
@@ -639,11 +642,11 @@ public class CrazyEightsGameController implements GameController {
 		} else {
 			//Draw Card
 			Card tmpCard = game.draw(players.get(whoseTurn));
-			
+
 			//if card is null then there are no cards to draw so just move on and allow the turn to advance
-			if(tmpCard != null) { 
+			if(tmpCard != null) {
 				mySM.drawCardSound();
-	
+
 				if (Util.isDebugBuild()) {
 					gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
 				} else {
