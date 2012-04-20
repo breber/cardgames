@@ -270,9 +270,13 @@ public class CrazyEightsPlayerController implements PlayerController {
 						// go to the onActivityResult to finish this turn
 					} else {
 						connection.write(Constants.PLAY_CARD, cardSelected);
-						Toast.makeText(playerContext.getApplicationContext(),
-								"playing : " + cardSelected.getValue(),
-								Toast.LENGTH_SHORT).show();
+
+						if (Util.isDebugBuild()) {
+							Toast.makeText(playerContext.getApplicationContext(),
+									"playing : " + cardSelected.getValue(),
+									Toast.LENGTH_SHORT).show();
+						}
+
 						playerContext.removeFromHand(cardSelected.getIdNum());
 
 						if (Util.isDebugBuild()) {

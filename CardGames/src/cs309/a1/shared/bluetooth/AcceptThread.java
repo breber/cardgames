@@ -97,7 +97,7 @@ public class AcceptThread extends Thread {
 
 		setName("AcceptThread");
 
-		while (continueChecking && i < maxConnections) {
+		while (continueChecking && i < maxConnections && mmServerSocket != null) {
 			BluetoothConnectionService serv = new BluetoothConnectionService(mContext, mHandler);
 			BluetoothSocket socket = null;
 
@@ -183,11 +183,13 @@ public class AcceptThread extends Thread {
 		// Change the loop variable to prevent the loop from continuing
 		continueChecking = false;
 
-		// Close the server socket
-		try {
-			mmServerSocket.close();
-		} catch (IOException e) {
-			Log.e(TAG, "Socket close() of server failed", e);
+		if (mmServerSocket != null) {
+			// Close the server socket
+			try {
+				mmServerSocket.close();
+			} catch (IOException e) {
+				Log.e(TAG, "Socket close() of server failed", e);
+			}
 		}
 	}
 }
