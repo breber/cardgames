@@ -196,7 +196,7 @@ public class CrazyEightsGameController implements GameController {
 		} else {
 			// Otherwise just show the back of the cards for all players
 			for (int i = 0; i < NUMBER_OF_CARDS_PER_HAND * players.size(); i++) {
-				gameContext.placeCard(i % 4 + 1, new Card(5, 0,	R.drawable.back_blue_1, 54));
+				gameContext.placeCard(i % players.size() + 1, new Card(5, 0,	R.drawable.back_blue_1, 54));
 			}
 
 			gameContext.placeCard(0, game.getDiscardPileTop());
