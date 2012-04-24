@@ -92,7 +92,7 @@ public class CrazyEightsGameController implements GameController {
 	/**
 	 * This represents the suit chosen when an 8 is played
 	 */
-	private int suitChosen = 0;
+	private int suitChosen = -1;
 
 	/**
 	 * This is the context of the GameBoardActivity this allows this class to
@@ -360,7 +360,10 @@ public class CrazyEightsGameController implements GameController {
 		gameContext.highlightPlayer(whoseTurn+1);
 
 		Card onDiscard = game.getDiscardPileTop();
-		if (onDiscard.getValue() == 7) {
+		if (onDiscard.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
+			if (suitChosen == -1) {
+				suitChosen = onDiscard.getSuit();
+			}
 			onDiscard = new Card(suitChosen, onDiscard.getValue(),
 					onDiscard.getResourceId(), onDiscard.getIdNum());
 		}
@@ -541,7 +544,7 @@ public class CrazyEightsGameController implements GameController {
 			}
 
 
-			if (cardSelected != null && cardSelected.getValue() == 7) {
+			if (cardSelected != null && cardSelected.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
 				int[] suits = new int[5];
 				int maxSuitIndex = 0;
 				for (Card c : cards) {
@@ -569,7 +572,7 @@ public class CrazyEightsGameController implements GameController {
 
 			for (Card c : cards) {
 				//checks for 8s and jokers
-				if( (c.getValue() == 7 || c.getSuit() == Constants.SUIT_JOKER) && gameRules.checkCard(c, onDiscard) ){
+				if( (c.getValue() == C8Constants.EIGHT_CARD_NUMBER || c.getSuit() == Constants.SUIT_JOKER) && gameRules.checkCard(c, onDiscard) ){
 					special.add(c);
 					continue;
 				}
@@ -620,7 +623,7 @@ public class CrazyEightsGameController implements GameController {
 				}
 			} else if (special.size() > 0){ //play a special card as last resort
 				cardSelected = special.get(0);
-				if (cardSelected != null && cardSelected.getValue() == 7) {
+				if (cardSelected != null && cardSelected.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
 					suitChosen = maxSuitIndex;
 				}
 			} // else { no card selected }
