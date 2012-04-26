@@ -24,7 +24,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
-import android.widget.Toast;
 import cs309.a1.player.activities.GameResultsActivity;
 import cs309.a1.player.activities.SelectSuitActivity;
 import cs309.a1.player.activities.ShowCardsActivity;
@@ -271,19 +270,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 					} else {
 						connection.write(Constants.PLAY_CARD, cardSelected);
 
-						if (Util.isDebugBuild()) {
-							Toast.makeText(playerContext.getApplicationContext(),
-									"playing : " + cardSelected.getValue(),
-									Toast.LENGTH_SHORT).show();
-						}
-
 						playerContext.removeFromHand(cardSelected.getIdNum());
-
-						if (Util.isDebugBuild()) {
-							Toast.makeText(playerContext.getApplicationContext(),
-									"Played: " + cardSelected.getSuit() + " " + cardSelected.getValue(),
-									Toast.LENGTH_SHORT);
-						}
 
 						cardSelected = null;
 						setButtonsEnabled(false);
@@ -344,14 +331,8 @@ public class CrazyEightsPlayerController implements PlayerController {
 				break;
 			}
 
-			if(isSuitChosen){
+			if (isSuitChosen) {
 				playerContext.removeFromHand(cardSelected.getIdNum());
-				if (Util.isDebugBuild()) {
-					Toast.makeText(playerContext.getApplicationContext(),
-							"Played: " + cardSelected.getSuit() + " "
-									+ cardSelected.getValue(), 100);
-				}
-
 				cardSelected = null;
 				setButtonsEnabled(false);
 				isTurn = false;

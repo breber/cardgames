@@ -21,7 +21,7 @@ import cs309.a1.shared.Util;
  * A class for keeping track of the logic and game state for the game type crazy eights
  */
 public class CrazyEightsTabletGame implements Game {
-	
+
 	/**
 	 * A tag for the class name
 	 */
@@ -36,17 +36,17 @@ public class CrazyEightsTabletGame implements Game {
 	 * A private variable for a list of players in the current game
 	 */
 	private List<Player> players;
-	
+
 	/**
 	 * A private variable representing the game deck for the crazy eights game
 	 */
 	private Deck gameDeck;
-	
+
 	/**
 	 * A private variable for the rules interface for the crazy eights game
 	 */
 	private Rules rules;
-	
+
 	/**
 	 * A private variable to represent the difficulty of computers in the current game
 	 */
@@ -61,7 +61,7 @@ public class CrazyEightsTabletGame implements Game {
 	 * A list of all the cards in the shuffle deck
 	 */
 	private ArrayList<Card> shuffledDeck;
-	
+
 	/**
 	 * A list of all the cards in the discard pile
 	 */
@@ -111,12 +111,12 @@ public class CrazyEightsTabletGame implements Game {
 		discardPile = new ArrayList<Card>();
 	}
 
-	@Override
 	/**
 	 * This method is a getter for the players list
 	 * 
 	 * @return a list of Player objects in the game
 	 */
+	@Override
 	public List<Player> getPlayers() {
 		return players;
 	}
@@ -202,22 +202,22 @@ public class CrazyEightsTabletGame implements Game {
 		this.shuffledDeck = shuffledDeck;
 	}
 
-	@Override
 	/**
 	 * This method is a setter for the computer difficulty
 	 * 
 	 * @param diff the difficulty of the computers for the current game
 	 */
+	@Override
 	public void setComputerDifficulty(String diff){
 		this.computerDifficulty = diff;
 	}
 
-	@Override
 	/**
 	 * This method is a getter for the computer difficulty variable
 	 * 
 	 * @return a String representing the difficulty of the computers in the game
 	 */
+	@Override
 	public String getComputerDifficulty(){
 		return this.computerDifficulty;
 	}
@@ -239,8 +239,6 @@ public class CrazyEightsTabletGame implements Game {
 
 		//remove the last card returned by iter.next()
 		iter.remove();
-
-		//display stuff
 	}
 
 	/**
@@ -370,7 +368,7 @@ public class CrazyEightsTabletGame implements Game {
 		}
 
 		if (!iter.hasNext()) return null;
-		
+
 		Card card = iter.next();
 		//get a card out of the shuffled pile and add to the players hand
 		player.addCard(card);

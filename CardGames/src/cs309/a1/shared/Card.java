@@ -124,12 +124,11 @@ public class Card {
 	}
 
 	/**
-	 * This is a custom toString method for the transferring of card data
+	 * Generate a JSONObject based on the necessary fields of this class.
 	 * 
-	 * @return a JSON string representation of the card including suit, value, resourceId, idNum
+	 * @return a JSONObject representation of this instance
 	 */
-	@Override
-	public String toString(){
+	public JSONObject toJSONObject() {
 		// Encode the cards into a JSONArray
 		try {
 			JSONObject obj = new JSONObject();
@@ -138,10 +137,20 @@ public class Card {
 			obj.put(RESOURCE_ID, getResourceId());
 			obj.put(ID, getIdNum());
 
-			return obj.toString();
+			return obj;
 		} catch (JSONException ex) {
 			ex.printStackTrace();
-			return "";
+			return new JSONObject();
 		}
+	}
+
+	/**
+	 * This is a custom toString method for the transferring of card data
+	 * 
+	 * @return a JSON string representation of the card including suit, value, resourceId, idNum
+	 */
+	@Override
+	public String toString() {
+		return toJSONObject().toString();
 	}
 }

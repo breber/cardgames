@@ -3,7 +3,6 @@ package cs309.a1.crazyeights;
 import static cs309.a1.crazyeights.C8Constants.NUMBER_OF_CARDS_PER_HAND;
 import static cs309.a1.shared.CardGame.CRAZY_EIGHTS;
 import static cs309.a1.shared.Constants.ID;
-import static cs309.a1.shared.Constants.RESOURCE_ID;
 import static cs309.a1.shared.Constants.SUIT;
 import static cs309.a1.shared.Constants.VALUE;
 
@@ -133,8 +132,7 @@ public class CrazyEightsGameController implements GameController {
 	 * @param context Context of the GameBoardActivity
 	 * @param connectionGiven The ConnectionServer that will be used
 	 * @param playersGiven The players that will be used in the game
-	 * @param refreshGiven The refresh button which will be handled by this
-	 *            GameController
+	 * @param refreshGiven The refresh button which will be handled by this GameController
 	 */
 	public CrazyEightsGameController(GameboardActivity context,	ConnectionServer connectionGiven,
 			List<Player> playersGiven, ImageButton refreshGiven) {
@@ -142,6 +140,7 @@ public class CrazyEightsGameController implements GameController {
 		server = connectionGiven;
 		players = playersGiven;
 		refreshButton = refreshGiven;
+		mySM = new SoundManager(gameContext);
 
 		refreshButton.setOnClickListener(new OnClickListener() {
 			/* (non-Javadoc)
@@ -154,8 +153,6 @@ public class CrazyEightsGameController implements GameController {
 				v.setEnabled(true);
 			}
 		});
-
-		mySM = new SoundManager(gameContext);
 
 		Deck deck = new Deck(CRAZY_EIGHTS);
 		Rules rules = new CrazyEightGameRules();
@@ -196,11 +193,13 @@ public class CrazyEightsGameController implements GameController {
 		} else {
 			// Otherwise just show the back of the cards for all players
 			for (int i = 0; i < NUMBER_OF_CARDS_PER_HAND * players.size(); i++) {
-				gameContext.placeCard(i % players.size() + 1, new Card(5, 0,	R.drawable.back_blue_1, 54));
+				gameContext.placeCard(i % players.size() + 1, new Card(5, 0, R.drawable.back_blue_1, 54));
 			}
 
 			gameContext.placeCard(0, game.getDiscardPileTop());
 		}
+
+		// Update the indicator on the gameboard with the current suit
 		gameContext.updateSuit(game.getDiscardPileTop().getSuit());
 	}
 
@@ -286,6 +285,10 @@ public class CrazyEightsGameController implements GameController {
 				Log.d(TAG, "onActivityResult: CHOOSE_PLAYER");
 			}
 
+			// Send the refresh signal to all players just to make
+			// sure everyone has the latest information
+			refreshPlayers();
+
 			// Pause the players
 			unpause();
 
@@ -295,7 +298,7 @@ public class CrazyEightsGameController implements GameController {
 			// Update the gameboard with the correct player names
 			gameContext.updateNamesOnGameboard();
 
-			// Send the refresh signal to all players just to make
+			// Send the refresh signal (again) to all players just to make
 			// sure everyone has the latest information
 			refreshPlayers();
 		} else if (requestCode == PLAY_COMPUTER_TURN) {
@@ -337,52 +340,65 @@ public class CrazyEightsGameController implements GameController {
 		}
 	}
 
-
-
 	/**
 	 * This function will be called when a players turn is over It will change
 	 * whoseTurn to the next player and send them the message that it is their
 	 * turn
 	 */
 	private void advanceTurn() {
+		// If the game is over, proceed to the declare winner section of the code
 		if (game.isGameOver(players.get(whoseTurn))) {
 			declareWinner(whoseTurn);
 			return;
 		}
 
+		// Figure out whose turn it is now
 		if (whoseTurn < game.getNumPlayers() - 1) {
 			whoseTurn++;
 		} else {
 			whoseTurn = 0;
 		}
 
-		//highlight whose turn it is
-		gameContext.highlightPlayer(whoseTurn+1);
+		// Highlight the name of the current player
+		gameContext.highlightPlayer(whoseTurn + 1);
 
+		// Get the top discard pile card, so that we can tell the user which cards
+		// are valid moves
 		Card onDiscard = game.getDiscardPileTop();
+
+		// If the top card is an 8, we need to do some special logic
+		// to figure out the actual suit of the card
 		if (onDiscard.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
+			// If this is the first card to be chosen, just set the chosen
+			// suit to be the suit of the 8. Otherwise the suitChosen variable
+			// should already have the value of the new suit
 			if (suitChosen == -1) {
 				suitChosen = onDiscard.getSuit();
 			}
-			onDiscard = new Card(suitChosen, onDiscard.getValue(),
-					onDiscard.getResourceId(), onDiscard.getIdNum());
+
+			// Create a temporary card for sending to the players
+			onDiscard = new Card(suitChosen, onDiscard.getValue(), onDiscard.getResourceId(), onDiscard.getIdNum());
 		}
+
+		// Update the Gamebaord display with an indication of the current suit
 		gameContext.updateSuit(onDiscard.getSuit());
+
+		// If this is a computer, start having the computer play
 		if (players.get(whoseTurn).getIsComputer()) {
 			//play turn for computer player if not already
-			if(!isComputerPlaying){
+			if (!isComputerPlaying) {
 				Intent computerTurn = new Intent(gameContext, PlayComputerTurnActivity.class);
 				gameContext.startActivityForResult(computerTurn, PLAY_COMPUTER_TURN);
 				isComputerPlaying = true;
 			}
 		} else {
-			// tell the player it is their turn.
+			// tell the player it is their turn
 			server.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn).getId());
 		}
 	}
 
 	/**
-	 * This will send winner and loser messages to all the players depending if
+	 * This will send winner and loser messages to all the players depending on if
 	 * they won or not
 	 *
 	 * @param whoWon The player that won
@@ -392,6 +408,7 @@ public class CrazyEightsGameController implements GameController {
 			Toast.makeText(gameContext, "Sending winner and loser info", Toast.LENGTH_SHORT).show();
 		}
 
+		// Let each player know whether they won or lost
 		for (int i = 0; i < game.getNumPlayers(); i++) {
 			if (i == whoWon) {
 				server.write(Constants.WINNER, null, players.get(i).getId());
@@ -400,31 +417,39 @@ public class CrazyEightsGameController implements GameController {
 			}
 		}
 
-		mySM.speak("Congratulations " + game.getPlayers().get(whoWon).getName()	+ "! You Won!");
+		String winnerName = players.get(whoWon).getName();
+
+		// Have the tablet verbally congratulate the winner
+		mySM.speak(gameContext.getResources().getString(R.string.congratulationMessage).replace("%s", winnerName));
+
+		// Start the GameResultsActivity
 		Intent gameResults = new Intent(gameContext, GameResultsActivity.class);
-		gameResults.putExtra(GameResultsActivity.WINNER_NAME, game.getPlayers().get(whoWon).getName());
+		gameResults.putExtra(GameResultsActivity.WINNER_NAME, winnerName);
 		gameContext.startActivityForResult(gameResults, DECLARE_WINNER);
+
+		// Unregister the BroadcastReceiver so that we ignore disconnection messages from users
 		gameContext.unregisterReceiver();
 	}
 
 	/**
-	 * This draws a card in the tablet game instance and sends that card to the
-	 * player
+	 * This draws a card in the tablet game instance and sends that card to the player
 	 */
 	private void drawCard() {
-		//play draw card sound
+		// Play draw card sound
 		mySM.drawCardSound();
 
 		Card tmpCard = game.draw(players.get(whoseTurn));
 
-		if(tmpCard != null){
+		if (tmpCard != null) {
+			// If we are in debug mode, display the actual card face
 			if (Util.isDebugBuild()) {
 				gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
 			} else {
-				//generic back of card
+				// In release mode, display the back of the card
 				gameContext.placeCard(players.get(whoseTurn).getPosition(), new Card(5, 0,	R.drawable.back_blue_1, 54));
 			}
 
+			// And send the card to the player
 			server.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
 		} else {
 			// there are no cards to draw so make it no longer that players turn and refresh the players
@@ -435,6 +460,7 @@ public class CrazyEightsGameController implements GameController {
 
 	/**
 	 * This will take in the received card and discard it
+	 * 
 	 * @param object This object is a JSON object that has been received as a discarded card
 	 */
 	private void discardReceivedCard(String object) {
@@ -458,22 +484,14 @@ public class CrazyEightsGameController implements GameController {
 
 	/**
 	 * This will refresh the state of all the players by sending them their
-	 * cards and if it is their turn via bluetooth
+	 * cards and if it is their turn
 	 */
 	private void refreshPlayers() {
 		Player pTurn = players.get(whoseTurn);
 
-		JSONObject discardObj = new JSONObject();
-		try {
-			//send the card on the discard pile
-			Card discard = game.getDiscardPileTop();
-			discardObj.put(SUIT, discard.getSuit());
-			discardObj.put(VALUE, discard.getValue());
-			discardObj.put(RESOURCE_ID, discard.getResourceId());
-			discardObj.put(ID, discard.getIdNum());
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		}
+		// send the card on the discard pile
+		Card discard = game.getDiscardPileTop();
+		JSONObject discardObj = discard.toJSONObject();
 
 		for (Player p : players) {
 			if (Util.isDebugBuild()) {
@@ -482,25 +500,19 @@ public class CrazyEightsGameController implements GameController {
 
 			try {
 				JSONArray arr = new JSONArray();
+
+				// Create the base refresh info object
 				JSONObject refreshInfo = new JSONObject();
 				refreshInfo.put(Constants.TURN, pTurn.equals(p));
 				refreshInfo.put(Constants.PLAYER_NAME, p.getName());
-				// Maybe add more refresh info here
-
 				arr.put(refreshInfo);
 
-				//send the card on the discard pile
+				// send the card on the discard pile
 				arr.put(discardObj);
 
-				//send all the cards in the players hand
+				// send all the cards in the players hand
 				for (Card c : p.getCards()) {
-					JSONObject obj = new JSONObject();
-					obj.put(SUIT, c.getSuit());
-					obj.put(VALUE, c.getValue());
-					obj.put(RESOURCE_ID, c.getResourceId());
-					obj.put(ID, c.getIdNum());
-
-					arr.put(obj);
+					arr.put(c.toJSONObject());
 				}
 
 				server.write(Constants.REFRESH, arr.toString(), p.getId());
@@ -509,13 +521,16 @@ public class CrazyEightsGameController implements GameController {
 			}
 		}
 
-		//this will check to see if the current player is a computer and the computer is not playing
+		// If the next player is a computer, and the computer isn't currently playing,
+		// have the computer initiate a move
 		if (players.get(whoseTurn).getIsComputer() && !isComputerPlaying) {
 			Intent computerTurn = new Intent(gameContext, PlayComputerTurnActivity.class);
 			gameContext.startActivityForResult(computerTurn, PLAY_COMPUTER_TURN);
 			isComputerPlaying = true;
 		}
 	}
+
+
 	/**
 	 * This will play for a computer player based on the difficulty level. either play or draw a card.
 	 * This will be called after the PlayComputerTurnActivity has waited for the appropriate amount of time.
@@ -643,11 +658,11 @@ public class CrazyEightsGameController implements GameController {
 			game.discard(players.get(whoseTurn), cardSelected);
 			gameContext.placeCard(0, cardSelected);
 		} else {
-			//Draw Card
+			// Draw Card
 			Card tmpCard = game.draw(players.get(whoseTurn));
 
-			//if card is null then there are no cards to draw so just move on and allow the turn to advance
-			if(tmpCard != null) {
+			// If card is null then there are no cards to draw so just move on and allow the turn to advance
+			if (tmpCard != null) {
 				mySM.drawCardSound();
 
 				if (Util.isDebugBuild()) {

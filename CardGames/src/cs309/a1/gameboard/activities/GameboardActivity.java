@@ -385,29 +385,28 @@ public class GameboardActivity extends Activity {
 	 * 
 	 * @param suit the suit of the card in which to change the picture to
 	 */
-	public void updateSuit(int suit){
+	public void updateSuit(int suit) {
 		ImageView suitView = (ImageView)findViewById(R.id.gameboard_suit);
-		if(Util.isDebugBuild()){
-			Toast.makeText(this, suit+"", Toast.LENGTH_SHORT).show();
+		if (Util.isDebugBuild()) {
+			Toast.makeText(this, suit + "", Toast.LENGTH_SHORT).show();
 		}
 
-		//Based on the suit change the image
-		if(suit == 0){
+		// Based on the suit change the image
+		if (suit == 0) {
 			suitView.setImageResource(R.drawable.clubsuitimage);
 			suitView.setVisibility(0);
-		}else if(suit == 1){
+		} else if (suit == 1) {
 			suitView.setImageResource(R.drawable.diamondsuitimage);
 			suitView.setVisibility(0);
-		}else if(suit == 2){
+		} else if (suit == 2) {
 			suitView.setImageResource(R.drawable.heartsuitimage);
 			suitView.setVisibility(0);
-		}else if(suit == 3){
+		} else if (suit == 3) {
 			suitView.setImageResource(R.drawable.spadesuitimage);
 			suitView.setVisibility(0);
-		}else{
+		} else {
 			suitView.setVisibility(4);
 		}
-
 	}
 
 	/**

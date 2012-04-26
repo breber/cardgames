@@ -1,16 +1,9 @@
 package cs309.a1.shared;
 
-import static cs309.a1.shared.Constants.ID;
-import static cs309.a1.shared.Constants.RESOURCE_ID;
-import static cs309.a1.shared.Constants.SUIT;
-import static cs309.a1.shared.Constants.VALUE;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * This class will be used to represent a player. Each player will have a list of cards, a name,
@@ -201,22 +194,11 @@ public class Player {
 	@Override
 	public String toString() {
 		// Encode the cards into a JSONArray
-		try {
-			JSONArray arr = new JSONArray();
-			for (Card c : cards) {
-				JSONObject obj = new JSONObject();
-				obj.put(SUIT, c.getSuit());
-				obj.put(VALUE, c.getValue());
-				obj.put(RESOURCE_ID, c.getResourceId());
-				obj.put(ID, c.getIdNum());
-
-				arr.put(obj);
-			}
-
-			return arr.toString();
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return "";
+		JSONArray arr = new JSONArray();
+		for (Card c : cards) {
+			arr.put(c.toJSONObject());
 		}
+
+		return arr.toString();
 	}
 }
