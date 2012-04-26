@@ -235,7 +235,6 @@ public class ConnectActivity extends Activity {
 
 		// Get the BluetoothAdapter for doing operations with Bluetooth
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		mConnectionServer = ConnectionFactory.getServerInstance(this);
 		isReconnectScreen = getIntent().getBooleanExtra(IS_RECONNECT, false);
 
 		WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -300,6 +299,9 @@ public class ConnectActivity extends Activity {
 		} else if (!wifiManager.isWifiEnabled() && currentType == ConnectionType.WIFI) {
 			// Wifi is not currently enabled, so try and enable it
 			wifiManager.setWifiEnabled(true);
+
+			// Everything is already enabled, so put ourselves in listening mode
+			startListeningForDevices();
 		} else {
 			// Everything is already enabled, so put ourselves in listening mode
 			startListeningForDevices();
@@ -441,6 +443,10 @@ public class ConnectActivity extends Activity {
 	private void startListeningForDevices() {
 		if (Util.isDebugBuild()) {
 			Log.d(TAG, "startListeningForDevices");
+		}
+
+		if (mConnectionServer == null) {
+			mConnectionServer = ConnectionFactory.getServerInstance(this);
 		}
 
 		if (ConnectionFactory.getConnectionType(this) == ConnectionType.BLUETOOTH) {
