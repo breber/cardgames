@@ -193,7 +193,14 @@ public class ConnectActivity extends Activity {
 					playerIds.remove(deviceId);
 				} else if (state == ConnectionConstants.STATE_CONNECTED) {
 					playerNames.put(deviceId, NO_NAME_SELECTED);
-					playerIds.add(deviceId);
+					// If positionToFill is not -1, we are reconnecting
+					// so we want to place this newly connected user in
+					// this position
+					if (positionToFill != -1) {
+						playerIds.set(positionToFill, deviceId);
+					} else {
+						playerIds.add(deviceId);
+					}
 				}
 			}
 
@@ -245,6 +252,8 @@ public class ConnectActivity extends Activity {
 			if (Util.isDebugBuild()) {
 				Log.d(TAG, "Reconnecting...");
 			}
+			
+			mConnectionServer = ConnectionFactory.getServerInstance(this);
 
 			currentGame = GameFactory.getGameInstance();
 
