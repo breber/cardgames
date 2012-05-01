@@ -24,8 +24,7 @@ public class TextView extends android.widget.TextView {
 		mContext = context;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see android.view.View#onFinishInflate()
 	 */
 	@Override
@@ -34,7 +33,7 @@ public class TextView extends android.widget.TextView {
 
 		// If this is not a debug build, use the custom font
 		if (!Util.isDebugBuild()) {
-			Typeface typeface = Typeface.createFromAsset(mContext.getAssets(), "helsinki.ttf");
+			Typeface typeface = Typeface.createFromAsset(mContext.getAssets(), "helsinki.otf");
 			setTypeface(typeface);
 		}
 	}
