@@ -105,7 +105,7 @@ The game will start with player 1 and continue in a counterclockwise fashion aro
 
     <!-- Game Results Activity -->
     <string name="playerNWon">%s Wins!</string>
-    <string name="congratulationMessage">Congratulations %s! You Won!"</string>
+    <string name="congratulationMessage">Congratulations %s! You Won!</string>
 
     <string-array name="locale_array">
         <item>US</item>
