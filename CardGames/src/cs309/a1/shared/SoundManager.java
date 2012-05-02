@@ -131,7 +131,6 @@ public class SoundManager {
 		MyInitListener mil = new MyInitListener();
 		tts = new TextToSpeech(context.getApplicationContext(), mil);
 		isTTSInitialized = false;
-		mediaplayer = MediaPlayer.create(context, R.raw.sound_test);
 	}
 
 	/**

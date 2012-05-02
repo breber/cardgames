@@ -18,6 +18,10 @@
         <item>@raw/draw_card_5</item>
         <item>@raw/draw_card_6</item>
         <item>@raw/draw_card_7</item>
+        <item>@raw/draw_card_8</item>
+        <item>@raw/draw_card_9</item>
+        <item>@raw/draw_card_10</item>
+        <item>@raw/draw_card_11</item>
     </array>
     <array name="playCard">
         <item>@raw/play_card_1</item>
@@ -25,10 +29,17 @@
         <item>@raw/play_card_3</item>
         <item>@raw/play_card_4</item>
         <item>@raw/play_card_5</item>
+        <item>@raw/play_card_6</item>
+        <item>@raw/play_card_7</item>
+        <item>@raw/play_card_8</item>
+        <item>@raw/play_card_9</item>
+        <item>@raw/play_card_10</item>
+        <item>@raw/play_card_11</item>
     </array>
     <array name="shuffle">
         <item>@raw/shuffling_cards_1</item>
         <item>@raw/shuffling_cards_2</item>
+        <item>@raw/shuffling_cards_3</item>
     </array>
 
 </resources>
