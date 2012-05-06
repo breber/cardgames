@@ -15,7 +15,7 @@
 
     <ScrollView
         style="@style/GameButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/infoTextViewPaddingTopBottom"
         android:layout_marginLeft="@dimen/infoTextViewPaddingLeftRight"
@@ -23,10 +23,11 @@
         android:layout_marginTop="@dimen/infoTextViewPaddingTopBottom" >
 
         <TableLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center_horizontal"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:stretchColumns="1" >
 
             <TableRow>
 
@@ -41,7 +42,7 @@
 
                 <SeekBar
                     android:id="@+id/volume"
-                    android:layout_width="265dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </TableRow>
 
@@ -75,7 +76,7 @@
 
                 <Spinner
                     android:id="@+id/langOption"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:entries="@array/locale_array"
                     android:prompt="@string/lang" />
@@ -94,7 +95,7 @@
 
                 <Spinner
                     android:id="@+id/gameOption"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:entries="@array/game_array"
                     android:prompt="@string/Game" />
@@ -113,7 +114,7 @@
 
                 <Spinner
                     android:id="@+id/connectionOption"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:entries="@array/connection_array"
                     android:prompt="@string/connectionType" />
