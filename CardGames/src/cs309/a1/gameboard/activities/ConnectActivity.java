@@ -254,7 +254,7 @@ public class ConnectActivity extends Activity {
 			if (Util.isDebugBuild()) {
 				Log.d(TAG, "Reconnecting...");
 			}
-			
+
 			mConnectionServer = ConnectionFactory.getServerInstance(this);
 
 			currentGame = GameFactory.getGameInstance();
@@ -408,7 +408,9 @@ public class ConnectActivity extends Activity {
 	 */
 	@Override
 	protected void onDestroy() {
-		mConnectionServer.stopListening();
+		if (mConnectionServer != null) {
+			mConnectionServer.stopListening();
+		}
 
 		try {
 			unregisterReceiver(receiver);
