@@ -1,6 +1,7 @@
 package cs309.a1.gameboard.activities;
 
 import static cs309.a1.shared.Constants.PLAYER_NAME;
+import static cs309.a1.shared.Constants.PREFERENCES;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +19,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -438,11 +440,13 @@ public class ConnectActivity extends Activity {
 		}
 
 		boolean namesEntered = (numPlayers == numNames);
+		SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, MODE_WORLD_READABLE);
+		int maxComputers = sharedPreferences.getInt(Constants.NUMBER_OF_COMPUTERS, 1);
 
 		if (Util.isDebugBuild()) {
-			return (mConnectionServer.getConnectedDeviceCount() > 0) && namesEntered;
+			return (numPlayers > 0) && namesEntered;
 		} else {
-			return (mConnectionServer.getConnectedDeviceCount() > 1) && namesEntered;
+			return (numPlayers > 0) && namesEntered && ((numPlayers + maxComputers) > 1);
 		}
 	}
 
