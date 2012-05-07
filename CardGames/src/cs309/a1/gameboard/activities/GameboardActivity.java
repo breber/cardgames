@@ -231,7 +231,7 @@ public class GameboardActivity extends Activity {
 			//TODO Josh needs to set this back to what it normally is. I am testing the hard computer against 2 mediums
 			if(j==2){
 				p.setName("Computer Hard");
-				p.setComputerDifficulty(computerDifficulty);				
+				p.setComputerDifficulty(Constants.HARD);				
 			} else{
 				p.setComputerDifficulty(Constants.MEDIUM);
 			}

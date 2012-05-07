@@ -672,7 +672,7 @@ public class CrazyEightsGameController implements GameController {
 			Card cardDrawn = null;
 			int movesArraySize = cardsClone.get(whoseTurn).size() +1;
 			double moves[] = new double[movesArraySize];
-			int recDepth = 5;
+			int recDepth = 5 + players.size();
 			
 			int minIndex=0;
 			
@@ -709,7 +709,8 @@ public class CrazyEightsGameController implements GameController {
 				drawPile.add(0,cardDrawn);
 				cardsClone.get(whoseTurn).remove(cardDrawn);
 				moves[movesArraySize-1] = tmpScore;
-				if(moves[movesArraySize-1] < moves[minIndex]){
+				//if there is no card to play then draw.
+				if(moves[movesArraySize-1] < moves[minIndex] && moves[minIndex]>= 30000){
 					minIndex = movesArraySize-1;
 				}
 			}
