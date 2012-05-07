@@ -228,7 +228,14 @@ public class GameboardActivity extends Activity {
 			p.setId("Computer" + (j - i + 1));
 			p.setPosition(j + 1);
 			p.setIsComputer(true);
-			p.setComputerDifficulty(computerDifficulty);
+			//TODO Josh needs to set this back to what it normally is. I am testing the hard computer against 2 mediums
+			if(j==2){
+				p.setName("Computer Hard");
+				p.setComputerDifficulty(computerDifficulty);				
+			} else{
+				p.setComputerDifficulty(Constants.MEDIUM);
+			}
+			
 			players.add(p);
 		}
 

@@ -36,5 +36,7 @@ public class C8Constants {
 	 * The card number associated with an 8
 	 */
 	public static final int EIGHT_CARD_NUMBER = 7;
+	
+
 
 }

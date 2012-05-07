@@ -1,5 +1,6 @@
 package cs309.a1.shared;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -75,6 +76,13 @@ public interface Game {
 	 * @return a List of type Player
 	 */
 	public List<Player> getPlayers();
+	
+	/**
+	 * This method is a getter for the shuffled deck pile
+	 * 
+	 * @return a list of Card objects representing the shuffled deck
+	 */
+	public ArrayList<Card> getShuffledDeck();
 	
 	/**
 	 * set the default computer difficulty
