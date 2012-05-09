@@ -3,10 +3,13 @@ package cs309.a1.shared.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView.OnEditorActionListener;
 import cs309.a1.R;
 import cs309.a1.shared.TextView;
 
@@ -21,7 +24,7 @@ import cs309.a1.shared.TextView;
  *
  * 		RESULT_CANCELLED - If no device was chosen
  */
-public class WifiConnectActivity extends Activity {
+public class WifiConnectActivity extends Activity implements OnEditorActionListener {
 
 	/**
 	 * Return Intent extra
@@ -40,6 +43,7 @@ public class WifiConnectActivity extends Activity {
 		title.setText(R.string.enterIpAddress);
 
 		final EditText textView = (EditText) findViewById(R.id.dialogPromptTextbox);
+		textView.setOnEditorActionListener(this);
 		textView.setHint(R.string.ipAddress);
 
 		// create button for the view
@@ -47,21 +51,7 @@ public class WifiConnectActivity extends Activity {
 		ok.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String ipAddress = "";
-
-				// If the user didn't enter anything, send them back to main menu
-				if (textView.getText().length() == 0) {
-					setResult(RESULT_CANCELED);
-					finish();
-				} else {
-					ipAddress = textView.getText().toString();
-
-					// Return the name the player chose with the result of this Activity
-					Intent nameToSend = new Intent();
-					nameToSend.putExtra(EXTRA_DEVICE_ADDRESS, ipAddress);
-					setResult(RESULT_OK, nameToSend);
-					finish();
-				}
+				addressEntered();
 			}
 		});
 	}
@@ -73,6 +63,41 @@ public class WifiConnectActivity extends Activity {
 	public void onBackPressed() {
 		setResult(RESULT_CANCELED);
 		finish();
+	}
+
+	/**
+	 * Will check the Address, and return the result to calling activity
+	 */
+	private void addressEntered() {
+		EditText textView = (EditText) findViewById(R.id.dialogPromptTextbox);
+		String ipAddress = "";
+
+		// If the user didn't enter anything, send them back to main menu
+		if (textView.getText().length() == 0) {
+			setResult(RESULT_CANCELED);
+			finish();
+		} else {
+			ipAddress = textView.getText().toString();
+
+			// Return the name the player chose with the result of this Activity
+			Intent nameToSend = new Intent();
+			nameToSend.putExtra(EXTRA_DEVICE_ADDRESS, ipAddress);
+			setResult(RESULT_OK, nameToSend);
+			finish();
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see android.widget.TextView.OnEditorActionListener#onEditorAction(android.widget.TextView, int, android.view.KeyEvent)
+	 */
+	@Override
+	public boolean onEditorAction(android.widget.TextView v, int actionId, KeyEvent event) {
+		if (EditorInfo.IME_ACTION_DONE == actionId) {
+			// Return input text to activity
+			addressEntered();
+			return true;
+		}
+		return false;
 	}
 }
 
