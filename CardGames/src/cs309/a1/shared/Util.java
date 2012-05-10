@@ -19,7 +19,7 @@ import android.util.Log;
  */
 public class Util {
 
-	public static final String TAG_GENERIC = "CR8S";
+	public static final String TAG_GENERIC = Util.class.getName();
 
 	/**
 	 * Represents whether this device is acting as the gameboard
@@ -81,32 +81,51 @@ public class Util {
 	public static String getLocalIpAddress() {
 		try {
 			String addrToReturn;
-			
+
 			// Check for IPv4 address
 			for (Enumeration<NetworkInterface> inter = NetworkInterface.getNetworkInterfaces(); inter.hasMoreElements();) {
 				NetworkInterface intf = inter.nextElement();
 				for (Enumeration<InetAddress> enumIP = intf.getInetAddresses(); enumIP.hasMoreElements();) {
 					InetAddress inet = enumIP.nextElement();
 					addrToReturn = inet.getHostAddress();
+
+					if (Util.isDebugBuild()) {
+						Log.d(TAG_GENERIC, "Address: " + addrToReturn);
+						Log.d(TAG_GENERIC, "isIPv4Address: " + InetAddressUtils.isIPv4Address(addrToReturn));
+					}
+
 					if (!inet.isLoopbackAddress() && InetAddressUtils.isIPv4Address(addrToReturn)) {
 						return addrToReturn;
 					}
 				}
 			}
-			
+
 			// Check for IPv6 address
 			for (Enumeration<NetworkInterface> inter = NetworkInterface.getNetworkInterfaces(); inter.hasMoreElements();) {
 				NetworkInterface intf = inter.nextElement();
 				for (Enumeration<InetAddress> enumIP = intf.getInetAddresses(); enumIP.hasMoreElements();) {
 					InetAddress inet = enumIP.nextElement();
 					addrToReturn = inet.getHostAddress();
+
+					int indexOfPercent = addrToReturn.indexOf('%');
+					if (indexOfPercent > 0) {
+						addrToReturn = addrToReturn.substring(0, indexOfPercent);
+					}
+
+					if (Util.isDebugBuild()) {
+						Log.d(TAG_GENERIC, "Address: " + addrToReturn);
+						Log.d(TAG_GENERIC, "isIPv6Address: " + InetAddressUtils.isIPv6Address(addrToReturn));
+						Log.d(TAG_GENERIC, "isIPv6HexCompressedAddress: " + InetAddressUtils.isIPv6HexCompressedAddress(addrToReturn));
+						Log.d(TAG_GENERIC, "isIPv6StdAddress: " + InetAddressUtils.isIPv6StdAddress(addrToReturn));
+					}
+
 					if (!inet.isLoopbackAddress() && (InetAddressUtils.isIPv6Address(addrToReturn) || InetAddressUtils.isIPv6HexCompressedAddress(addrToReturn)
 							|| InetAddressUtils.isIPv6StdAddress(addrToReturn))) {
 						return addrToReturn;
 					}
 				}
 			}
-			
+
 		} catch (SocketException ex) {
 			Log.e(TAG_GENERIC, ex.toString());
 		}
