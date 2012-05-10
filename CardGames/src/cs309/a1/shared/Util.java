@@ -6,6 +6,8 @@ import java.net.SocketException;
 import java.util.Comparator;
 import java.util.Enumeration;
 
+import org.apache.http.conn.util.InetAddressUtils;
+
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
@@ -78,12 +80,14 @@ public class Util {
 	 */
 	public static String getLocalIpAddress() {
 		try {
-			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-				NetworkInterface intf = en.nextElement();
-				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-					InetAddress inetAddress = enumIpAddr.nextElement();
-					if (!inetAddress.isLoopbackAddress()) {
-						return inetAddress.getHostAddress();
+			String addrToReturn;
+			for (Enumeration<NetworkInterface> inter = NetworkInterface.getNetworkInterfaces(); inter.hasMoreElements();) {
+				NetworkInterface intf = inter.nextElement();
+				for (Enumeration<InetAddress> enumIP = intf.getInetAddresses(); enumIP.hasMoreElements();) {
+					InetAddress inet = enumIP.nextElement();
+					addrToReturn = inet.getHostAddress();
+					if (!inet.isLoopbackAddress() && (InetAddressUtils.isIPv4Address(addrToReturn) || InetAddressUtils.isIPv6Address(addrToReturn))) {
+						return addrToReturn;
 					}
 				}
 			}

@@ -3,18 +3,13 @@ package cs309.a1.gameboard.activities;
 import static cs309.a1.shared.Constants.PLAYER_NAME;
 import static cs309.a1.shared.Constants.PREFERENCES;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.conn.util.InetAddressUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -328,7 +323,7 @@ public class ConnectActivity extends Activity {
 		if (currentType == ConnectionType.BLUETOOTH) {
 			tv.setText(getResources().getString(R.string.deviceName) + "\n" + mBluetoothAdapter.getName());
 		} else if (currentType == ConnectionType.WIFI) {
-			tv.setText(getResources().getString(R.string.deviceName) + "\n" + formattedIpAddress());
+			tv.setText(getResources().getString(R.string.deviceName) + "\n" + Util.getLocalIpAddress());
 		}
 
 		// Set up the start button
@@ -559,30 +554,5 @@ public class ConnectActivity extends Activity {
 		} else {
 			b.setEnabled(false);
 		}
-	}
-	
-	/**
-	 * Find the IP address of the device by searching through all of its network interfaces
-	 * and returns formatted String as long as it is an IPv4 or IPv6 address
-	 *  
-	 * @return Formatted IP address of device
-	 */
-	private String formattedIpAddress() {
-		try {
-			String addrToReturn;
-			for (Enumeration<NetworkInterface> inter = NetworkInterface.getNetworkInterfaces(); inter.hasMoreElements();) {
-				NetworkInterface intf = inter.nextElement();
-				for (Enumeration<InetAddress> enumIP = intf.getInetAddresses(); enumIP.hasMoreElements();) {
-					InetAddress inet = enumIP.nextElement();
-					addrToReturn = inet.getHostAddress();
-					if (!inet.isLoopbackAddress() && (InetAddressUtils.isIPv4Address(addrToReturn) || InetAddressUtils.isIPv6Address(addrToReturn))) {
-						return addrToReturn;
-					}
-				}
-			}
-		} catch (SocketException ex) {
-			Log.e(TAG, ex.toString());
-		}
-		return null;
 	}
 }
