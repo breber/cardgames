@@ -3,6 +3,7 @@ package cs309.a1.shared.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +31,12 @@ public class WifiConnectActivity extends Activity implements OnEditorActionListe
 	 * Return Intent extra
 	 */
 	public static String EXTRA_DEVICE_ADDRESS = "deviceAddress";
+	
+	/* I added this variable because I'm sure we'll need something like it in the future
+	 * and I wanted to test whether or not I can make a connection with IPv6.
+	 */
+	//TODO Detect IP address type and set variable
+	private boolean isIPv4 = true;
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -43,9 +50,16 @@ public class WifiConnectActivity extends Activity implements OnEditorActionListe
 		title.setText(R.string.enterIpAddress);
 
 		final EditText textView = (EditText) findViewById(R.id.dialogPromptTextbox);
-		textView.setOnEditorActionListener(this);
-		textView.setHint(R.string.ipAddress);
+		
+		if (isIPv4) {
+			textView.setHint(R.string.ipv4Address);
+		} else {
+			textView.setHint(R.string.ipv6Address);
+			textView.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+		}
 
+		textView.setOnEditorActionListener(this);
+		
 		// create button for the view
 		Button ok = (Button) findViewById(R.id.ok);
 		ok.setOnClickListener(new OnClickListener() {

@@ -46,7 +46,7 @@ The game will start with player 1 and continue in a counterclockwise fashion aro
 
     <!-- Wifi Connect Activity -->
     <string name="enterIpAddress">Enter IP Address of Server</string>
-    <string name="ipAddress">***.***.***.***</string>
+    <string name="ipv4Address">***.***.***.***</string>
 
     <!-- Connect Screen Handheld -->
     <string name="waitingForGame">Waiting for game to begin…</string>
@@ -132,5 +132,6 @@ The game will start with player 1 and continue in a counterclockwise fashion aro
         <item>WiFi</item>
         <item>Bluetooth</item>
     </string-array>
+    <string name="ipv6Address">****:****:****:****:****:****:****:****</string>
 
 </resources>
