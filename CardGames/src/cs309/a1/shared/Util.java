@@ -81,16 +81,32 @@ public class Util {
 	public static String getLocalIpAddress() {
 		try {
 			String addrToReturn;
+			
+			// Check for IPv4 address
 			for (Enumeration<NetworkInterface> inter = NetworkInterface.getNetworkInterfaces(); inter.hasMoreElements();) {
 				NetworkInterface intf = inter.nextElement();
 				for (Enumeration<InetAddress> enumIP = intf.getInetAddresses(); enumIP.hasMoreElements();) {
 					InetAddress inet = enumIP.nextElement();
 					addrToReturn = inet.getHostAddress();
-					if (!inet.isLoopbackAddress() && (InetAddressUtils.isIPv4Address(addrToReturn) || InetAddressUtils.isIPv6Address(addrToReturn))) {
+					if (!inet.isLoopbackAddress() && InetAddressUtils.isIPv4Address(addrToReturn)) {
 						return addrToReturn;
 					}
 				}
 			}
+			
+			// Check for IPv6 address
+			for (Enumeration<NetworkInterface> inter = NetworkInterface.getNetworkInterfaces(); inter.hasMoreElements();) {
+				NetworkInterface intf = inter.nextElement();
+				for (Enumeration<InetAddress> enumIP = intf.getInetAddresses(); enumIP.hasMoreElements();) {
+					InetAddress inet = enumIP.nextElement();
+					addrToReturn = inet.getHostAddress();
+					if (!inet.isLoopbackAddress() && (InetAddressUtils.isIPv6Address(addrToReturn) || InetAddressUtils.isIPv6HexCompressedAddress(addrToReturn)
+							|| InetAddressUtils.isIPv6StdAddress(addrToReturn))) {
+						return addrToReturn;
+					}
+				}
+			}
+			
 		} catch (SocketException ex) {
 			Log.e(TAG_GENERIC, ex.toString());
 		}
