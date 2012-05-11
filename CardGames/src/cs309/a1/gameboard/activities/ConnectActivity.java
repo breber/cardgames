@@ -323,7 +323,7 @@ public class ConnectActivity extends Activity {
 		if (currentType == ConnectionType.BLUETOOTH) {
 			tv.setText(getResources().getString(R.string.deviceName) + "\n" + mBluetoothAdapter.getName());
 		} else if (currentType == ConnectionType.WIFI) {
-			tv.setText(getResources().getString(R.string.deviceName) + "\n" + Util.getLocalIpAddress());
+			tv.setText(getResources().getString(R.string.deviceName) + "\n" + Util.getLocalIpAddress().getHostAddress());
 		}
 
 		// Set up the start button

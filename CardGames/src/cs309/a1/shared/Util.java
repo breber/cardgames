@@ -78,7 +78,7 @@ public class Util {
 	 * 
 	 * @return the ip address of this device
 	 */
-	public static String getLocalIpAddress() {
+	public static InetAddress getLocalIpAddress() {
 		try {
 			String addrToReturn;
 
@@ -95,7 +95,7 @@ public class Util {
 					}
 
 					if (!inet.isLoopbackAddress() && InetAddressUtils.isIPv4Address(addrToReturn)) {
-						return addrToReturn;
+						return inet;
 					}
 				}
 			}
@@ -121,7 +121,7 @@ public class Util {
 
 					if (!inet.isLoopbackAddress() && (InetAddressUtils.isIPv6Address(addrToReturn) || InetAddressUtils.isIPv6HexCompressedAddress(addrToReturn)
 							|| InetAddressUtils.isIPv6StdAddress(addrToReturn))) {
-						return addrToReturn;
+						return inet;
 					}
 				}
 			}

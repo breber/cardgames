@@ -71,7 +71,7 @@ public class AcceptThread extends Thread {
 
 		// Create a new listening server socket
 		try {
-			mmServerSocket = new ServerSocket(WifiConstants.PORT_NUMBER);
+			mmServerSocket = new ServerSocket(WifiConstants.PORT_NUMBER, 0, Util.getLocalIpAddress());
 		} catch (IOException e) {
 			Log.e(TAG, "Socket listen() failed", e);
 		}

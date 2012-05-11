@@ -31,12 +31,12 @@ public class WifiConnectActivity extends Activity implements OnEditorActionListe
 	 * Return Intent extra
 	 */
 	public static String EXTRA_DEVICE_ADDRESS = "deviceAddress";
-	
-	/* I added this variable because I'm sure we'll need something like it in the future
-	 * and I wanted to test whether or not I can make a connection with IPv6.
+
+	/**
+	 * Indicates whether we are connecting via IPv6 or IPv4
 	 */
-	//TODO Detect IP address type and set variable
 	private boolean isIPv4 = true;
+	//TODO Detect IP address type and set variable
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -50,7 +50,7 @@ public class WifiConnectActivity extends Activity implements OnEditorActionListe
 		title.setText(R.string.enterIpAddress);
 
 		final EditText textView = (EditText) findViewById(R.id.dialogPromptTextbox);
-		
+
 		if (isIPv4) {
 			textView.setHint(R.string.ipv4Address);
 		} else {
@@ -59,7 +59,7 @@ public class WifiConnectActivity extends Activity implements OnEditorActionListe
 		}
 
 		textView.setOnEditorActionListener(this);
-		
+
 		// create button for the view
 		Button ok = (Button) findViewById(R.id.ok);
 		ok.setOnClickListener(new OnClickListener() {
