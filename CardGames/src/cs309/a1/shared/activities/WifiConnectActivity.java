@@ -1,5 +1,9 @@
 package cs309.a1.shared.activities;
 
+import java.net.InetAddress;
+
+import org.apache.http.conn.util.InetAddressUtils;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView.OnEditorActionListener;
 import cs309.a1.R;
 import cs309.a1.shared.TextView;
+import cs309.a1.shared.Util;
 
 /**
  * This Activity allows a user to type in the IP address they want to connect
@@ -48,6 +53,17 @@ public class WifiConnectActivity extends Activity implements OnEditorActionListe
 
 		TextView title = (TextView) findViewById(R.id.dialogPromptTitle);
 		title.setText(R.string.enterIpAddress);
+		
+		InetAddress currentIP = Util.getLocalIpAddress();
+		
+		// Send back to main menu if not connected
+		if (currentIP == null) {
+			setResult(RESULT_CANCELED);
+			finish();
+		}
+		
+		// If not IPv4, set as IPv6
+		if ((currentIP != null) && !InetAddressUtils.isIPv4Address(currentIP.getHostAddress())) isIPv4 = false;
 
 		final EditText textView = (EditText) findViewById(R.id.dialogPromptTextbox);
 
