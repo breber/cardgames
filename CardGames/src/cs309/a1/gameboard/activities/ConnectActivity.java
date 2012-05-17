@@ -255,7 +255,7 @@ public class ConnectActivity extends Activity {
 
 			mConnectionServer = ConnectionFactory.getServerInstance(this);
 
-			currentGame = GameFactory.getGameInstance();
+			currentGame = GameFactory.getGameInstance(this);
 
 			// First, we get the list of players from the game
 			List<Player> players = currentGame.getPlayers();

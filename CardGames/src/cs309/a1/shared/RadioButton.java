@@ -33,7 +33,7 @@ public class RadioButton extends android.widget.RadioButton {
 
 		// If this is not a debug build, use the custom font
 		if (!Util.isDebugBuild()) {
-			Typeface typeface = Typeface.createFromAsset(mContext.getAssets(), "helsinki.otf");
+			Typeface typeface = Typeface.createFromAsset(mContext.getAssets(), Constants.FONT_NAME);
 			setTypeface(typeface);
 		}
 	}

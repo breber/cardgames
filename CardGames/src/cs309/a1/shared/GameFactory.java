@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.widget.Button;
 import android.widget.ImageButton;
 import cs309.a1.crazyeights.CrazyEightsGameController;
@@ -29,8 +30,8 @@ public class GameFactory {
 	 * @param rules - the rules definitions
 	 * @return the Game instance as specified by the type of game currently specified
 	 */
-	public static Game getGameInstance(List<Player> players, Deck deck, Rules rules) {
-		if (getGameType() == CardGame.CRAZY_EIGHTS) {
+	public static Game getGameInstance(Context ctx, List<Player> players, Deck deck, Rules rules) {
+		if (getGameType(ctx) == CardGame.CRAZY_EIGHTS) {
 			return CrazyEightsTabletGame.getInstance(players, deck, rules);
 		}
 
@@ -42,8 +43,8 @@ public class GameFactory {
 	 *
 	 * @return the Game instance as specified by the type of game currently specified
 	 */
-	public static Game getGameInstance() {
-		if (getGameType() == CardGame.CRAZY_EIGHTS) {
+	public static Game getGameInstance(Context ctx) {
+		if (getGameType(ctx) == CardGame.CRAZY_EIGHTS) {
 			return CrazyEightsTabletGame.getInstance();
 		}
 
@@ -57,7 +58,7 @@ public class GameFactory {
 	 */
 	public static GameController getGameControllerInstance(GameboardActivity activity,
 			ConnectionServer connectionServer, List<Player> players, ImageButton refreshButton) {
-		if (getGameType() == CardGame.CRAZY_EIGHTS) {
+		if (getGameType(activity) == CardGame.CRAZY_EIGHTS) {
 			return new CrazyEightsGameController(activity, connectionServer, players, refreshButton);
 		}
 
@@ -71,7 +72,7 @@ public class GameFactory {
 	 */
 	public static PlayerController getPlayerControllerInstance(Context context, Button playButton,
 			Button drawButton, ConnectionClient connectionClient, ArrayList<Card> cardHand) {
-		if (getGameType() == CardGame.CRAZY_EIGHTS) {
+		if (getGameType(context) == CardGame.CRAZY_EIGHTS) {
 			return new CrazyEightsPlayerController(context, playButton,	drawButton, connectionClient, cardHand);
 		}
 
@@ -83,7 +84,15 @@ public class GameFactory {
 	 *
 	 * @return the type of Game we are playing
 	 */
-	public static CardGame getGameType() {
+	public static CardGame getGameType(Context ctx) {
+		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, Context.MODE_WORLD_READABLE);
+		String gameType = prefs.getString(Constants.GAME_TYPE, Constants.CRAZY_EIGHTS);
+
+		if (Constants.CRAZY_EIGHTS.equals(gameType)) {
+			return CardGame.CRAZY_EIGHTS;
+		}
+
+
 		return CardGame.CRAZY_EIGHTS;
 	}
 }

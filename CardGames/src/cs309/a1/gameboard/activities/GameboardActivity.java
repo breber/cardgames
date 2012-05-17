@@ -229,7 +229,7 @@ public class GameboardActivity extends Activity {
 			p.setPosition(j + 1);
 			p.setIsComputer(true);
 			p.setComputerDifficulty(computerDifficulty);
-			
+
 			players.add(p);
 		}
 
@@ -237,7 +237,7 @@ public class GameboardActivity extends Activity {
 
 		// the GameController now handles the setup of the game.
 		gameController = GameFactory.getGameControllerInstance(this, connection, players, refresh);
-		Game game = GameFactory.getGameInstance();
+		Game game = GameFactory.getGameInstance(this);
 		game.setComputerDifficulty(computerDifficulty);
 		// Draw the names from the Game on the gameboard
 		updateNamesOnGameboard();
@@ -364,7 +364,7 @@ public class GameboardActivity extends Activity {
 	 * This data is pulled from the Game instance
 	 */
 	public void updateNamesOnGameboard() {
-		List<Player> players = GameFactory.getGameInstance().getPlayers();
+		List<Player> players = GameFactory.getGameInstance(this).getPlayers();
 		for (int i = 0; i < 4; i++) {
 			if (i < players.size()) {
 				playerTextViews[i].setVisibility(View.VISIBLE);
