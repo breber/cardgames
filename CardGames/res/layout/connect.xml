@@ -175,28 +175,39 @@
         </TableRow>
     </TableLayout>
 
-    <cs309.a1.shared.TextView
-        android:id="@+id/myName"
-        style="@style/GameButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="15dip"
-        android:padding="15dip"
-        android:text="@string/deviceName" />
+        android:weightSum="1.0" >
 
-    <cs309.a1.shared.Button
-        android:id="@+id/startButton"
-        style="@style/GameButtonBlack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="15dip"
-        android:background="@drawable/statebutton"
-        android:padding="15dip"
-        android:text="@string/start"
-        android:textColor="@color/buttontextcolor" />
+        <cs309.a1.shared.TextView
+            android:id="@+id/myName"
+            style="@style/GameButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dip"
+            android:layout_weight=".33"
+            android:maxLines="3"
+            android:padding="15dip"
+            android:scrollHorizontally="true"
+            android:text="@string/deviceName" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".34" />
+
+        <cs309.a1.shared.Button
+            android:id="@+id/startButton"
+            style="@style/GameButtonBlack"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dip"
+            android:layout_weight=".33"
+            android:background="@drawable/statebutton"
+            android:padding="15dip"
+            android:text="@string/start"
+            android:textColor="@color/buttontextcolor" />
+    </LinearLayout>
 
 </RelativeLayout>
