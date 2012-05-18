@@ -43,11 +43,7 @@ public class Constants {
 	/**
 	 * A constant to represent the name of the font to use
 	 */
-	public static final String FONT_NAME =
-			"helsinki.otf";
-	//			"hammersmithone.ttf";
-	//			"comfortaa.ttf";
-	//			"happymonkey.ttf";
+	public static final String FONT_NAME = "hammersmithone.ttf";
 
 	/* Game Constants */
 	/**
