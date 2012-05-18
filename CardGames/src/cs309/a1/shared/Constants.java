@@ -1,6 +1,5 @@
 package cs309.a1.shared;
 
-import cs309.a1.player.activities.EnterNameActivty;
 
 /**
  * This class will be used to represent constants in a common game. Each of the
@@ -135,8 +134,7 @@ public class Constants {
 	/**
 	 * this is a request code for the get EnterNameActivity
 	 */
-	public static final int GET_PLAYER_NAME = Math.abs(EnterNameActivty.class
-			.hashCode());
+	public static final int GET_PLAYER_NAME = Math.abs("GET_PLAYER_NAME".hashCode());
 
 	/* wireless connection message codes */
 	/**
