@@ -3,7 +3,6 @@ package cs309.a1.shared;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.util.Comparator;
 import java.util.Enumeration;
 
 import org.apache.http.conn.util.InetAddressUtils;
@@ -131,15 +130,5 @@ public class Util {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Comparator for sorting cards in ascending order based on ID number
-	 */
-	public static class CompareIdNums implements Comparator<Card> {
-		@Override
-		public int compare(Card card1, Card card2) {
-			return card1.getIdNum() - card2.getIdNum();
-		}
 	}
 }

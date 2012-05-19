@@ -13,7 +13,7 @@ import org.json.JSONObject;
  * and will be identified through the use of the fields. Each card will have an image to represent
  * it and also a suit, value and id number.
  */
-public class Card {
+public class Card implements Comparable<Card> {
 	/**
 	 * The suit of this card
 	 */
@@ -72,7 +72,7 @@ public class Card {
 	/**
 	 * This method will return the value of the card object
 	 * 
-	 * @return an iteger value representing the card object
+	 * @return an integer value representing the card object
 	 */
 	public int getValue() {
 		return value;
@@ -152,5 +152,13 @@ public class Card {
 	@Override
 	public String toString() {
 		return toJSONObject().toString();
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(Card another) {
+		return this.idNum - another.idNum;
 	}
 }

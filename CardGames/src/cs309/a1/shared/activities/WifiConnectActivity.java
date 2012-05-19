@@ -41,7 +41,6 @@ public class WifiConnectActivity extends Activity implements OnEditorActionListe
 	 * Indicates whether we are connecting via IPv6 or IPv4
 	 */
 	private boolean isIPv4 = true;
-	//TODO Detect IP address type and set variable
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -53,17 +52,19 @@ public class WifiConnectActivity extends Activity implements OnEditorActionListe
 
 		TextView title = (TextView) findViewById(R.id.dialogPromptTitle);
 		title.setText(R.string.enterIpAddress);
-		
+
 		InetAddress currentIP = Util.getLocalIpAddress();
-		
+
 		// Send back to main menu if not connected
 		if (currentIP == null) {
 			setResult(RESULT_CANCELED);
 			finish();
 		}
-		
+
 		// If not IPv4, set as IPv6
-		if ((currentIP != null) && !InetAddressUtils.isIPv4Address(currentIP.getHostAddress())) isIPv4 = false;
+		if ((currentIP != null) && !InetAddressUtils.isIPv4Address(currentIP.getHostAddress())) {
+			isIPv4 = false;
+		}
 
 		final EditText textView = (EditText) findViewById(R.id.dialogPromptTextbox);
 

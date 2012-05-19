@@ -20,7 +20,6 @@ import cs309.a1.shared.Card;
 import cs309.a1.shared.Constants;
 import cs309.a1.shared.GameFactory;
 import cs309.a1.shared.PlayerController;
-import cs309.a1.shared.Util;
 import cs309.a1.shared.activities.QuitGameActivity;
 import cs309.a1.shared.connection.ConnectionClient;
 import cs309.a1.shared.connection.ConnectionConstants;
@@ -219,38 +218,40 @@ public class ShowCardsActivity extends Activity {
 	 * @param newCard Card to be added to the hand
 	 */
 	public void addCard(Card newCard) {
-
+		// Add the new card to our hand
 		cardHand.add(newCard);
 
-		Collections.sort(cardHand, new Util.CompareIdNums());
+		// Make sure the hand is sorted
+		Collections.sort(cardHand);
 
+		// Remove all cards from the display
 		playerHandLayout.removeAllViews();
 
 		// convert dip to pixels
 		final float dpsToPixScale = getApplicationContext().getResources().getDisplayMetrics().density;
-		//int pixels = (int) (size.x * Constants.CARD_IMAGE_SCALE * dpsToPixScale + 0.5f);
-		//int pixels = (int) (125 * dpsToPixScale + 0.5f);
 		final int screen_width = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
 
-		int scale;
+		// Figure out how to scale the cards
+		int scale = Constants.CARD_IMAGE_SCALE_SMALL;
 
-		if(screen_width/dpsToPixScale >= 720) scale = Constants.CARD_IMAGE_SCALE_LARGE;
-		else if(screen_width/dpsToPixScale >= 500) scale = Constants.CARD_IMAGE_SCALE_MED;
-		else scale = Constants.CARD_IMAGE_SCALE_SMALL;
+		if (screen_width / dpsToPixScale >= 720) {
+			scale = Constants.CARD_IMAGE_SCALE_LARGE;
+		} else if (screen_width / dpsToPixScale >= 500) {
+			scale = Constants.CARD_IMAGE_SCALE_MED;
+		}
 
 		int pixels = (int) (scale * dpsToPixScale + 0.5f);
 
 		// edit layout attributes
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, pixels);
 
-		for (int i = 0; i < cardHand.size(); i++) {
-
-			Bitmap original = BitmapFactory.decodeResource(getResources(), cardHand.get(i).getResourceId());
+		for (Card c : cardHand) {
+			Bitmap original = BitmapFactory.decodeResource(getResources(), c.getResourceId());
 			int orgWidth = original.getWidth();
 			int orgHeight = original.getHeight();
 			float newHeight = pixels;
 
-			float scalePercentage = newHeight/orgHeight;
+			float scalePercentage = newHeight / orgHeight;
 
 			Matrix matrix = new Matrix();
 			matrix.postScale(scalePercentage, scalePercentage);
@@ -260,11 +261,11 @@ public class ShowCardsActivity extends Activity {
 			// create ImageView to hold Card
 			ImageView toAdd = new ImageView(this);
 			toAdd.setImageBitmap(resizedCard);
-			toAdd.setId(cardHand.get(i).getIdNum());
+			toAdd.setId(c.getIdNum());
 			toAdd.setAdjustViewBounds(true);
 			toAdd.setOnClickListener(playerController.getCardClickListener());
 
-			// Add a 5 px border around the image
+			// Add a 5px border around the image
 			toAdd.setPadding(5, 5, 5, 5);
 
 			playerHandLayout.addView(toAdd, lp);
@@ -294,11 +295,10 @@ public class ShowCardsActivity extends Activity {
 	 * used for refreshing the player and syncing with game board
 	 */
 	public void removeAllCards() {
-		// this removes all cards from card
-		while (cardHand.size() > 0) {
-			cardHand.remove(cardHand.get(0));
-		}
+		// Remove all cards from our hand
+		cardHand.clear();
 
+		// Remove all layouts from our view
 		playerHandLayout.removeAllViews();
 	}
 
@@ -311,15 +311,12 @@ public class ShowCardsActivity extends Activity {
 		playerHandLayout.removeView(findViewById(idNum));
 
 		// remove card from list
-		Card current = cardHand.get(0);
-		int i = 0;
-
-		while (current.getIdNum() != idNum) {
-			i++;
-			current = cardHand.get(i);
+		for (int i = 0; i < cardHand.size(); i++) {
+			if (cardHand.get(i).getIdNum() == idNum) {
+				cardHand.remove(i);
+				return;
+			}
 		}
-
-		cardHand.remove(current);
 	}
 
 }

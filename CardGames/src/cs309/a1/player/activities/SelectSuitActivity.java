@@ -35,7 +35,6 @@ public class SelectSuitActivity extends Activity{
 
 		// Set the listener for the spade button
 		ImageView spade = (ImageView) findViewById(R.id.spadeSuit);
-		spade.setClickable(true);
 		spade.setOnClickListener(new OnClickListener() {
 			/* (non-Javadoc)
 			 * @see android.view.View.OnClickListener#onClick(android.view.View)
@@ -49,7 +48,6 @@ public class SelectSuitActivity extends Activity{
 
 		// Set the listener for the heart button
 		ImageView heart = (ImageView) findViewById(R.id.heartSuit);
-		heart.setClickable(true);
 		heart.setOnClickListener(new OnClickListener() {
 			/* (non-Javadoc)
 			 * @see android.view.View.OnClickListener#onClick(android.view.View)
@@ -62,9 +60,7 @@ public class SelectSuitActivity extends Activity{
 		});
 
 		// Set the listener for the club button
-		//Button club = (Button) findViewById(R.id.Clubs);
 		ImageView club = (ImageView) findViewById(R.id.clubSuit);
-		club.setClickable(true);
 		club.setOnClickListener(new OnClickListener() {
 			/* (non-Javadoc)
 			 * @see android.view.View.OnClickListener#onClick(android.view.View)
@@ -77,9 +73,7 @@ public class SelectSuitActivity extends Activity{
 		});
 
 		// Set the listener for the diamond button
-		//Button diamond = (Button) findViewById(R.id.Diamonds);
 		ImageView diamond = (ImageView) findViewById(R.id.diamondSuit);
-		diamond.setClickable(true);
 		diamond.setOnClickListener(new OnClickListener() {
 			/* (non-Javadoc)
 			 * @see android.view.View.OnClickListener#onClick(android.view.View)

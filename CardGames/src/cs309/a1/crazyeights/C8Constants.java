@@ -5,13 +5,11 @@ package cs309.a1.crazyeights;
  */
 public class C8Constants {
 
-	// specific to C8
 	/**
 	 * A constant for the number of cards per hand to be dealt
 	 */
 	public static final int NUMBER_OF_CARDS_PER_HAND = 5;
 
-	// specific to C8
 	/**
 	 * A constant to represent an eight of clubs
 	 */
@@ -36,7 +34,5 @@ public class C8Constants {
 	 * The card number associated with an 8
 	 */
 	public static final int EIGHT_CARD_NUMBER = 7;
-	
-
 
 }
