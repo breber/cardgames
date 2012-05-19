@@ -19,7 +19,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 import cs309.a1.R;
 import cs309.a1.gameboard.activities.ConnectActivity;
@@ -109,7 +109,7 @@ public class CrazyEightsGameController implements GameController {
 	 * This is the refresh button that is on the GameBoard The GameController
 	 * will handle any button presses
 	 */
-	private ImageButton refreshButton;
+	private ImageView refreshButton;
 
 	/**
 	 * The implementation of the Game Rules
@@ -125,7 +125,7 @@ public class CrazyEightsGameController implements GameController {
 	 * This is how to tell if a play computer turn activity is currently running
 	 */
 	private boolean isComputerPlaying = false;
-	
+
 	private CardScoreCalculator csc;
 
 	/**
@@ -137,7 +137,7 @@ public class CrazyEightsGameController implements GameController {
 	 * @param refreshGiven The refresh button which will be handled by this GameController
 	 */
 	public CrazyEightsGameController(GameboardActivity context,	ConnectionServer connectionGiven,
-			List<Player> playersGiven, ImageButton refreshGiven) {
+			List<Player> playersGiven, ImageView refreshGiven) {
 		gameContext = context;
 		server = connectionGiven;
 		players = playersGiven;
@@ -603,11 +603,11 @@ public class CrazyEightsGameController implements GameController {
 					sameSuit.add(c);
 				} else if (c.getValue() == onDiscard.getValue() && gameRules.checkCard(c, onDiscard) ) {
 					sameNum.add(c);
-				} 
+				}
 			}
-			
-		
-			
+
+
+
 			//see if there is more of another suit that the computer can change it to.
 			boolean moreOfOtherSuit = false;
 			for (Card c : sameNum) {
@@ -616,7 +616,7 @@ public class CrazyEightsGameController implements GameController {
 				}
 			}
 
-			
+
 			if (onDiscard.getSuit() == Constants.SUIT_JOKER){ //for a joker
 				for (Card c : cards){
 					if (c.getSuit() == maxSuitIndex){
@@ -654,7 +654,7 @@ public class CrazyEightsGameController implements GameController {
 
 			//computer difficulty Hard
 		} else if (players.get(whoseTurn).getComputerDifficulty().equals(Constants.HARD)) {
-				
+
 			//get game state, clone it, send to recursive function
 			List<List<Card>> cardsClone = new ArrayList<List<Card>>();
 			for(Player p : players){
@@ -667,7 +667,7 @@ public class CrazyEightsGameController implements GameController {
 			}
 			Card curOnDiscard = game.getDiscardPileTop();
 			int suitToChoose = findMaxSuitIndex(cardsClone.get(whoseTurn));
-			
+
 			int nextTurnIndex=whoseTurn;
 			// Figure out whose turn it is next
 			if (nextTurnIndex < game.getNumPlayers() - 1) {
@@ -675,16 +675,16 @@ public class CrazyEightsGameController implements GameController {
 			} else {
 				nextTurnIndex =0;
 			}
-	
+
 			List<Card> drawPile = new ArrayList<Card>(game.getShuffledDeck());
 			double tmpScore = 0;
 			Card cardDrawn = null;
 			int movesArraySize = cardsClone.get(whoseTurn).size() +1;
 			double moves[] = new double[movesArraySize];
 			int recDepth = 6 + players.size();
-			
+
 			int minIndex=0;
-			
+
 			//recursive call
 			for(int i = 0; i<cardsClone.get(whoseTurn).size(); i++){
 				curOnDiscard = firstOnDiscard;
@@ -707,12 +707,12 @@ public class CrazyEightsGameController implements GameController {
 				}
 				cardsClone.get(whoseTurn).add(tmpCard);
 			}
-			
+
 			//see how we do if we draw
 			if(!drawPile.isEmpty() && moves[minIndex]>= 30000){
 				cardDrawn = drawPile.get(0);
 				cardsClone.get(whoseTurn).add(cardDrawn);
-				drawPile.remove(0);	
+				drawPile.remove(0);
 				tmpScore = csc.calculateScoreDrawn(cardDrawn, whoseTurn);
 				tmpScore += findBestMove(nextTurnIndex, cardsClone, curOnDiscard, drawPile, recDepth);
 				drawPile.add(0,cardDrawn);
@@ -723,10 +723,10 @@ public class CrazyEightsGameController implements GameController {
 					minIndex = movesArraySize-1;
 				}
 			}
-			
+
 			if(minIndex < movesArraySize-1){
 				cardSelected = players.get(whoseTurn).getCards().get(minIndex);
-				
+
 				if(!gameRules.checkCard(cardSelected, onDiscard)){
 					//should never get here, this would be an error.
 					cardSelected = null;
@@ -736,7 +736,7 @@ public class CrazyEightsGameController implements GameController {
 			} else {
 				cardSelected = null;
 			}
-			
+
 		}
 
 
@@ -764,9 +764,9 @@ public class CrazyEightsGameController implements GameController {
 			}
 		}
 	}
-	
+
 	private int findMaxSuitIndex(List<Card> cards){
-		
+
 		int suits[] = new int[5];
 		int maxSuitIndex = 0;
 
@@ -782,9 +782,9 @@ public class CrazyEightsGameController implements GameController {
 			}
 		}
 		return maxSuitIndex;
-		
+
 	}
-	
+
 	/**
 	 * This function will find the best move for any player and return the score of how good of a move it is for that player
 	 * @param playerIndex
@@ -804,7 +804,7 @@ public class CrazyEightsGameController implements GameController {
 		Card cardDrawn = null;
 		int movesArraySize = cardsClone.get(playerIndex).size() +1;
 		double moves[] = new double[movesArraySize];
-		
+
 		int nextTurnIndex=playerIndex;
 		// Figure out whose turn it is next
 		if (nextTurnIndex < game.getNumPlayers() - 1) {
@@ -812,7 +812,7 @@ public class CrazyEightsGameController implements GameController {
 		} else {
 			nextTurnIndex =0;
 		}
-		
+
 		int maxIndex=0;
 		//rec call
 		for(int i = 0; i<cardsClone.get(playerIndex).size(); i++){
@@ -841,17 +841,17 @@ public class CrazyEightsGameController implements GameController {
 					moves[i] = 30000;
 				} else {
 					//very low number so it is never chosen by another player
-					moves[i] = -30000;					
+					moves[i] = -30000;
 				}
 			}
 			cardsClone.get(playerIndex).add(tmpCard);
 		}
-		
+
 		//try drawing a card, only if there is a draw pile and there is not another card that can be played
 		if(!drawPile.isEmpty() && (moves[maxIndex] >=30000 || moves[maxIndex] <= -30000) ){
 			cardDrawn = drawPile.get(0);
 			cardsClone.get(playerIndex).add(cardDrawn);
-			drawPile.remove(0);	
+			drawPile.remove(0);
 			tmpScore = csc.calculateScoreDrawn(cardDrawn, playerIndex);
 			tmpScore += findBestMove(nextTurnIndex, cardsClone, curOnDiscard, drawPile, recDepth-1);
 			drawPile.add(0,cardDrawn);
@@ -866,10 +866,10 @@ public class CrazyEightsGameController implements GameController {
 				moves[movesArraySize-1] = 30000;
 			} else {
 				//very low number so it is never chosen by another player
-				moves[movesArraySize-1] = -30000;					
+				moves[movesArraySize-1] = -30000;
 			}
 		}
-		
+
 		if(whoseTurn == playerIndex){
 			//if this is the current player then we want the minimum not maximum.
 			int minIndex = 0;
@@ -880,9 +880,9 @@ public class CrazyEightsGameController implements GameController {
 			}
 			return moves[minIndex];
 		}
-		
-		
+
+
 		return moves[maxIndex];
 	}
-	
+
 }

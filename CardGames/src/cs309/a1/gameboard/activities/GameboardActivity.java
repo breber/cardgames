@@ -20,11 +20,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import cs309.a1.R;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.Constants;
@@ -169,7 +167,7 @@ public class GameboardActivity extends Activity {
 		playerTextViews[3] = (TextView) findViewById(R.id.player4text);
 
 		// Add the handler for the pause button
-		ImageButton pause = (ImageButton) findViewById(R.id.gameboard_pause);
+		ImageView pause = (ImageView) findViewById(R.id.gameboard_pause);
 		pause.setOnClickListener(new OnClickListener() {
 			/* (non-Javadoc)
 			 * @see android.view.View.OnClickListener#onClick(android.view.View)
@@ -233,7 +231,7 @@ public class GameboardActivity extends Activity {
 			players.add(p);
 		}
 
-		ImageButton refresh = (ImageButton) findViewById(R.id.gameboard_refresh);
+		ImageView refresh = (ImageView) findViewById(R.id.gameboard_refresh);
 
 		// the GameController now handles the setup of the game.
 		gameController = GameFactory.getGameControllerInstance(this, connection, players, refresh);
@@ -242,7 +240,6 @@ public class GameboardActivity extends Activity {
 		// Draw the names from the Game on the gameboard
 		updateNamesOnGameboard();
 	}
-
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onBackPressed()
@@ -388,25 +385,22 @@ public class GameboardActivity extends Activity {
 	 */
 	public void updateSuit(int suit) {
 		ImageView suitView = (ImageView)findViewById(R.id.gameboard_suit);
-		if (Util.isDebugBuild()) {
-			Toast.makeText(this, suit + "", Toast.LENGTH_SHORT).show();
-		}
 
 		// Based on the suit change the image
 		if (suit == 0) {
 			suitView.setImageResource(R.drawable.clubsuitimage);
-			suitView.setVisibility(0);
+			suitView.setVisibility(View.VISIBLE);
 		} else if (suit == 1) {
 			suitView.setImageResource(R.drawable.diamondsuitimage);
-			suitView.setVisibility(0);
+			suitView.setVisibility(View.VISIBLE);
 		} else if (suit == 2) {
 			suitView.setImageResource(R.drawable.heartsuitimage);
-			suitView.setVisibility(0);
+			suitView.setVisibility(View.VISIBLE);
 		} else if (suit == 3) {
 			suitView.setImageResource(R.drawable.spadesuitimage);
-			suitView.setVisibility(0);
+			suitView.setVisibility(View.VISIBLE);
 		} else {
-			suitView.setVisibility(4);
+			suitView.setVisibility(View.INVISIBLE);
 		}
 	}
 
@@ -429,7 +423,6 @@ public class GameboardActivity extends Activity {
 
 		// place in discard pile
 		if (location == 0) {
-
 			ImageView discard = (ImageView) findViewById(R.id.discardpile);
 
 			discard.setImageResource(newCard.getResourceId());

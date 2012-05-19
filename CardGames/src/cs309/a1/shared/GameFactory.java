@@ -6,7 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import cs309.a1.crazyeights.CrazyEightsGameController;
 import cs309.a1.crazyeights.CrazyEightsPlayerController;
 import cs309.a1.crazyeights.CrazyEightsTabletGame;
@@ -57,7 +57,7 @@ public class GameFactory {
 	 * @return the GameController instance as specified by the currently specified game type
 	 */
 	public static GameController getGameControllerInstance(GameboardActivity activity,
-			ConnectionServer connectionServer, List<Player> players, ImageButton refreshButton) {
+			ConnectionServer connectionServer, List<Player> players, ImageView refreshButton) {
 		if (getGameType(activity) == CardGame.CRAZY_EIGHTS) {
 			return new CrazyEightsGameController(activity, connectionServer, players, refreshButton);
 		}
