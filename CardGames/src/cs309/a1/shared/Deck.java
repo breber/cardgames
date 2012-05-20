@@ -84,7 +84,7 @@ public class Deck {
 			cardImages.add(new Card(0, 6, R.drawable.clubs_7, 6));
 			cardImages.add(new Card(0, 7, R.drawable.clubs_8, 7));
 			cardImages.add(new Card(0, 8, R.drawable.clubs_9, 8));
-			cardImages.add(new Card(0, 9, R.drawable.clubs_10_, 9));
+			cardImages.add(new Card(0, 9, R.drawable.clubs_10, 9));
 			cardImages.add(new Card(0, 10, R.drawable.clubs_j, 10));
 			cardImages.add(new Card(0, 11, R.drawable.clubs_q, 11));
 			cardImages.add(new Card(0, 12, R.drawable.clubs_k, 12));

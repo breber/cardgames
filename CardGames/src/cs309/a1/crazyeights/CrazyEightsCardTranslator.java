@@ -32,7 +32,7 @@ public class CrazyEightsCardTranslator implements CardTranslator {
 		} else if (cardId == 8) {
 			return R.drawable.clubs_9;
 		} else if (cardId == 9) {
-			return R.drawable.clubs_10_;
+			return R.drawable.clubs_10;
 		} else if (cardId == 10) {
 			return R.drawable.clubs_j;
 		} else if (cardId == 11) {
