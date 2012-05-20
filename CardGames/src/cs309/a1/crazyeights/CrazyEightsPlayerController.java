@@ -123,7 +123,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	 * The player's name
 	 */
 	private String playerName;
-	
+
 	/**
 	 * The LinearLayout holding all card images
 	 */
@@ -352,7 +352,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	/**
 	 * Used to set the play and draw buttons to enable or disabled
 	 * Also if it is the player's turn then set the cards to be greyed
-	 * out if they are not playable. if it is not the player's turn then 
+	 * out if they are not playable. if it is not the player's turn then
 	 * do not grey out any cards
 	 * 
 	 * @param isEnabled
@@ -361,25 +361,18 @@ public class CrazyEightsPlayerController implements PlayerController {
 		play.setEnabled(isEnabled);
 		draw.setEnabled(isEnabled);
 		if (isEnabled) {
-			// it is your turn grey out cards			
-			for (int i = 0; i < playerHandLayout.getChildCount(); i++) {
-			    ImageView v = (ImageView) playerHandLayout.getChildAt(i);
-			    Card tmpCard = null;
-			    for (int j = 0; i < cardHand.size(); i++) {
-			    	if (cardHand.get(j).getIdNum() == v.getId()) {
-			    		tmpCard = cardHand.get(j);
-			    		break;
-			    	}
-			    }
-			    
-			    boolean isPlayable = gameRules.checkCard(tmpCard, cardOnDiscard); 
-			    playerContext.setCardPlayable(v.getId(), isPlayable);
+			// it is your turn grey out cards
+			for (Card c : cardHand) {
+				boolean isPlayable = gameRules.checkCard(c, cardOnDiscard);
+				playerContext.setCardPlayable(c.getIdNum(), isPlayable);
 			}
 		} else {
 			// it is not your turn make cards normal
-			for (int i = 0; i < playerHandLayout.getChildCount(); i++) {
-			    ImageView v = (ImageView) playerHandLayout.getChildAt(i);
-			    playerContext.setCardPlayable(v.getId(), true);
+			if (playerHandLayout != null) {
+				for (int i = 0; i < playerHandLayout.getChildCount(); i++) {
+					ImageView v = (ImageView) playerHandLayout.getChildAt(i);
+					playerContext.setCardPlayable(v.getId(), true);
+				}
 			}
 		}
 	}
