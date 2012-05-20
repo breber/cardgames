@@ -289,6 +289,21 @@ public class ShowCardsActivity extends Activity {
 			}
 		}
 	}
+	
+	/**
+	 * Set the card as greyed out, or not greyed out.
+	 *
+	 * @param cardImageViewId  -  This is the id of the image view of the card that is being greyed out or not greyed out
+	 * @param isPlayable   -   This is whether or not the card should be greyed out based on whether it is legal to play it
+	 */
+	public void setCardPlayable(int cardImageViewId, boolean isPlayable) {
+		ImageView iv = (ImageView) findViewById(cardImageViewId);
+		if (isPlayable) {
+			iv.setColorFilter(0x00000000); //this is no filter
+		} else {
+			iv.setColorFilter(0x77888888); //this is greyed out
+		}	
+	}
 
 	/**
 	 * This will remove all cards from cardHand and from the screen

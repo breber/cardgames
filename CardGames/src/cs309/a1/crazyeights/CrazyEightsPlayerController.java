@@ -24,6 +24,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import cs309.a1.R;
 import cs309.a1.player.activities.GameResultsActivity;
 import cs309.a1.player.activities.SelectSuitActivity;
 import cs309.a1.player.activities.ShowCardsActivity;
@@ -120,6 +123,11 @@ public class CrazyEightsPlayerController implements PlayerController {
 	 * The player's name
 	 */
 	private String playerName;
+	
+	/**
+	 * The LinearLayout holding all card images
+	 */
+	private LinearLayout playerHandLayout;
 
 	/**
 	 * This will initialize an instance of a CrazyEightsPlayerController
@@ -141,6 +149,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 		mySM = new SoundManager(context);
 		cardHand = cardHandGiven;
 		playerName = "";
+		playerHandLayout = (LinearLayout)  playerContext.findViewById(R.id.playerCardContainer);
 
 		gameRules = new CrazyEightGameRules();
 		ct = new CrazyEightsCardTranslator();
@@ -342,12 +351,37 @@ public class CrazyEightsPlayerController implements PlayerController {
 
 	/**
 	 * Used to set the play and draw buttons to enable or disabled
+	 * Also if it is the player's turn then set the cards to be greyed
+	 * out if they are not playable. if it is not the player's turn then 
+	 * do not grey out any cards
 	 * 
 	 * @param isEnabled
 	 */
 	private void setButtonsEnabled(boolean isEnabled) {
 		play.setEnabled(isEnabled);
 		draw.setEnabled(isEnabled);
+		if (isEnabled) {
+			// it is your turn grey out cards			
+			for (int i = 0; i < playerHandLayout.getChildCount(); i++) {
+			    ImageView v = (ImageView) playerHandLayout.getChildAt(i);
+			    Card tmpCard = null;
+			    for (int j = 0; i < cardHand.size(); i++) {
+			    	if (cardHand.get(j).getIdNum() == v.getId()) {
+			    		tmpCard = cardHand.get(j);
+			    		break;
+			    	}
+			    }
+			    
+			    boolean isPlayable = gameRules.checkCard(tmpCard, cardOnDiscard); 
+			    playerContext.setCardPlayable(v.getId(), isPlayable);
+			}
+		} else {
+			// it is not your turn make cards normal
+			for (int i = 0; i < playerHandLayout.getChildCount(); i++) {
+			    ImageView v = (ImageView) playerHandLayout.getChildAt(i);
+			    playerContext.setCardPlayable(v.getId(), true);
+			}
+		}
 	}
 
 	/**
