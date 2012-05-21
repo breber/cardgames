@@ -419,7 +419,13 @@ public class GameboardActivity extends Activity {
 
 		// convert dip to pixels
 		final float dpsToPixScale = getApplicationContext().getResources().getDisplayMetrics().density;
-		int pixels = (int) (125 * dpsToPixScale + 0.5f);
+		final double screen_width = 
+				(double)getApplicationContext().getResources().getDisplayMetrics().heightPixels/dpsToPixScale;
+		int scale = Constants.GAMEBOARD_CARDWIDTH_LARGE;
+		if (screen_width < 720) {
+			scale = Constants.GAMEBOARD_CARDWIDTH_SMALL;
+		}
+		int pixels = (int) (scale * dpsToPixScale + 0.5f);
 
 		// place in discard pile
 		if (location == 0) {

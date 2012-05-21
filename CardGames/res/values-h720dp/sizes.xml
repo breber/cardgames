@@ -9,5 +9,6 @@
     <dimen name="mainMenuLargeButtonPadding">75dip</dimen>
     <dimen name="mainMenuButtonSpacing">15dip</dimen>
     <dimen name="popupMarginLeftRight">100dip</dimen>
+    <dimen name="discardPileHeight">215dip</dimen>
 
 </resources>
