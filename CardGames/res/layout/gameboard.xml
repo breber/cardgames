@@ -131,7 +131,7 @@
         <ImageView
             android:id="@+id/drawpile"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/discardPileHeight"
             android:adjustViewBounds="true"
             android:paddingRight="100dip"
             android:src="@drawable/back_blue_1" />
