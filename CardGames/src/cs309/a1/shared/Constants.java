@@ -43,16 +43,7 @@ public class Constants {
 	 * A constant to represent the name of the font to use
 	 */
 	public static final String FONT_NAME = "hammersmithone.ttf";
-	
-	/**
-	 * The width of players' hidden cards on the game board of large tablet
-	 */
-	public static final int GAMEBOARD_CARDWIDTH_LARGE = 125;
-	
-	/**
-	 * The width of players' hidden cards on the game board of small tablet
-	 */
-	public static final int GAMEBOARD_CARDWIDTH_SMALL = 60;
+
 
 	/* Game Constants */
 	/**

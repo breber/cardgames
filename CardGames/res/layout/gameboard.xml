@@ -9,35 +9,6 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:gravity="top|center_horizontal"
-        android:orientation="vertical" >
-
-        <LinearLayout
-            android:id="@+id/player3ll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="top|center_horizontal"
-            android:orientation="horizontal" >
-        </LinearLayout>
-
-        <cs309.a1.shared.TextView
-            android:id="@+id/player3text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="bottom|center_horizontal"
-            android:padding="10sp"
-            android:rotation="180"
-            android:text="@string/player_3"
-            android:textColor="#000000"
-            android:textSize="50sp"
-            android:textStyle="bold"
-            android:visibility="invisible" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:gravity="bottom|center_horizontal"
@@ -47,10 +18,9 @@
             android:id="@+id/player1text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="top|center_horizontal"
             android:paddingBottom="10sp"
             android:text="@string/player_1"
-            android:textColor="#000000"
+            android:textColor="@color/black"
             android:textSize="50sp"
             android:textStyle="bold"
             android:visibility="invisible" />
@@ -59,27 +29,26 @@
             android:id="@+id/player1ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="bottom"
             android:orientation="horizontal" >
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:gravity="right|center_vertical"
-        android:orientation="horizontal" >
+        android:gravity="bottom|center_horizontal"
+        android:orientation="vertical"
+        android:rotation="270" >
 
         <cs309.a1.shared.TextView
             android:id="@+id/player2text"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:gravity="left|center_vertical"
-            android:rotation="270"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10sp"
             android:text="@string/player_2"
-            android:textColor="#000000"
+            android:textColor="@color/black"
             android:textSize="50sp"
             android:textStyle="bold"
             android:visibility="invisible" />
@@ -88,36 +57,64 @@
             android:id="@+id/player2ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:orientation="vertical" />
+            android:orientation="horizontal" >
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="bottom|center_horizontal"
+        android:orientation="vertical"
+        android:rotation="180" >
+
+        <cs309.a1.shared.TextView
+            android:id="@+id/player3text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10sp"
+            android:text="@string/player_3"
+            android:textColor="@color/black"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+        <LinearLayout
+            android:id="@+id/player3ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:gravity="left|center_vertical"
-        android:orientation="horizontal" >
+        android:gravity="bottom|center_horizontal"
+        android:orientation="vertical"
+        android:rotation="90" >
+
+        <cs309.a1.shared.TextView
+            android:id="@+id/player4text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10sp"
+            android:text="@string/player_4"
+            android:textColor="@color/black"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
 
         <LinearLayout
             android:id="@+id/player4ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="left"
-            android:orientation="vertical" />
-
-        <cs309.a1.shared.TextView
-            android:id="@+id/player4text"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:gravity="left|center_vertical"
-            android:rotation="90"
-            android:text="@string/player_4"
-            android:textColor="#000000"
-            android:textSize="50sp"
-            android:textStyle="bold"
-            android:visibility="invisible" />
+            android:orientation="horizontal" >
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -131,7 +128,7 @@
         <ImageView
             android:id="@+id/drawpile"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/discardPileHeight"
+            android:layout_height="fill_parent"
             android:adjustViewBounds="true"
             android:paddingRight="100dip"
             android:src="@drawable/back_blue_1" />
@@ -139,14 +136,14 @@
         <ImageView
             android:id="@+id/discardpile"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/discardPileHeight"
+            android:layout_height="fill_parent"
             android:adjustViewBounds="true" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/gameboard_pause"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:padding="5dip"
@@ -154,8 +151,8 @@
 
     <ImageView
         android:id="@+id/gameboard_refresh"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:padding="5dip"
@@ -163,8 +160,8 @@
 
     <ImageView
         android:id="@+id/gameboard_suit"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:padding="5dip" />
