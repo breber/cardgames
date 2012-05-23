@@ -18,12 +18,12 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import cs309.a1.R;
 import cs309.a1.shared.Card;
 import cs309.a1.shared.Constants;
@@ -31,6 +31,7 @@ import cs309.a1.shared.Game;
 import cs309.a1.shared.GameController;
 import cs309.a1.shared.GameFactory;
 import cs309.a1.shared.Player;
+import cs309.a1.shared.TextView;
 import cs309.a1.shared.Util;
 import cs309.a1.shared.activities.QuitGameActivity;
 import cs309.a1.shared.connection.ConnectionConstants;
@@ -185,6 +186,10 @@ public class GameboardActivity extends Activity {
 		int screenHeight = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
 		cardHeight = screenHeight / 4;
 		buttonHeight = screenHeight / 6;
+
+		for (TextView tv : playerTextViews) {
+			tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenHeight / 15);
+		}
 
 		// Add the handler for the pause button
 		ImageView pause = (ImageView) findViewById(R.id.gameboard_pause);
@@ -443,6 +448,7 @@ public class GameboardActivity extends Activity {
 		// Place images for all player's cards
 		for (Player p : players) {
 			List<Card> cards = p.getCards();
+			playerLinearLayouts[i].removeAllViews();
 
 			for (int j = 0; j < cards.size(); j++) {
 				Card c = cards.get(j);
