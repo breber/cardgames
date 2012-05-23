@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cs309.a1.R;
@@ -76,26 +77,6 @@ public class GameboardActivity extends Activity {
 	private ConnectionServer connection;
 
 	/**
-	 * The number of cards in player 1's hand
-	 */
-	private int player1cards;
-
-	/**
-	 * The number of cards in player 2's hand
-	 */
-	private int player2cards;
-
-	/**
-	 * The number of cards in player 3's hand
-	 */
-	private int player3cards;
-
-	/**
-	 * The number of cards in player 4's hand
-	 */
-	private int player4cards;
-
-	/**
 	 * This will handle the specific logic of the game chosen, it will follow
 	 * the turn logic and Connection communication with players and also control
 	 * the current game board state
@@ -108,9 +89,34 @@ public class GameboardActivity extends Activity {
 	private TextView highlightedPlayer;
 
 	/**
-	 * This is the TextViews for all the player names
+	 * These are the TextViews for all the player names
 	 */
 	private TextView[] playerTextViews = new TextView[4];
+
+	/**
+	 * These are the LinearLayouts for all the player cards
+	 */
+	private LinearLayout[] playerLinearLayouts = new LinearLayout[4];
+
+	/**
+	 * The discard pile ImageView
+	 */
+	private ImageView discard;
+
+	/**
+	 * The draw pile ImageView
+	 */
+	private ImageView draw;
+
+	/**
+	 * The height of each card
+	 */
+	private static int cardHeight;
+
+	/**
+	 * The height of each button
+	 */
+	private static int buttonHeight;
 
 	/**
 	 * The SharedPreferences used to store preferences for the game
@@ -161,13 +167,28 @@ public class GameboardActivity extends Activity {
 
 		highlightedPlayer = null;
 
+		// Get references to commonly used UI elements
 		playerTextViews[0] = (TextView) findViewById(R.id.player1text);
 		playerTextViews[1] = (TextView) findViewById(R.id.player2text);
 		playerTextViews[2] = (TextView) findViewById(R.id.player3text);
 		playerTextViews[3] = (TextView) findViewById(R.id.player4text);
 
+		playerLinearLayouts[0] = (LinearLayout) findViewById(R.id.player1ll);
+		playerLinearLayouts[1] = (LinearLayout) findViewById(R.id.player2ll);
+		playerLinearLayouts[2] = (LinearLayout) findViewById(R.id.player3ll);
+		playerLinearLayouts[3] = (LinearLayout) findViewById(R.id.player4ll);
+
+		discard = (ImageView) findViewById(R.id.discardpile);
+		draw = (ImageView) findViewById(R.id.drawpile);
+
+		// Set up the scale factors for the card images
+		int screenHeight = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
+		cardHeight = screenHeight / 4;
+		buttonHeight = screenHeight / 6;
+
 		// Add the handler for the pause button
 		ImageView pause = (ImageView) findViewById(R.id.gameboard_pause);
+		pause.setImageBitmap(scaleButton(R.drawable.pause_button));
 		pause.setOnClickListener(new OnClickListener() {
 			/* (non-Javadoc)
 			 * @see android.view.View.OnClickListener#onClick(android.view.View)
@@ -179,6 +200,10 @@ public class GameboardActivity extends Activity {
 				startActivityForResult(pauseButtonClick, PAUSE_GAME);
 			}
 		});
+
+		// Update the refresh button image
+		ImageView refresh = (ImageView) findViewById(R.id.gameboard_refresh);
+		refresh.setImageBitmap(scaleButton(R.drawable.refresh_button));
 
 		// Register the BroadcastReceiver to handle all
 		// messages from the Connection module
@@ -230,8 +255,6 @@ public class GameboardActivity extends Activity {
 
 			players.add(p);
 		}
-
-		ImageView refresh = (ImageView) findViewById(R.id.gameboard_refresh);
 
 		// the GameController now handles the setup of the game.
 		gameController = GameFactory.getGameControllerInstance(this, connection, players, refresh);
@@ -384,20 +407,20 @@ public class GameboardActivity extends Activity {
 	 * @param suit the suit of the card in which to change the picture to
 	 */
 	public void updateSuit(int suit) {
-		ImageView suitView = (ImageView)findViewById(R.id.gameboard_suit);
+		ImageView suitView = (ImageView) findViewById(R.id.gameboard_suit);
 
 		// Based on the suit change the image
 		if (suit == 0) {
-			suitView.setImageResource(R.drawable.clubsuitimage);
+			suitView.setImageBitmap(scaleButton(R.drawable.clubsuitimage));
 			suitView.setVisibility(View.VISIBLE);
 		} else if (suit == 1) {
-			suitView.setImageResource(R.drawable.diamondsuitimage);
+			suitView.setImageBitmap(scaleButton(R.drawable.diamondsuitimage));
 			suitView.setVisibility(View.VISIBLE);
 		} else if (suit == 2) {
-			suitView.setImageResource(R.drawable.heartsuitimage);
+			suitView.setImageBitmap(scaleButton(R.drawable.heartsuitimage));
 			suitView.setVisibility(View.VISIBLE);
 		} else if (suit == 3) {
-			suitView.setImageResource(R.drawable.spadesuitimage);
+			suitView.setImageBitmap(scaleButton(R.drawable.spadesuitimage));
 			suitView.setVisibility(View.VISIBLE);
 		} else {
 			suitView.setVisibility(View.INVISIBLE);
@@ -410,304 +433,104 @@ public class GameboardActivity extends Activity {
 	 * @param location Location to place the card
 	 * @param newCard Card to be placed on the game board
 	 */
-	public void placeCard(int location, Card newCard) {
-		// TODO: do we want to move the layouts into an array so that
-		// we don't have to findViewById each time?
-		LinearLayout ll;
-		LinearLayout.LayoutParams lp;
-		int handSize;
+	public void updateUi() {
+		Game game = GameFactory.getGameInstance(this);
+		List<Player> players = game.getPlayers();
+		int i = 0;
 
-		// convert dip to pixels
-		final float dpsToPixScale = getApplicationContext().getResources().getDisplayMetrics().density;
-		final double screen_width = 
-				(double)getApplicationContext().getResources().getDisplayMetrics().heightPixels/dpsToPixScale;
-		int scale = Constants.GAMEBOARD_CARDWIDTH_LARGE;
-		if (screen_width < 720) {
-			scale = Constants.GAMEBOARD_CARDWIDTH_SMALL;
-		}
-		int pixels = (int) (scale * dpsToPixScale + 0.5f);
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight);
 
-		// place in discard pile
-		if (location == 0) {
-			ImageView discard = (ImageView) findViewById(R.id.discardpile);
+		// Place images for all player's cards
+		for (Player p : players) {
+			List<Card> cards = p.getCards();
 
-			discard.setImageResource(newCard.getResourceId());
-		}
+			for (int j = 0; j < cards.size(); j++) {
+				Card c = cards.get(j);
+				ImageView image = new ImageView(this);
+				image.setId(c.getIdNum());
+				image.setScaleType(ScaleType.FIT_CENTER);
 
-		// if Player 1 or Player 3
-		else if (location == 1 || location == 3) {
+				// TODO: customizable back
+				int resId = R.drawable.back_blue_1;
 
-			if (location == 1) {
-				ll = (LinearLayout) findViewById(R.id.player1ll);
-				handSize = ++player1cards;
-			} else {
-				ll = (LinearLayout) findViewById(R.id.player3ll);
-				handSize = ++player3cards;
-			}
+				// If we are in debug mode, show the face
+				if (Util.isDebugBuild()) {
+					resId = c.getResourceId();
+				}
 
-			// create full-sized card image if first card in hand
-			if (handSize == 1) {
-				lp = new LinearLayout.LayoutParams(pixels,
-						LinearLayout.LayoutParams.WRAP_CONTENT);
+				Bitmap scaledCard = scaleCard(resId);
 
-				ImageView toAdd = new ImageView(this);
-				toAdd.setImageResource(newCard.getResourceId());
-				if (location == 1) {
-					toAdd.setId(handSize);
+				if (j == cards.size() - 1) {
+					// Draw full card
+					image.setImageBitmap(scaledCard);
 				} else {
-					toAdd.setId(2 * Constants.MAX_DISPLAYED + handSize);
-				}
-				toAdd.setAdjustViewBounds(true);
-				ll.addView(toAdd, lp);
-			}
+					// Draw half card
+					Bitmap halfCard = Bitmap.createBitmap(scaledCard, 0, 0,
+							scaledCard.getWidth() / 2,
+							scaledCard.getHeight(), null, true);
 
-			// create half-sized card image to add to hand if current card count
-			// is less than display limit
-			else if (handSize <= Constants.MAX_DISPLAYED) {
-
-				Bitmap verticalCard = BitmapFactory.decodeResource(getResources(), newCard.getResourceId());
-				Matrix tempMatrix = new Matrix();
-
-				// if player 3, add new image to linear layout of player 3's
-				// hand
-				if (location == 3) {
-					Bitmap halfCard = Bitmap.createBitmap(verticalCard,
-							verticalCard.getWidth() / 2, 0,
-							verticalCard.getWidth() / 2,
-							verticalCard.getHeight(), tempMatrix, true);
-					ImageView toAdd = new ImageView(this);
-					toAdd.setId(2 * Constants.MAX_DISPLAYED + handSize);
-					toAdd.setImageBitmap(halfCard);
-
-					lp = new LinearLayout.LayoutParams(pixels / 2,
-							LinearLayout.LayoutParams.WRAP_CONTENT);
-					toAdd.setAdjustViewBounds(true);
-					ll.addView(toAdd, lp);
+					image.setImageBitmap(halfCard);
 				}
 
-				// if player 1, remove and re-add all views so new card displays
-				// in correct order
-				else {
-					Bitmap horCard = Bitmap.createBitmap(verticalCard, 0, 0,
-							verticalCard.getWidth() / 2,
-							verticalCard.getHeight(), tempMatrix, true);
-					ll.removeAllViews();
-					for (int i = 1; i < handSize; i++) {
-						ImageView toAdd = new ImageView(this);
-						toAdd.setId(i + 1);
-						toAdd.setImageBitmap(horCard);
+				// Check for max displayed
+				boolean display = true;
+				if (i == 1 || i == 3) {
+					display = playerLinearLayouts[i].getChildCount() < Constants.MAX_DISPLAYED;
+				} else {
+					display = playerLinearLayouts[i].getChildCount() < Constants.MAX_DIS_SIDES;
+				}
 
-						lp = new LinearLayout.LayoutParams(pixels / 2,
-								LinearLayout.LayoutParams.WRAP_CONTENT);
-						toAdd.setAdjustViewBounds(true);
-						ll.addView(toAdd, lp);
-					}
-
-					ImageView toAdd = new ImageView(this);
-					toAdd.setId(1);
-					toAdd.setImageResource(newCard.getResourceId());
-
-					lp = new LinearLayout.LayoutParams(pixels,
-							LinearLayout.LayoutParams.WRAP_CONTENT);
-					toAdd.setAdjustViewBounds(true);
-					ll.addView(toAdd, lp);
+				if (display) {
+					playerLinearLayouts[i].addView(image, params);
+				} else {
+					// TODO: add count of how many cards are not shown
 				}
 			}
 
-			else {
-
-				/*
-				 * TextView iv = null;
-				 *
-				 * if(handSize == Constants.MAX_DISPLAYED + 1) { RelativeLayout rl =
-				 * (RelativeLayout) findViewById(R.layout.gameboard);
-				 *
-				 * iv = new TextView(this);
-				 *
-				 * RelativeLayout.LayoutParams params = new
-				 * RelativeLayout.LayoutParams(20, 20);
-				 *
-				 * ImageView fullCard = (ImageView)
-				 * findViewById((location-1)*Constants.MAX_DISPLAYED + 1);
-				 *
-				 * int[] viewLocation = new int[2];
-				 * fullCard.getLocationOnScreen(viewLocation); params.leftMargin
-				 * = viewLocation[0]; params.topMargin = viewLocation[1];
-				 *
-				 * iv.setBackgroundColor(R.color.black);
-				 * iv.setTextColor(R.color.gold);
-				 *
-				 * iv.setId(1000*(location+1));
-				 *
-				 * rl.addView(iv, params); } else { iv = (TextView)
-				 * findViewById(1000*(location+1)); }
-				 *
-				 * iv.setText("+" + (handSize - Constants.MAX_DISPLAYED));
-				 */
-			}
+			i++;
 		}
 
-		// if Player 2 or Player 4
-		else if (location == 2 || location == 4) {
+		// Place Discard Image
+		Bitmap discardImage = scaleCard(game.getDiscardPileTop().getResourceId());
+		discard.setImageBitmap(discardImage);
 
-			if (location == 2) {
-				ll = (LinearLayout) findViewById(R.id.player2ll);
-				handSize = ++player2cards;
-			} else {
-				ll = (LinearLayout) findViewById(R.id.player4ll);
-				handSize = ++player4cards;
-			}
-
-			// create full-sized horizontal card if first card in hand
-			if (handSize == 1) {
-
-				// rotate vertical card image 90 degrees
-				Bitmap verticalCard = BitmapFactory.decodeResource(
-						getResources(), newCard.getResourceId());
-				Matrix tempMatrix = new Matrix();
-				tempMatrix.postRotate(90);
-				Bitmap horCard = Bitmap.createBitmap(verticalCard, 0, 0,
-						verticalCard.getWidth(), verticalCard.getHeight(),
-						tempMatrix, true);
-
-				ImageView toAdd = new ImageView(this);
-				if (location == 2)
-					toAdd.setId(Constants.MAX_DISPLAYED + handSize);
-				else
-					toAdd.setId(3 * Constants.MAX_DISPLAYED + handSize);
-				toAdd.setImageBitmap(horCard);
-
-				lp = new LinearLayout.LayoutParams(
-						LinearLayout.LayoutParams.WRAP_CONTENT, pixels);
-				toAdd.setAdjustViewBounds(true);
-				ll.addView(toAdd, lp);
-			}
-
-			// create horizontal half-cards to display if maximum display count
-			// has not been reached
-			else if (handSize <= Constants.MAX_DIS_SIDES) {
-
-				Bitmap horCard;
-
-				Bitmap verticalCard = BitmapFactory.decodeResource(
-						getResources(), newCard.getResourceId());
-				double conversion = verticalCard.getHeight()
-						* (((double) pixels / (double) verticalCard.getWidth()));
-
-				Matrix tempMatrix = new Matrix();
-				tempMatrix.postRotate(90);
-
-				// if player 4, remove all views and re-add to player 4's linear
-				// layout to display in correct order
-				if (location == 4) {
-					horCard = Bitmap.createBitmap(verticalCard, 0, 0,
-							verticalCard.getWidth() / 2,
-							verticalCard.getHeight(), tempMatrix, true);
-					ll.removeAllViews();
-					for (int i = 1; i < handSize; i++) {
-						ImageView toAdd = new ImageView(this);
-						toAdd.setId(3 * Constants.MAX_DISPLAYED + i + 1);
-						toAdd.setImageBitmap(horCard);
-
-						lp = new LinearLayout.LayoutParams((int) conversion,
-								LinearLayout.LayoutParams.WRAP_CONTENT);
-						toAdd.setAdjustViewBounds(true);
-						ll.addView(toAdd, lp);
-					}
-
-					Bitmap verticalCard2 = BitmapFactory.decodeResource(
-							getResources(), newCard.getResourceId());
-					Matrix tempMatrix2 = new Matrix();
-					tempMatrix2.postRotate(90);
-					Bitmap horCard2 = Bitmap.createBitmap(verticalCard2, 0, 0,
-							verticalCard2.getWidth(),
-							verticalCard2.getHeight(), tempMatrix2, true);
-
-					ImageView toAdd = new ImageView(this);
-					toAdd.setId(3 * Constants.MAX_DISPLAYED + 1);
-					toAdd.setImageBitmap(horCard2);
-
-					lp = new LinearLayout.LayoutParams(
-							LinearLayout.LayoutParams.WRAP_CONTENT, pixels);
-					toAdd.setAdjustViewBounds(true);
-					ll.addView(toAdd, lp);
-				}
-
-				// if player 2, add new card view to player 2's linear layout
-				else {
-					horCard = Bitmap.createBitmap(verticalCard,
-							verticalCard.getWidth() / 2, 0,
-							verticalCard.getWidth() / 2,
-							verticalCard.getHeight(), tempMatrix, true);
-					ImageView toAdd = new ImageView(this);
-					toAdd.setId(Constants.MAX_DISPLAYED + handSize);
-					toAdd.setImageBitmap(horCard);
-
-					lp = new LinearLayout.LayoutParams((int) conversion,
-							LinearLayout.LayoutParams.WRAP_CONTENT);
-					toAdd.setAdjustViewBounds(true);
-					ll.addView(toAdd, lp);
-				}
-			}
-
-			else {
-				// TODO: display counter of cards not shown
-			}
-		}
-
-		// set draw pile image
-		else {
-			ImageView draw = (ImageView) findViewById(R.id.drawpile);
-			draw.setImageResource(newCard.getResourceId());
-		}
+		// Place Draw Image
+		Bitmap drawImage = scaleCard(R.drawable.back_blue_1);// TODO: customize back of card
+		draw.setImageBitmap(drawImage);
 	}
 
 	/**
-	 * Removes a card from specified location on the game board
-	 *
-	 * @param location Location from which card should be removed
+	 * Scale a card image with the given resource
+	 * 
+	 * @param resId the resource id of the card to scale
+	 * @return a scaled card image
 	 */
-	public void removeCard(int location) {
-		// TODO: do we want to move the layouts into an array so that
-		// we don't have to findViewById each time?
-		LinearLayout ll;
-		int handSize;
+	private Bitmap scaleCard(int resId) {
+		Bitmap fullCard = BitmapFactory.decodeResource(getResources(), resId);
+		float scaleFactor = (cardHeight + 0.0f) / fullCard.getHeight();
+		Matrix tempMatrix = new Matrix();
+		tempMatrix.setScale(scaleFactor, scaleFactor);
 
-		// remove card from player 1's hand
-		if (location == 1) {
-			ll = (LinearLayout) findViewById(R.id.player1ll);
-			handSize = --player1cards;
-			if (handSize < Constants.MAX_DISPLAYED) {
-				ll.removeView(findViewById(handSize + 1));
-			}
-		}
+		return Bitmap.createBitmap(fullCard, 0, 0,
+				fullCard.getWidth(),
+				fullCard.getHeight(), tempMatrix, true);
+	}
 
-		// remove card from player 2's hand
-		else if (location == 2) {
-			ll = (LinearLayout) findViewById(R.id.player2ll);
-			handSize = --player2cards;
-			if (handSize < Constants.MAX_DIS_SIDES) {
-				ll.removeView(findViewById(Constants.MAX_DISPLAYED + handSize + 1));
-			}
-		}
+	/**
+	 * Scale a button image with the given resource
+	 * 
+	 * @param resId the resource id of the card to scale
+	 * @return a scaled button image
+	 */
+	private Bitmap scaleButton(int resId) {
+		Bitmap fullImage = BitmapFactory.decodeResource(getResources(), resId);
+		float scaleFactor = (buttonHeight + 0.0f) / fullImage.getHeight();
+		Matrix tempMatrix = new Matrix();
+		tempMatrix.setScale(scaleFactor, scaleFactor);
 
-		// remove card from player 3's hand
-		else if (location == 3) {
-			ll = (LinearLayout) findViewById(R.id.player3ll);
-			handSize = --player3cards;
-			if (handSize < Constants.MAX_DISPLAYED) {
-				ll.removeView(findViewById(2 * Constants.MAX_DISPLAYED + handSize + 1));
-			}
-		}
-
-		// remove card from player 4's hand
-		else {
-			ll = (LinearLayout) findViewById(R.id.player4ll);
-			handSize = --player4cards;
-			if (handSize < Constants.MAX_DIS_SIDES) {
-				ll.removeView(findViewById(3 * Constants.MAX_DISPLAYED + handSize + 1));
-			}
-		}
+		return Bitmap.createBitmap(fullImage, 0, 0,
+				fullImage.getWidth(),
+				fullImage.getHeight(), tempMatrix, true);
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package cs309.a1.crazyeights;
 
-import static cs309.a1.crazyeights.C8Constants.NUMBER_OF_CARDS_PER_HAND;
 import static cs309.a1.shared.CardGame.CRAZY_EIGHTS;
 import static cs309.a1.shared.Constants.ID;
 import static cs309.a1.shared.Constants.SUIT;
@@ -182,24 +181,7 @@ public class CrazyEightsGameController implements GameController {
 	private void placeInitialCards() {
 		mySM.shuffleCardsSound();
 
-		// If it is a debug build, show the cards face up so that we can
-		// verify that the tablet has the same cards as the player
-		if (Util.isDebugBuild()) {
-			for (Player p : players) {
-				for (Card c : p.getCards()) {
-					gameContext.placeCard(p.getPosition(), c);
-				}
-			}
-
-			gameContext.placeCard(0, game.getDiscardPileTop());
-		} else {
-			// Otherwise just show the back of the cards for all players
-			for (int i = 0; i < NUMBER_OF_CARDS_PER_HAND * players.size(); i++) {
-				gameContext.placeCard(i % players.size() + 1, new Card(5, 0, R.drawable.back_blue_1, 54));
-			}
-
-			gameContext.placeCard(0, game.getDiscardPileTop());
-		}
+		gameContext.updateUi();
 
 		// Update the indicator on the gameboard with the current suit
 		gameContext.updateSuit(game.getDiscardPileTop().getSuit());
@@ -397,6 +379,9 @@ public class CrazyEightsGameController implements GameController {
 			// tell the player it is their turn
 			server.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn).getId());
 		}
+
+		// Update the UI
+		gameContext.updateUi();
 	}
 
 	/**
@@ -443,14 +428,6 @@ public class CrazyEightsGameController implements GameController {
 		Card tmpCard = game.draw(players.get(whoseTurn));
 
 		if (tmpCard != null) {
-			// If we are in debug mode, display the actual card face
-			if (Util.isDebugBuild()) {
-				gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
-			} else {
-				// In release mode, display the back of the card
-				gameContext.placeCard(players.get(whoseTurn).getPosition(), new Card(5, 0,	R.drawable.back_blue_1, 54));
-			}
-
 			// And send the card to the player
 			server.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
 		} else {
@@ -474,14 +451,12 @@ public class CrazyEightsGameController implements GameController {
 			int id = obj.getInt(ID);
 			tmpCard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
 
-			gameContext.removeCard(players.get(whoseTurn).getPosition());
 			game.discard(players.get(whoseTurn), tmpCard);
 		} catch (JSONException ex) {
 			ex.printStackTrace();
 		}
 
 		mySM.playCardSound();
-		gameContext.placeCard(0, tmpCard);
 	}
 
 	/**
@@ -744,9 +719,7 @@ public class CrazyEightsGameController implements GameController {
 			//Play Card
 			mySM.playCardSound();
 
-			gameContext.removeCard(players.get(whoseTurn).getPosition());
 			game.discard(players.get(whoseTurn), cardSelected);
-			gameContext.placeCard(0, cardSelected);
 		} else {
 			// Draw Card
 			Card tmpCard = game.draw(players.get(whoseTurn));
@@ -754,13 +727,6 @@ public class CrazyEightsGameController implements GameController {
 			// If card is null then there are no cards to draw so just move on and allow the turn to advance
 			if (tmpCard != null) {
 				mySM.drawCardSound();
-
-				if (Util.isDebugBuild()) {
-					gameContext.placeCard(players.get(whoseTurn).getPosition(), tmpCard);
-				} else {
-					//generic back of card
-					gameContext.placeCard(players.get(whoseTurn).getPosition(), new Card(5, 0,	R.drawable.back_blue_1, 54));
-				}
 			}
 		}
 	}
