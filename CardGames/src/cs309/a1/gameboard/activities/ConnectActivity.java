@@ -3,6 +3,7 @@ package cs309.a1.gameboard.activities;
 import static cs309.a1.shared.Constants.PLAYER_NAME;
 import static cs309.a1.shared.Constants.PREFERENCES;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -323,7 +324,9 @@ public class ConnectActivity extends Activity {
 		if (currentType == ConnectionType.BLUETOOTH) {
 			tv.setText(getResources().getString(R.string.deviceName) + "\n" + mBluetoothAdapter.getName());
 		} else if (currentType == ConnectionType.WIFI) {
-			tv.setText(getResources().getString(R.string.deviceName) + "\n" + Util.getLocalIpAddress().getHostAddress());
+			InetAddress currentAddress = Util.getLocalIpAddress();
+			// TODO: how should we handle the case where the user doesn't have an IP address?
+			tv.setText(getResources().getString(R.string.deviceName) + "\n" + ((currentAddress == null) ? "Unknown" : currentAddress.getHostAddress()));
 		}
 
 		// Set up the start button
