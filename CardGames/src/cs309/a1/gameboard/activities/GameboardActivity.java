@@ -14,7 +14,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.util.Log;
@@ -83,11 +82,6 @@ public class GameboardActivity extends Activity {
 	 * the current game board state
 	 */
 	private GameController gameController;
-
-	/**
-	 * The TextView that represents the player whose turn it currently is
-	 */
-	private TextView highlightedPlayer;
 
 	/**
 	 * These are the TextViews for all the player names
@@ -165,8 +159,6 @@ public class GameboardActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gameboard);
-
-		highlightedPlayer = null;
 
 		// Get references to commonly used UI elements
 		playerTextViews[0] = (TextView) findViewById(R.id.player1text);
@@ -443,7 +435,8 @@ public class GameboardActivity extends Activity {
 		List<Player> players = game.getPlayers();
 		int i = 0;
 
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight);
+		LinearLayout.LayoutParams paramsH = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight);
+		LinearLayout.LayoutParams paramsV = new LinearLayout.LayoutParams(cardHeight, LinearLayout.LayoutParams.WRAP_CONTENT);
 
 		// Place images for all player's cards
 		for (Player p : players) {
@@ -464,19 +457,27 @@ public class GameboardActivity extends Activity {
 					resId = c.getResourceId();
 				}
 
-				Bitmap scaledCard = scaleCard(resId);
+				Bitmap scaledCard;
 
-				if (j == cards.size() - 1) {
-					// Draw full card
-					image.setImageBitmap(scaledCard);
+				if (i == 1) {
+					scaledCard = scaleCard(resId, i, j != 0);
+					Matrix tempMatrix = new Matrix();
+					tempMatrix.postRotate(-90);
+					scaledCard = Bitmap.createBitmap(scaledCard, 0, 0,
+							scaledCard.getWidth(),
+							scaledCard.getHeight(), tempMatrix, true);
+				} else if (i == 3) {
+					scaledCard = scaleCard(resId, i, j != cards.size() - 1);
+					Matrix tempMatrix = new Matrix();
+					tempMatrix.postRotate(90);
+					scaledCard = Bitmap.createBitmap(scaledCard, 0, 0,
+							scaledCard.getWidth(),
+							scaledCard.getHeight(), tempMatrix, true);
 				} else {
-					// Draw half card
-					Bitmap halfCard = Bitmap.createBitmap(scaledCard, 0, 0,
-							scaledCard.getWidth() / 2,
-							scaledCard.getHeight(), null, true);
-
-					image.setImageBitmap(halfCard);
+					scaledCard = scaleCard(resId, i, j != cards.size() - 1);
 				}
+
+				image.setImageBitmap(scaledCard);
 
 				// Check for max displayed
 				boolean display = true;
@@ -487,7 +488,11 @@ public class GameboardActivity extends Activity {
 				}
 
 				if (display) {
-					playerLinearLayouts[i].addView(image, params);
+					if (i == 1 || i == 3) {
+						playerLinearLayouts[i].addView(image, paramsV);
+					} else {
+						playerLinearLayouts[i].addView(image, paramsH);
+					}
 				} else {
 					// TODO: add count of how many cards are not shown
 				}
@@ -497,11 +502,11 @@ public class GameboardActivity extends Activity {
 		}
 
 		// Place Discard Image
-		Bitmap discardImage = scaleCard(game.getDiscardPileTop().getResourceId());
+		Bitmap discardImage = scaleCard(game.getDiscardPileTop().getResourceId(), 0, false);
 		discard.setImageBitmap(discardImage);
 
 		// Place Draw Image
-		Bitmap drawImage = scaleCard(R.drawable.back_blue_1);// TODO: customize back of card
+		Bitmap drawImage = scaleCard(R.drawable.back_blue_1, 0, false);// TODO: customize back of card
 		draw.setImageBitmap(drawImage);
 	}
 
@@ -511,15 +516,22 @@ public class GameboardActivity extends Activity {
 	 * @param resId the resource id of the card to scale
 	 * @return a scaled card image
 	 */
-	private Bitmap scaleCard(int resId) {
+	private Bitmap scaleCard(int resId, int position, boolean halfCard) {
 		Bitmap fullCard = BitmapFactory.decodeResource(getResources(), resId);
 		float scaleFactor = (cardHeight + 0.0f) / fullCard.getHeight();
 		Matrix tempMatrix = new Matrix();
 		tempMatrix.setScale(scaleFactor, scaleFactor);
 
-		return Bitmap.createBitmap(fullCard, 0, 0,
-				fullCard.getWidth(),
-				fullCard.getHeight(), tempMatrix, true);
+		// Draw half card
+		if (halfCard) {
+			return Bitmap.createBitmap(fullCard, 0, 0,
+					fullCard.getWidth() / 2,
+					fullCard.getHeight(), tempMatrix, true);
+		} else {
+			return Bitmap.createBitmap(fullCard, 0, 0,
+					fullCard.getWidth(),
+					fullCard.getHeight(), tempMatrix, true);
+		}
 	}
 
 	/**
@@ -545,21 +557,13 @@ public class GameboardActivity extends Activity {
 	 * @param playerNumber the player whose turn it is
 	 */
 	public void highlightPlayer(int playerNumber) {
-		if (highlightedPlayer != null) {
-			highlightedPlayer.setTextColor(Color.BLACK);
+		for (int i = 0; i < 4; i++) {
+			if (i == playerNumber) {
+				playerTextViews[i].setTextColor(getResources().getColor(R.color.gold));
+			} else {
+				playerTextViews[i].setTextColor(getResources().getColor(R.color.black));
+			}
 		}
-
-		if (playerNumber == 1) {
-			highlightedPlayer = (TextView) findViewById(R.id.player1text);
-		} else if (playerNumber == 2) {
-			highlightedPlayer = (TextView) findViewById(R.id.player2text);
-		} else if (playerNumber == 3) {
-			highlightedPlayer = (TextView) findViewById(R.id.player3text);
-		} else if (playerNumber == 4) {
-			highlightedPlayer = (TextView) findViewById(R.id.player4text);
-		}
-
-		highlightedPlayer.setTextColor(getResources().getColor(R.color.gold));
 	}
 
 
