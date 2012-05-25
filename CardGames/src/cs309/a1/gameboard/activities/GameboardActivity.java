@@ -72,6 +72,44 @@ public class GameboardActivity extends Activity {
 	private static final int DECLARE_WINNER = Math.abs("DECLARE_WINNER".hashCode());
 
 	/**
+	 * LayoutParams for adding a card to a player on the long edge of the screen
+	 * 
+	 * width  = WRAP_CONTENT
+	 * height = cardHeight
+	 */
+	private static LinearLayout.LayoutParams paramsH;
+
+	/**
+	 * LayoutParams for adding a card to a player on the short edge of the screen
+	 * 
+	 * width  = cardHeight
+	 * height = WRAP_CONTENT
+	 */
+	private static LinearLayout.LayoutParams paramsV;
+
+	/**
+	 * The height of each card
+	 */
+	private static int cardHeight;
+
+	/**
+	 * The height of each button
+	 */
+	private static int buttonHeight;
+
+	/**
+	 * Parameters specific to a players position are stored here so that
+	 * we can just reference them by their position, instead of having a bunch
+	 * of if-elseif-else logic in the card placement code
+	 */
+	private static PlayerLayoutParams[] playerParams = new PlayerLayoutParams[4];
+
+	/**
+	 * Holds the scaled Bitmaps of the suit images
+	 */
+	private static Bitmap[] scaledSuitImages = new Bitmap[4];
+
+	/**
 	 * The ConnectionServer that sends and receives messages from other devices
 	 */
 	private ConnectionServer connection;
@@ -104,14 +142,9 @@ public class GameboardActivity extends Activity {
 	private ImageView draw;
 
 	/**
-	 * The height of each card
+	 * The current suit ImageView
 	 */
-	private static int cardHeight;
-
-	/**
-	 * The height of each button
-	 */
-	private static int buttonHeight;
+	private ImageView suitView;
 
 	/**
 	 * The SharedPreferences used to store preferences for the game
@@ -152,6 +185,37 @@ public class GameboardActivity extends Activity {
 		}
 	};
 
+	// Set up playerParams on initial Class load
+	static {
+		playerParams[0] = new GameboardActivity.PlayerLayoutParams(Constants.MAX_DISPLAYED, 0) {
+			@Override
+			public boolean displayHalfCard(int numCards, int totalInHand) {
+				return numCards != totalInHand - 1;
+			}
+		};
+
+		playerParams[1] = new GameboardActivity.PlayerLayoutParams(Constants.MAX_DIS_SIDES, -90) {
+			@Override
+			public boolean displayHalfCard(int numCards, int totalInHand) {
+				return numCards != 0;
+			}
+		};
+
+		playerParams[2] = new GameboardActivity.PlayerLayoutParams(Constants.MAX_DISPLAYED, 0) {
+			@Override
+			public boolean displayHalfCard(int numCards, int totalInHand) {
+				return numCards != totalInHand - 1;
+			}
+		};
+
+		playerParams[3] = new GameboardActivity.PlayerLayoutParams(Constants.MAX_DIS_SIDES, 90) {
+			@Override
+			public boolean displayHalfCard(int numCards, int totalInHand) {
+				return numCards != totalInHand - 1;
+			}
+		};
+	}
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -159,44 +223,7 @@ public class GameboardActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gameboard);
-
-		// Get references to commonly used UI elements
-		playerTextViews[0] = (TextView) findViewById(R.id.player1text);
-		playerTextViews[1] = (TextView) findViewById(R.id.player2text);
-		playerTextViews[2] = (TextView) findViewById(R.id.player3text);
-		playerTextViews[3] = (TextView) findViewById(R.id.player4text);
-
-		playerLinearLayouts[0] = (LinearLayout) findViewById(R.id.player1ll);
-		playerLinearLayouts[1] = (LinearLayout) findViewById(R.id.player2ll);
-		playerLinearLayouts[2] = (LinearLayout) findViewById(R.id.player3ll);
-		playerLinearLayouts[3] = (LinearLayout) findViewById(R.id.player4ll);
-
-		discard = (ImageView) findViewById(R.id.discardpile);
-		draw = (ImageView) findViewById(R.id.drawpile);
-
-		// Set up the scale factors for the card images
-		int screenHeight = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
-		cardHeight = screenHeight / 4;
-		buttonHeight = screenHeight / 6;
-
-		for (TextView tv : playerTextViews) {
-			tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenHeight / 15);
-		}
-
-		// Add the handler for the pause button
-		ImageView pause = (ImageView) findViewById(R.id.gameboard_pause);
-		pause.setImageBitmap(scaleButton(R.drawable.pause_button));
-		pause.setOnClickListener(new OnClickListener() {
-			/* (non-Javadoc)
-			 * @see android.view.View.OnClickListener#onClick(android.view.View)
-			 */
-			@Override
-			public void onClick(View v) {
-				gameController.pause();
-				Intent pauseButtonClick = new Intent(GameboardActivity.this, PauseMenuActivity.class);
-				startActivityForResult(pauseButtonClick, PAUSE_GAME);
-			}
-		});
+		initUIElements();
 
 		// Update the refresh button image
 		ImageView refresh = (ImageView) findViewById(R.id.gameboard_refresh);
@@ -257,8 +284,64 @@ public class GameboardActivity extends Activity {
 		gameController = GameFactory.getGameControllerInstance(this, connection, players, refresh);
 		Game game = GameFactory.getGameInstance(this);
 		game.setComputerDifficulty(computerDifficulty);
+
 		// Draw the names from the Game on the gameboard
 		updateNamesOnGameboard();
+	}
+
+	/**
+	 * Set up all the references to UI elements
+	 */
+	private void initUIElements() {
+		// Get references to commonly used UI elements
+		playerTextViews[0] = (TextView) findViewById(R.id.player1text);
+		playerTextViews[1] = (TextView) findViewById(R.id.player2text);
+		playerTextViews[2] = (TextView) findViewById(R.id.player3text);
+		playerTextViews[3] = (TextView) findViewById(R.id.player4text);
+
+		playerLinearLayouts[0] = (LinearLayout) findViewById(R.id.player1ll);
+		playerLinearLayouts[1] = (LinearLayout) findViewById(R.id.player2ll);
+		playerLinearLayouts[2] = (LinearLayout) findViewById(R.id.player3ll);
+		playerLinearLayouts[3] = (LinearLayout) findViewById(R.id.player4ll);
+
+		discard = (ImageView) findViewById(R.id.discardpile);
+		draw = (ImageView) findViewById(R.id.drawpile);
+		suitView = (ImageView) findViewById(R.id.gameboard_suit);
+
+		// Set up the scale factors for the card images
+		int screenHeight = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
+		cardHeight = screenHeight / 4;
+		buttonHeight = screenHeight / 6;
+
+		// Update the size of the text in the name TextViews
+		for (TextView tv : playerTextViews) {
+			tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenHeight / 15);
+		}
+
+		// Set up the layout params for the cards
+		paramsH = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight);
+		paramsV = new LinearLayout.LayoutParams(cardHeight, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+		// Create the scaled suit images
+		scaledSuitImages[0] = scaleButton(R.drawable.clubsuitimage);
+		scaledSuitImages[1] = scaleButton(R.drawable.diamondsuitimage);
+		scaledSuitImages[2] = scaleButton(R.drawable.heartsuitimage);
+		scaledSuitImages[3] = scaleButton(R.drawable.spadesuitimage);
+
+		// Add the handler for the pause button
+		ImageView pause = (ImageView) findViewById(R.id.gameboard_pause);
+		pause.setImageBitmap(scaleButton(R.drawable.pause_button));
+		pause.setOnClickListener(new OnClickListener() {
+			/* (non-Javadoc)
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
+			@Override
+			public void onClick(View v) {
+				gameController.pause();
+				Intent pauseButtonClick = new Intent(GameboardActivity.this, PauseMenuActivity.class);
+				startActivityForResult(pauseButtonClick, PAUSE_GAME);
+			}
+		});
 	}
 
 	/* (non-Javadoc)
@@ -381,6 +464,7 @@ public class GameboardActivity extends Activity {
 	 * This data is pulled from the Game instance
 	 */
 	public void updateNamesOnGameboard() {
+		// TODO: can we do this without adding spaces?
 		List<Player> players = GameFactory.getGameInstance(this).getPlayers();
 		for (int i = 0; i < 4; i++) {
 			if (i < players.size()) {
@@ -404,20 +488,8 @@ public class GameboardActivity extends Activity {
 	 * @param suit the suit of the card in which to change the picture to
 	 */
 	public void updateSuit(int suit) {
-		ImageView suitView = (ImageView) findViewById(R.id.gameboard_suit);
-
-		// Based on the suit change the image
-		if (suit == 0) {
-			suitView.setImageBitmap(scaleButton(R.drawable.clubsuitimage));
-			suitView.setVisibility(View.VISIBLE);
-		} else if (suit == 1) {
-			suitView.setImageBitmap(scaleButton(R.drawable.diamondsuitimage));
-			suitView.setVisibility(View.VISIBLE);
-		} else if (suit == 2) {
-			suitView.setImageBitmap(scaleButton(R.drawable.heartsuitimage));
-			suitView.setVisibility(View.VISIBLE);
-		} else if (suit == 3) {
-			suitView.setImageBitmap(scaleButton(R.drawable.spadesuitimage));
+		if (suit >= 0 && suit < 4) {
+			suitView.setImageBitmap(scaledSuitImages[suit]);
 			suitView.setVisibility(View.VISIBLE);
 		} else {
 			suitView.setVisibility(View.INVISIBLE);
@@ -425,18 +497,16 @@ public class GameboardActivity extends Activity {
 	}
 
 	/**
-	 * Places a card in the specified location on the game board
-	 *
-	 * @param location Location to place the card
-	 * @param newCard Card to be placed on the game board
+	 * Updates the User Interface
+	 * 
+	 * Places all cards in the users' hands
+	 * Updates the discard image
+	 * Updates the draw card image
 	 */
 	public void updateUi() {
 		Game game = GameFactory.getGameInstance(this);
 		List<Player> players = game.getPlayers();
 		int i = 0;
-
-		LinearLayout.LayoutParams paramsH = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight);
-		LinearLayout.LayoutParams paramsV = new LinearLayout.LayoutParams(cardHeight, LinearLayout.LayoutParams.WRAP_CONTENT);
 
 		// Place images for all player's cards
 		for (Player p : players) {
@@ -453,40 +523,24 @@ public class GameboardActivity extends Activity {
 				int resId = R.drawable.back_blue_1;
 
 				// If we are in debug mode, show the face
+				// Otherwise stick with the back of the card
 				if (Util.isDebugBuild()) {
 					resId = c.getResourceId();
 				}
 
-				Bitmap scaledCard;
+				// Scale card
+				Bitmap scaledCard = scaleCard(resId, i, playerParams[i].displayHalfCard(j, cards.size()));;
 
-				if (i == 1) {
-					scaledCard = scaleCard(resId, i, j != 0);
-					Matrix tempMatrix = new Matrix();
-					tempMatrix.postRotate(-90);
-					scaledCard = Bitmap.createBitmap(scaledCard, 0, 0,
-							scaledCard.getWidth(),
-							scaledCard.getHeight(), tempMatrix, true);
-				} else if (i == 3) {
-					scaledCard = scaleCard(resId, i, j != cards.size() - 1);
-					Matrix tempMatrix = new Matrix();
-					tempMatrix.postRotate(90);
-					scaledCard = Bitmap.createBitmap(scaledCard, 0, 0,
-							scaledCard.getWidth(),
-							scaledCard.getHeight(), tempMatrix, true);
-				} else {
-					scaledCard = scaleCard(resId, i, j != cards.size() - 1);
-				}
+				// Rotate if necessary
+				Matrix tempMatrix = new Matrix();
+				tempMatrix.postRotate(playerParams[i].rotate);
+				scaledCard = Bitmap.createBitmap(scaledCard, 0, 0,
+						scaledCard.getWidth(), scaledCard.getHeight(), tempMatrix, true);
 
 				image.setImageBitmap(scaledCard);
 
 				// Check for max displayed
-				boolean display = true;
-				if (i == 1 || i == 3) {
-					display = playerLinearLayouts[i].getChildCount() < Constants.MAX_DISPLAYED;
-				} else {
-					display = playerLinearLayouts[i].getChildCount() < Constants.MAX_DIS_SIDES;
-				}
-
+				boolean display = playerLinearLayouts[i].getChildCount() < playerParams[i].maxDisplayed;
 				if (display) {
 					if (i == 1 || i == 3) {
 						playerLinearLayouts[i].addView(image, paramsV);
@@ -525,12 +579,10 @@ public class GameboardActivity extends Activity {
 		// Draw half card
 		if (halfCard) {
 			return Bitmap.createBitmap(fullCard, 0, 0,
-					fullCard.getWidth() / 2,
-					fullCard.getHeight(), tempMatrix, true);
+					fullCard.getWidth() / 2, fullCard.getHeight(), tempMatrix, true);
 		} else {
 			return Bitmap.createBitmap(fullCard, 0, 0,
-					fullCard.getWidth(),
-					fullCard.getHeight(), tempMatrix, true);
+					fullCard.getWidth(), fullCard.getHeight(), tempMatrix, true);
 		}
 	}
 
@@ -547,8 +599,7 @@ public class GameboardActivity extends Activity {
 		tempMatrix.setScale(scaleFactor, scaleFactor);
 
 		return Bitmap.createBitmap(fullImage, 0, 0,
-				fullImage.getWidth(),
-				fullImage.getHeight(), tempMatrix, true);
+				fullImage.getWidth(), fullImage.getHeight(), tempMatrix, true);
 	}
 
 	/**
@@ -558,7 +609,7 @@ public class GameboardActivity extends Activity {
 	 */
 	public void highlightPlayer(int playerNumber) {
 		for (int i = 0; i < 4; i++) {
-			if (i == playerNumber) {
+			if ((i + 1) == playerNumber) {
 				playerTextViews[i].setTextColor(getResources().getColor(R.color.gold));
 			} else {
 				playerTextViews[i].setTextColor(getResources().getColor(R.color.black));
@@ -596,6 +647,39 @@ public class GameboardActivity extends Activity {
 		 * The device ID of this NameDevWrapper
 		 */
 		public String deviceId;
+	}
+
+	/**
+	 * Information needed for a player's layout
+	 */
+	private abstract static class PlayerLayoutParams {
+		/**
+		 * The maximum number of cards to display for this user
+		 */
+		public int maxDisplayed;
+
+		/**
+		 * The amount to rotate each card
+		 */
+		public int rotate;
+
+		/**
+		 * @param maxDisplayed
+		 * @param rotate
+		 */
+		public PlayerLayoutParams(int maxDisplayed, int rotate) {
+			this.maxDisplayed = maxDisplayed;
+			this.rotate = rotate;
+		}
+
+		/**
+		 * Should we create a half card?
+		 * 
+		 * @param numCards the number of cards currently displayed
+		 * @param totalInHand the total number of cards in the user's hand
+		 * @return whether to generate a half card for this card
+		 */
+		public abstract boolean displayHalfCard(int numCards, int totalInHand);
 	}
 
 }
