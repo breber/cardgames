@@ -4,13 +4,13 @@
         <ignore path="res/layout/title_bar.xml" />
     </issue>
     <issue id="UnusedResources">
-        <ignore path="res/drawable-mdpi/back_blue_2.png" />
-        <ignore path="res/drawable-mdpi/back_blue_3.png" />
-        <ignore path="res/drawable-mdpi/back_blue_4.png" />
-        <ignore path="res/drawable-mdpi/back_red_1.png" />
-        <ignore path="res/drawable-mdpi/back_red_150_4.png" />
-        <ignore path="res/drawable-mdpi/back_red_2.png" />
-        <ignore path="res/drawable-mdpi/back_red_3.png" />
+        <ignore path="res/drawable/back_blue_2.png" />
+        <ignore path="res/drawable/back_blue_3.png" />
+        <ignore path="res/drawable/back_blue_4.png" />
+        <ignore path="res/drawable/back_red_1.png" />
+        <ignore path="res/drawable/back_red_150_4.png" />
+        <ignore path="res/drawable/back_red_2.png" />
+        <ignore path="res/drawable/back_red_3.png" />
     </issue>
     <issue id="UselessParent">
         <ignore path="res/layout/connect.xml" />
