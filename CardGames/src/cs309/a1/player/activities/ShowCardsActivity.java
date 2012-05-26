@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.widget.Button;
@@ -48,6 +49,11 @@ public class ShowCardsActivity extends Activity {
 	 * The request code to pause the game
 	 */
 	private static final int PAUSE_GAME = Math.abs("PAUSE_GAME".hashCode());
+
+	/**
+	 * The height of each card
+	 */
+	private static int cardHeight;
 
 	/**
 	 * List of cards in player's hand
@@ -107,6 +113,9 @@ public class ShowCardsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.player_hand);
+
+		int screenHeight = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
+		cardHeight = screenHeight * 3 / 5;
 
 		// Create a new, empty hand
 		cardHand = new ArrayList<Card>();
@@ -227,49 +236,37 @@ public class ShowCardsActivity extends Activity {
 		// Remove all cards from the display
 		playerHandLayout.removeAllViews();
 
-		// convert dip to pixels
-		final float dpsToPixScale = getApplicationContext().getResources().getDisplayMetrics().density;
-		final int screen_width = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
-
-		// Figure out how to scale the cards
-		int scale = Constants.CARD_IMAGE_SCALE_SMALL;
-
-		if (screen_width / dpsToPixScale >= 720) {
-			scale = Constants.CARD_IMAGE_SCALE_LARGE;
-		} else if (screen_width / dpsToPixScale >= 500) {
-			scale = Constants.CARD_IMAGE_SCALE_MED;
-		}
-
-		int pixels = (int) (scale * dpsToPixScale + 0.5f);
-
 		// edit layout attributes
-		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, pixels);
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight);
 
 		for (Card c : cardHand) {
-			Bitmap original = BitmapFactory.decodeResource(getResources(), c.getResourceId());
-			int orgWidth = original.getWidth();
-			int orgHeight = original.getHeight();
-			float newHeight = pixels;
-
-			float scalePercentage = newHeight / orgHeight;
-
-			Matrix matrix = new Matrix();
-			matrix.postScale(scalePercentage, scalePercentage);
-
-			Bitmap resizedCard = Bitmap.createBitmap(original, 0, 0, orgWidth, orgHeight, matrix, true);
-
 			// create ImageView to hold Card
 			ImageView toAdd = new ImageView(this);
-			toAdd.setImageBitmap(resizedCard);
+			toAdd.setImageBitmap(scaleCard(c.getResourceId()));
 			toAdd.setId(c.getIdNum());
-			toAdd.setAdjustViewBounds(true);
 			toAdd.setOnClickListener(playerController.getCardClickListener());
 
 			// Add a 5px border around the image
 			toAdd.setPadding(5, 5, 5, 5);
 
-			playerHandLayout.addView(toAdd, lp);
+			playerHandLayout.addView(toAdd, params);
 		}
+	}
+
+	/**
+	 * Scale a card image with the given resource
+	 * 
+	 * @param resId the resource id of the card to scale
+	 * @return a scaled card image
+	 */
+	private Bitmap scaleCard(int resId) {
+		Bitmap fullCard = BitmapFactory.decodeResource(getResources(), resId);
+		float scaleFactor = (cardHeight + 0.0f) / fullCard.getHeight();
+		Matrix tempMatrix = new Matrix();
+		tempMatrix.setScale(scaleFactor, scaleFactor);
+
+		return Bitmap.createBitmap(fullCard, 0, 0,
+				fullCard.getWidth(), fullCard.getHeight(), tempMatrix, true);
 	}
 
 	/**
@@ -289,20 +286,22 @@ public class ShowCardsActivity extends Activity {
 			}
 		}
 	}
-	
+
 	/**
 	 * Set the card as greyed out, or not greyed out.
 	 *
-	 * @param cardImageViewId  -  This is the id of the image view of the card that is being greyed out or not greyed out
-	 * @param isPlayable   -   This is whether or not the card should be greyed out based on whether it is legal to play it
+	 * @param cardImageViewId - This is the id of the image view of the card
+	 * 							that is being greyed out or not greyed out
+	 * @param isPlayable  - This is whether or not the card should be greyed
+	 * 						out based on whether it is legal to play it
 	 */
 	public void setCardPlayable(int cardImageViewId, boolean isPlayable) {
 		ImageView iv = (ImageView) findViewById(cardImageViewId);
 		if (isPlayable) {
-			iv.setColorFilter(0x00000000); //this is no filter
+			iv.setColorFilter(Color.TRANSPARENT);
 		} else {
-			iv.setColorFilter(0x77888888); //this is greyed out
-		}	
+			iv.setColorFilter(getResources().getColor(R.color.transparent_grey));
+		}
 	}
 
 	/**
@@ -333,5 +332,4 @@ public class ShowCardsActivity extends Activity {
 			}
 		}
 	}
-
 }

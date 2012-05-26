@@ -15,21 +15,6 @@ public class Constants {
 	public static final int NAME_MAX_CHARS = 10;
 
 	/**
-	 * The display size of a card on a small handheld
-	 */
-	public static final int CARD_IMAGE_SCALE_SMALL = 200;
-
-	/**
-	 * The display size of a card on a medium handheld
-	 */
-	public static final int CARD_IMAGE_SCALE_MED = 400;
-
-	/**
-	 * The display size of a card on a large handheld
-	 */
-	public static final int CARD_IMAGE_SCALE_LARGE = 500;
-
-	/**
 	 * The maximum number of cards to be displayed on longest sides of tablet
 	 */
 	public static final int MAX_DISPLAYED = 13;
@@ -43,16 +28,7 @@ public class Constants {
 	 * A constant to represent the name of the font to use
 	 */
 	public static final String FONT_NAME = "hammersmithone.ttf";
-	
-	/**
-	 * The width of players' hidden cards on the game board of large tablet
-	 */
-	public static final int GAMEBOARD_CARDWIDTH_LARGE = 125;
-	
-	/**
-	 * The width of players' hidden cards on the game board of small tablet
-	 */
-	public static final int GAMEBOARD_CARDWIDTH_SMALL = 60;
+
 
 	/* Game Constants */
 	/**
