@@ -115,11 +115,6 @@
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.CrazyEights" />
         <activity
-            android:name=".gameboard.activities.PlayComputerTurnActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.CrazyEights" />
-        <activity
             android:name=".shared.activities.DeviceListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_device_list"
