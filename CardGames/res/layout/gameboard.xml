@@ -34,10 +34,9 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center_horizontal"
         android:orientation="horizontal" >
 
         <cs309.a1.shared.TextView
@@ -55,7 +54,8 @@
         <LinearLayout
             android:id="@+id/player2ll"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical"
             android:orientation="vertical" />
     </LinearLayout>
 
@@ -88,16 +88,16 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center_horizontal"
         android:orientation="horizontal" >
 
         <LinearLayout
             android:id="@+id/player4ll"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical"
             android:orientation="vertical" />
 
         <cs309.a1.shared.TextView
