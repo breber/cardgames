@@ -6,9 +6,6 @@ import static cs309.a1.shared.Constants.LANGUAGE_FRANCE;
 import static cs309.a1.shared.Constants.LANGUAGE_GERMAN;
 import static cs309.a1.shared.Constants.LANGUAGE_UK;
 import static cs309.a1.shared.Constants.LANGUAGE_US;
-import static cs309.a1.shared.Constants.PREFERENCES;
-import static cs309.a1.shared.Constants.SOUND_EFFECTS;
-import static cs309.a1.shared.Constants.SPEECH_VOLUME;
 
 import java.util.Locale;
 import java.util.Random;
@@ -20,6 +17,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
 import cs309.a1.R;
 
@@ -36,14 +34,19 @@ public class SoundManager {
 	private static final String TAG = SoundManager.class.getName();
 
 	/**
+	 * The Singleton instance of SoundManager
+	 */
+	private static SoundManager mInstance;
+
+	/**
 	 * This has a bunch of sounds that can be played
 	 */
-	private static SoundPool soundpool;
+	private static SoundPool soundpool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
 
 	/**
 	 * This will play music or other sounds
 	 */
-	private static MediaPlayer mediaplayer;
+	private static MediaPlayer mediaplayer = new MediaPlayer();
 
 	/**
 	 * This is how we will read the names of the players out loud
@@ -53,7 +56,7 @@ public class SoundManager {
 	/**
 	 * This is how we can tell if the TTS has been initialized
 	 */
-	boolean isTTSInitialized;
+	private boolean isTTSInitialized = false;
 
 	/**
 	 * This will be obtained from the shared preference to see if the player wants sound fx
@@ -68,27 +71,41 @@ public class SoundManager {
 	/**
 	 * This is how we will get the settings that the user has set.
 	 */
-	private SharedPreferences sharedPreferences;
+	private final SharedPreferences sharedPreferences;
 
 	/**
 	 * Strings to be spoken when it is a player's turn
 	 */
-	private final String[] playerTurnPrompt;
+	private static String[] playerTurnPrompt;
 
 	/**
 	 * array to store the SoundPool IDs for the draw card sounds
 	 */
-	private int[] drawCardSounds;
+	private static int[] drawCardSounds;
 
 	/**
 	 * array to store the SoundPool IDs for the play card sounds
 	 */
-	private int[] playCardSounds;
+	private static int[] playCardSounds;
 
 	/**
 	 * array to store the SoundPool IDs for the shuffle card sounds
 	 */
-	private int[] shuffleCardSounds;
+	private static int[] shuffleCardSounds;
+
+	/**
+	 * Get an instance of the SoundManager
+	 * 
+	 * @param ctx
+	 * @return
+	 */
+	public static SoundManager getInstance(Context ctx) {
+		if (mInstance == null) {
+			mInstance = new SoundManager(ctx);
+		}
+
+		return mInstance;
+	}
 
 	/**
 	 * this will initialize the SoundManager by initializing all the sound FX
@@ -96,12 +113,10 @@ public class SoundManager {
 	 * 
 	 * @param context The context of the class to use the SoundManager
 	 */
-	public SoundManager(Context context) {
-		sharedPreferences = context.getSharedPreferences(PREFERENCES, Context.MODE_WORLD_WRITEABLE);
-		isSoundFXOn = sharedPreferences.getBoolean(SOUND_EFFECTS, true);
-		isTTSOn = sharedPreferences.getBoolean(SPEECH_VOLUME, true);
-
-		soundpool = new SoundPool(5, AudioManager.STREAM_MUSIC, 100);
+	private SoundManager(Context context) {
+		sharedPreferences = context.getSharedPreferences(Constants.PREFERENCES, Context.MODE_WORLD_READABLE);
+		isSoundFXOn = sharedPreferences.getBoolean(Constants.SOUND_EFFECTS, true);
+		isTTSOn = sharedPreferences.getBoolean(Constants.SPEECH_VOLUME, true);
 
 		// Initialize the strings to speak when it is a users turn
 		playerTurnPrompt = context.getResources().getStringArray(R.array.phrases);
@@ -127,10 +142,40 @@ public class SoundManager {
 			shuffleCardSounds[i] = soundpool.load(context, shuffleSounds.getResourceId(i, 0), 1);
 		}
 
-		mediaplayer = new MediaPlayer();
-		MyInitListener mil = new MyInitListener();
-		tts = new TextToSpeech(context.getApplicationContext(), mil);
-		isTTSInitialized = false;
+		tts = new TextToSpeech(context.getApplicationContext(), new OnInitListener() {
+			@Override
+			public void onInit(int status) {
+				if (status == TextToSpeech.SUCCESS) {
+					// get the user preference
+					String lang = sharedPreferences.getString(LANGUAGE, LANGUAGE_US);
+					int langResult = -1;
+
+					if (lang.equals(LANGUAGE_US)) { // default
+						langResult = tts.setLanguage(Locale.US);
+					} else if (lang.equals(LANGUAGE_GERMAN)) {
+						langResult = tts.setLanguage(Locale.GERMAN);
+					} else if (lang.equals(LANGUAGE_FRANCE)) {
+						langResult = tts.setLanguage(Locale.FRANCE);
+					} else if (lang.equals(LANGUAGE_CANADA)) {
+						langResult = tts.setLanguage(Locale.CANADA);
+					} else if (lang.equals(LANGUAGE_UK)) {
+						langResult = tts.setLanguage(Locale.UK);
+					}
+
+					if (langResult == TextToSpeech.LANG_MISSING_DATA
+							|| langResult == TextToSpeech.LANG_NOT_SUPPORTED) {
+						if (Util.isDebugBuild()) {
+							Log.d(TAG, "Language not available");
+						}
+					} else {
+						// let us know that it is safe to use it now
+						isTTSInitialized = true;
+					}
+				} else if (Util.isDebugBuild()) {
+					Log.d(TAG, "Text To Speech did not initialize correctly");
+				}
+			}
+		});
 	}
 
 	/**
@@ -216,46 +261,5 @@ public class SoundManager {
 		}
 		soundpool.autoPause();
 		tts.stop();
-	}
-
-	/**
-	 * this class will have the onInit method called when the TTS has been
-	 * initialized then this method will finish the setup of TTS including
-	 * getting the "dialect" or "Locale" of the voice
-	 */
-	private class MyInitListener implements TextToSpeech.OnInitListener {
-
-		@Override
-		public void onInit(int status) {
-			if (status == TextToSpeech.SUCCESS) {
-				// get the user preference
-				String lang = sharedPreferences.getString(LANGUAGE, LANGUAGE_US);
-				int langResult = -1;
-
-				if (lang.equals(LANGUAGE_US)) { // default
-					langResult = tts.setLanguage(Locale.US);
-				} else if (lang.equals(LANGUAGE_GERMAN)) {
-					langResult = tts.setLanguage(Locale.GERMAN);
-				} else if (lang.equals(LANGUAGE_FRANCE)) {
-					langResult = tts.setLanguage(Locale.FRANCE);
-				} else if (lang.equals(LANGUAGE_CANADA)) {
-					langResult = tts.setLanguage(Locale.CANADA);
-				} else if (lang.equals(LANGUAGE_UK)) {
-					langResult = tts.setLanguage(Locale.UK);
-				}
-
-				if (langResult == TextToSpeech.LANG_MISSING_DATA
-						|| langResult == TextToSpeech.LANG_NOT_SUPPORTED) {
-					if (Util.isDebugBuild()) {
-						Log.d(TAG, "Language not available");
-					}
-				} else {
-					// let us know that it is safe to use it now
-					isTTSInitialized = true;
-				}
-			} else if (Util.isDebugBuild()) {
-				Log.d(TAG, "Text To Speech did not initialize correctly");
-			}
-		}
 	}
 }

@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import cs309.a1.R;
 import cs309.a1.gameboard.activities.ConnectActivity;
 import cs309.a1.player.activities.ShowCardsActivity;
+import cs309.a1.shared.SoundManager;
 import cs309.a1.shared.Util;
 
 /**
@@ -30,9 +31,17 @@ public class MainMenu extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
+		// Initialize the SoundManager on a separate thread, so that we don't
+		// don't have to wait for it to initialize when starting the game
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				SoundManager.getInstance(MainMenu.this);
+			}
+		}).start();
+
 		// Set the listener for the Create Game button if it exists
 		Button create = (Button) findViewById(R.id.btCreate);
-
 		if (create != null) {
 			create.setOnClickListener(new OnClickListener() {
 				@Override

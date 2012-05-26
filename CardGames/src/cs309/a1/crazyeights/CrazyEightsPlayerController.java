@@ -146,7 +146,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 		play.setOnClickListener(getPlayOnClickListener());
 		draw.setOnClickListener(getDrawOnClickListener());
 		setButtonsEnabled(false);
-		mySM = new SoundManager(context);
+		mySM = SoundManager.getInstance(context);
 		cardHand = cardHandGiven;
 		playerName = "";
 		playerHandLayout = (LinearLayout)  playerContext.findViewById(R.id.playerCardContainer);

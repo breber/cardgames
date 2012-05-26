@@ -172,7 +172,7 @@ public class CrazyEightsGameController implements GameController {
 		server = connectionGiven;
 		players = playersGiven;
 		refreshButton = refreshGiven;
-		mySM = new SoundManager(gameContext);
+		mySM = SoundManager.getInstance(context);
 
 		refreshButton.setOnClickListener(new OnClickListener() {
 			/* (non-Javadoc)
