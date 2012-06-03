@@ -9,7 +9,7 @@
     android:keepScreenOn="true"
     android:orientation="vertical" >
 
-    <cs309.a1.shared.TextView
+    <com.worthwhilegames.cardgames.shared.TextView
         style="@style/popupTitleTextLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         android:measureWithLargestChild="true"
         android:orientation="horizontal" >
 
-        <cs309.a1.shared.Button
+        <com.worthwhilegames.cardgames.shared.Button
             android:id="@+id/reconnect"
             style="@style/GameButtonBlack"
             android:layout_width="0dip"
@@ -34,7 +34,7 @@
             android:layout_weight="1"
             android:text="@string/reconnect" />
 
-        <cs309.a1.shared.Button
+        <com.worthwhilegames.cardgames.shared.Button
             android:id="@+id/dropPlayer"
             style="@style/GameButtonBlack"
             android:layout_width="0dip"

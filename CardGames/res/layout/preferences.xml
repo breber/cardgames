@@ -31,7 +31,7 @@
 
             <TableRow>
 
-                <cs309.a1.shared.TextView
+                <com.worthwhilegames.cardgames.shared.TextView
                     android:id="@+id/textViewVolume"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
 
             <TableRow>
 
-                <cs309.a1.shared.TextView
+                <com.worthwhilegames.cardgames.shared.TextView
                     android:id="@+id/textViewSpeechVolume"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
 
             <TableRow>
 
-                <cs309.a1.shared.TextView
+                <com.worthwhilegames.cardgames.shared.TextView
                     android:id="@+id/textViewLang"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
 
             <TableRow>
 
-                <cs309.a1.shared.TextView
+                <com.worthwhilegames.cardgames.shared.TextView
                     android:id="@+id/textViewGameType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
 
             <TableRow>
 
-                <cs309.a1.shared.TextView
+                <com.worthwhilegames.cardgames.shared.TextView
                     android:id="@+id/textViewConnectionType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

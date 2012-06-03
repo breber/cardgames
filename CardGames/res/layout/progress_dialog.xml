@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <cs309.a1.shared.TextView
+    <com.worthwhilegames.cardgames.shared.TextView
         android:id="@+id/progressDialogText"
         style="@style/popupTitleText"
         android:layout_width="0dip"

@@ -16,7 +16,7 @@
         android:text=""
         android:visibility="invisible" />
 
-    <cs309.a1.shared.TextView
+    <com.worthwhilegames.cardgames.shared.TextView
         android:id="@+id/title"
         style="@style/TitleFont"
         android:layout_width="wrap_content"

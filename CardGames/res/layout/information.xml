@@ -22,7 +22,7 @@
         android:layout_marginRight="@dimen/infoTextViewPaddingLeftRight"
         android:layout_marginTop="@dimen/infoTextViewPaddingTopBottom" >
 
-        <cs309.a1.shared.TextView
+        <com.worthwhilegames.cardgames.shared.TextView
             android:id="@+id/informationBody"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

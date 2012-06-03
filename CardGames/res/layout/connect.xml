@@ -40,7 +40,7 @@
                     android:layout_centerInParent="true"
                     android:visibility="invisible" />
 
-                <cs309.a1.shared.TextView
+                <com.worthwhilegames.cardgames.shared.TextView
                     android:id="@+id/connectDeviceP3TextView"
                     style="@style/ConnectPlayerFont"
                     android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
                     android:layout_centerInParent="true"
                     android:visibility="invisible" />
 
-                <cs309.a1.shared.TextView
+                <com.worthwhilegames.cardgames.shared.TextView
                     android:id="@+id/connectDeviceP4TextView"
                     style="@style/ConnectPlayerFont"
                     android:layout_width="wrap_content"
@@ -100,7 +100,7 @@
                     android:orientation="horizontal"
                     android:src="@drawable/on_device" />
 
-                <cs309.a1.shared.TextView
+                <com.worthwhilegames.cardgames.shared.TextView
                     style="@style/ConnectPlayerFont"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -127,7 +127,7 @@
                     android:layout_centerInParent="true"
                     android:visibility="invisible" />
 
-                <cs309.a1.shared.TextView
+                <com.worthwhilegames.cardgames.shared.TextView
                     android:id="@+id/connectDeviceP2TextView"
                     style="@style/ConnectPlayerFont"
                     android:layout_width="wrap_content"
@@ -164,7 +164,7 @@
                     android:layout_centerInParent="true"
                     android:visibility="invisible" />
 
-                <cs309.a1.shared.TextView
+                <com.worthwhilegames.cardgames.shared.TextView
                     android:id="@+id/connectDeviceP1TextView"
                     style="@style/ConnectPlayerFont"
                     android:layout_width="wrap_content"
@@ -181,7 +181,7 @@
         android:layout_height="wrap_content"
         android:weightSum="1.0" >
 
-        <cs309.a1.shared.TextView
+        <com.worthwhilegames.cardgames.shared.TextView
             android:id="@+id/myName"
             style="@style/GameButton"
             android:layout_width="fill_parent"
@@ -198,7 +198,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".34" />
 
-        <cs309.a1.shared.Button
+        <com.worthwhilegames.cardgames.shared.Button
             android:id="@+id/startButton"
             style="@style/GameButtonBlack"
             android:layout_width="fill_parent"

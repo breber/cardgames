@@ -10,7 +10,7 @@
     android:orientation="vertical"
     android:padding="10dip" >
 
-    <cs309.a1.shared.TextView
+    <com.worthwhilegames.cardgames.shared.TextView
         style="@style/popupTitleTextLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

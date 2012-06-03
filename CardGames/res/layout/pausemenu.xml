@@ -21,7 +21,7 @@
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical" >
 
-        <cs309.a1.shared.Button
+        <com.worthwhilegames.cardgames.shared.Button
             android:id="@+id/btResume"
             style="@style/MainMenuLargerButton"
             android:layout_marginLeft="@dimen/mainMenuLargeButtonPadding"
@@ -29,7 +29,7 @@
             android:layout_marginTop="@dimen/mainMenuButtonSpacing"
             android:text="@string/resume" />
 
-        <cs309.a1.shared.Button
+        <com.worthwhilegames.cardgames.shared.Button
             android:id="@+id/btRules"
             style="@style/MainMenuSmallerButton"
             android:layout_marginBottom="@dimen/mainMenuButtonSpacing"
@@ -38,7 +38,7 @@
             android:layout_marginTop="@dimen/mainMenuButtonSpacing"
             android:text="@string/Rules" />
 
-        <cs309.a1.shared.Button
+        <com.worthwhilegames.cardgames.shared.Button
             android:id="@+id/btMainMenu"
             style="@style/MainMenuSmallerButton"
             android:layout_marginBottom="@dimen/mainMenuButtonSpacing"

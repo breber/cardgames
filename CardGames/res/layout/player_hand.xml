@@ -15,7 +15,7 @@
         android:gravity="left"
         android:orientation="horizontal" >
 
-        <cs309.a1.shared.Button
+        <com.worthwhilegames.cardgames.shared.Button
             android:id="@+id/btDrawCard"
             style="@style/GameButton"
             android:layout_width="225dip"
@@ -39,7 +39,7 @@
         android:gravity="right"
         android:orientation="horizontal" >
 
-        <cs309.a1.shared.Button
+        <com.worthwhilegames.cardgames.shared.Button
             android:id="@+id/btPlayCard"
             style="@style/GameButton"
             android:layout_width="225dip"
