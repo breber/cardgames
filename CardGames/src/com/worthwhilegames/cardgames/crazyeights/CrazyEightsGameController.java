@@ -508,6 +508,10 @@ public class CrazyEightsGameController implements GameController {
 	 * cards and if it is their turn
 	 */
 	private void refreshPlayers() {
+		// Unpause the game
+		unpause();
+
+		// Send users information
 		Player pTurn = players.get(whoseTurn);
 
 		// send the card on the discard pile
@@ -543,8 +547,7 @@ public class CrazyEightsGameController implements GameController {
 		}
 
 		// If the next player is a computer, and the computer isn't currently
-		// playing,
-		// have the computer initiate a move
+		// playing, have the computer initiate a move
 		if (players.get(whoseTurn).getIsComputer() && !isComputerPlaying) {
 			startComputerTurn();
 		}
