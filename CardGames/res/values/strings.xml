@@ -11,7 +11,15 @@
 
     <!-- Rules Activity -->
     <string name="rulesActivityTitle">Rules</string>
-    <string name="crazy_eight_game_rules_text">The basic game of Crazy Eights is played with a standard deck of 52 cards. Each player will be dealt five cards and the rest of the cards will be put into a draw pile which is placed face down on the playing table. After the cards are dealt, one card will be taken from and placed next to the draw pile face up. This will serve as the discard pile.</string>
+    <string name="crazy_eight_game_rules_text">The basic game of Crazy Eights is played with a standard deck of 52 cards. Each player will be dealt five cards and the rest of the cards will be put into a draw pile which is placed face down on the playing table. After the cards are dealt, one card will be taken from and placed next to the draw pile face up. This will serve as the discard pile.
+The game will start with player 1 and continue in a counterclockwise fashion around the table. During each turn a player will either need to play a card from their hand or select one card from the draw pile.
+\n\nBasic Game Play:
+\n1. If the top card is not an eight then a player must play a card that matches suit or the number of the last card in the discard pile.
+\n2. An eight of any suit may be played at anytime during a players turn. If they choose to play an eight they must declare a suit.
+\n3. If an eight is present on the top of the discard pile then a card of the declared suit or another eight can be played.
+\n4. A draw will serve as a turn if a player cannot play a card.
+\n5. If the first card turned up for the discard pile is an eight, then the suit that is on the eight is the suit that should be played next.\n6. Jokers can be played on any card, and any card can be played on a Joker.\n
+\nThe first player to successfully get rid of all of their cards wins the game. If at any point in the game the draw pile is empty, all of the cards from the discard pile except for the top card will be re-shuffled to form a new draw pile.</string>
 
     <!-- About Activity -->
     <string name="aboutActivityTitle">About</string>
