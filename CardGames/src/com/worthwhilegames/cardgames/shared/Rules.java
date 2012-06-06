@@ -14,5 +14,7 @@ public interface Rules {
 	 * @return true if the play is valid and false otherwise
 	 */
 	public boolean checkCard(Card cardPlayed, Card onDiscard);
+	
+	public boolean checkCard(Card cardPlayed, int trump, int suitLed, Player player);
 
 }

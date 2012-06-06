@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.crazyeights.CrazyEightsCardTranslator;
+import com.worthwhilegames.cardgames.euchre.EuchreCardTranslator;
 
 /**
  * Represents a deck of cards
@@ -51,6 +52,9 @@ public class Deck {
 		switch(gameName) {
 
 		case CRAZY_EIGHTS:
+			cardId = R.drawable.back_blue_1;
+			break;
+		case EUCHRE:
 			cardId = R.drawable.back_blue_1;
 			break;
 		}
@@ -130,6 +134,33 @@ public class Deck {
 			cardImages.add(new Card(4, 0, R.drawable.joker_b, 52));
 			cardImages.add(new Card(4, 1, R.drawable.joker_r, 53));
 			break;
+			
+		case EUCHRE:
+			cardImages.add(new Card(0, 0, R.drawable.clubs_a, 0));
+			cardImages.add(new Card(0, 8, R.drawable.clubs_9, 8));
+			cardImages.add(new Card(0, 9, R.drawable.clubs_10, 9));
+			cardImages.add(new Card(0, 10, R.drawable.clubs_j, 10));
+			cardImages.add(new Card(0, 11, R.drawable.clubs_q, 11));
+			cardImages.add(new Card(0, 12, R.drawable.clubs_k, 12));
+			cardImages.add(new Card(1, 0, R.drawable.diamonds_a, 13));
+			cardImages.add(new Card(1, 8, R.drawable.diamonds_9, 21));
+			cardImages.add(new Card(1, 9, R.drawable.diamonds_10, 22));
+			cardImages.add(new Card(1, 10, R.drawable.diamonds_j, 23));
+			cardImages.add(new Card(1, 11, R.drawable.diamonds_q, 24));
+			cardImages.add(new Card(1, 12, R.drawable.diamonds_k, 25));
+			cardImages.add(new Card(2, 0, R.drawable.hearts_a, 26));
+			cardImages.add(new Card(2, 8, R.drawable.hearts_9, 34));
+			cardImages.add(new Card(2, 9, R.drawable.hearts_10, 35));
+			cardImages.add(new Card(2, 10, R.drawable.hearts_j, 36));
+			cardImages.add(new Card(2, 11, R.drawable.hearts_q, 37));
+			cardImages.add(new Card(2, 12, R.drawable.hearts_k, 38));
+			cardImages.add(new Card(3, 0, R.drawable.spades_a, 39));
+			cardImages.add(new Card(3, 8, R.drawable.spades_9, 47));
+			cardImages.add(new Card(3, 9, R.drawable.spades_10, 48));
+			cardImages.add(new Card(3, 10, R.drawable.spades_j, 49));
+			cardImages.add(new Card(3, 11, R.drawable.spades_q, 50));
+			cardImages.add(new Card(3, 12, R.drawable.spades_k, 51));
+			break;
 		}
 	}
 
@@ -144,6 +175,8 @@ public class Deck {
 		switch(game) {
 		case CRAZY_EIGHTS:
 			return new CrazyEightsCardTranslator();
+		case EUCHRE:
+			return new EuchreCardTranslator();
 		default:
 			return null;
 		}

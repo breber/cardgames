@@ -2,6 +2,7 @@ package com.worthwhilegames.cardgames.crazyeights;
 
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.Constants;
+import com.worthwhilegames.cardgames.shared.Player;
 import com.worthwhilegames.cardgames.shared.Rules;
 
 /**
@@ -47,6 +48,11 @@ public class CrazyEightGameRules implements Rules {
 			return true;
 		}
 
+		return false;
+	}
+	
+	@Override
+	public boolean checkCard(Card cardPlayed, int trump, int suitLed, Player player){
 		return false;
 	}
 

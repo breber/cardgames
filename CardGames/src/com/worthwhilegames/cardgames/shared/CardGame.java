@@ -8,6 +8,8 @@ public enum CardGame {
 	/**
 	 * enum to represent the card game crazy eights
 	 */
-	CRAZY_EIGHTS
+	CRAZY_EIGHTS,
+	
+	EUCHRE
 
 }
