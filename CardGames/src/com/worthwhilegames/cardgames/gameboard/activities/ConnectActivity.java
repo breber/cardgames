@@ -467,11 +467,7 @@ public class ConnectActivity extends Activity {
 			Util.ensureDiscoverable(this, mBluetoothAdapter);
 		}
 
-		if (isReconnectScreen) {
-			mConnectionServer.startListening(1);
-		} else {
-			mConnectionServer.startListening(4);
-		}
+		mConnectionServer.startListening();
 	}
 
 	/* (non-Javadoc)

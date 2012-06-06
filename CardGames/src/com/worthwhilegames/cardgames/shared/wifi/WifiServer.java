@@ -14,8 +14,11 @@ import android.os.Message;
 import android.util.Log;
 
 import com.worthwhilegames.cardgames.shared.Util;
+import com.worthwhilegames.cardgames.shared.connection.AcceptThread;
+import com.worthwhilegames.cardgames.shared.connection.ConnectionCommon;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
+import com.worthwhilegames.cardgames.shared.connection.IConnectionService;
 
 /**
  * This Singleton class acts as a Server for a Bluetooth connection.
@@ -23,7 +26,7 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
  * It connects to up to 4 other Bluetooth devices (running the client), and then
  * communicates with any number of them (by sending messages and receiving messages).
  */
-public class WifiServer extends WifiCommon implements ConnectionServer {
+public class WifiServer extends ConnectionCommon implements ConnectionServer {
 	/**
 	 * The Logcat Debug tag
 	 */
@@ -37,7 +40,7 @@ public class WifiServer extends WifiCommon implements ConnectionServer {
 	/**
 	 * A map of MAC addresses to their corresponding BluetoothConnectionServices
 	 */
-	private HashMap<String, WifiConnectionService> services;
+	private HashMap<String, IConnectionService> services;
 
 	/**
 	 * The Thread that runs while listening for connections
@@ -89,7 +92,7 @@ public class WifiServer extends WifiCommon implements ConnectionServer {
 	 */
 	private WifiServer(Context ctx) {
 		mContext = ctx;
-		services = new HashMap<String, WifiConnectionService>();
+		services = new HashMap<String, IConnectionService>();
 		mAcceptThread = new AcceptThread(mContext, mHandler, services, this);
 	}
 
@@ -111,7 +114,7 @@ public class WifiServer extends WifiCommon implements ConnectionServer {
 	 * @see cs309.a1.shared.connection.ConnectionServer#startListening(int)
 	 */
 	@Override
-	public void startListening(int maxConnections) {
+	public void startListening() {
 		// Start the AcceptThread which listens for incoming connection requests
 		if (mAcceptThread == null) {
 			mAcceptThread = new AcceptThread(mContext, mHandler, services, this);
@@ -137,7 +140,7 @@ public class WifiServer extends WifiCommon implements ConnectionServer {
 	@Override
 	public void disconnect() {
 		// Disconnect connections
-		for (WifiConnectionService serv : services.values()) {
+		for (IConnectionService serv : services.values()) {
 			serv.stop();
 		}
 
@@ -167,7 +170,7 @@ public class WifiServer extends WifiCommon implements ConnectionServer {
 		Iterator<String> iter = services.keySet().iterator();
 		while (iter.hasNext()) {
 			String temp = iter.next();
-			WifiConnectionService service = services.get(temp);
+			IConnectionService service = services.get(temp);
 
 			if (service.getState() == ConnectionConstants.STATE_LISTEN
 					|| service.getState() == ConnectionConstants.STATE_NONE) {
@@ -176,7 +179,7 @@ public class WifiServer extends WifiCommon implements ConnectionServer {
 		}
 
 		for (String s : services.keySet()) {
-			WifiConnectionService service = services.get(s);
+			IConnectionService service = services.get(s);
 
 			if (service.getState() == ConnectionConstants.STATE_CONNECTED) {
 				toRet.add(s);
@@ -199,7 +202,7 @@ public class WifiServer extends WifiCommon implements ConnectionServer {
 		// If the caller didn't provide any addresses, send the message to all
 		// connected devices
 		if (address.length == 0) {
-			for (WifiConnectionService service : services.values()) {
+			for (IConnectionService service : services.values()) {
 				if (!performWrite(service, messageType, obj)) {
 					retVal = false;
 				}
@@ -207,7 +210,7 @@ public class WifiServer extends WifiCommon implements ConnectionServer {
 		} else {
 			// Otherwise send it out to the devices specified in address
 			for (String addr : address) {
-				WifiConnectionService service = services.get(addr);
+				IConnectionService service = services.get(addr);
 
 				if (service != null) {
 					if (!performWrite(service, messageType, obj)) {

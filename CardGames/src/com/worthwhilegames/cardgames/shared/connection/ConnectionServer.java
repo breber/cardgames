@@ -21,10 +21,8 @@ public interface ConnectionServer {
 
 	/**
 	 * Start listening for Connections
-	 * 
-	 * @param maxConnections - the max number of connections to accept
 	 */
-	void startListening(int maxConnections);
+	void startListening();
 
 	/**
 	 * Stop listening for Connections

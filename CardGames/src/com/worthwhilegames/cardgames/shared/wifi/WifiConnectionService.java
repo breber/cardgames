@@ -10,14 +10,16 @@ import java.net.UnknownHostException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.worthwhilegames.cardgames.shared.Util;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
+import com.worthwhilegames.cardgames.shared.Util;
+import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
+import com.worthwhilegames.cardgames.shared.connection.IConnectionService;
+import com.worthwhilegames.cardgames.shared.connection.ISocket;
 
 /**
  * This class does all the work for setting up and managing Bluetooth
@@ -25,7 +27,7 @@ import android.util.Log;
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
  */
-public class WifiConnectionService {
+public class WifiConnectionService implements IConnectionService {
 	/**
 	 * The Logcat Debug tag
 	 */
@@ -96,6 +98,7 @@ public class WifiConnectionService {
 	 * 
 	 * @return the current state
 	 */
+	@Override
 	public synchronized int getState() {
 		return mState;
 	}
@@ -104,6 +107,7 @@ public class WifiConnectionService {
 	 * Start the Bluetooth service. Cancels any currently connected connections,
 	 * and sets the state to STATE_LISTEN.
 	 */
+	@Override
 	public synchronized void start() {
 		if (Util.isDebugBuild()) {
 			Log.d(TAG, "start");
@@ -129,6 +133,7 @@ public class WifiConnectionService {
 	 * 
 	 * @param device  The BluetoothDevice to connect
 	 */
+	@Override
 	public synchronized void connect(final String device) {
 		if (Util.isDebugBuild()) {
 			Log.d(TAG, "connect to: " + device);
@@ -170,13 +175,15 @@ public class WifiConnectionService {
 	 * Called once a Bluetooth connection has been established (either by ConnectThread
 	 * or AcceptThread).
 	 * 
-	 * @param socket  The BluetoothSocket on which the connection was made
-	 * @param device  The BluetoothDevice that has been connected
+	 * @param socket  The Socket on which the connection was made
 	 */
-	public synchronized void connected(Socket socket, InetAddress device) {
+	@Override
+	public synchronized void connected(ISocket socket) {
 		if (Util.isDebugBuild()) {
 			Log.d(TAG, "connected Socket");
 		}
+
+		WifiSocket actualSocket = (WifiSocket) socket;
 
 		// Cancel the thread that completed the connection
 		if (mConnectThread != null) {
@@ -191,11 +198,11 @@ public class WifiConnectionService {
 		}
 
 		// Start the thread to manage the connection and perform transmissions
-		mConnectedThread = new ConnectedThread(socket);
+		mConnectedThread = new ConnectedThread(actualSocket.getSocket());
 		mConnectedThread.start();
 
 		// Store the remote device's address
-		deviceAddress = device.getHostAddress();
+		deviceAddress = socket.toString();
 
 		// Update our state
 		setState(ConnectionConstants.STATE_CONNECTED);
@@ -204,6 +211,7 @@ public class WifiConnectionService {
 	/**
 	 * Stop all connections, and set the state to STATE_NONE
 	 */
+	@Override
 	public synchronized void stop() {
 		if (Util.isDebugBuild()) {
 			Log.d(TAG, "stop");
@@ -228,6 +236,7 @@ public class WifiConnectionService {
 	 * @param out The bytes to write
 	 * @see ConnectedThread#write(byte[])
 	 */
+	@Override
 	public void write(byte[] out) {
 		// Create temporary object
 		ConnectedThread r;
@@ -308,7 +317,7 @@ public class WifiConnectionService {
 			}
 
 			// Start the connected thread
-			connected(mmSocket, mmDevice);
+			connected(new WifiSocket(mmSocket));
 		}
 
 		/**

@@ -1,11 +1,5 @@
 package com.worthwhilegames.cardgames.shared.bluetooth;
 
-import com.worthwhilegames.cardgames.shared.Util;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
-
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,13 +7,18 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.worthwhilegames.cardgames.shared.Util;
+import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
+import com.worthwhilegames.cardgames.shared.connection.ConnectionCommon;
+import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
+
 /**
  * This Singleton class acts as a Client for a Bluetooth connection.
  * 
  * It connects to another Bluetooth device (running the server), and then
  * communicates with it (by sending messages and receiving messages).
  */
-public class BluetoothClient extends BluetoothCommon implements ConnectionClient {
+public class BluetoothClient extends ConnectionCommon implements ConnectionClient {
 	/**
 	 * The Logcat Debug tag
 	 */
@@ -34,11 +33,6 @@ public class BluetoothClient extends BluetoothCommon implements ConnectionClient
 	 * The BluetoothConnectionService associated with this client
 	 */
 	private BluetoothConnectionService mService;
-
-	/**
-	 * The BluetoothAdapter used to query Bluetooth information
-	 */
-	private BluetoothAdapter mBluetoothAdapter;
 
 	/**
 	 * The context of this thread
@@ -90,7 +84,6 @@ public class BluetoothClient extends BluetoothCommon implements ConnectionClient
 	private BluetoothClient(Context ctx) {
 		mContext = ctx;
 		mService = new BluetoothConnectionService(mContext, mHandler);
-		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 	}
 
 	/**
@@ -130,8 +123,7 @@ public class BluetoothClient extends BluetoothCommon implements ConnectionClient
 	public void connect(String macAddress) {
 		setMacAddress(macAddress);
 
-		BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(macAddress);
-		mService.connect(device);
+		mService.connect(macAddress);
 	}
 
 	/* (non-Javadoc)

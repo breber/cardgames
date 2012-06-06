@@ -1,9 +1,6 @@
-package com.worthwhilegames.cardgames.shared.wifi;
+package com.worthwhilegames.cardgames.shared.connection;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.HashMap;
 
 import android.content.Context;
@@ -13,7 +10,6 @@ import android.util.Log;
 import com.worthwhilegames.cardgames.shared.Game;
 import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.Util;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 
 /**
  * This thread runs while listening for incoming connections. When it finds
@@ -30,7 +26,7 @@ public class AcceptThread extends Thread {
 	/**
 	 *  The local server socket
 	 */
-	private ServerSocket mmServerSocket;
+	private IServerSocket mmServerSocket;
 
 	/**
 	 * The Handler that each WifiConnectionService will get
@@ -41,13 +37,13 @@ public class AcceptThread extends Thread {
 	 * A reference to a HashMap of MAC addresses to WifiConnectionServices
 	 * that is passed in by the calling server.
 	 */
-	private final HashMap<String, WifiConnectionService> mConnections;
+	private final HashMap<String, IConnectionService> mConnections;
 
 	/**
-	 * A reference to the WifiServer so that we can check to see how many
+	 * A reference to the ConnectionServer so that we can check to see how many
 	 * active connections there are
 	 */
-	private WifiServer mServer;
+	private ConnectionServer mServer;
 
 	/**
 	 * The context of this thread
@@ -67,18 +63,14 @@ public class AcceptThread extends Thread {
 	 * @param services A map of MAC addresses to WifiConnectionService
 	 * @param maxConnections the maximum number of connections to open
 	 */
-	public AcceptThread(Context ctx, Handler handler, HashMap<String, WifiConnectionService> services, WifiServer server) {
+	public AcceptThread(Context ctx, Handler handler, HashMap<String, IConnectionService> services, ConnectionServer server) {
 		mConnections = services;
 		mContext = ctx;
 		mHandler = handler;
 		mServer = server;
 
 		// Create a new listening server socket
-		try {
-			mmServerSocket = new ServerSocket(WifiConstants.PORT_NUMBER, 0, Util.getLocalIpAddress());
-		} catch (IOException e) {
-			Log.e(TAG, "Socket listen() failed", e);
-		}
+		mmServerSocket = ConnectionFactory.getServerSocket(mContext);
 	}
 
 	/* (non-Javadoc)
@@ -104,8 +96,8 @@ public class AcceptThread extends Thread {
 		}
 
 		while (continueChecking) {
-			Socket socket = null;
-			WifiConnectionService serv = new WifiConnectionService(mContext, mHandler);
+			ISocket socket = null;
+			IConnectionService serv = ConnectionFactory.getNewConnectionService(mContext, mHandler);
 			serv.start();
 
 			// Listen to the server socket if we're not connected
@@ -119,7 +111,7 @@ public class AcceptThread extends Thread {
 				socket = mmServerSocket.accept();
 
 				if (Util.isDebugBuild()) {
-					Log.d(TAG, "mmServerSocket.accept() completed " + socket.getInetAddress().getHostAddress());
+					Log.d(TAG, "mmServerSocket.accept() completed " + socket/*.getInetAddress().getHostAddress()*/);
 				}
 			} catch (IOException e) {
 				Log.e(TAG, "Socket accept() failed", e);
@@ -164,14 +156,12 @@ public class AcceptThread extends Thread {
 						case ConnectionConstants.STATE_LISTEN:
 						case ConnectionConstants.STATE_CONNECTING:
 							// Situation normal. Start the connected thread.
-							InetAddress dev = socket.getInetAddress();
-
 							if (Util.isDebugBuild()) {
-								Log.d(TAG, "connecting: " + dev.getHostAddress());
+								Log.d(TAG, "connecting: " + socket);
 							}
 
-							mConnections.put(dev.getHostAddress(), serv);
-							serv.connected(socket, dev);
+							mConnections.put(socket.toString(), serv);
+							serv.connected(socket);
 							break;
 						case ConnectionConstants.STATE_NONE:
 						case ConnectionConstants.STATE_CONNECTED:

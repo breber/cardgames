@@ -3,6 +3,7 @@ package com.worthwhilegames.cardgames.shared.wifi;
 import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
+import com.worthwhilegames.cardgames.shared.connection.ConnectionCommon;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +18,7 @@ import android.util.Log;
  * It connects to another Bluetooth device (running the server), and then
  * communicates with it (by sending messages and receiving messages).
  */
-public class WifiClient extends WifiCommon implements ConnectionClient {
+public class WifiClient extends ConnectionCommon implements ConnectionClient {
 	/**
 	 * The Logcat Debug tag
 	 */

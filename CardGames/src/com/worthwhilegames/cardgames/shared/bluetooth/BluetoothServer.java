@@ -5,11 +5,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import com.worthwhilegames.cardgames.shared.Util;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
-
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,13 +12,20 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.worthwhilegames.cardgames.shared.Util;
+import com.worthwhilegames.cardgames.shared.connection.AcceptThread;
+import com.worthwhilegames.cardgames.shared.connection.ConnectionCommon;
+import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
+import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
+import com.worthwhilegames.cardgames.shared.connection.IConnectionService;
+
 /**
  * This Singleton class acts as a Server for a Bluetooth connection.
  * 
  * It connects to up to 4 other Bluetooth devices (running the client), and then
  * communicates with any number of them (by sending messages and receiving messages).
  */
-public class BluetoothServer extends BluetoothCommon implements ConnectionServer {
+public class BluetoothServer extends ConnectionCommon implements ConnectionServer {
 	/**
 	 * The Logcat Debug tag
 	 */
@@ -37,12 +39,7 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 	/**
 	 * A map of MAC addresses to their corresponding BluetoothConnectionServices
 	 */
-	private HashMap<String, BluetoothConnectionService> services;
-
-	/**
-	 * The BluetoothAdapter used to query Bluetooth information
-	 */
-	private BluetoothAdapter mBluetoothAdapter;
+	private HashMap<String, IConnectionService> services;
 
 	/**
 	 * The Thread that runs while listening for connections
@@ -94,9 +91,8 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 	 */
 	private BluetoothServer(Context ctx) {
 		mContext = ctx;
-		services = new HashMap<String, BluetoothConnectionService>();
-		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		mAcceptThread = new AcceptThread(mContext, mBluetoothAdapter, mHandler, services, 4);
+		services = new HashMap<String, IConnectionService>();
+		mAcceptThread = new AcceptThread(mContext, mHandler, services, this);
 	}
 
 	/**
@@ -117,10 +113,10 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 	 * @see cs309.a1.shared.connection.ConnectionServer#startListening()
 	 */
 	@Override
-	public void startListening(int maxConnections) {
+	public void startListening() {
 		// Start the AcceptThread which listens for incoming connection requests
 		if (mAcceptThread == null) {
-			mAcceptThread = new AcceptThread(mContext, mBluetoothAdapter, mHandler, services, maxConnections);
+			mAcceptThread = new AcceptThread(mContext, mHandler, services, this);
 		}
 
 		mAcceptThread.start();
@@ -143,7 +139,7 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 	@Override
 	public void disconnect() {
 		// Disconnect connections
-		for (BluetoothConnectionService serv : services.values()) {
+		for (IConnectionService serv : services.values()) {
 			serv.stop();
 		}
 
@@ -171,7 +167,7 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 		HashSet<String> toRet = new HashSet<String>();
 
 		for (String s : services.keySet()) {
-			BluetoothConnectionService service = services.get(s);
+			IConnectionService service = services.get(s);
 
 			if (service.getState() == ConnectionConstants.STATE_CONNECTED) {
 				toRet.add(s);
@@ -194,7 +190,7 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 		// If the caller didn't provide any addresses, send the message to all
 		// connected devices
 		if (address.length == 0) {
-			for (BluetoothConnectionService service : services.values()) {
+			for (IConnectionService service : services.values()) {
 				if (!performWrite(service, messageType, obj)) {
 					retVal = false;
 				}
@@ -202,7 +198,7 @@ public class BluetoothServer extends BluetoothCommon implements ConnectionServer
 		} else {
 			// Otherwise send it out to the devices specified in address
 			for (String addr : address) {
-				BluetoothConnectionService service = services.get(addr);
+				IConnectionService service = services.get(addr);
 
 				if (service != null) {
 					if (!performWrite(service, messageType, obj)) {
