@@ -3,7 +3,9 @@ package com.worthwhilegames.cardgames.shared.wifi;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import com.worthwhilegames.cardgames.shared.connection.ISocket;
 
@@ -21,6 +23,23 @@ public class WifiSocket implements ISocket {
 	 */
 	public WifiSocket(Socket socket) {
 		mSocket = socket;
+	}
+
+	/**
+	 * Create a new WifiSocket to the given address
+	 * 
+	 * @param address the address to connect to
+	 */
+	public WifiSocket(String address) {
+		InetAddress addr;
+		try {
+			addr = InetAddress.getByName(address);
+			mSocket = new Socket(addr, WifiConstants.PORT_NUMBER);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -61,6 +80,14 @@ public class WifiSocket implements ISocket {
 	@Override
 	public void shutdownInput() throws IOException {
 		mSocket.shutdownInput();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.worthwhilegames.cardgames.shared.connection.ISocket#connect()
+	 */
+	@Override
+	public void connect() throws IOException {
+		// Do nothing
 	}
 
 	/* (non-Javadoc)

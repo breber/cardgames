@@ -254,7 +254,7 @@ public class ConnectActivity extends Activity {
 				Log.d(TAG, "Reconnecting...");
 			}
 
-			mConnectionServer = ConnectionFactory.getServerInstance(this);
+			mConnectionServer = ConnectionServer.getInstance(this);
 
 			currentGame = GameFactory.getGameInstance(this);
 
@@ -460,7 +460,7 @@ public class ConnectActivity extends Activity {
 		}
 
 		if (mConnectionServer == null) {
-			mConnectionServer = ConnectionFactory.getServerInstance(this);
+			mConnectionServer = ConnectionServer.getInstance(this);
 		}
 
 		if (ConnectionFactory.getConnectionType(this) == ConnectionType.BLUETOOTH) {

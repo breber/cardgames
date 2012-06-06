@@ -78,7 +78,7 @@ public class ConnectionClient extends ConnectionCommon {
 	 */
 	protected ConnectionClient(Context ctx) {
 		mContext = ctx;
-		mService = ConnectionFactory.getNewConnectionService(mContext, mHandler);
+		mService = new ConnectionService(mContext, mHandler);
 	}
 
 	/**

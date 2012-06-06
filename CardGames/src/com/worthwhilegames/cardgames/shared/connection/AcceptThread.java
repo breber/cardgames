@@ -97,7 +97,7 @@ public class AcceptThread extends Thread {
 
 		while (continueChecking) {
 			ISocket socket = null;
-			ConnectionService serv = ConnectionFactory.getNewConnectionService(mContext, mHandler);
+			ConnectionService serv = new ConnectionService(mContext, mHandler);
 			serv.start();
 
 			// Listen to the server socket if we're not connected
@@ -111,7 +111,7 @@ public class AcceptThread extends Thread {
 				socket = mmServerSocket.accept();
 
 				if (Util.isDebugBuild()) {
-					Log.d(TAG, "mmServerSocket.accept() completed " + socket/*.getInetAddress().getHostAddress()*/);
+					Log.d(TAG, "mmServerSocket.accept() completed " + socket);
 				}
 			} catch (IOException e) {
 				Log.e(TAG, "Socket accept() failed", e);

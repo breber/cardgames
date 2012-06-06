@@ -48,4 +48,6 @@ public interface ISocket {
 	 * @throws IOException
 	 */
 	void shutdownInput() throws IOException;
+
+	void connect() throws IOException;
 }

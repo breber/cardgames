@@ -25,7 +25,6 @@ import com.worthwhilegames.cardgames.shared.PlayerController;
 import com.worthwhilegames.cardgames.shared.activities.QuitGameActivity;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionFactory;
 
 /**
  * This is the Activity that handles Game Play
@@ -126,7 +125,7 @@ public class ShowCardsActivity extends Activity {
 
 		// Get an instance of the ConnectionClient so that we can
 		// send messages back to the tablet
-		connection = ConnectionFactory.getClientInstance(this);
+		connection = ConnectionClient.getInstance(this);
 
 		// Set up the Layout for the cards
 		playerHandLayout = (LinearLayout) findViewById(R.id.playerCardContainer);

@@ -21,7 +21,7 @@ import com.worthwhilegames.cardgames.shared.Util;
  * The purpose of this is to allow the connection logic to be shared across
  * connection types.
  */
-public abstract class ConnectionService {
+public class ConnectionService {
 	/**
 	 * The Logcat Debug tag
 	 */
@@ -42,7 +42,7 @@ public abstract class ConnectionService {
 	/**
 	 * The MAC address of the remote device this service is connected to
 	 */
-	private String deviceAddress;
+	private String mDeviceAddress;
 
 	/**
 	 * The Thread that handles the process of starting a connection
@@ -56,6 +56,11 @@ public abstract class ConnectionService {
 	private ConnectedThread mConnectedThread;
 
 	/**
+	 * The context
+	 */
+	private final Context mContext;
+
+	/**
 	 * Constructor. Initializes information needed to create a connection
 	 * 
 	 * @param context  The UI Activity Context
@@ -64,6 +69,7 @@ public abstract class ConnectionService {
 	public ConnectionService(Context context, Handler handler) {
 		mState = ConnectionConstants.STATE_NONE;
 		mHandler = handler;
+		mContext = context;
 	}
 
 	/**
@@ -82,7 +88,7 @@ public abstract class ConnectionService {
 		Message msg = mHandler.obtainMessage(ConnectionConstants.STATE_MESSAGE, -1, -1);
 		Bundle bundle = new Bundle();
 		bundle.putInt(ConnectionConstants.KEY_STATE_MESSAGE, state);
-		bundle.putString(ConnectionConstants.KEY_DEVICE_ID, deviceAddress);
+		bundle.putString(ConnectionConstants.KEY_DEVICE_ID, mDeviceAddress);
 		msg.setData(bundle);
 		msg.sendToTarget();
 	}
@@ -142,6 +148,10 @@ public abstract class ConnectionService {
 			mConnectedThread.cancel();
 			mConnectedThread = null;
 		}
+
+		// Start the thread to connect with the given device
+		mConnectThread = new ConnectThread(mContext, device);
+		mConnectThread.start();
 
 		setState(ConnectionConstants.STATE_CONNECTING);
 	}
@@ -220,10 +230,113 @@ public abstract class ConnectionService {
 		mConnectedThread.start();
 
 		// Store the remote device's address
-		deviceAddress = socket.toString();
+		mDeviceAddress = socket.toString();
 
 		// Update our state
 		setState(ConnectionConstants.STATE_CONNECTED);
+	}
+
+	/**
+	 * This thread runs while attempting to make an outgoing connection
+	 * with a device. It runs straight through; the connection either
+	 * succeeds or fails.
+	 */
+	private class ConnectThread extends Thread implements IConnectThread {
+		/**
+		 * The BluetoothSocket this connection will be opened on
+		 */
+		private ISocket mmSocket;
+
+		/**
+		 * The device address
+		 */
+		private final String mmDevice;
+
+		/**
+		 * The context
+		 */
+		private Context mmContext;
+
+		/**
+		 * Create a new ConnectThread with the given device
+		 * 
+		 * @param device the device to try and connect to
+		 */
+		public ConnectThread(Context ctx, String device) {
+			mmDevice = device;
+			mmContext = ctx;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
+		@Override
+		public void run() {
+			if (Util.isDebugBuild()) {
+				Log.i(TAG, "BEGIN mConnectThread");
+			}
+			int timesTried = 0;
+
+			setName("ConnectThread-" + mmSocket);
+
+			// Get a Socket for a connection with the given Device
+			mmSocket = ConnectionFactory.getSocket(mmContext, mmDevice);
+
+			while (timesTried != -1 && timesTried < 5) {
+				// Make a connection to the BluetoothSocket
+				try {
+					// This is a blocking call and will only return on a
+					// successful connection or an exception
+					mmSocket.connect();
+
+					// Set timesTried to -1 indicating we were successful
+					timesTried = -1;
+				} catch (IOException e) {
+					Log.e(TAG, "IOException", e);
+					// Close the socket
+					try {
+						mmSocket.close();
+					} catch (IOException e2) {
+						Log.e(TAG, "unable to close() socket during connection failure", e2);
+					}
+
+					// Try a few times to connect
+					Log.w(TAG, "Unsuccessful attempt to connect: " + timesTried);
+					timesTried++;
+				}
+			}
+
+			// We failed connecting too many times
+			if (timesTried != -1) {
+				Log.w(TAG, "Connection initiation failed. Restarting service");
+
+				// Restart this service, therefore updating the state and letting
+				// the UI know that the connection failed
+				ConnectionService.this.start();
+
+				return;
+			}
+
+			// Reset the ConnectThread because we're done
+			synchronized (ConnectionService.this) {
+				mConnectThread = null;
+			}
+
+			// Start the connected thread
+			connected(mmSocket);
+		}
+
+		/**
+		 * Cancel the current operation
+		 */
+		@Override
+		public void cancel() {
+			try {
+				mmSocket.close();
+			} catch (IOException e) {
+				Log.e(TAG, "close() of connect socket failed", e);
+			}
+		}
 	}
 
 	/**
@@ -312,7 +425,7 @@ public abstract class ConnectionService {
 						if (obj.has(ConnectionConstants.KEY_MSG_DATA)) {
 							data.putString(ConnectionConstants.KEY_MESSAGE_RX, obj.get(ConnectionConstants.KEY_MSG_DATA).toString());
 						}
-						data.putString(ConnectionConstants.KEY_DEVICE_ID, deviceAddress);
+						data.putString(ConnectionConstants.KEY_DEVICE_ID, mDeviceAddress);
 						msg.setData(data);
 						msg.sendToTarget();
 					} else if (bytes == -1) {

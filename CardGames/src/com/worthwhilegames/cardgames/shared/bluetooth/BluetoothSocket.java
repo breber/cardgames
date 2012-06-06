@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+
 import com.worthwhilegames.cardgames.shared.connection.ISocket;
 
 /**
@@ -20,6 +23,24 @@ public class BluetoothSocket implements ISocket {
 	 */
 	public BluetoothSocket(android.bluetooth.BluetoothSocket socket) {
 		mSocket = socket;
+	}
+
+	/**
+	 * Create a new BluetoothSocket to the given address
+	 * 
+	 * @param address the address to connect to
+	 */
+	public BluetoothSocket(String address) {
+		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+		BluetoothDevice dev = adapter.getRemoteDevice(address);
+		try {
+			mSocket = dev.createRfcommSocketToServiceRecord(BluetoothConstants.MY_UUID);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		// Always cancel discovery because it will slow down a connection
+		adapter.cancelDiscovery();
 	}
 
 	/* (non-Javadoc)
@@ -60,6 +81,14 @@ public class BluetoothSocket implements ISocket {
 	@Override
 	public void shutdownInput() throws IOException {
 		// Do nothing
+	}
+
+	/* (non-Javadoc)
+	 * @see com.worthwhilegames.cardgames.shared.connection.ISocket#connect()
+	 */
+	@Override
+	public void connect() throws IOException {
+		mSocket.connect();
 	}
 
 	/* (non-Javadoc)
