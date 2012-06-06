@@ -241,7 +241,6 @@ public class ConnectActivity extends Activity {
 		playerProgressBars[2] = (ProgressBar) findViewById(R.id.connectDeviceP3ProgressBar);
 		playerProgressBars[3] = (ProgressBar) findViewById(R.id.connectDeviceP4ProgressBar);
 
-
 		// Get the BluetoothAdapter for doing operations with Bluetooth
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		isReconnectScreen = getIntent().getBooleanExtra(IS_RECONNECT, false);

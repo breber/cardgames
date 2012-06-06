@@ -3,17 +3,18 @@ package com.worthwhilegames.cardgames.shared;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.widget.Button;
+import android.widget.ImageView;
+
+import com.worthwhilegames.cardgames.crazyeights.C8Constants;
 import com.worthwhilegames.cardgames.crazyeights.CrazyEightsGameController;
 import com.worthwhilegames.cardgames.crazyeights.CrazyEightsPlayerController;
 import com.worthwhilegames.cardgames.crazyeights.CrazyEightsTabletGame;
 import com.worthwhilegames.cardgames.gameboard.activities.GameboardActivity;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.widget.Button;
-import android.widget.ImageView;
 
 /**
  * A Factory that will help facilitate the retrieval
@@ -95,5 +96,18 @@ public class GameFactory {
 
 
 		return CardGame.CRAZY_EIGHTS;
+	}
+
+	/**
+	 * Gets the default maximum number of players for the current game
+	 *
+	 * @return the type maximum number of players allowed
+	 */
+	public static int getMaxAllowedPlayers(Context ctx) {
+		if (Constants.CRAZY_EIGHTS.equals(getGameType(ctx))) {
+			return C8Constants.MAX_NUM_PLAYERS;
+		}
+
+		return Constants.DEFAULT_MAX_PLAYERS;
 	}
 }

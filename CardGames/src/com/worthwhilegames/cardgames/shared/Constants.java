@@ -32,6 +32,11 @@ public class Constants {
 
 	/* Game Constants */
 	/**
+	 * The default maximum number of players allowed
+	 */
+	public static final int DEFAULT_MAX_PLAYERS = 4;
+
+	/**
 	 * A constant to represent the Clubs suit
 	 */
 	public static final int SUIT_CLUBS = 0;

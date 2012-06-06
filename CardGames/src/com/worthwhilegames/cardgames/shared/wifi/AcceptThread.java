@@ -6,12 +6,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 
-import com.worthwhilegames.cardgames.shared.Util;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
-
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
+
+import com.worthwhilegames.cardgames.shared.Game;
+import com.worthwhilegames.cardgames.shared.GameFactory;
+import com.worthwhilegames.cardgames.shared.Util;
+import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 
 /**
  * This thread runs while listening for incoming connections. When it finds
@@ -42,6 +44,12 @@ public class AcceptThread extends Thread {
 	private final HashMap<String, WifiConnectionService> mConnections;
 
 	/**
+	 * A reference to the WifiServer so that we can check to see how many
+	 * active connections there are
+	 */
+	private WifiServer mServer;
+
+	/**
 	 * The context of this thread
 	 */
 	private Context mContext;
@@ -52,11 +60,6 @@ public class AcceptThread extends Thread {
 	private boolean continueChecking = true;
 
 	/**
-	 * The max number of connections to accept
-	 */
-	private int maxConnections = 0;
-
-	/**
 	 * Create a new AcceptThread
 	 * 
 	 * @param ctx The context of this thread
@@ -64,11 +67,11 @@ public class AcceptThread extends Thread {
 	 * @param services A map of MAC addresses to WifiConnectionService
 	 * @param maxConnections the maximum number of connections to open
 	 */
-	public AcceptThread(Context ctx, Handler handler, HashMap<String, WifiConnectionService> services, int maxConnections) {
+	public AcceptThread(Context ctx, Handler handler, HashMap<String, WifiConnectionService> services, WifiServer server) {
 		mConnections = services;
 		mContext = ctx;
 		mHandler = handler;
-		this.maxConnections = maxConnections;
+		mServer = server;
 
 		// Create a new listening server socket
 		try {
@@ -83,38 +86,79 @@ public class AcceptThread extends Thread {
 	 */
 	@Override
 	public void run() {
+		// Try and get a reference to the game so that we can figure
+		// out how many human players there were so that we allow up
+		// to that many active connections
+		Game g = null;
+		try {
+			g = GameFactory.getGameInstance(mContext);
+		} catch (IllegalArgumentException ex) {
+			if (Util.isDebugBuild()) {
+				Log.d(TAG, "Game hasn't been started yet - allow up to the default number of connections");
+			}
+		}
+		setName("AcceptThread");
+
 		if (Util.isDebugBuild()) {
 			Log.d(TAG, "Socket BEGIN mAcceptThread" + this);
 		}
-		int i = 0;
 
-		setName("AcceptThread");
-
-		while (continueChecking && i < maxConnections) {
-			WifiConnectionService serv = new WifiConnectionService(mContext, mHandler);
+		while (continueChecking) {
 			Socket socket = null;
-
+			WifiConnectionService serv = new WifiConnectionService(mContext, mHandler);
 			serv.start();
 
 			// Listen to the server socket if we're not connected
-			while (continueChecking && serv.getState() != ConnectionConstants.STATE_CONNECTED && i < maxConnections) {
-				try {
-					// This is a blocking call and will only return on a
-					// successful connection or an exception
-					Log.d(TAG, "mmServerSocket.accept() beginning - " + i);
-					socket = mmServerSocket.accept();
-					Log.d(TAG, "mmServerSocket.accept() completed " + socket.getInetAddress().getHostAddress());
-				} catch (IOException e) {
-					Log.e(TAG, "Socket accept() failed", e);
-					break;
+			try {
+				// This is a blocking call and will only return on a
+				// successful connection or an exception
+				if (Util.isDebugBuild()) {
+					Log.d(TAG, "mmServerSocket.accept() beginning");
 				}
 
-				// If a connection was accepted
-				if (socket != null) {
+				socket = mmServerSocket.accept();
+
+				if (Util.isDebugBuild()) {
+					Log.d(TAG, "mmServerSocket.accept() completed " + socket.getInetAddress().getHostAddress());
+				}
+			} catch (IOException e) {
+				Log.e(TAG, "Socket accept() failed", e);
+				break;
+			}
+
+			// If a connection was accepted
+			if (socket != null) {
+				if (Util.isDebugBuild()) {
+					Log.d(TAG, "the socket is not null! " + socket);
+					Log.d(TAG, "game: " + g);
+					if (g != null) {
+						Log.d(TAG, "CurrentNumPlayers " + g.getNumPlayers());
+						Log.d(TAG, "MaxNumPlayers " + g.getMaxNumPlayers());
+					}
+				}
+
+				// Figure out how many active connections to allow
+				// By default, we will allow as many as the game allows
+				// If the game has been started, we will let it tell
+				// us how many human players there were
+				int numPlayersToAllow = GameFactory.getMaxAllowedPlayers(mContext);
+				if (g != null) {
+					numPlayersToAllow = g.getMaxNumPlayers();
+				}
+
+				// If we already have enough players, drop this connection
+				if (mServer.getConnectedDeviceCount() == numPlayersToAllow) {
 					if (Util.isDebugBuild()) {
-						Log.d(TAG, "the socket is not null! " + socket);
+						Log.d(TAG, "connecting: too many players, dropping new player");
 					}
 
+					try {
+						socket.close();
+					} catch (IOException e) {
+						Log.e(TAG, "Socket close() of extra client failed", e);
+						e.printStackTrace();
+					}
+				} else {
 					synchronized (AcceptThread.this) {
 						switch (serv.getState()) {
 						case ConnectionConstants.STATE_LISTEN:
@@ -123,12 +167,11 @@ public class AcceptThread extends Thread {
 							InetAddress dev = socket.getInetAddress();
 
 							if (Util.isDebugBuild()) {
-								Log.d(TAG, "connecting: " + i + " --> " + dev.getHostAddress());
+								Log.d(TAG, "connecting: " + dev.getHostAddress());
 							}
 
 							mConnections.put(dev.getHostAddress(), serv);
 							serv.connected(socket, dev);
-							i++;
 							break;
 						case ConnectionConstants.STATE_NONE:
 						case ConnectionConstants.STATE_CONNECTED:
@@ -141,28 +184,20 @@ public class AcceptThread extends Thread {
 							break;
 						}
 					} // end synchronized
-				} // end socket != null
-
-				if (Util.isDebugBuild()) {
-					Log.d(TAG, "connecting: post socket != null : " + i + " / " + maxConnections);
-					Log.d(TAG, "connecting: post socket != null : " + (continueChecking && serv.getState() != ConnectionConstants.STATE_CONNECTED && i < maxConnections));
-				}
-
-			} // end while continue...
+				} // end else
+			} // end socket != null
 
 			if (Util.isDebugBuild()) {
-				Log.d(TAG, "connecting: post while continue... : " + i + " / " + maxConnections);
-				Log.d(TAG, "connecting: post while continue... : " + (continueChecking && i < maxConnections));
+				Log.d(TAG, "connecting: post socket != null : " + (continueChecking && serv.getState() != ConnectionConstants.STATE_CONNECTED));
 			}
 		} // end while...
 
-		if (Util.isDebugBuild()) {
-			Log.d(TAG, "connecting: post while" + i + " / " + maxConnections);
-			Log.d(TAG, "connecting: post while");
-		}
-
 		// Close the server socket
 		try {
+			if (Util.isDebugBuild()) {
+				Log.d(TAG, "connecting: closing the server socket");
+			}
+
 			mmServerSocket.close();
 		} catch (IOException e) {
 			Log.e(TAG, "Socket close() of server failed", e);

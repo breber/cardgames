@@ -6,16 +6,16 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import com.worthwhilegames.cardgames.shared.Util;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
+import com.worthwhilegames.cardgames.shared.Util;
+import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
+import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
 
 /**
  * This Singleton class acts as a Server for a Bluetooth connection.
@@ -90,7 +90,7 @@ public class WifiServer extends WifiCommon implements ConnectionServer {
 	private WifiServer(Context ctx) {
 		mContext = ctx;
 		services = new HashMap<String, WifiConnectionService>();
-		mAcceptThread = new AcceptThread(mContext, mHandler, services, 4);
+		mAcceptThread = new AcceptThread(mContext, mHandler, services, this);
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class WifiServer extends WifiCommon implements ConnectionServer {
 	public void startListening(int maxConnections) {
 		// Start the AcceptThread which listens for incoming connection requests
 		if (mAcceptThread == null) {
-			mAcceptThread = new AcceptThread(mContext, mHandler, services, maxConnections);
+			mAcceptThread = new AcceptThread(mContext, mHandler, services, this);
 		}
 
 		mAcceptThread.start();
