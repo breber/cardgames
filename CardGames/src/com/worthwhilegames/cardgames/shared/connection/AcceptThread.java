@@ -37,7 +37,7 @@ public class AcceptThread extends Thread {
 	 * A reference to a HashMap of MAC addresses to WifiConnectionServices
 	 * that is passed in by the calling server.
 	 */
-	private final HashMap<String, IConnectionService> mConnections;
+	private final HashMap<String, ConnectionService> mConnections;
 
 	/**
 	 * A reference to the ConnectionServer so that we can check to see how many
@@ -63,7 +63,7 @@ public class AcceptThread extends Thread {
 	 * @param services A map of MAC addresses to WifiConnectionService
 	 * @param maxConnections the maximum number of connections to open
 	 */
-	public AcceptThread(Context ctx, Handler handler, HashMap<String, IConnectionService> services, ConnectionServer server) {
+	public AcceptThread(Context ctx, Handler handler, HashMap<String, ConnectionService> services, ConnectionServer server) {
 		mConnections = services;
 		mContext = ctx;
 		mHandler = handler;
@@ -97,7 +97,7 @@ public class AcceptThread extends Thread {
 
 		while (continueChecking) {
 			ISocket socket = null;
-			IConnectionService serv = ConnectionFactory.getNewConnectionService(mContext, mHandler);
+			ConnectionService serv = ConnectionFactory.getNewConnectionService(mContext, mHandler);
 			serv.start();
 
 			// Listen to the server socket if we're not connected

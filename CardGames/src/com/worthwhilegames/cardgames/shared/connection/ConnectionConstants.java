@@ -75,4 +75,24 @@ public class ConnectionConstants {
 	 * Indicates that the BluetoothConnectionService is currently connected to a device
 	 */
 	public static final int STATE_CONNECTED = 3;
+
+
+	/**
+	 *  Name for the SDP record when creating server socket
+	 */
+	public static final String SOCKET_NAME = "CardGames";
+
+	/**
+	 * The constant used internally from the ConnectionService
+	 * to the ConnectionClient/ConnectionServer indicating that we read a message
+	 * from the Connection port.
+	 */
+	public static final int READ_MESSAGE  = 0;
+
+	/**
+	 * THe constant used internally from the ConnectionConnectionService
+	 * to the ConnectionClient/ConnectionServer indicating that the state of the
+	 * Connection connection has changed.
+	 */
+	public static final int STATE_MESSAGE = 1;
 }

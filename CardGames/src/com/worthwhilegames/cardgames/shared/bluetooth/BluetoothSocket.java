@@ -1,6 +1,8 @@
 package com.worthwhilegames.cardgames.shared.bluetooth;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import com.worthwhilegames.cardgames.shared.connection.ISocket;
 
@@ -26,6 +28,38 @@ public class BluetoothSocket implements ISocket {
 	@Override
 	public void close() throws IOException {
 		mSocket.close();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.worthwhilegames.cardgames.shared.connection.ISocket#getInputStream()
+	 */
+	@Override
+	public InputStream getInputStream() throws IOException {
+		return mSocket.getInputStream();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.worthwhilegames.cardgames.shared.connection.ISocket#getOutputStream()
+	 */
+	@Override
+	public OutputStream getOutputStream() throws IOException {
+		return mSocket.getOutputStream();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.worthwhilegames.cardgames.shared.connection.ISocket#shutdownOutput()
+	 */
+	@Override
+	public void shutdownOutput() throws IOException {
+		// Do nothing
+	}
+
+	/* (non-Javadoc)
+	 * @see com.worthwhilegames.cardgames.shared.connection.ISocket#shutdownInput()
+	 */
+	@Override
+	public void shutdownInput() throws IOException {
+		// Do nothing
 	}
 
 	/* (non-Javadoc)

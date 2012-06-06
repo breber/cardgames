@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import android.bluetooth.BluetoothAdapter;
 
+import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 import com.worthwhilegames.cardgames.shared.connection.IServerSocket;
 import com.worthwhilegames.cardgames.shared.connection.ISocket;
 
@@ -20,7 +21,7 @@ public class BluetoothServerSocket implements IServerSocket {
 	public BluetoothServerSocket() {
 		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 		try {
-			mServerSocket = adapter.listenUsingRfcommWithServiceRecord(BluetoothConstants.SOCKET_NAME, BluetoothConstants.MY_UUID);;
+			mServerSocket = adapter.listenUsingRfcommWithServiceRecord(ConnectionConstants.SOCKET_NAME, BluetoothConstants.MY_UUID);;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

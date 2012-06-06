@@ -5,13 +5,9 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 
 import com.worthwhilegames.cardgames.shared.Constants;
-import com.worthwhilegames.cardgames.shared.bluetooth.BluetoothClient;
 import com.worthwhilegames.cardgames.shared.bluetooth.BluetoothConnectionService;
-import com.worthwhilegames.cardgames.shared.bluetooth.BluetoothServer;
 import com.worthwhilegames.cardgames.shared.bluetooth.BluetoothServerSocket;
-import com.worthwhilegames.cardgames.shared.wifi.WifiClient;
 import com.worthwhilegames.cardgames.shared.wifi.WifiConnectionService;
-import com.worthwhilegames.cardgames.shared.wifi.WifiServer;
 import com.worthwhilegames.cardgames.shared.wifi.WifiServerSocket;
 
 /**
@@ -28,15 +24,7 @@ public class ConnectionFactory {
 	 * @return the ConnectionClient
 	 */
 	public static ConnectionClient getClientInstance(Context ctx) {
-		ConnectionType type = getConnectionType(ctx);
-
-		if (type == ConnectionType.BLUETOOTH) {
-			return BluetoothClient.getInstance(ctx);
-		} else if (type == ConnectionType.WIFI) {
-			return WifiClient.getInstance(ctx);
-		}
-
-		return null;
+		return ConnectionClient.getInstance(ctx);
 	}
 
 	/**
@@ -47,15 +35,7 @@ public class ConnectionFactory {
 	 * @return the ConnectionServer
 	 */
 	public static ConnectionServer getServerInstance(Context ctx) {
-		ConnectionType type = getConnectionType(ctx);
-
-		if (type == ConnectionType.BLUETOOTH) {
-			return BluetoothServer.getInstance(ctx);
-		} else if (type == ConnectionType.WIFI) {
-			return WifiServer.getInstance(ctx);
-		}
-
-		return null;
+		return ConnectionServer.getInstance(ctx);
 	}
 
 	/**
@@ -99,7 +79,7 @@ public class ConnectionFactory {
 	 * 
 	 * @return a new IConnectionService
 	 */
-	public static IConnectionService getNewConnectionService(Context ctx, Handler handler) {
+	public static ConnectionService getNewConnectionService(Context ctx, Handler handler) {
 		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, Context.MODE_WORLD_READABLE);
 		String connectionType = prefs.getString(Constants.CONNECTION_TYPE, Constants.WIFI);
 

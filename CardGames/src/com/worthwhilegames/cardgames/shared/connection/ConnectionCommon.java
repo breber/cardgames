@@ -15,7 +15,7 @@ public abstract class ConnectionCommon {
 	 * @param obj the object to write
 	 * @return whether the message was written or not
 	 */
-	protected boolean performWrite(IConnectionService service, int messageType, Object obj) {
+	protected boolean performWrite(ConnectionService service, int messageType, Object obj) {
 		// If we aren't connected, return false
 		if (service.getState() != ConnectionConstants.STATE_CONNECTED) {
 			return false;
