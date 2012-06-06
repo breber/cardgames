@@ -183,7 +183,7 @@ public class ConnectActivity extends Activity {
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		ConnectionClient client = ConnectionFactory.getClientInstance(this);
+		ConnectionClient client = ConnectionClient.getInstance(this);
 
 		if (requestCode == DEVICE_LIST_RESULT && resultCode != RESULT_CANCELED) {
 			// We are coming back from the device list, and it wasn't cancelled, so

@@ -241,7 +241,6 @@ public class ConnectActivity extends Activity {
 		playerProgressBars[2] = (ProgressBar) findViewById(R.id.connectDeviceP3ProgressBar);
 		playerProgressBars[3] = (ProgressBar) findViewById(R.id.connectDeviceP4ProgressBar);
 
-
 		// Get the BluetoothAdapter for doing operations with Bluetooth
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		isReconnectScreen = getIntent().getBooleanExtra(IS_RECONNECT, false);
@@ -255,7 +254,7 @@ public class ConnectActivity extends Activity {
 				Log.d(TAG, "Reconnecting...");
 			}
 
-			mConnectionServer = ConnectionFactory.getServerInstance(this);
+			mConnectionServer = ConnectionServer.getInstance(this);
 
 			currentGame = GameFactory.getGameInstance(this);
 
@@ -461,18 +460,14 @@ public class ConnectActivity extends Activity {
 		}
 
 		if (mConnectionServer == null) {
-			mConnectionServer = ConnectionFactory.getServerInstance(this);
+			mConnectionServer = ConnectionServer.getInstance(this);
 		}
 
 		if (ConnectionFactory.getConnectionType(this) == ConnectionType.BLUETOOTH) {
 			Util.ensureDiscoverable(this, mBluetoothAdapter);
 		}
 
-		if (isReconnectScreen) {
-			mConnectionServer.startListening(1);
-		} else {
-			mConnectionServer.startListening(4);
-		}
+		mConnectionServer.startListening();
 	}
 
 	/* (non-Javadoc)

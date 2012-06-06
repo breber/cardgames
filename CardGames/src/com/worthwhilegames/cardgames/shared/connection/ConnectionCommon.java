@@ -1,15 +1,12 @@
-package com.worthwhilegames.cardgames.shared.wifi;
+package com.worthwhilegames.cardgames.shared.connection;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
-
-
 /**
  * Common methods for Bluetooth Client and Server
  */
-public abstract class WifiCommon {
+public abstract class ConnectionCommon {
 
 	/**
 	 * Perform a write operation
@@ -18,7 +15,7 @@ public abstract class WifiCommon {
 	 * @param obj the object to write
 	 * @return whether the message was written or not
 	 */
-	protected boolean performWrite(WifiConnectionService service, int messageType, Object obj) {
+	protected boolean performWrite(ConnectionService service, int messageType, Object obj) {
 		// If we aren't connected, return false
 		if (service.getState() != ConnectionConstants.STATE_CONNECTED) {
 			return false;
