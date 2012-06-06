@@ -63,6 +63,13 @@ public interface Game {
 	public int getNumPlayers();
 
 	/**
+	 * The maximum number of players to allow to connect
+	 * 
+	 * @return the maximum number of players to allow to connect
+	 */
+	public int getMaxNumPlayers();
+
+	/**
 	 * This method will tell if the game is over for a given player
 	 * 
 	 * @param player the player to check
@@ -76,20 +83,20 @@ public interface Game {
 	 * @return a List of type Player
 	 */
 	public List<Player> getPlayers();
-	
+
 	/**
 	 * This method is a getter for the shuffled deck pile
 	 * 
 	 * @return a list of Card objects representing the shuffled deck
 	 */
 	public ArrayList<Card> getShuffledDeck();
-	
+
 	/**
 	 * set the default computer difficulty
 	 * @param diff computer difficulty
 	 */
 	public void setComputerDifficulty(String diff);
-	
+
 	/**
 	 * get the default computer difficulty
 	 * @return the computer difficulty

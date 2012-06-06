@@ -35,7 +35,6 @@ import com.worthwhilegames.cardgames.shared.TextView;
 import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.activities.QuitGameActivity;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionFactory;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
 
 /**
@@ -234,7 +233,7 @@ public class GameboardActivity extends Activity {
 		// messages from the Connection module
 		registerReceiver();
 
-		connection = ConnectionFactory.getServerInstance(this);
+		connection = ConnectionServer.getInstance(this);
 
 		sharedPreferences = getSharedPreferences(PREFERENCES, MODE_WORLD_READABLE);
 
