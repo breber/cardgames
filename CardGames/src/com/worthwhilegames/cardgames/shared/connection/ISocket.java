@@ -49,5 +49,10 @@ public interface ISocket {
 	 */
 	void shutdownInput() throws IOException;
 
+	/**
+	 * Connect to the socket
+	 * 
+	 * @throws IOException
+	 */
 	void connect() throws IOException;
 }
