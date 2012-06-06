@@ -60,6 +60,11 @@ public class Constants {
 	 * A constant to represent the jokers
 	 */
 	public static final int SUIT_JOKER = 4;
+	
+	/**
+	 * A constant for the Jack card value
+	 */
+	public static final int JACK_VALUE = 10;
 
 	/**
 	 * This is used by the connections screen to pass the player 1 name that
