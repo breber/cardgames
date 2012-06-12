@@ -6,14 +6,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.worthwhilegames.cardgames.euchre.EuchreGameRules;
-import com.worthwhilegames.cardgames.euchre.EuchreTabletGame;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.Player;
 
 public class EuchreRulesTest {
 
 	private EuchreGameRules r;
-	private EuchreTabletGame t = new EuchreTabletGame();
 	private int suitLed;
 	private int trump;
 	private Player player = new Player();

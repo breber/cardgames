@@ -78,6 +78,11 @@ public class EuchreTabletGame implements Game{
 	 * A list of all the cards in the shuffle deck
 	 */
 	private ArrayList<Card> shuffledDeck;
+	
+	/**
+	 * A card to represent the first card turned over for players to bet on
+	 */
+	private Card topCard;
 
 
 	/**
@@ -158,13 +163,12 @@ public class EuchreTabletGame implements Game{
 			}
 		}
 		
-		trump = iter.next().getSuit();
+		topCard = iter.next();
 		iter.remove();
+		trump = topCard.getSuit();
 		
 	}
 
-	
-	
 	@Override
 	public Card draw(Player player) {
 		//No drawing in this game
@@ -261,6 +265,86 @@ public class EuchreTabletGame implements Game{
 	public String getComputerDifficulty() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public int determineTrickWinner(List<Card> cards, int suitLed){
+		
+		Card winningCard = cards.get(0);
+		adjustCards(winningCard);
+		
+		for(int i = 1; i < cards.size(); i++){
+			Card card = cards.get(i);
+			adjustCards(card);
+			winningCard = compareCards(winningCard, card, suitLed);	
+		}
+		
+		return winningCard.getIdNum();
+	}
+	
+	public Card compareCards(Card card, Card card2, int suitLed){
+		
+		if(card.getSuit() == trump && card2.getSuit() != trump){
+			return card;
+		}else if(card.getSuit() != trump && card2.getSuit() == trump){
+			return card2;
+		}else if(card.getSuit() == suitLed && card2.getSuit() != suitLed){
+			return card;
+		}else if(card.getSuit() != suitLed && card2.getSuit() == suitLed){
+			return card2;
+		}else{
+			if(card.getValue() >= card2.getValue()){
+				return card;
+			}else{
+				return card2;
+			}
+		}
+		
+	}
+	
+public void adjustCards(Card card){
+					
+		switch(trump){
+			case SUIT_CLUBS:
+				if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_SPADES){
+					card.setSuit(SUIT_CLUBS);
+					card.setValue(15);
+				}else if(card.getValue() == JACK_VALUE&& card.getSuit() == SUIT_CLUBS){
+					card.setValue(16);
+				}
+				break;
+				
+			case SUIT_DIAMONDS:
+				if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_HEARTS){
+					card.setSuit(SUIT_DIAMONDS);
+					card.setValue(15);
+				}else if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_DIAMONDS){
+					card.setValue(16);
+				}
+				break;
+			
+			case SUIT_HEARTS:
+				if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_DIAMONDS){
+					card.setSuit(SUIT_HEARTS);
+					card.setValue(15);
+				}else if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_HEARTS){
+					card.setValue(16);
+				}
+				break;
+			
+			case SUIT_SPADES:
+				if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_CLUBS){
+					card.setSuit(SUIT_SPADES);
+					card.setValue(15);
+				}else if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_SPADES){
+					card.setValue(16);
+				}
+				break;
+		}
+		
+		if(card.getValue() == 0){
+			card.setValue(14);
+		}
+		
 	}
 
 	public Deck getGameDeck() {
