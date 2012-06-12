@@ -163,46 +163,7 @@ public class EuchreTabletGame implements Game{
 		
 	}
 
-	public void adjustJacks(Player player, int trump){
-		
-		int numCards = player.getNumCards();
-		
-		List<Card> cards = player.getCards();
-		
-		Card card;
-		
-		for(int i = 0; i < numCards; i++){
-			
-			card = cards.get(i);
-			
-			switch(trump){
-				case SUIT_CLUBS:
-					if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_SPADES){
-						card.setSuit(SUIT_CLUBS);
-					}
-					break;
-					
-				case SUIT_DIAMONDS:
-					if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_HEARTS){
-						card.setSuit(SUIT_DIAMONDS);
-					}
-					break;
-				
-				case SUIT_HEARTS:
-					if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_DIAMONDS){
-						card.setSuit(SUIT_HEARTS);
-					}
-					break;
-				
-				case SUIT_SPADES:
-					if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_CLUBS){
-						card.setSuit(SUIT_SPADES);
-					}
-					
-					break;
-			}
-		}
-	}
+	
 	
 	@Override
 	public Card draw(Player player) {
