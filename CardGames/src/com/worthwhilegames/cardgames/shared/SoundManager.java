@@ -149,9 +149,11 @@ public class SoundManager {
 				if (status == TextToSpeech.SUCCESS) {
 					// get the user preference
 					String lang = sharedPreferences.getString(LANGUAGE, LANGUAGE_US);
-					int langResult = -1;
+					int langResult = TextToSpeech.LANG_MISSING_DATA;
 
-					if (lang.equals(LANGUAGE_US)) { // default
+					if (tts == null) {
+						langResult = TextToSpeech.LANG_MISSING_DATA;
+					} else if (lang.equals(LANGUAGE_US)) { // default
 						langResult = tts.setLanguage(Locale.US);
 					} else if (lang.equals(LANGUAGE_GERMAN)) {
 						langResult = tts.setLanguage(Locale.GERMAN);
