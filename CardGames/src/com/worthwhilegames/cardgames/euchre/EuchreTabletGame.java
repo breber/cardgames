@@ -1,5 +1,12 @@
 package com.worthwhilegames.cardgames.euchre;
 
+import static com.worthwhilegames.cardgames.shared.Constants.JACK_VALUE;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.EUCHRE_SCORE_LIMIT;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -9,6 +16,7 @@ import java.util.Random;
 import android.util.Log;
 
 import com.worthwhilegames.cardgames.shared.Card;
+import com.worthwhilegames.cardgames.shared.CardGame;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.Deck;
 import com.worthwhilegames.cardgames.shared.Game;
@@ -16,12 +24,14 @@ import com.worthwhilegames.cardgames.shared.Player;
 import com.worthwhilegames.cardgames.shared.Rules;
 import com.worthwhilegames.cardgames.shared.Util;
 
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
-import static com.worthwhilegames.cardgames.shared.Constants.JACK_VALUE;
-
+/**
+ * @author Josh
+ *
+ */
+/**
+ * @author Josh
+ *
+ */
 public class EuchreTabletGame implements Game{
 	
 	/**
@@ -68,6 +78,11 @@ public class EuchreTabletGame implements Game{
 	 * An integer to represent the player who is the dealer
 	 */
 	private int dealer;
+	
+	/**
+	 * This is whoever started the current trick
+	 */
+	private int trickLeader;
 
 	/**
 	 * An iterator for removing cards from the shuffled deck
@@ -80,9 +95,29 @@ public class EuchreTabletGame implements Game{
 	private ArrayList<Card> shuffledDeck;
 	
 	/**
+	 * This is how many tricks each team has won in a round
+	 */
+	private int[] roundScores = new int[2];
+	
+	/**
+	 * This is the total points for the team
+	 */
+	private int[] matchScores = new int[2];;
+	
+	/**
 	 * A card to represent the first card turned over for players to bet on
 	 */
 	private Card topCard;
+	
+	/**
+	 * list of the cards played the last round
+	 */
+	private ArrayList<Card> cardsPlayed;
+	
+	/**
+	 * The first card played for a trick
+	 */
+	private Card cardLead;
 
 
 	/**
@@ -135,12 +170,16 @@ public class EuchreTabletGame implements Game{
 	
 	@Override
 	public void setup() {
+		roundScores[0] = 0;
+		roundScores[1] = 0;
+		matchScores[0] = 0;
+		matchScores[1] = 0;
 		
-		this.shuffleDeck();
-		
-		this.deal();
-		
+		//this is -1 because start round sets it to dealer +1 so it will start as 0;
+		setDealer(-1);
 	}
+
+
 
 	@Override
 	public void deal() {
@@ -167,6 +206,7 @@ public class EuchreTabletGame implements Game{
 		iter.remove();
 		trump = topCard.getSuit();
 		
+		cardsPlayed.add(getDealer(), topCard);
 	}
 
 	@Override
@@ -178,6 +218,7 @@ public class EuchreTabletGame implements Game{
 	@Override
 	public void discard(Player player, Card card) {
 		player.getCards().remove(card);
+		cardsPlayed.add(players.indexOf(player), card);
 	}
 
 	@Override
@@ -191,6 +232,43 @@ public class EuchreTabletGame implements Game{
 		//set the iterator to go through the shuffled deck
 		iter = shuffledDeck.iterator();
 		
+	}
+	
+	/**
+	 * This will end a series of 5 tricks and calculate the score
+	 */
+	public void endRound(){
+		
+		int bettingTeam = playerCalledTrump % 2;
+		if( roundScores[bettingTeam] >= 3){
+			//TODO add go alone scoring
+			if( roundScores[bettingTeam] > 4 ){
+				matchScores[bettingTeam] += 2;
+			} else {
+				matchScores[bettingTeam] ++;				
+			}
+		} else {
+			//betting team has been "Euchred" 2 points for defending team
+			matchScores[(bettingTeam +1) % 2] += 2;
+		}
+		
+		this.clearCardsPlayed();
+		
+	}
+	
+	/**
+	 * This will start the next round by dealing new cards and setting up the card to bet on
+	 */
+	public void startRound(){
+		//make the dealer the next player this also resets the trick leader
+		this.setDealer(getDealer() + 1);	
+				
+		
+		//redeal
+		this.gameDeck = new Deck(CardGame.EUCHRE);
+		shuffledDeck = gameDeck.getCardIDs();
+		this.shuffleDeck();
+		this.deal();
 	}
 	
 	public void pickItUp(Player player){
@@ -240,8 +318,8 @@ public class EuchreTabletGame implements Game{
 
 	@Override
 	public boolean isGameOver(Player player) {
-		// TODO Auto-generated method stub
-		return false;
+		//TODO make the match score limit a setting?
+		return matchScores[0] >= EUCHRE_SCORE_LIMIT || matchScores[1] >= EUCHRE_SCORE_LIMIT;
 	}
 
 	@Override
@@ -267,21 +345,38 @@ public class EuchreTabletGame implements Game{
 		return null;
 	}
 	
-	public int determineTrickWinner(List<Card> cards, int suitLed){
+	public void determineTrickWinner(){
 		
-		Card winningCard = cards.get(0);
+		Card winningCard = cardsPlayed.get(0);
 		adjustCards(winningCard);
+		int winningPlayer = 0;
 		
-		for(int i = 1; i < cards.size(); i++){
-			Card card = cards.get(i);
+		for(int i = 1; i < cardsPlayed.size(); i++){
+			Card card = cardsPlayed.get(i);
 			adjustCards(card);
-			winningCard = compareCards(winningCard, card, suitLed);	
+			winningCard = compareCards(winningCard, card, cardLead.getSuit());
+			if(winningCard.equals(card)){
+				winningPlayer = i;
+			}
 		}
 		
-		return winningCard.getIdNum();
+		//add a trick taken to the round score for the player
+		roundScores[winningPlayer % 2]++; 
+		
+		clearCardsPlayed();
+		
+		setTrickLeader(winningPlayer);
+		
+		return;
 	}
 	
 	public Card compareCards(Card card, Card card2, int suitLed){
+		//null check for if someone is going alone then one player will never play
+		if(card == null){
+			return card2;
+		}else if(card2 == null){
+			return card;
+		}
 		
 		if(card.getSuit() == trump && card2.getSuit() != trump){
 			return card;
@@ -301,8 +396,11 @@ public class EuchreTabletGame implements Game{
 		
 	}
 	
-public void adjustCards(Card card){
-					
+	public void adjustCards(Card card){
+		if( card == null ){
+			return;
+		}
+	
 		switch(trump){
 			case SUIT_CLUBS:
 				if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_SPADES){
@@ -371,6 +469,14 @@ public void adjustCards(Card card){
 		this.trump = trump;
 	}
 
+	public Card getTopCard() {
+		return topCard;
+	}
+
+	public void setTopCard(Card topCard) {
+		this.topCard = topCard;
+	}
+
 	public Iterator<Card> getIter() {
 		return iter;
 	}
@@ -401,6 +507,49 @@ public void adjustCards(Card card){
 
 	public void setDealer(int dealer) {
 		this.dealer = dealer;
+		if(this.dealer > 3){
+			this.dealer = 0;
+		}
+		setTrickLeader(dealer + 1);
+	}
+
+	public int getTrickLeader() {
+		return trickLeader;
+	}
+
+	public void setTrickLeader(int trickLeader) {
+		this.trickLeader = trickLeader;
+		if(this.trickLeader > 3){
+			this.trickLeader = 0;
+		}
+	}
+	
+	public int[] getRoundScores() {
+		return roundScores;
+	}
+
+	public int[] getMatchScores() {
+		return matchScores;
+	}
+	
+	/**
+	 * clears the cards that have been played by player.
+	 */
+	public void clearCardsPlayed(){
+		//get rid of record of what has been played
+		//TODO hopefully the cardsPlayed can be used by the gameboard to show which cards have been played.
+		cardsPlayed.set(0, null);
+		cardsPlayed.set(1, null);
+		cardsPlayed.set(2, null);
+		cardsPlayed.set(3, null);
+	}
+
+	public Card getCardLead() {
+		return cardLead;
+	}
+
+	public void setCardLead(Card cardLead) {
+		this.cardLead = cardLead;
 	}
 
 }

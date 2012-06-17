@@ -20,6 +20,11 @@ public class EuchreConstants {
 	 * JSON message code for trump suit declared in EuchreBet
 	 */
 	public static final String TRUMP = "trump";
+	
+	/**
+	 * This is the score that a team must get to win the game
+	 */
+	public static final int EUCHRE_SCORE_LIMIT = 10;
 
 	/* All Game specific bluetooth message constants will be >= 30  */
 	/**
@@ -38,14 +43,24 @@ public class EuchreConstants {
 	public static final int LEAD_TRICK = 32;
 	
 	/**
-	 * Message type for a player playing the first card of a trick
+	 * Message type for telling the dealer to take this card and keep it in his hand or discard it.
 	 */
-	public static final int PLAY_LEAD_CARD = 33;
+	public static final int PICK_IT_UP = 33;
 	
 	/**
 	 * Message type for a player playing the first card of a trick
 	 */
-	public static final int ROUND_OVER = 34;
+	public static final int PLAY_LEAD_CARD = 34;
+		
+	/**
+	 * Message type for a player playing the first card of a trick
+	 */
+	public static final int ROUND_OVER = 36;
+	
+	/**
+	 * Message type for the gameboard sending a player the trump suit
+	 */
+	public static final int TRUMP_SUIT = 37;
 	
 	
 	
