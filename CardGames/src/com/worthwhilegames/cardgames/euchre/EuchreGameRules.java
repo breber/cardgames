@@ -6,6 +6,7 @@ import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.worthwhilegames.cardgames.shared.Card;
@@ -26,15 +27,13 @@ public class EuchreGameRules implements Rules{
 	 * 
 	 */
 	@Override
-	public boolean checkCard(Card cardPlayed, int trump, int suitLed, Player player) {
+	public boolean checkCard(Card cardPlayed, int trump, int suitLed, ArrayList<Card> cards) {
 		
-		adjustJacks(player, trump);
+		adjustJacks(cards, trump);
 		
 		boolean canFollowSuit = false;
 		
-		int numCards = player.getNumCards();
-		
-		List<Card> cards = player.getCards();
+		int numCards = cards.size();
 		
 		for(int i = 0; i < numCards; i++){
 			Card card = cards.get(i);
@@ -49,16 +48,14 @@ public class EuchreGameRules implements Rules{
 			return true;
 		}
 		
-		revertJacks(player, trump);
+		revertJacks(cards, trump);
 		
 		return false;
 	}
 	
-	public void adjustJacks(Player player, int trump){
+	public void adjustJacks(ArrayList<Card> cards , int trump){
 		
-		int numCards = player.getNumCards();
-		
-		List<Card> cards = player.getCards();
+		int numCards = cards.size();
 		
 		Card card;
 		
@@ -95,11 +92,9 @@ public class EuchreGameRules implements Rules{
 		}
 	}
 
-	public void revertJacks(Player player, int trump){
+	public void revertJacks(ArrayList<Card> cards, int trump){
 		
-		int numCards = player.getNumCards();
-		
-		List<Card> cards = player.getCards();
+		int numCards = cards.size();
 		
 		Card card;
 		

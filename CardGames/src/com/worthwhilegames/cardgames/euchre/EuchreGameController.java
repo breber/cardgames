@@ -258,6 +258,7 @@ public class EuchreGameController implements GameController{
 					break;
 				case PICK_IT_UP:
 					isComputerPlaying = false;
+					//TODO get which card they discarded and discard it.
 					currentState = LEAD_TRICK;
 					whoseTurn = game.getTrickLeader();
 					server.write(LEAD_TRICK, null, players.get(whoseTurn).getId());
@@ -427,8 +428,6 @@ public class EuchreGameController implements GameController{
 		
 		// Highlight the name of the current player
 		gameContext.highlightPlayer(whoseTurn);
-
-		
 
 		currentState = IS_TURN;
 		

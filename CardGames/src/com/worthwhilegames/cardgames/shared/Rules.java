@@ -1,5 +1,7 @@
 package com.worthwhilegames.cardgames.shared;
 
+import java.util.ArrayList;
+
 /**
  * An interface that defines which card can be played next
  * based on the current top discard pile card
@@ -15,6 +17,6 @@ public interface Rules {
 	 */
 	public boolean checkCard(Card cardPlayed, Card onDiscard);
 	
-	public boolean checkCard(Card cardPlayed, int trump, int suitLed, Player player);
+	public boolean checkCard(Card cardPlayed, int trump, int suitLed, ArrayList<Card> cards) ;
 
 }
