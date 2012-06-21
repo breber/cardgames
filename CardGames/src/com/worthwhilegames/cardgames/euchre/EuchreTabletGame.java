@@ -1,12 +1,5 @@
 package com.worthwhilegames.cardgames.euchre;
 
-import static com.worthwhilegames.cardgames.shared.Constants.JACK_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
-import static com.worthwhilegames.cardgames.euchre.EuchreConstants.EUCHRE_SCORE_LIMIT;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -24,14 +17,13 @@ import com.worthwhilegames.cardgames.shared.Player;
 import com.worthwhilegames.cardgames.shared.Rules;
 import com.worthwhilegames.cardgames.shared.Util;
 
-/**
- * @author Josh
- *
- */
-/**
- * @author Josh
- *
- */
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
+import static com.worthwhilegames.cardgames.shared.Constants.JACK_VALUE;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.EUCHRE_SCORE_LIMIT;;
+
 public class EuchreTabletGame implements Game{
 	
 	/**
@@ -110,6 +102,7 @@ public class EuchreTabletGame implements Game{
 	private Card topCard;
 	
 	/**
+
 	 * list of the cards played the last round
 	 */
 	private ArrayList<Card> cardsPlayed;
@@ -118,7 +111,6 @@ public class EuchreTabletGame implements Game{
 	 * The first card played for a trick
 	 */
 	private Card cardLead;
-
 
 	/**
 	 * Create a new instance of the tablet game so that multiple classes are able to reference
@@ -168,6 +160,9 @@ public class EuchreTabletGame implements Game{
 
 	}
 	
+	/**
+	 * This method will set up the initial game
+	 */
 	@Override
 	public void setup() {
 		roundScores[0] = 0;
@@ -179,8 +174,9 @@ public class EuchreTabletGame implements Game{
 		setDealer(-1);
 	}
 
-
-
+	/**
+	 * This method will shuffle the cards and distribute them to the players in a 3-2 deal pattern
+	 */
 	@Override
 	public void deal() {
 		for(int i = 0; i < 2; i++){
@@ -209,18 +205,30 @@ public class EuchreTabletGame implements Game{
 		cardsPlayed.add(getDealer(), topCard);
 	}
 
+	/**
+	 * This method is not used in the game of Euchre
+	 */
 	@Override
 	public Card draw(Player player) {
 		//No drawing in this game
 		return null;
 	}
 
+	/**
+	 * This method will remove a card from the players hand
+	 * 
+	 * @param player the player to remove the card from
+	 * @param card the card to be removed
+	 */
 	@Override
 	public void discard(Player player, Card card) {
 		player.getCards().remove(card);
 		cardsPlayed.add(players.indexOf(player), card);
 	}
 
+	/**
+	 * This method will shuffle the initial deck making use of the Collections.shuffle method
+	 */
 	@Override
 	public void shuffleDeck() {
 		//create a random number generator
@@ -234,8 +242,8 @@ public class EuchreTabletGame implements Game{
 		
 	}
 	
-	/**
-	 * This will end a series of 5 tricks and calculate the score
+	/**	 
+	 * * This will end a series of 5 tricks and calculate the score
 	 */
 	public void endRound(){
 		
@@ -271,15 +279,21 @@ public class EuchreTabletGame implements Game{
 		this.deal();
 	}
 	
+	/**
+	 * This method is specific to Euchre and allows the player who called trump to be set
+	 * 
+	 * @param player the player who called trump
+	 */
 	public void pickItUp(Player player){
 		playerCalledTrump = player.getPosition();
-		
-		//start the game
-		//.
-		//.
-		//.
 	}
 
+	/**
+	 * This method will drop a player from the current game by removing them from the players list and
+	 * making them into a computer
+	 * 
+	 * @param playerMacAddress the unique id of the player to be dropped
+	 */
 	@Override
 	public void dropPlayer(String playerMacAddress) {
 		if (Util.isDebugBuild()) {
@@ -305,7 +319,10 @@ public class EuchreTabletGame implements Game{
 		}
 	}
 
+
+
 	@Override
+	
 	public Card getDiscardPileTop() {
 		//no discard pile
 		return null;
@@ -344,9 +361,14 @@ public class EuchreTabletGame implements Game{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+	/**
+	 * This method will determine the winner of a trick
+	 * 
+	 * @param cards a list of card to determine the winner from
+	 * @param suitLed the suit led in the current round
+	 * @return the card id of the winning card
+	 */
 	public void determineTrickWinner(){
-		
 		Card winningCard = cardsPlayed.get(0);
 		adjustCards(winningCard);
 		int winningPlayer = 0;
@@ -370,6 +392,14 @@ public class EuchreTabletGame implements Game{
 		return;
 	}
 	
+	/**
+	 * This method will compare two cards and return the winning card of the two
+	 * 
+	 * @param card the first card played
+	 * @param card2 the second card played
+	 * @param suitLed the suit led in the current round
+	 * @return the better of the two cards based on the current round and trump
+	 */
 	public Card compareCards(Card card, Card card2, int suitLed){
 		//null check for if someone is going alone then one player will never play
 		if(card == null){
@@ -396,47 +426,54 @@ public class EuchreTabletGame implements Game{
 		
 	}
 	
+
+	/**
+	 * This method will adjust the jack trumps and the value of an ace to a higher number to more
+	 * easily determine the winner of a trick
+	 * 
+	 * @param card the card to adjust
+	 */
 	public void adjustCards(Card card){
 		if( card == null ){
 			return;
 		}
 	
 		switch(trump){
-			case SUIT_CLUBS:
-				if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_SPADES){
-					card.setSuit(SUIT_CLUBS);
-					card.setValue(15);
-				}else if(card.getValue() == JACK_VALUE&& card.getSuit() == SUIT_CLUBS){
-					card.setValue(16);
-				}
-				break;
-				
-			case SUIT_DIAMONDS:
-				if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_HEARTS){
-					card.setSuit(SUIT_DIAMONDS);
-					card.setValue(15);
-				}else if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_DIAMONDS){
-					card.setValue(16);
-				}
-				break;
+		case SUIT_CLUBS:
+			if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_SPADES){
+				card.setSuit(SUIT_CLUBS);
+				card.setValue(15);
+			}else if(card.getValue() == JACK_VALUE&& card.getSuit() == SUIT_CLUBS){
+				card.setValue(16);
+			}
+			break;
 			
-			case SUIT_HEARTS:
-				if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_DIAMONDS){
-					card.setSuit(SUIT_HEARTS);
-					card.setValue(15);
-				}else if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_HEARTS){
-					card.setValue(16);
-				}
-				break;
+		case SUIT_DIAMONDS:
+			if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_HEARTS){
+				card.setSuit(SUIT_DIAMONDS);
+				card.setValue(15);
+			}else if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_DIAMONDS){
+				card.setValue(16);
+			}
+			break;
 			
-			case SUIT_SPADES:
-				if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_CLUBS){
-					card.setSuit(SUIT_SPADES);
-					card.setValue(15);
-				}else if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_SPADES){
-					card.setValue(16);
-				}
-				break;
+		case SUIT_HEARTS:
+			if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_DIAMONDS){
+				card.setSuit(SUIT_HEARTS);
+				card.setValue(15);
+			}else if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_HEARTS){
+				card.setValue(16);
+			}
+			break;
+			
+		case SUIT_SPADES:
+			if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_CLUBS){
+				card.setSuit(SUIT_SPADES);
+				card.setValue(15);
+			}else if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_SPADES){
+				card.setValue(16);
+			}
+			break;
 		}
 		
 		if(card.getValue() == 0){
@@ -467,14 +504,6 @@ public class EuchreTabletGame implements Game{
 
 	public void setTrump(int trump) {
 		this.trump = trump;
-	}
-
-	public Card getTopCard() {
-		return topCard;
-	}
-
-	public void setTopCard(Card topCard) {
-		this.topCard = topCard;
 	}
 
 	public Iterator<Card> getIter() {
@@ -550,6 +579,14 @@ public class EuchreTabletGame implements Game{
 
 	public void setCardLead(Card cardLead) {
 		this.cardLead = cardLead;
+	}
+
+	public Card getTopCard() {
+		return topCard;
+	}
+
+	public void setTopCard(Card topCard) {
+		this.topCard = topCard;
 	}
 
 }
