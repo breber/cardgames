@@ -22,6 +22,11 @@ public class EuchreConstants {
 	public static final String TRUMP = "trump";
 	
 	/**
+	 * message code for betting round
+	 */
+	public static final String BET_ROUND = "betround";
+	
+	/**
 	 * This is the score that a team must get to win the game
 	 */
 	public static final int EUCHRE_SCORE_LIMIT = 10;

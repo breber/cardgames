@@ -1,15 +1,13 @@
 package com.worthwhilegames.cardgames.euchre;
 
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.BET;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.BET_ROUND;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.FIRST_ROUND_BETTING;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.GO_ALONE;
-import static com.worthwhilegames.cardgames.euchre.EuchreConstants.LEAD_TRICK;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PICK_IT_UP;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PLAY_LEAD_CARD;
-import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ROUND_OVER;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.SECOND_ROUND_BETTING;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP;
-import static com.worthwhilegames.cardgames.shared.Constants.CARD_DRAWN;
 import static com.worthwhilegames.cardgames.shared.Constants.ID;
 import static com.worthwhilegames.cardgames.shared.Constants.IS_TURN;
 import static com.worthwhilegames.cardgames.shared.Constants.LOSER;
@@ -18,7 +16,6 @@ import static com.worthwhilegames.cardgames.shared.Constants.SETUP;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
 import static com.worthwhilegames.cardgames.shared.Constants.VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.WINNER;
-
 
 import java.util.ArrayList;
 
@@ -31,22 +28,18 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.worthwhilegames.cardgames.R;
-import com.worthwhilegames.cardgames.crazyeights.CrazyEightGameRules;
-import com.worthwhilegames.cardgames.crazyeights.CrazyEightsCardTranslator;
-import com.worthwhilegames.cardgames.crazyeights.CrazyEightsPlayerController;
 import com.worthwhilegames.cardgames.player.activities.GameResultsActivity;
-import com.worthwhilegames.cardgames.player.activities.SelectSuitActivity;
 import com.worthwhilegames.cardgames.player.activities.ShowCardsActivity;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.CardTranslator;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.PlayerController;
-import com.worthwhilegames.cardgames.shared.Rules;
 import com.worthwhilegames.cardgames.shared.SoundManager;
 import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
@@ -58,13 +51,23 @@ public class EuchrePlayerController implements PlayerController {
 	/**
 	 * The Logcat Debug tag
 	 */
-	private static final String TAG = CrazyEightsPlayerController.class.getName();
+	private static final String TAG = EuchreGameController.class.getName();
 	
 	/**
 	 * The request code to keep track of the "Are you sure you want to quit"
 	 * activity
 	 */
 	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
+	
+	/**
+	 * intent code for betting in first round
+	 */
+	private static final int BET_FIRST_ROUND = Math.abs("BET_FIRST_ROUND".hashCode());
+	
+	/**
+	 * intent code for betting in second round
+	 */
+	private static final int BET_SECOND_ROUND = Math.abs("BET_SECOND_ROUND".hashCode());
 	
 	/**
 	 * The cards of this player
@@ -151,6 +154,7 @@ public class EuchrePlayerController implements PlayerController {
 		draw = drawGiven;
 		play.setOnClickListener(getPlayOnClickListener());
 		draw.setOnClickListener(getDrawOnClickListener());
+		draw.setVisibility(Button.INVISIBLE);
 		setButtonsEnabled(false);
 		mySM = SoundManager.getInstance(context);
 		cardHand = cardHandGiven;
@@ -167,7 +171,6 @@ public class EuchrePlayerController implements PlayerController {
 	 */
 	@Override
 	public void handleBroadcastReceive(Context context, Intent intent) {
-		// TODO Auto-generated method stub
 		String action = intent.getAction();
 
 		if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
@@ -197,16 +200,37 @@ public class EuchrePlayerController implements PlayerController {
 				isTurn = false;
 				break;
 			case FIRST_ROUND_BETTING:
+				mySM.sayBet(playerName);
+				isTurn = true;
+				this.setCardLead(object);
 				currentState = FIRST_ROUND_BETTING;
 				
+				Intent selectBetIntent1 = new Intent(playerContext, SelectBetActivity.class);
+				selectBetIntent1.putExtra(TRUMP, cardLead.getSuit());
+				selectBetIntent1.putExtra(BET_ROUND, FIRST_ROUND_BETTING);
+				playerContext.startActivityForResult(selectBetIntent1, FIRST_ROUND_BETTING);
+				break;
 			case SECOND_ROUND_BETTING:
+				mySM.sayBet(playerName);
+				isTurn = true;
+				this.setCardLead(object);
 				currentState = SECOND_ROUND_BETTING;
 				
+				// start select bet activity to let the player bet
+				Intent selectBetIntent2 = new Intent(playerContext, SelectBetActivity.class);
+				selectBetIntent2.putExtra(TRUMP, cardLead.getSuit());
+				selectBetIntent2.putExtra(BET_ROUND, SECOND_ROUND_BETTING);
+				playerContext.startActivityForResult(selectBetIntent2, SECOND_ROUND_BETTING);
+				break;
 			case PLAY_LEAD_CARD:
+				mySM.sayTurn(playerName);
 				currentState = PLAY_LEAD_CARD;
+				setButtonsEnabled(true);
+				isTurn = true;
 				
 			case PICK_IT_UP:
-				
+				currentState = PICK_IT_UP;
+				mySM.sayPickItUp(playerName);
 				try {
 					JSONObject obj = new JSONObject(object);
 					int suit = obj.getInt(SUIT);
@@ -217,20 +241,13 @@ public class EuchrePlayerController implements PlayerController {
 					ex.printStackTrace();
 				}
 				dealerDiscard();
-				//TODO put in pick it up mode to discard a card
 				break;
 				
 			case IS_TURN:
 				mySM.sayTurn(playerName);
-				try {
-					JSONObject obj = new JSONObject(object);
-					int suit = obj.getInt(SUIT);
-					int value = obj.getInt(VALUE);
-					int id = obj.getInt(ID);
-					cardLead = new Card(suit, value, ct.getResourceForCardWithId(id), id);
-				} catch (JSONException ex) {
-					ex.printStackTrace();
-				}
+				this.setCardLead(object);
+				currentState = IS_TURN;
+				
 				setButtonsEnabled(true);
 				isTurn = true;
 				break;
@@ -241,6 +258,7 @@ public class EuchrePlayerController implements PlayerController {
 					JSONObject refreshInfo = arr.getJSONObject(0);
 					isTurn = refreshInfo.getBoolean(Constants.TURN);
 					playerName = refreshInfo.getString(Constants.PLAYER_NAME);
+					trumpSuit = refreshInfo.getInt(TRUMP);
 					// add more refresh info here
 
 					playerContext.removeAllCards();
@@ -285,42 +303,75 @@ public class EuchrePlayerController implements PlayerController {
 	@Override
 	public void handleActivityResult(int requestCode, int resultCode,
 			Intent data) {
-		// TODO Auto-generated method stub
+		if (requestCode == BET_FIRST_ROUND) {			
+			//get bet from intent
+			int betTrump 		= data.getIntExtra(TRUMP, cardLead.getSuit());
+			boolean betBet 		= data.getBooleanExtra(BET, false);
+			boolean betGoAlone 	= data.getBooleanExtra(GO_ALONE, false);
+			
+			EuchreBet bet = new EuchreBet(betTrump, betBet, betGoAlone);
+			
+			if(bet.getPlaceBet() == true && bet.getTrumpSuit() == cardLead.getSuit()) {
+				connection.write(FIRST_ROUND_BETTING, bet.toString());
+			} else {
+				connection.write(FIRST_ROUND_BETTING, bet.toString());
+			} 
+			setButtonsEnabled(false);
+			isTurn = false;
+		} else if (requestCode == BET_SECOND_ROUND) {
+			//get bet from intent
+			int betTrump 		= data.getIntExtra(TRUMP, cardLead.getSuit());
+			boolean betBet 		= data.getBooleanExtra(BET, false);
+			boolean betGoAlone 	= data.getBooleanExtra(GO_ALONE, false);
+			
+			EuchreBet bet = new EuchreBet(betTrump, betBet, betGoAlone);
+			
+			if(bet.getPlaceBet() == true) {
+				connection.write(FIRST_ROUND_BETTING, bet.toString());
+			} else {
+				connection.write(FIRST_ROUND_BETTING, bet.toString());
+			}
+			setButtonsEnabled(false);
+			isTurn = false;
+			
+		}
 		
 	}
 
 	@Override
 	public OnClickListener getPlayOnClickListener() {
-		// TODO Auto-generated method stub
 		return new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if ( ( (isTurn && gameRules.checkCard(cardSelected, trumpSuit, cardLead.getSuit(), cardHand) )
+				if ( (isTurn && cardSelected != null) && 
+						( gameRules.checkCard(cardSelected, trumpSuit, cardLead.getSuit(), cardHand) 
 						|| currentState == PICK_IT_UP || currentState == PLAY_LEAD_CARD ) && cardHand.size() != 0) {
-					// play card
+					// play card or discard if it is pick_it_up mode
 					
 					connection.write(currentState, cardSelected);
 
 					playerContext.removeFromHand(cardSelected.getIdNum());
 
 					cardSelected = null;
+					if( currentState == PICK_IT_UP ){
+						play.setText(R.string.Play);
+					}
 					setButtonsEnabled(false);
 					isTurn = false;
 				}
+				
 			}
 		};
 	}
 
 	@Override
 	public OnClickListener getDrawOnClickListener() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public OnClickListener getCardClickListener() {
-		// TODO Auto-generated method stub
-		return null;
+		return new CardSelectionClickListener();
 	}
 	
 	/**
@@ -333,11 +384,10 @@ public class EuchrePlayerController implements PlayerController {
 	 */
 	private void setButtonsEnabled(boolean isEnabled) {
 		play.setEnabled(isEnabled);
-		draw.setEnabled(isEnabled);
 		if (isEnabled) {
 			// it is your turn grey out cards
 			for (Card c : cardHand) {
-				boolean isPlayable = gameRules.checkCard(c, cardOnDiscard);
+				boolean isPlayable = gameRules.checkCard(cardSelected, trumpSuit, cardLead.getSuit(), cardHand) ;
 				playerContext.setCardPlayable(c.getIdNum(), isPlayable);
 			}
 		} else {
@@ -351,18 +401,55 @@ public class EuchrePlayerController implements PlayerController {
 		}
 	}
 
+	/**
+	 * Sets the player's name
+	 * 
+	 * @param name - the player's name
+	 */
 	@Override
 	public void setPlayerName(String name) {
-		// TODO Auto-generated method stub
-
+		playerName = name;
 	}
 	
 	private void dealerDiscard(){
 		setButtonsEnabled(true);
+		play.setText(R.string.Discard);
 		isTurn = true;
-		//TODO make the play button say discard
-		//TODO make there a message to say discard a card
-		//
+	}
+	
+	private void setCardLead(String object){
+		try {
+			JSONObject obj = new JSONObject(object);
+			int suit = obj.getInt(SUIT);
+			int value = obj.getInt(VALUE);
+			int id = obj.getInt(ID);
+			cardLead = new Card(suit, value, ct.getResourceForCardWithId(id), id);
+		} catch (JSONException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	/**
+	 * This will be used for each card ImageView and will allow the card to be
+	 * selected when it is Clicked
+	 */
+	private class CardSelectionClickListener implements View.OnClickListener {//TODO abstract
+		@Override
+		public void onClick(View v) {
+			// Show an animation indicating the card was selected
+			ScaleAnimation scale = new ScaleAnimation((float) 1.2, (float) 1.2,	(float) 1.2, (float) 1.2);
+			scale.scaleCurrentDuration(5);
+			v.startAnimation(scale);
+
+			// Let the UI know which card was selected
+			playerContext.setSelected(v.getId());
+
+			for (int i = 0; i < cardHand.size(); i++) {
+				if (cardHand.get(i).getIdNum() == v.getId()) {
+					cardSelected = cardHand.get(i);
+				}
+			}
+		}
 	}
 
 }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/popupStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginLeft="@dimen/popupMarginLeftRight"
+    android:layout_marginRight="@dimen/popupMarginLeftRight"
+    android:keepScreenOn="true"
+    android:orientation="vertical"
+    android:padding="10dip" >
+
+    <com.worthwhilegames.cardgames.shared.TextView
+        android:id="@+id/betTitle"
+        style="@style/popupTitleTextLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal" >
+
+        <com.worthwhilegames.cardgames.shared.Button
+            android:id="@+id/passOption"
+            style="@style/GameButtonBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="5dip" 
+            android:text="@string/pass_option"/>
+
+        <com.worthwhilegames.cardgames.shared.Button
+            android:id="@+id/betOption"
+            style="@style/GameButtonBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="5dip" 
+            android:text="@string/bet_option"/>
+
+        <com.worthwhilegames.cardgames.shared.Button
+            android:id="@+id/betOption"
+            style="@+id/goAloneOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="5dip" 
+            android:text="@string/go_alone_option"/>
+        
+        <ImageView
+            android:id="@+id/betTrumpSuit"
+            android:layout_width="@dimen/selectSuitImage"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dip"
+            android:adjustViewBounds="true" />
+    </LinearLayout>
+
+</LinearLayout>

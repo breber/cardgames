@@ -118,4 +118,11 @@ The game will start with player 1 and continue in a counterclockwise fashion aro
         <item>Crazy Eights</item>
     </string-array>
 
+    <string name="pass_option">Pass</string>
+    <string name="bet_option">Bet</string>
+    <string name="go_alone_option">Go Alone</string>
+    <string name="bet_round_one_title">Tell the dealer to pick it up?</string>
+    <string name="bet_round_two_title">Pass, or choose a suit and bet</string>
+    <string name="Discard">Discard</string>
+
 </resources>

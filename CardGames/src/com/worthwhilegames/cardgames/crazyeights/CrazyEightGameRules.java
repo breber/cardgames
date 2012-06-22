@@ -1,5 +1,7 @@
 package com.worthwhilegames.cardgames.crazyeights;
 
+import java.util.ArrayList;
+
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.Player;
@@ -51,8 +53,10 @@ public class CrazyEightGameRules implements Rules {
 		return false;
 	}
 	
+
 	@Override
-	public boolean checkCard(Card cardPlayed, int trump, int suitLed, Player player){
+	public boolean checkCard(Card cardPlayed, int trump, int suitLed,
+			ArrayList<Card> cards) {
 		return false;
 	}
 
