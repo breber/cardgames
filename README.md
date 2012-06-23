@@ -2,7 +2,6 @@
 ================
 
 ## Creating a Release ##
-------------------------
 
 ### Export Application APK from Eclipse ###
 
@@ -48,3 +47,12 @@ It is also a good idea to have a copy of the APK from each release, just in case
 
 *	Rename the APK uploaded to the Android Market Developer Console to CardGames_v#.#.#.apk, where the '#' characters are replaced with the actual version number
 *	Move the renamed APK to the Releases directory in the Dropbox folder
+
+## Ad Information ##
+
+We currently use AdMob with their Mediation service (https://developers.google.com/mobile-ads-sdk/docs/android/mediation/). To update the libraries, go to
+https://developers.google.com/mobile-ads-sdk/download, and download the Android zip from
+the Google AdMob Ads SDK section, and the Android MobFox SDK from the Ad Network Mediation
+section. Unzip both of the zip files. Then place the 2 jars from the MobFox zip, and the 1
+jar from the AdMob zip into CardGames/libs. Refresh the Eclipse project, and run the app
+and make sure nothing broke.
