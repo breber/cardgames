@@ -5,6 +5,11 @@ package com.worthwhilegames.cardgames.euchre;
  */
 public class EuchreConstants {
 	
+	/**
+	 * The number of cards in a euchre game
+	 */
+	public static final int EUCHRE_NUM_CARDS = 5;
+	
 	/* JSON constants for EuchreBet */
 	/**
 	 * JSON message code for placing a bet in EuchreBet
@@ -66,6 +71,21 @@ public class EuchreConstants {
 	 * Message type for the gameboard sending a player the trump suit
 	 */
 	public static final int TRUMP_SUIT = 37;
+	
+	
+	
+	/**
+	 * These are some random terms
+	 * 
+	 * Trick - when each player has played a card then the trick is over.
+	 * Round - a series of 5 tricks that allow a team to score
+	 * Match - all rounds until a team scores
+	 * up card - the card that is bet on during the first round of betting
+	 * Trump - the suit that is higher than any card of any other suit
+	 * left bower - the second highest card in the round ( the Jack of the 
+	 * 				The jack of the same colored suit as trump but not the trump suit
+	 * right bower - The highest card in the round. The jack of Trump suit
+	 */
 	
 	
 	

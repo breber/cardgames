@@ -1,6 +1,6 @@
 package com.worthwhilegames.cardgames.shared;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An interface that defines which card can be played next
@@ -17,6 +17,6 @@ public interface Rules {
 	 */
 	public boolean checkCard(Card cardPlayed, Card onDiscard);
 	
-	public boolean checkCard(Card cardPlayed, int trump, int suitLed, ArrayList<Card> cards) ;
+	public boolean checkCard(Card cardPlayed, int trump, int suitLed, List<Card> cards) ;
 
 }

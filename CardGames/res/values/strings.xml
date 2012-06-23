@@ -116,6 +116,7 @@ The game will start with player 1 and continue in a counterclockwise fashion aro
     </string-array>
     <string-array name="game_array">
         <item>Crazy Eights</item>
+        <item>Euchre</item>
     </string-array>
 
     <string name="pass_option">Pass</string>

@@ -1,5 +1,12 @@
 package com.worthwhilegames.cardgames.euchre;
 
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.EUCHRE_SCORE_LIMIT;
+import static com.worthwhilegames.cardgames.shared.Constants.JACK_VALUE;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -17,15 +24,8 @@ import com.worthwhilegames.cardgames.shared.Player;
 import com.worthwhilegames.cardgames.shared.Rules;
 import com.worthwhilegames.cardgames.shared.Util;
 
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
-import static com.worthwhilegames.cardgames.shared.Constants.JACK_VALUE;
-import static com.worthwhilegames.cardgames.euchre.EuchreConstants.EUCHRE_SCORE_LIMIT;;
-
 public class EuchreTabletGame implements Game{
-	
+
 	/**
 	 * A tag for the class name
 	 */
@@ -55,22 +55,22 @@ public class EuchreTabletGame implements Game{
 	 * A private variable to represent the difficulty of computers in the current game
 	 */
 	private String computerDifficulty = Constants.EASY;
-	
+
 	/**
 	 * An integer to represent the trump suit
 	 */
 	private int trump;
-	
+
 	/**
 	 * An integer to represent the player who picked up the trump card or named the suit
 	 */
 	private int playerCalledTrump;
-	
+
 	/**
 	 * An integer to represent the player who is the dealer
 	 */
 	private int dealer;
-	
+
 	/**
 	 * This is whoever started the current trick
 	 */
@@ -85,62 +85,60 @@ public class EuchreTabletGame implements Game{
 	 * A list of all the cards in the shuffle deck
 	 */
 	private ArrayList<Card> shuffledDeck;
-	
+
 	/**
 	 * This is how many tricks each team has won in a round
 	 */
 	private int[] roundScores = new int[2];
-	
+
 	/**
 	 * This is the total points for the team
 	 */
 	private int[] matchScores = new int[2];;
-	
+
 	/**
 	 * A card to represent the first card turned over for players to bet on
 	 */
 	private Card topCard;
-	
+
 	/**
 
 	 * list of the cards played the last round
 	 */
 	private ArrayList<Card> cardsPlayed;
-	
+
 	/**
 	 * The first card played for a trick
 	 */
 	private Card cardLead;
 
 	/**
-	 * Create a new instance of the tablet game so that multiple classes are able to reference
-	 * the same card game and only one instance will be made available. This method uses the custom
-	 * constructor made in this class.
-	 * 
-	 * @return an instance of EuchreTabletGame
+	 * Represents whether the game is currently active
 	 */
-	public static EuchreTabletGame getInstance(List<Player> players, Deck deck, Rules rules) {
-		instance = new EuchreTabletGame(players, deck, rules);
-
-		return instance;
-	}
+	private boolean gameActive = false;
 
 	/**
 	 * Create a new instance of the tablet game so that multiple classes are able to reference
 	 * the same card game and only one instance will be made available. This method uses the default
 	 * constructor.
 	 * 
-	 * @return an instance of EuchreTabletGame
+	 * @return an instance of CrazyEightsTabletGame
 	 */
 	public static EuchreTabletGame getInstance() {
 		if (instance == null) {
-			throw new IllegalArgumentException();
+			instance = new EuchreTabletGame();
 		}
 
 		return instance;
 	}
 
-	
+	/**
+	 * Clear the game instance
+	 */
+	public static void clearInstance() {
+		instance = null;
+	}
+
 	/**
 	 * A constructor for the crazy eights game type. This constructor will initialize the all the variables
 	 * for a game of euchre including the rules, players, deck, shuffled deck pile and the discard pile.
@@ -155,11 +153,11 @@ public class EuchreTabletGame implements Game{
 		this.rules = rules;
 		shuffledDeck = gameDeck.getCardIDs();
 	}
-	
-	public EuchreTabletGame() {
 
+	public EuchreTabletGame() {
+		// TODO
 	}
-	
+
 	/**
 	 * This method will set up the initial game
 	 */
@@ -169,7 +167,7 @@ public class EuchreTabletGame implements Game{
 		roundScores[1] = 0;
 		matchScores[0] = 0;
 		matchScores[1] = 0;
-		
+
 		//this is -1 because start round sets it to dealer +1 so it will start as 0;
 		setDealer(-1);
 	}
@@ -179,6 +177,7 @@ public class EuchreTabletGame implements Game{
 	 */
 	@Override
 	public void deal() {
+		gameActive = true;
 		for(int i = 0; i < 2; i++){
 			for (Player p : players) {
 				if(i == 0){
@@ -194,14 +193,14 @@ public class EuchreTabletGame implements Game{
 					p.addCard(iter.next());
 					iter.remove();
 				}
-				
+
 			}
 		}
-		
+
 		topCard = iter.next();
 		iter.remove();
 		trump = topCard.getSuit();
-		
+
 		cardsPlayed.add(getDealer(), topCard);
 	}
 
@@ -236,49 +235,50 @@ public class EuchreTabletGame implements Game{
 
 		//shuffle the deck
 		Collections.shuffle(shuffledDeck, generator);
-		
+
 		//set the iterator to go through the shuffled deck
 		iter = shuffledDeck.iterator();
-		
+
 	}
-	
-	/**	 
+
+	/**
 	 * * This will end a series of 5 tricks and calculate the score
 	 */
 	public void endRound(){
-		
+
 		int bettingTeam = playerCalledTrump % 2;
 		if( roundScores[bettingTeam] >= 3){
 			//TODO add go alone scoring
 			if( roundScores[bettingTeam] > 4 ){
 				matchScores[bettingTeam] += 2;
 			} else {
-				matchScores[bettingTeam] ++;				
+				matchScores[bettingTeam] ++;
 			}
 		} else {
 			//betting team has been "Euchred" 2 points for defending team
 			matchScores[(bettingTeam +1) % 2] += 2;
 		}
-		
+
+
 		this.clearCardsPlayed();
-		
+
 	}
-	
+
 	/**
 	 * This will start the next round by dealing new cards and setting up the card to bet on
 	 */
 	public void startRound(){
 		//make the dealer the next player this also resets the trick leader
-		this.setDealer(getDealer() + 1);	
-				
-		
+		this.setDealer(getDealer() + 1);
+
+
 		//redeal
 		this.gameDeck = new Deck(CardGame.EUCHRE);
 		shuffledDeck = gameDeck.getCardIDs();
 		this.shuffleDeck();
 		this.deal();
 	}
-	
+
 	/**
 	 * This method is specific to Euchre and allows the player who called trump to be set
 	 * 
@@ -309,20 +309,28 @@ public class EuchreTabletGame implements Game{
 			}
 		}
 
-		if (p != null) {
-			p.setIsComputer(true);
-			p.setComputerDifficulty(computerDifficulty);
-		} else {
-			if (Util.isDebugBuild()) {
-				Log.d(TAG, "dropPlayer: couldn't find player with id: " + playerMacAddress);
+		if (gameActive) {
+			if (p != null) {
+				p.setIsComputer(true);
+				p.setComputerDifficulty(computerDifficulty);
+
+				// TODO
+				//				maxNumberOfPlayers--;
+			} else {
+				if (Util.isDebugBuild()) {
+					Log.d(TAG, "dropPlayer: couldn't find player with id: " + playerMacAddress);
+				}
 			}
+		} else {
+			// If the game hasn't been started yet, just remove them from the list
+			players.remove(p);
 		}
 	}
 
 
 
 	@Override
-	
+
 	public Card getDiscardPileTop() {
 		//no discard pile
 		return null;
@@ -352,14 +360,12 @@ public class EuchreTabletGame implements Game{
 
 	@Override
 	public void setComputerDifficulty(String diff) {
-		// TODO Auto-generated method stub
-		
+		computerDifficulty = diff;
 	}
 
 	@Override
 	public String getComputerDifficulty() {
-		// TODO Auto-generated method stub
-		return null;
+		return computerDifficulty;
 	}
 	/**
 	 * This method will determine the winner of a trick
@@ -372,7 +378,7 @@ public class EuchreTabletGame implements Game{
 		Card winningCard = cardsPlayed.get(0);
 		adjustCards(winningCard);
 		int winningPlayer = 0;
-		
+
 		for(int i = 1; i < cardsPlayed.size(); i++){
 			Card card = cardsPlayed.get(i);
 			adjustCards(card);
@@ -381,17 +387,17 @@ public class EuchreTabletGame implements Game{
 				winningPlayer = i;
 			}
 		}
-		
+
 		//add a trick taken to the round score for the player
-		roundScores[winningPlayer % 2]++; 
-		
+		roundScores[winningPlayer % 2]++;
+
 		clearCardsPlayed();
-		
+
 		setTrickLeader(winningPlayer);
-		
+
 		return;
 	}
-	
+
 	/**
 	 * This method will compare two cards and return the winning card of the two
 	 * 
@@ -407,7 +413,7 @@ public class EuchreTabletGame implements Game{
 		}else if(card2 == null){
 			return card;
 		}
-		
+
 		if(card.getSuit() == trump && card2.getSuit() != trump){
 			return card;
 		}else if(card.getSuit() != trump && card2.getSuit() == trump){
@@ -423,9 +429,9 @@ public class EuchreTabletGame implements Game{
 				return card2;
 			}
 		}
-		
+
 	}
-	
+
 
 	/**
 	 * This method will adjust the jack trumps and the value of an ace to a higher number to more
@@ -437,7 +443,7 @@ public class EuchreTabletGame implements Game{
 		if( card == null ){
 			return;
 		}
-	
+
 		switch(trump){
 		case SUIT_CLUBS:
 			if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_SPADES){
@@ -447,7 +453,7 @@ public class EuchreTabletGame implements Game{
 				card.setValue(16);
 			}
 			break;
-			
+
 		case SUIT_DIAMONDS:
 			if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_HEARTS){
 				card.setSuit(SUIT_DIAMONDS);
@@ -456,7 +462,7 @@ public class EuchreTabletGame implements Game{
 				card.setValue(16);
 			}
 			break;
-			
+
 		case SUIT_HEARTS:
 			if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_DIAMONDS){
 				card.setSuit(SUIT_HEARTS);
@@ -465,7 +471,7 @@ public class EuchreTabletGame implements Game{
 				card.setValue(16);
 			}
 			break;
-			
+
 		case SUIT_SPADES:
 			if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_CLUBS){
 				card.setSuit(SUIT_SPADES);
@@ -475,11 +481,11 @@ public class EuchreTabletGame implements Game{
 			}
 			break;
 		}
-		
+
 		if(card.getValue() == 0){
 			card.setValue(14);
 		}
-		
+
 	}
 
 	public Deck getGameDeck() {
@@ -552,7 +558,7 @@ public class EuchreTabletGame implements Game{
 			this.trickLeader = 0;
 		}
 	}
-	
+
 	public int[] getRoundScores() {
 		return roundScores;
 	}
@@ -560,7 +566,7 @@ public class EuchreTabletGame implements Game{
 	public int[] getMatchScores() {
 		return matchScores;
 	}
-	
+
 	/**
 	 * clears the cards that have been played by player.
 	 */
@@ -587,6 +593,26 @@ public class EuchreTabletGame implements Game{
 
 	public void setTopCard(Card topCard) {
 		this.topCard = topCard;
+	}
+
+	@Override
+	public int getMaxNumPlayers() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void addPlayer(Player p) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/* (non-Javadoc)
+	 * @see com.worthwhilegames.cardgames.shared.Game#isActive()
+	 */
+	@Override
+	public boolean isActive() {
+		return gameActive;
 	}
 
 }

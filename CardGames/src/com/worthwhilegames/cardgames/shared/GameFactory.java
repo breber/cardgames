@@ -11,6 +11,9 @@ import com.worthwhilegames.cardgames.crazyeights.C8Constants;
 import com.worthwhilegames.cardgames.crazyeights.CrazyEightsGameController;
 import com.worthwhilegames.cardgames.crazyeights.CrazyEightsPlayerController;
 import com.worthwhilegames.cardgames.crazyeights.CrazyEightsTabletGame;
+import com.worthwhilegames.cardgames.euchre.EuchreGameController;
+import com.worthwhilegames.cardgames.euchre.EuchrePlayerController;
+import com.worthwhilegames.cardgames.euchre.EuchreTabletGame;
 import com.worthwhilegames.cardgames.gameboard.activities.GameboardActivity;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
@@ -31,6 +34,8 @@ public class GameFactory {
 	public static Game getGameInstance(Context ctx) {
 		if (getGameType(ctx) == CardGame.CRAZY_EIGHTS) {
 			return CrazyEightsTabletGame.getInstance();
+		} else if (getGameType(ctx) == CardGame.EUCHRE) {
+			return EuchreTabletGame.getInstance();
 		}
 
 		return null;
@@ -54,6 +59,8 @@ public class GameFactory {
 			ConnectionServer connectionServer, ImageView refreshButton) {
 		if (getGameType(activity) == CardGame.CRAZY_EIGHTS) {
 			return new CrazyEightsGameController(activity, connectionServer, refreshButton);
+		} else if (getGameType(activity) == CardGame.EUCHRE) {
+			return new EuchreGameController(activity, connectionServer, refreshButton);
 		}
 
 		return null;
@@ -68,6 +75,8 @@ public class GameFactory {
 			Button drawButton, ConnectionClient connectionClient, ArrayList<Card> cardHand) {
 		if (getGameType(context) == CardGame.CRAZY_EIGHTS) {
 			return new CrazyEightsPlayerController(context, playButton,	drawButton, connectionClient, cardHand);
+		} else if (getGameType(context) == CardGame.EUCHRE) {
+			return new EuchrePlayerController(context, playButton,	drawButton, connectionClient, cardHand);
 		}
 
 		return null;
@@ -84,8 +93,9 @@ public class GameFactory {
 
 		if (Constants.CRAZY_EIGHTS.equals(gameType)) {
 			return CardGame.CRAZY_EIGHTS;
+		} else if (Constants.EUCHRE.equals(gameType)) {
+			return CardGame.EUCHRE;
 		}
-
 
 		return CardGame.CRAZY_EIGHTS;
 	}

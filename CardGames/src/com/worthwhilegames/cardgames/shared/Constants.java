@@ -60,7 +60,7 @@ public class Constants {
 	 * A constant to represent the jokers
 	 */
 	public static final int SUIT_JOKER = 4;
-	
+
 	/**
 	 * A constant for the Jack card value
 	 */
@@ -255,6 +255,12 @@ public class Constants {
 	 * crazy eights
 	 */
 	public static final String CRAZY_EIGHTS = "Crazy Eights";
+
+	/**
+	 * A constant to represent a key in the shared preferences for the game type
+	 * euchre
+	 */
+	public static final String EUCHRE = "Euchre";
 
 	/**
 	 * A constant to represent a key in the shared preferences for the image

@@ -6,6 +6,7 @@ import static com.worthwhilegames.cardgames.euchre.EuchreConstants.FIRST_ROUND_B
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.GO_ALONE;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PICK_IT_UP;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PLAY_LEAD_CARD;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ROUND_OVER;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.SECOND_ROUND_BETTING;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP;
 import static com.worthwhilegames.cardgames.shared.Constants.ID;
@@ -18,6 +19,7 @@ import static com.worthwhilegames.cardgames.shared.Constants.VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.WINNER;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,7 +74,7 @@ public class EuchrePlayerController implements PlayerController {
 	/**
 	 * The cards of this player
 	 */
-	private ArrayList<Card> cardHand;
+	private List<Card> cardHand;
 
 	/**
 	 * An instance of the ShowCardsActivity that can be used to display cards
@@ -205,6 +207,7 @@ public class EuchrePlayerController implements PlayerController {
 				this.setCardLead(object);
 				currentState = FIRST_ROUND_BETTING;
 				
+				//start select bet activity for round 1
 				Intent selectBetIntent1 = new Intent(playerContext, SelectBetActivity.class);
 				selectBetIntent1.putExtra(TRUMP, cardLead.getSuit());
 				selectBetIntent1.putExtra(BET_ROUND, FIRST_ROUND_BETTING);
@@ -227,7 +230,7 @@ public class EuchrePlayerController implements PlayerController {
 				currentState = PLAY_LEAD_CARD;
 				setButtonsEnabled(true);
 				isTurn = true;
-				
+				break;
 			case PICK_IT_UP:
 				currentState = PICK_IT_UP;
 				mySM.sayPickItUp(playerName);
@@ -282,6 +285,9 @@ public class EuchrePlayerController implements PlayerController {
 				}
 				setButtonsEnabled(isTurn);
 				cardSelected = null;
+				break;
+			case ROUND_OVER:
+				currentState = ROUND_OVER;
 				break;
 			case WINNER://TODO don't disconnect
 				playerContext.unregisterReceiver();
@@ -433,7 +439,7 @@ public class EuchrePlayerController implements PlayerController {
 	 * This will be used for each card ImageView and will allow the card to be
 	 * selected when it is Clicked
 	 */
-	private class CardSelectionClickListener implements View.OnClickListener {//TODO abstract
+	private class CardSelectionClickListener implements View.OnClickListener {
 		@Override
 		public void onClick(View v) {
 			// Show an animation indicating the card was selected
