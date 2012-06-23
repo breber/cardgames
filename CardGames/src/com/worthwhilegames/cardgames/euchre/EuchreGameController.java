@@ -139,8 +139,7 @@ public class EuchreGameController implements GameController{
 
 			if (!isPaused) {
 				isComputerPlaying = false;
-				//This is the turnCode for the computer
-				playComputerTurn(msg.arg1);
+				playComputerTurn();
 			} else {
 				if (Util.isDebugBuild()) {
 					Log.d(TAG, "handleMessage: game paused. not going to play now");
@@ -527,7 +526,7 @@ public class EuchreGameController implements GameController{
 		// playing,
 		// have the computer initiate a move
 		if (players.get(whoseTurn).getIsComputer() && !isComputerPlaying) {
-			startComputerTurn(currentState);
+			startComputerTurn();
 		}
 	}
 
@@ -538,7 +537,7 @@ public class EuchreGameController implements GameController{
 	 * Starts another thread that waits, and then posts a message to the
 	 * mHandler letting it know it can play.
 	 */
-	private void startComputerTurn(final int turnCode) {
+	private void startComputerTurn() {
 		isComputerPlaying = true;
 
 		new Thread(new Runnable() {
@@ -554,16 +553,18 @@ public class EuchreGameController implements GameController{
 					Log.d(TAG, "startComputerTurn: letting computer know it can play");
 				}
 
-				Message msg = new Message();
-				msg.arg1 = turnCode;
-				handler.sendMessage(msg);
+				handler.sendMessage(null);
 			}
 		}).start();
 	}
 
-	private void playComputerTurn(int turnCode) {
-		//TODO update this to get the card lead with
-		Card onDiscard = game.getDiscardPileTop();
+	/**
+	 * This will play the computer's turn
+	 * 
+	 * @param turnCode
+	 */
+	private void playComputerTurn() {
+		Card cardLead = game.getCardLead();
 
 		List<Card> cards = players.get(whoseTurn).getCards();
 		Card cardSelected = null;
@@ -571,19 +572,21 @@ public class EuchreGameController implements GameController{
 
 		//computer with difficulty
 		//TODO right now only has easy
-		if (true || players.get(whoseTurn).getComputerDifficulty().equals(Constants.EASY)) {
-			switch(turnCode){
+		if (players.get(whoseTurn).getComputerDifficulty().equals(Constants.EASY)) {
+			switch(currentState){
 			case FIRST_ROUND_BETTING:
 				break;
 			case SECOND_ROUND_BETTING:
+				break;
+			case PICK_IT_UP:
+				cardSelected = cards.get(0);
 				break;
 			case LEAD_TRICK:
 				cardSelected = cards.get(0);
 				break;
 			case IS_TURN:
-				//TODO
 				for (Card c : cards) {
-					if (gameRules.checkCard(c, game.getTrump(), game.getCardLead().getSuit(), cards)) {
+					if (gameRules.checkCard(c, game.getTrump(), cardLead.getSuit(), cards)) {
 						cardSelected = c;
 						break;
 					}
@@ -593,18 +596,20 @@ public class EuchreGameController implements GameController{
 
 			//TODO computer difficulty Medium
 		} else if (players.get(whoseTurn).getComputerDifficulty().equals(Constants.MEDIUM) ) {
-			switch(turnCode){
+			switch(currentState){
 			case FIRST_ROUND_BETTING:
-
 				break;
 			case SECOND_ROUND_BETTING:
-
+				break;
+			case PICK_IT_UP:
+				cardSelected = cards.get(0);
 				break;
 			case LEAD_TRICK:
+				cardSelected = cards.get(0);
 				break;
 			case IS_TURN:
 				for (Card c : cards) {
-					if (gameRules.checkCard(c, onDiscard)) {
+					if (gameRules.checkCard(c, game.getTrump(), cardLead.getSuit(), cards)) {
 						cardSelected = c;
 						break;
 					}
@@ -614,20 +619,20 @@ public class EuchreGameController implements GameController{
 
 			//TODO computer difficulty Hard
 		} else if (players.get(whoseTurn).getComputerDifficulty().equals(Constants.HARD)) {
-			switch(turnCode){
+			switch(currentState){
 			case FIRST_ROUND_BETTING:
-
 				break;
 			case SECOND_ROUND_BETTING:
-
+				break;
+			case PICK_IT_UP:
+				cardSelected = cards.get(0);
 				break;
 			case LEAD_TRICK:
-
+				cardSelected = cards.get(0);
 				break;
 			case IS_TURN:
-
 				for (Card c : cards) {
-					if (gameRules.checkCard(c, onDiscard)) {
+					if (gameRules.checkCard(c, game.getTrump(), cardLead.getSuit(), cards)) {
 						cardSelected = c;
 						break;
 					}
@@ -741,10 +746,11 @@ public class EuchreGameController implements GameController{
 	 * @param card the card to give the player or computer
 	 */
 	private void sendNextTurn(int state, Card card){
+		currentState = state;
 		if (players.get(whoseTurn).getIsComputer()) {
 			if (!isComputerPlaying) {
 				isComputerPlaying = true;
-				startComputerTurn(state);
+				startComputerTurn();
 			}
 		} else {
 			server.write(state, card, players.get(whoseTurn).getId());
