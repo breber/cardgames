@@ -17,6 +17,7 @@ import static com.worthwhilegames.cardgames.shared.Constants.SETUP;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
 import static com.worthwhilegames.cardgames.shared.Constants.VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.WINNER;
+import static com.worthwhilegames.cardgames.shared.Constants.CURRENT_STATE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,6 +108,11 @@ public class EuchrePlayerController implements PlayerController {
 	 * This is true if it is the players turn
 	 */
 	private boolean isTurn = false;
+	
+	/**
+	 * This is to keep track if a betting activity is open now or not
+	 */
+	private boolean isBettingNow = false;
 	
 	/**
 	 * The current selected Card
@@ -208,10 +214,11 @@ public class EuchrePlayerController implements PlayerController {
 				currentState = FIRST_ROUND_BETTING;
 				
 				//start select bet activity for round 1
+				isBettingNow = true;
 				Intent selectBetIntent1 = new Intent(playerContext, SelectBetActivity.class);
 				selectBetIntent1.putExtra(TRUMP, cardLead.getSuit());
 				selectBetIntent1.putExtra(BET_ROUND, FIRST_ROUND_BETTING);
-				playerContext.startActivityForResult(selectBetIntent1, FIRST_ROUND_BETTING);
+				playerContext.startActivityForResult(selectBetIntent1, BET_FIRST_ROUND);
 				break;
 			case SECOND_ROUND_BETTING:
 				mySM.sayBet(playerName);
@@ -220,10 +227,11 @@ public class EuchrePlayerController implements PlayerController {
 				currentState = SECOND_ROUND_BETTING;
 				
 				// start select bet activity to let the player bet
+				isBettingNow = true;
 				Intent selectBetIntent2 = new Intent(playerContext, SelectBetActivity.class);
 				selectBetIntent2.putExtra(TRUMP, cardLead.getSuit());
 				selectBetIntent2.putExtra(BET_ROUND, SECOND_ROUND_BETTING);
-				playerContext.startActivityForResult(selectBetIntent2, SECOND_ROUND_BETTING);
+				playerContext.startActivityForResult(selectBetIntent2, BET_SECOND_ROUND);
 				break;
 			case PLAY_LEAD_CARD:
 				mySM.sayTurn(playerName);
@@ -260,6 +268,7 @@ public class EuchrePlayerController implements PlayerController {
 					JSONArray arr = new JSONArray(object);
 					JSONObject refreshInfo = arr.getJSONObject(0);
 					isTurn = refreshInfo.getBoolean(Constants.TURN);
+					currentState = refreshInfo.getInt(CURRENT_STATE);
 					playerName = refreshInfo.getString(Constants.PLAYER_NAME);
 					trumpSuit = refreshInfo.getInt(TRUMP);
 					// add more refresh info here
@@ -282,6 +291,24 @@ public class EuchrePlayerController implements PlayerController {
 					}
 				} catch (JSONException ex) {
 					ex.printStackTrace();
+				}
+				
+				
+				if(isTurn && (currentState == FIRST_ROUND_BETTING ||  currentState == SECOND_ROUND_BETTING)){
+					if(isBettingNow){
+						//don't want to open 2 betting windows
+						break;
+					}
+					Intent selectBetIntent3 = new Intent(playerContext, SelectBetActivity.class);
+					selectBetIntent3.putExtra(TRUMP, cardLead.getSuit());
+					selectBetIntent3.putExtra(BET_ROUND, SECOND_ROUND_BETTING);
+					if(currentState == FIRST_ROUND_BETTING){
+						playerContext.startActivityForResult(selectBetIntent3, BET_FIRST_ROUND);
+					} else {
+						playerContext.startActivityForResult(selectBetIntent3, BET_SECOND_ROUND);							
+					}
+					isBettingNow = true;
+					break;
 				}
 				setButtonsEnabled(isTurn);
 				cardSelected = null;
@@ -309,19 +336,16 @@ public class EuchrePlayerController implements PlayerController {
 	@Override
 	public void handleActivityResult(int requestCode, int resultCode,
 			Intent data) {
-		if (requestCode == BET_FIRST_ROUND) {			
+		if (requestCode == BET_FIRST_ROUND) {
 			//get bet from intent
 			int betTrump 		= data.getIntExtra(TRUMP, cardLead.getSuit());
 			boolean betBet 		= data.getBooleanExtra(BET, false);
 			boolean betGoAlone 	= data.getBooleanExtra(GO_ALONE, false);
 			
 			EuchreBet bet = new EuchreBet(betTrump, betBet, betGoAlone);
-			
-			if(bet.getPlaceBet() == true && bet.getTrumpSuit() == cardLead.getSuit()) {
-				connection.write(FIRST_ROUND_BETTING, bet.toString());
-			} else {
-				connection.write(FIRST_ROUND_BETTING, bet.toString());
-			} 
+
+			connection.write(FIRST_ROUND_BETTING, bet.toString());
+			isBettingNow = false; 
 			setButtonsEnabled(false);
 			isTurn = false;
 		} else if (requestCode == BET_SECOND_ROUND) {
@@ -332,11 +356,8 @@ public class EuchrePlayerController implements PlayerController {
 			
 			EuchreBet bet = new EuchreBet(betTrump, betBet, betGoAlone);
 			
-			if(bet.getPlaceBet() == true) {
-				connection.write(FIRST_ROUND_BETTING, bet.toString());
-			} else {
-				connection.write(FIRST_ROUND_BETTING, bet.toString());
-			}
+			connection.write(SECOND_ROUND_BETTING, bet.toString());
+			isBettingNow = false;
 			setButtonsEnabled(false);
 			isTurn = false;
 			

@@ -126,6 +126,11 @@ public class Constants {
 	 * this is a JSON key for getting the player name
 	 */
 	public static final String PLAYER_NAME = "playername";
+	
+	/**
+	 * This is a JSON key for telling the player what state the game is in
+	 */
+	public static final String CURRENT_STATE = "currentstate";
 
 	/**
 	 * this is a request code for the get EnterNameActivity

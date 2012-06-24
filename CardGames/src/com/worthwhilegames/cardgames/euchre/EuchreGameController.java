@@ -9,6 +9,7 @@ import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PLAY_LEAD_CAR
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ROUND_OVER;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.SECOND_ROUND_BETTING;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP;
+import static com.worthwhilegames.cardgames.shared.Constants.CURRENT_STATE;
 import static com.worthwhilegames.cardgames.shared.Constants.ID;
 import static com.worthwhilegames.cardgames.shared.Constants.IS_TURN;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
@@ -185,8 +186,6 @@ public class EuchreGameController implements GameController{
 		game.startRound();
 		whoseTurn = game.getTrickLeader();
 
-		gameContext.highlightPlayer(whoseTurn);
-
 		for (Player p : players) {
 			if (Util.isDebugBuild()) {
 				Log.d(TAG, p.getName() + ": " + p);
@@ -201,8 +200,7 @@ public class EuchreGameController implements GameController{
 		currentState = FIRST_ROUND_BETTING;
 
 		//tell first person to bet
-		sendNextTurn(currentState, game.getTopCard());
-
+		sendNextTurn(currentState, game.getCardLead());
 	}
 
 	/**
@@ -252,7 +250,9 @@ public class EuchreGameController implements GameController{
 					break;
 				case PICK_IT_UP:
 					isComputerPlaying = false;
+
 					//Get which card they discarded and discard it.
+					mySM.playCardSound();
 					currentState = LEAD_TRICK;
 					playReceivedCard(object);
 					game.clearCardsPlayed();
@@ -414,23 +414,16 @@ public class EuchreGameController implements GameController{
 				whoseTurn = game.getTrickLeader();
 				currentState = PLAY_LEAD_CARD;
 
-				// Highlight the name of the current player
-				gameContext.highlightPlayer(whoseTurn);
-
 				sendNextTurn(currentState, game.getCardLead());
 			}
 
 			return;
 		}
 
-		// Highlight the name of the current player
-		gameContext.highlightPlayer(whoseTurn);
-
 		currentState = IS_TURN;
 
 		//tell the next person to play
 		sendNextTurn(currentState, game.getCardLead());
-
 
 		// Update the UI
 		gameContext.updateUi();
@@ -489,9 +482,9 @@ public class EuchreGameController implements GameController{
 		Player pTurn = players.get(whoseTurn);
 
 		// TODO get the card lead with
-		Card discard = game.getDiscardPileTop();
+		Card leadingCard = game.getCardLead();
 
-		JSONObject discardObj = discard.toJSONObject();
+		JSONObject cardLeadObj = leadingCard.toJSONObject();
 
 		for (Player p : players) {
 			if (Util.isDebugBuild()) {
@@ -504,12 +497,13 @@ public class EuchreGameController implements GameController{
 				// Create the base refresh info object
 				JSONObject refreshInfo = new JSONObject();
 				refreshInfo.put(Constants.TURN, pTurn.equals(p));
+				refreshInfo.put(CURRENT_STATE, currentState);
 				refreshInfo.put(Constants.PLAYER_NAME, p.getName());
 				refreshInfo.put(TRUMP, game.getTrump());
 				arr.put(refreshInfo);
 
 				// send the card on the discard pile
-				arr.put(discardObj);
+				arr.put(cardLeadObj);
 
 				// send all the cards in the players hand
 				for (Card c : p.getCards()) {
@@ -674,7 +668,7 @@ public class EuchreGameController implements GameController{
 		//first round of betting
 		if(round == FIRST_ROUND_BETTING){
 			if(bet.getPlaceBet()){
-				if(bet.getTrumpSuit() == game.getTopCard().getSuit()){
+				if(bet.getTrumpSuit() == game.getCardLead().getSuit()){
 					//set trump and trump caller
 					game.setTrump(bet.getTrumpSuit());
 					game.pickItUp(players.get(whoseTurn));
@@ -689,21 +683,19 @@ public class EuchreGameController implements GameController{
 					currentState = PICK_IT_UP;
 
 					//tell the dealer to "pick it up"
-					players.get(game.getDealer()).addCard(game.getTopCard());
-					sendNextTurn(currentState, game.getTopCard());
-					return;
+					mySM.drawCardSound();
+					game.clearCardsPlayed();
+
+					players.get(game.getDealer()).addCard(game.getCardLead());
 				} else {
 					//TODO error should not get here.
 				}
-				return;
 			} else {
 				if(whoseTurn == game.getDealer()){
 					//start betting round 2
 					currentState = SECOND_ROUND_BETTING;
 				}
 				incrementWhoseTurn();
-
-				sendNextTurn(currentState, game.getTopCard());
 			}
 
 			//second round of betting
@@ -712,7 +704,6 @@ public class EuchreGameController implements GameController{
 				game.setTrump(bet.getTrumpSuit());
 				game.pickItUp(players.get(whoseTurn));
 				gameContext.updateSuit(game.getTrump());
-
 
 				if(bet.getGoAlone()){
 					//TODO go alone stuff
@@ -723,20 +714,18 @@ public class EuchreGameController implements GameController{
 				game.clearCardsPlayed();
 
 				currentState = PLAY_LEAD_CARD;
-				sendNextTurn(currentState, null);
-				return;
 			} else {
-				if(whoseTurn == game.getDealer()){
-					//should never get here, but if we do. force the dealer to choose the trump
-					server.write(currentState, game.getTopCard(), players.get(whoseTurn).getId());
+				if(whoseTurn != game.getDealer()){
+					incrementWhoseTurn();
 				}
-				incrementWhoseTurn();
-
-				sendNextTurn(currentState, game.getTopCard());
+				//if it is the second round and the dealer
+				//	passes we just keep telling him/her to bet. they must.
+				//  AKA "stick it to the dealer."
 			}
 		}
 
-
+		//all of the cases above should come to this statement.
+		sendNextTurn(currentState, game.getCardLead());
 	}
 
 
@@ -755,6 +744,12 @@ public class EuchreGameController implements GameController{
 		} else {
 			server.write(state, card, players.get(whoseTurn).getId());
 		}
+
+		// Highlight the name of the current player
+		gameContext.highlightPlayer(whoseTurn);
+
+		//TODO update scores on gameboard
+		gameContext.updateUi();
 	}
 
 	/**

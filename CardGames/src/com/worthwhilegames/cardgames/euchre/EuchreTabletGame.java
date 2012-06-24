@@ -97,18 +97,21 @@ public class EuchreTabletGame implements Game{
 	private int[] matchScores = new int[2];;
 
 	/**
+<<<<<<< HEAD
 	 * A card to represent the first card turned over for players to bet on
 	 */
 	private Card topCard;
 
 	/**
+=======
+>>>>>>> Made some changes to the controllers. including updating refresh to
 
 	 * list of the cards played the last round
 	 */
 	private ArrayList<Card> cardsPlayed;
 
 	/**
-	 * The first card played for a trick
+	 * The first card played for a trick or the card flipped over to bet on
 	 */
 	private Card cardLead;
 
@@ -197,11 +200,11 @@ public class EuchreTabletGame implements Game{
 			}
 		}
 
-		topCard = iter.next();
+		cardLead = iter.next();
 		iter.remove();
-		trump = topCard.getSuit();
+		trump = cardLead.getSuit();
 
-		cardsPlayed.add(getDealer(), topCard);
+		cardsPlayed.add(getDealer(), cardLead);
 	}
 
 	/**
@@ -587,12 +590,12 @@ public class EuchreTabletGame implements Game{
 		this.cardLead = cardLead;
 	}
 
-	public Card getTopCard() {
-		return topCard;
-	}
-
-	public void setTopCard(Card topCard) {
-		this.topCard = topCard;
+	/* (non-Javadoc)
+	 * @see com.worthwhilegames.cardgames.shared.Game#isActive()
+	 */
+	@Override
+	public boolean isActive() {
+		return gameActive;
 	}
 
 	@Override
@@ -603,16 +606,6 @@ public class EuchreTabletGame implements Game{
 
 	@Override
 	public void addPlayer(Player p) {
-		// TODO Auto-generated method stub
-
+		players.add(p);
 	}
-
-	/* (non-Javadoc)
-	 * @see com.worthwhilegames.cardgames.shared.Game#isActive()
-	 */
-	@Override
-	public boolean isActive() {
-		return gameActive;
-	}
-
 }

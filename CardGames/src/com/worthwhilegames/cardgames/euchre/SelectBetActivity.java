@@ -192,12 +192,11 @@ public class SelectBetActivity extends Activity {
 		case (-1):
 		default:
 			//TODO set this to  ? image
-			trumpSuit.setBackgroundResource(R.drawable.clubsuitimage);
+			trumpSuit.setBackgroundResource(R.drawable.button);
 			break;
 		}
-		
+			
 	}
-	
 	
 	
 }
