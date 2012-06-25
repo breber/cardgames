@@ -349,6 +349,13 @@ public class EuchreTabletGame implements Game{
 		//TODO make the match score limit a setting?
 		return matchScores[0] >= EUCHRE_SCORE_LIMIT || matchScores[1] >= EUCHRE_SCORE_LIMIT;
 	}
+	
+	public int getWinningTeam(){
+		if(matchScores[0] >= matchScores[1]){
+			return 0;
+		}
+		return 1;
+	}
 
 	@Override
 	public List<Player> getPlayers() {

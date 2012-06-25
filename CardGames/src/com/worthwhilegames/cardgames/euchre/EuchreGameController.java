@@ -32,7 +32,9 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.gameboard.activities.ConnectActivity;
+import com.worthwhilegames.cardgames.gameboard.activities.GameResultsActivity;
 import com.worthwhilegames.cardgames.gameboard.activities.GameboardActivity;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.CardTranslator;
@@ -61,6 +63,12 @@ public class EuchreGameController implements GameController{
 	 */
 	private static final int CHOOSE_PLAYER = Math.abs("CHOOSE_PLAYER".hashCode());
 
+	/**
+	 * The request code to keep track of the "Are you sure you want to quit"
+	 * activity
+	 */
+	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
+	
 	/**
 	 * The ConnectionServer that sends and receives messages from other devices
 	 */
@@ -228,8 +236,6 @@ public class EuchreGameController implements GameController{
 
 
 			if(whoseTurn != getWhoSentMessage(context, intent)){
-				//TODO the wrong person just sent a message
-				//additional security should have had in original
 				refreshPlayers();
 			} else {
 				//the right person responded.
@@ -336,9 +342,19 @@ public class EuchreGameController implements GameController{
 			// Send the refresh signal (again) to all players just to make
 			// sure everyone has the latest information
 			refreshPlayers();
+<<<<<<< HEAD
 		}
 
 
+=======
+		} else if (requestCode == DECLARE_WINNER && resultCode == Activity.RESULT_CANCELED){
+			//TODO
+			//TODO
+			
+		}
+			
+		
+>>>>>>> tried to make the euchre game have  a replay button. worked on ending
 		return false;
 	}
 
@@ -400,7 +416,8 @@ public class EuchreGameController implements GameController{
 			if(players.get(0).getCards().size() == 0){
 				game.endRound();
 				if(game.isGameOver(players.get(0))){
-					//TODO end game.
+					declareWinner(game.getWinningTeam());
+					return;
 				}
 				declareRoundScores();
 				startRound();
@@ -443,8 +460,48 @@ public class EuchreGameController implements GameController{
 			server.write(ROUND_OVER, null, players.get(i).getId());
 		}
 	}
+<<<<<<< HEAD
 
 
+=======
+	
+	/**
+	 * This will send winner and loser messages to all the players depending on
+	 * if they won or not
+	 * 
+	 * @param whoWon
+	 *            The player that won
+	 */
+	private void declareWinner(int teamWhoWon) {
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "Sending winner and loser info");
+		}
+
+		// Let each player know whether they won or lost
+		for (int i = 0; i < game.getNumPlayers(); i++) {
+			if (i % 2 == teamWhoWon) {
+				server.write(Constants.WINNER, null, players.get(i).getId());
+			} else {
+				server.write(Constants.LOSER, null, players.get(i).getId());
+			}
+		}
+
+		String winner1Name = players.get(teamWhoWon).getName();
+		String winner2Name = players.get(teamWhoWon+2).getName();
+		
+		String winningTeam = winner1Name + " and " + winner2Name;
+
+		// Have the tablet verbally congratulate the winner
+		mySM.speak(gameContext.getResources().getString(R.string.congratulationMessage).replace("%s", winningTeam));
+
+		// Start the GameResultsActivity
+		Intent gameResults = new Intent(gameContext, GameResultsActivity.class);
+		gameResults.putExtra(GameResultsActivity.WINNER_NAME, winningTeam);
+		gameContext.startActivityForResult(gameResults, DECLARE_WINNER);
+	}
+	
+	
+>>>>>>> tried to make the euchre game have  a replay button. worked on ending
 	/**
 	 * This will take in the received card and play it
 	 * 

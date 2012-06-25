@@ -28,6 +28,14 @@
             android:layout_marginLeft="@dimen/mainMenuSmallButtonPadding"
             android:layout_marginRight="@dimen/mainMenuSmallButtonPadding"
             android:text="@string/main_menu" />
+        
+        <com.worthwhilegames.cardgames.shared.Button
+            android:id="@+id/btPlayAgain"
+            style="@style/MainMenuSmallerButton"
+            android:layout_marginBottom="@dimen/mainMenuButtonSpacing"
+            android:layout_marginLeft="@dimen/mainMenuSmallButtonPadding"
+            android:layout_marginRight="@dimen/mainMenuSmallButtonPadding"
+            android:text="@string/play_again" />
     </LinearLayout>
 
     <com.google.ads.AdView

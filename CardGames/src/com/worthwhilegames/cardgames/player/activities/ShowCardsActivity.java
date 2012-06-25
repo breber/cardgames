@@ -189,8 +189,9 @@ public class ShowCardsActivity extends Activity {
 		if (requestCode == QUIT_GAME && resultCode == RESULT_OK) {
 			// Finish this activity - if everything goes right, we
 			// should be back at the main menu
+			this.unregisterReceiver();
 			setResult(RESULT_OK);
-			finish();
+			finish();			
 		} else if (requestCode == DISCONNECTED) {
 			// Whatever result we get from the disconnected activity,
 			// just finish this activity since they will need to reconnect anyways.
@@ -215,6 +216,7 @@ public class ShowCardsActivity extends Activity {
 		} else {
 			// If it isn't anything we know how to handle, pass it on to the
 			// playerController to try and handle it
+			// Quit game and replay will be handled here
 			playerController.handleActivityResult(requestCode, resultCode, data);
 		}
 

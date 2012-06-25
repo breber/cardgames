@@ -126,7 +126,7 @@ public class Constants {
 	 * this is a JSON key for getting the player name
 	 */
 	public static final String PLAYER_NAME = "playername";
-	
+
 	/**
 	 * This is a JSON key for telling the player what state the game is in
 	 */
@@ -193,6 +193,11 @@ public class Constants {
 	 * message type that a player sends when requesting to draw a card
 	 */
 	public static final int DRAW_CARD = 10;
+
+	/**
+	 * message type that a player sends when requesting to draw a card
+	 */
+	public static final int PLAY_AGAIN = 11;
 
 	/* Preferences Options */
 	/**

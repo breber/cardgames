@@ -9,6 +9,7 @@ import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PLAY_LEAD_CAR
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ROUND_OVER;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.SECOND_ROUND_BETTING;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP;
+import static com.worthwhilegames.cardgames.shared.Constants.CURRENT_STATE;
 import static com.worthwhilegames.cardgames.shared.Constants.ID;
 import static com.worthwhilegames.cardgames.shared.Constants.IS_TURN;
 import static com.worthwhilegames.cardgames.shared.Constants.LOSER;
@@ -17,7 +18,7 @@ import static com.worthwhilegames.cardgames.shared.Constants.SETUP;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
 import static com.worthwhilegames.cardgames.shared.Constants.VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.WINNER;
-import static com.worthwhilegames.cardgames.shared.Constants.CURRENT_STATE;
+import static com.worthwhilegames.cardgames.shared.Constants.PLAY_AGAIN;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -191,7 +193,28 @@ public class EuchrePlayerController implements PlayerController {
 
 			switch (messageType) {
 			case SETUP:
-				// Parse the Message if it was the original setup
+				// Parse the Message if it was to start the game over
+				cardHand.removeAll(cardHand);
+				playerContext.removeAllCards();
+				try {
+					JSONArray arr = new JSONArray(object);
+					for (int i = 0; i < arr.length(); i++) {
+						JSONObject obj = arr.getJSONObject(i);
+						int suit = obj.getInt(SUIT);
+						int value = obj.getInt(VALUE);
+						int id = obj.getInt(ID);
+						playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+					}
+				} catch (JSONException ex) {
+					ex.printStackTrace();
+				}
+				setButtonsEnabled(false);
+				isTurn = false;
+				break;
+			case PLAY_AGAIN:
+				// Parse the Message if it was to start the game over
+				cardHand.removeAll(cardHand);
+				playerContext.removeAllCards();
 				try {
 					JSONArray arr = new JSONArray(object);
 					for (int i = 0; i < arr.length(); i++) {
@@ -317,13 +340,12 @@ public class EuchrePlayerController implements PlayerController {
 				currentState = ROUND_OVER;
 				break;
 			case WINNER://TODO don't disconnect
-				playerContext.unregisterReceiver();
+				
 				Intent winner = new Intent(playerContext, GameResultsActivity.class);
 				winner.putExtra(GameResultsActivity.IS_WINNER, true);
 				playerContext.startActivityForResult(winner, QUIT_GAME);
 				break;
 			case LOSER://TODO don't disconnect
-				playerContext.unregisterReceiver();
 				Intent loser = new Intent(playerContext, GameResultsActivity.class);
 				loser.putExtra(GameResultsActivity.IS_WINNER, false);
 				playerContext.startActivityForResult(loser, QUIT_GAME);
@@ -360,6 +382,10 @@ public class EuchrePlayerController implements PlayerController {
 			isBettingNow = false;
 			setButtonsEnabled(false);
 			isTurn = false;
+			
+		} else if (requestCode == QUIT_GAME && requestCode == Activity.RESULT_CANCELED) {
+			setButtonsEnabled(false);
+			cardHand.removeAll(cardHand);
 			
 		}
 		
