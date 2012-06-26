@@ -348,9 +348,13 @@ public class EuchreGameController implements GameController{
 
 =======
 		} else if (requestCode == DECLARE_WINNER && resultCode == Activity.RESULT_CANCELED){
-			//TODO
-			//TODO
+			// This should restart the game.
+			Deck deck = new Deck(EUCHRE);
+			Rules rules = new EuchreGameRules();
+			game = EuchreTabletGame.getInstance(players, deck, rules);
+			game.setup();
 			
+			startRound();
 		}
 			
 		

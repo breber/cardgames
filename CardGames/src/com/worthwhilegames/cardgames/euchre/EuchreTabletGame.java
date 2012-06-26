@@ -596,6 +596,13 @@ public class EuchreTabletGame implements Game{
 	public void setCardLead(Card cardLead) {
 		this.cardLead = cardLead;
 	}
+	
+	public void resetScores(){
+		roundScores[0] = 0;
+		roundScores[1] = 0;
+		matchScores[0] = 0;
+		matchScores[1] = 0;
+	}
 
 	/* (non-Javadoc)
 	 * @see com.worthwhilegames.cardgames.shared.Game#isActive()

@@ -18,7 +18,6 @@ import static com.worthwhilegames.cardgames.shared.Constants.SETUP;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
 import static com.worthwhilegames.cardgames.shared.Constants.VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.WINNER;
-import static com.worthwhilegames.cardgames.shared.Constants.PLAY_AGAIN;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -193,25 +192,6 @@ public class EuchrePlayerController implements PlayerController {
 
 			switch (messageType) {
 			case SETUP:
-				// Parse the Message if it was to start the game over
-				cardHand.removeAll(cardHand);
-				playerContext.removeAllCards();
-				try {
-					JSONArray arr = new JSONArray(object);
-					for (int i = 0; i < arr.length(); i++) {
-						JSONObject obj = arr.getJSONObject(i);
-						int suit = obj.getInt(SUIT);
-						int value = obj.getInt(VALUE);
-						int id = obj.getInt(ID);
-						playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
-					}
-				} catch (JSONException ex) {
-					ex.printStackTrace();
-				}
-				setButtonsEnabled(false);
-				isTurn = false;
-				break;
-			case PLAY_AGAIN:
 				// Parse the Message if it was to start the game over
 				cardHand.removeAll(cardHand);
 				playerContext.removeAllCards();
