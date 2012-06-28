@@ -43,14 +43,14 @@ public class ConnectionServer extends ConnectionCommon {
 	/**
 	 * The context of this thread
 	 */
-	private Context mContext;
+	private static Context mContext;
 
 	/**
 	 * The Handler to handle all messages coming from the BluetoothConnectionService
 	 * 
 	 * This should pretty much just pass the message on to the UI/GameLayer
 	 */
-	private Handler mHandler = new Handler() {
+	private static Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			if (Util.isDebugBuild()) {

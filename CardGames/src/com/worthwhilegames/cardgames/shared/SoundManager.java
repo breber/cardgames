@@ -115,7 +115,7 @@ public class SoundManager {
 	 * @param context The context of the class to use the SoundManager
 	 */
 	private SoundManager(Context context) {
-		sharedPreferences = context.getSharedPreferences(Constants.PREFERENCES, Context.MODE_WORLD_READABLE);
+		sharedPreferences = context.getSharedPreferences(Constants.PREFERENCES, 0);
 		isSoundFXOn = sharedPreferences.getBoolean(Constants.SOUND_EFFECTS, true);
 		isTTSOn = sharedPreferences.getBoolean(Constants.SPEECH_VOLUME, true);
 

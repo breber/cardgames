@@ -21,7 +21,7 @@ public class ConnectionFactory {
 	 * @return the type of connection in use
 	 */
 	public static ConnectionType getConnectionType(Context ctx) {
-		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, Context.MODE_WORLD_READABLE);
+		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, 0);
 		String connectionType = prefs.getString(Constants.CONNECTION_TYPE, Constants.WIFI);
 
 		if (Constants.WIFI.equals(connectionType)) {
@@ -39,7 +39,7 @@ public class ConnectionFactory {
 	 * @return a ServerSocket
 	 */
 	public static IServerSocket getServerSocket(Context ctx) {
-		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, Context.MODE_WORLD_READABLE);
+		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, 0);
 		String connectionType = prefs.getString(Constants.CONNECTION_TYPE, Constants.WIFI);
 
 		if (Constants.WIFI.equals(connectionType)) {
@@ -57,7 +57,7 @@ public class ConnectionFactory {
 	 * @return a ServerSocket
 	 */
 	public static ISocket getSocket(Context ctx, String address) {
-		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, Context.MODE_WORLD_READABLE);
+		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, 0);
 		String connectionType = prefs.getString(Constants.CONNECTION_TYPE, Constants.WIFI);
 
 		if (Constants.WIFI.equals(connectionType)) {

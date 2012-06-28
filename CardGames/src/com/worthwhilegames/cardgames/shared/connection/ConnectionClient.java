@@ -28,7 +28,7 @@ public class ConnectionClient extends ConnectionCommon {
 	/**
 	 * The context of this thread
 	 */
-	protected Context mContext;
+	protected static Context mContext;
 
 	/**
 	 * The address of the device to connect to
@@ -45,7 +45,7 @@ public class ConnectionClient extends ConnectionCommon {
 	 * 
 	 * This should pretty much just pass the message on to the UI/GameLayer
 	 */
-	protected Handler mHandler = new Handler() {
+	protected static Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			if (Util.isDebugBuild()) {
@@ -91,7 +91,7 @@ public class ConnectionClient extends ConnectionCommon {
 		if (instance == null) {
 			instance = new ConnectionClient(ctx);
 		} else {
-			instance.mContext = ctx;
+			ConnectionClient.mContext = ctx;
 		}
 
 		return instance;

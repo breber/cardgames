@@ -441,7 +441,7 @@ public class ConnectActivity extends Activity {
 		}
 
 		boolean namesEntered = (numPlayers == numNames);
-		SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, MODE_WORLD_READABLE);
+		SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, 0);
 		int maxComputers = sharedPreferences.getInt(Constants.NUMBER_OF_COMPUTERS, 1);
 
 		if (Util.isDebugBuild()) {

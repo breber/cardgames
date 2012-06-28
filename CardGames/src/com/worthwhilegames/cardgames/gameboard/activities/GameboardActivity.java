@@ -235,7 +235,7 @@ public class GameboardActivity extends Activity {
 
 		connection = ConnectionServer.getInstance(this);
 
-		sharedPreferences = getSharedPreferences(PREFERENCES, MODE_WORLD_READABLE);
+		sharedPreferences = getSharedPreferences(PREFERENCES, 0);
 
 		int numOfConnections = connection.getConnectedDeviceCount();
 		List<Player> players = new ArrayList<Player>();

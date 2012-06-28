@@ -55,7 +55,11 @@ public class WifiSocket implements ISocket {
 	 */
 	@Override
 	public InputStream getInputStream() throws IOException {
-		return mSocket.getInputStream();
+		if (mSocket != null) {
+			return mSocket.getInputStream();
+		} else {
+			return null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -63,7 +67,11 @@ public class WifiSocket implements ISocket {
 	 */
 	@Override
 	public OutputStream getOutputStream() throws IOException {
-		return mSocket.getOutputStream();
+		if (mSocket != null) {
+			return mSocket.getOutputStream();
+		} else {
+			return null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -71,7 +79,9 @@ public class WifiSocket implements ISocket {
 	 */
 	@Override
 	public void shutdownOutput() throws IOException {
-		mSocket.shutdownOutput();
+		if (mSocket != null) {
+			mSocket.shutdownOutput();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -79,7 +89,9 @@ public class WifiSocket implements ISocket {
 	 */
 	@Override
 	public void shutdownInput() throws IOException {
-		mSocket.shutdownInput();
+		if (mSocket != null) {
+			mSocket.shutdownInput();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -95,7 +107,11 @@ public class WifiSocket implements ISocket {
 	 */
 	@Override
 	public String toString() {
-		return mSocket.getInetAddress().getHostAddress();
+		if (mSocket != null) {
+			return mSocket.getInetAddress().getHostAddress();
+		} else {
+			return "";
+		}
 	}
 
 	/**

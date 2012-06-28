@@ -91,7 +91,7 @@ public class PreferencesActivity extends Activity {
 		audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
 		// create the shared preferences object
-		sharedPref = this.getSharedPreferences(PREFERENCES,	MODE_WORLD_WRITEABLE);
+		sharedPref = this.getSharedPreferences(PREFERENCES,	0);
 
 		// create the preferences editor for editing the preferences
 		prefsEditor = sharedPref.edit();

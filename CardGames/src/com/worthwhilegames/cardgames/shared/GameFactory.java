@@ -87,7 +87,7 @@ public class GameFactory {
 	 * @return the type of Game we are playing
 	 */
 	public static CardGame getGameType(Context ctx) {
-		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, Context.MODE_WORLD_READABLE);
+		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, 0);
 		String gameType = prefs.getString(Constants.GAME_TYPE, Constants.CRAZY_EIGHTS);
 
 		if (Constants.CRAZY_EIGHTS.equals(gameType)) {
