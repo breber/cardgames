@@ -47,7 +47,9 @@ public class WifiSocket implements ISocket {
 	 */
 	@Override
 	public void close() throws IOException {
-		mSocket.close();
+		if (mSocket != null) {
+			mSocket.close();
+		}
 	}
 
 	/* (non-Javadoc)

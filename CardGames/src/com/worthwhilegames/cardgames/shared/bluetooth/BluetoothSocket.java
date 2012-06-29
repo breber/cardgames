@@ -48,7 +48,9 @@ public class BluetoothSocket implements ISocket {
 	 */
 	@Override
 	public void close() throws IOException {
-		mSocket.close();
+		if (mSocket != null) {
+			mSocket.close();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -56,7 +58,11 @@ public class BluetoothSocket implements ISocket {
 	 */
 	@Override
 	public InputStream getInputStream() throws IOException {
-		return mSocket.getInputStream();
+		if (mSocket != null) {
+			return mSocket.getInputStream();
+		} else {
+			return null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -64,7 +70,11 @@ public class BluetoothSocket implements ISocket {
 	 */
 	@Override
 	public OutputStream getOutputStream() throws IOException {
-		return mSocket.getOutputStream();
+		if (mSocket != null) {
+			return mSocket.getOutputStream();
+		} else {
+			return null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -88,7 +98,9 @@ public class BluetoothSocket implements ISocket {
 	 */
 	@Override
 	public void connect() throws IOException {
-		mSocket.connect();
+		if (mSocket != null) {
+			mSocket.connect();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -96,7 +108,11 @@ public class BluetoothSocket implements ISocket {
 	 */
 	@Override
 	public String toString() {
-		return mSocket.getRemoteDevice().getAddress();
+		if (mSocket != null) {
+			return mSocket.getRemoteDevice().getAddress();
+		} else {
+			return "";
+		}
 	}
 
 	/**

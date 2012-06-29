@@ -29,7 +29,11 @@ public class WifiServerSocket implements IServerSocket {
 	 */
 	@Override
 	public ISocket accept() throws IOException {
-		return new WifiSocket(mServerSocket.accept());
+		if (mServerSocket != null) {
+			return new WifiSocket(mServerSocket.accept());
+		} else {
+			return null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -37,6 +41,8 @@ public class WifiServerSocket implements IServerSocket {
 	 */
 	@Override
 	public void close() throws IOException {
-		mServerSocket.close();
+		if (mServerSocket != null) {
+			mServerSocket.close();
+		}
 	}
 }

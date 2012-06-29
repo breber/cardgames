@@ -32,7 +32,11 @@ public class BluetoothServerSocket implements IServerSocket {
 	 */
 	@Override
 	public ISocket accept() throws IOException {
-		return new BluetoothSocket(mServerSocket.accept());
+		if (mServerSocket != null) {
+			return new BluetoothSocket(mServerSocket.accept());
+		} else {
+			return null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -40,6 +44,8 @@ public class BluetoothServerSocket implements IServerSocket {
 	 */
 	@Override
 	public void close() throws IOException {
-		mServerSocket.close();
+		if (mServerSocket != null) {
+			mServerSocket.close();
+		}
 	}
 }
