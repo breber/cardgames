@@ -144,14 +144,26 @@ public class ConnectActivity extends Activity {
 					}
 				} else if (state == ConnectionConstants.STATE_CONNECTED) {
 					boolean needToAdd = true;
-					// If a player has been disconnected, their Player object
-					// will say so. We first will check to see if any players
-					// were disconnected. If so, this connection will take their
-					// place. If not, we will add a new player for them
 					for (Player p : mGame.getPlayers()) {
-						if (p.isDisconnected()) {
+						if (p.getId().equalsIgnoreCase(deviceId)) {
+							// Set deviceId again to make sure they aren't listed
+							// as disconnected
 							p.setId(deviceId);
 							needToAdd = false;
+							break;
+						}
+					}
+
+					if (needToAdd) {
+						// If a player has been disconnected, their Player object
+						// will say so. We first will check to see if any players
+						// were disconnected. If so, this connection will take their
+						// place. If not, we will add a new player for them
+						for (Player p : mGame.getPlayers()) {
+							if (p.isDisconnected()) {
+								p.setId(deviceId);
+								needToAdd = false;
+							}
 						}
 					}
 
@@ -306,7 +318,7 @@ public class ConnectActivity extends Activity {
 		boolean namesEntered = mGame.getPlayers().size() > 0;
 
 		for (Player p : mGame.getPlayers()) {
-			namesEntered &= p.hasName();
+			namesEntered &= (p.hasName() || p.isDisconnected());
 		}
 
 		return namesEntered && ((mGame.getPlayers().size() + maxComputers) > 1);

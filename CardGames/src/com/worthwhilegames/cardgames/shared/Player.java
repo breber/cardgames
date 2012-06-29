@@ -104,6 +104,10 @@ public class Player {
 	 */
 	public void setIsComputer(boolean isComp) {
 		isComputer = isComp;
+
+		if (isComputer) {
+			isDisconnected = false;
+		}
 	}
 
 	/**
