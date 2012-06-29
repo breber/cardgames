@@ -7,13 +7,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,7 +30,6 @@ import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionFactory;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionType;
 
 /**
  * This Activity will show how many players are connected, and
@@ -48,11 +45,6 @@ public class ConnectActivity extends Activity {
 	 * Logcat debug tag
 	 */
 	private static final String TAG = ConnectActivity.class.getName();
-
-	/**
-	 * The request code to keep track of the Bluetooth request enable intent
-	 */
-	private static final int REQUEST_ENABLE_BT = Math.abs("REQUEST_BLUETOOTH".hashCode());
 
 	/**
 	 * An array of ImageViews. These are the "tablet" images that light up when a player
@@ -171,6 +163,9 @@ public class ConnectActivity extends Activity {
 						mGame.addPlayer(p);
 					}
 				}
+			} else if (ConnectionFactory.CONNECTION_ENABLED.equals(action)) {
+				updateName();
+				startListeningForDevices();
 			}
 
 			// Update the UI to indicate how many players are connected
@@ -190,6 +185,7 @@ public class ConnectActivity extends Activity {
 		// the Bluetooth module
 		registerReceiver(receiver, new IntentFilter(ConnectionConstants.MESSAGE_RX_INTENT));
 		registerReceiver(receiver, new IntentFilter(ConnectionConstants.STATE_CHANGE_INTENT));
+		registerReceiver(receiver, new IntentFilter(ConnectionFactory.CONNECTION_ENABLED));
 
 		// Get the ImageView and TextView references so that we can display different
 		// states for connected/disconnected devices
@@ -213,28 +209,10 @@ public class ConnectActivity extends Activity {
 		isReconnect = mGame.getNumPlayers() > 0;
 
 
-		// TODO: move this connection logic out to connection factory
-		ConnectionType currentType = ConnectionFactory.getConnectionType(this);
-		WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		// If Bluetooth isn't enabled, request that it be enabled (if we are currently using Bluetooth)
-		if (!BluetoothAdapter.getDefaultAdapter().isEnabled() && currentType == ConnectionType.Bluetooth) {
-			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-		} else if (!wifiManager.isWifiEnabled() && currentType == ConnectionType.WiFi) {
-			// Wifi is not currently enabled, so try and enable it
-			wifiManager.setWifiEnabled(true);
+		// Make sure that all connections are enabled
+		ConnectionFactory.ensureConnectionEnabled(this);
 
-			// Everything is already enabled, so put ourselves in listening mode
-			startListeningForDevices();
-		} else {
-			// Everything is already enabled, so put ourselves in listening mode
-			startListeningForDevices();
-		}
-
-		// Display this device's name so that users know which device to connect
-		// to on their own device.
-		TextView tv = (TextView) findViewById(R.id.myName);
-		tv.setText(ConnectionFactory.getDeviceDisplayName(this));
+		updateName();
 
 		// Set up the start button
 		Button startButton = (Button) findViewById(R.id.startButton);
@@ -305,6 +283,16 @@ public class ConnectActivity extends Activity {
 	}
 
 	/**
+	 * Update the name displayed on the device
+	 */
+	private void updateName() {
+		// Display this device's name so that users know which device to connect
+		// to on their own device.
+		TextView tv = (TextView) findViewById(R.id.myName);
+		tv.setText(ConnectionFactory.getDeviceDisplayName(this));
+	}
+
+	/**
 	 * Returns whether or not a game can be started or not
 	 *
 	 * - There needs to be at least 2 players
@@ -342,9 +330,10 @@ public class ConnectActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// If we are coming back from the Bluetooth Enable request, and
 		// it was successful, start listening for device connections
-		if (resultCode == RESULT_OK && requestCode == REQUEST_ENABLE_BT) {
+		if (resultCode == RESULT_OK && requestCode == ConnectionFactory.REQUEST_ENABLE_BT) {
+			updateName();
 			startListeningForDevices();
-		} else if (resultCode != RESULT_OK && requestCode == REQUEST_ENABLE_BT) {
+		} else if (resultCode != RESULT_OK && requestCode == ConnectionFactory.REQUEST_ENABLE_BT) {
 			// The user didn't enable bluetooth - send them back to main menu
 			setResult(RESULT_CANCELED);
 			finish();

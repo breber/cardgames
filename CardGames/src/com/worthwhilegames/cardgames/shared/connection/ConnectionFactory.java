@@ -2,9 +2,16 @@ package com.worthwhilegames.cardgames.shared.connection;
 
 import java.net.InetAddress;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.Constants;
@@ -19,6 +26,13 @@ import com.worthwhilegames.cardgames.shared.wifi.WifiSocket;
  * client or server.
  */
 public class ConnectionFactory {
+
+	public static final String CONNECTION_ENABLED = "com.worthwhilegames.cardgames.shared.connection.ConnectionFactory.CONNECTION_ENABLED";
+
+	/**
+	 * The request code to keep track of the Bluetooth request enable intent
+	 */
+	public static final int REQUEST_ENABLE_BT = Math.abs("REQUEST_BLUETOOTH".hashCode());
 
 	/**
 	 * Get the type of connection that is currently in use
@@ -60,6 +74,38 @@ public class ConnectionFactory {
 		}
 
 		return sb.toString();
+	}
+
+	/**
+	 * Ensure connections are enabled
+	 * 
+	 * @param ctx
+	 */
+	public static void ensureConnectionEnabled(final Activity ctx) {
+		if (ConnectionType.WiFi.equals(getConnectionType(ctx))) {
+			final WifiManager wifiManager = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
+			final ConnectivityManager connectivityManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+			final BroadcastReceiver rx = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED) {
+
+						NetworkInfo info = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+						if (NetworkInfo.State.CONNECTED.equals(info.getState())) {
+							ctx.unregisterReceiver(this);
+							ctx.sendBroadcast(new Intent(CONNECTION_ENABLED));
+						}
+					}
+				}
+			};
+
+			ctx.registerReceiver(rx, new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
+			ctx.registerReceiver(rx, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+			wifiManager.setWifiEnabled(true);
+		} else if (ConnectionType.Bluetooth.equals(getConnectionType(ctx))) {
+			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			ctx.startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+		}
 	}
 
 	/**
