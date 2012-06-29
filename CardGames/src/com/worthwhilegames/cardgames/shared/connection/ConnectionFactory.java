@@ -1,10 +1,14 @@
 package com.worthwhilegames.cardgames.shared.connection;
 
+import java.net.InetAddress;
+
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.Constants;
+import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.bluetooth.BluetoothServerSocket;
 import com.worthwhilegames.cardgames.shared.bluetooth.BluetoothSocket;
 import com.worthwhilegames.cardgames.shared.wifi.WifiServerSocket;
@@ -32,6 +36,30 @@ public class ConnectionFactory {
 		}
 
 		return ConnectionType.WiFi;
+	}
+
+	/**
+	 * Get the string to display on the connection screen
+	 * 
+	 * @return the string device id
+	 */
+	public static String getDeviceDisplayName(Context ctx) {
+		StringBuilder sb = new StringBuilder(ctx.getResources().getString(R.string.deviceName));
+		sb.append("\n");
+
+		if (ConnectionType.WiFi.equals(getConnectionType(ctx))) {
+			InetAddress currentAddress = Util.getLocalIpAddress();
+			if (currentAddress == null) {
+				sb.append("Unknown");
+			} else {
+				sb.append(currentAddress.getHostAddress());
+			}
+		} else if (ConnectionType.Bluetooth.equals(getConnectionType(ctx))) {
+			BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+			sb.append(btAdapter.getName());
+		}
+
+		return sb.toString();
 	}
 
 	/**

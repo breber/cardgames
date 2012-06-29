@@ -2,8 +2,6 @@ package com.worthwhilegames.cardgames.gameboard.activities;
 
 import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
@@ -117,6 +115,11 @@ public class GameboardActivity extends Activity {
 	private GameController gameController;
 
 	/**
+	 * The game instance
+	 */
+	private Game mGame;
+
+	/**
 	 * These are the TextViews for all the player names
 	 */
 	private TextView[] playerTextViews = new TextView[4];
@@ -170,8 +173,14 @@ public class GameboardActivity extends Activity {
 				// If the new state is anything but connected, display the
 				// "You have been disconnected" screen
 				if (newState != ConnectionConstants.STATE_CONNECTED) {
+					String deviceId = intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
+					for (Player p : mGame.getPlayers()) {
+						if (p.getId().equalsIgnoreCase(deviceId)) {
+							p.clearName();
+							p.setDisconnected(true);
+						}
+					}
 					Intent i = new Intent(GameboardActivity.this, ConnectionFailActivity.class);
-					i.putExtra(ConnectionConstants.KEY_DEVICE_ID, intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID));
 					startActivityForResult(i, DISCONNECTED);
 
 					// Pause the players
@@ -208,54 +217,26 @@ public class GameboardActivity extends Activity {
 		registerReceiver();
 
 		connection = ConnectionServer.getInstance(this);
-
-		int numOfConnections = connection.getConnectedDeviceCount();
-		List<Player> players = new ArrayList<Player>();
-		List<String> devices = connection.getConnectedDevices();
-
-		// Get the list of players and their addresses from the
-		// Intent data (from the ConnectActivity)
-		NameDevWrapper[] playerNames = getPlayerNames(getIntent());
-		int i;
-		for (i = 0; i < numOfConnections; i++) {
-			Player p = new Player();
-			int deviceIndex = devices.indexOf(playerNames[i].deviceId);
-
-			// If we can't find the device in the device list,
-			// then set it as a computer
-			if (deviceIndex == -1) {
-				p.setIsComputer(true);
-			} else {
-				p.setId(devices.get(deviceIndex));
-			}
-			p.setName(playerNames[i].name);
-			p.setPosition(i + 1);
-			players.add(p);
-
-			// Show the user names we got back
-			if (Util.isDebugBuild()) {
-				Log.d(TAG, "Player" + (i + 1) + ": " + playerNames[i]);
-			}
-		}
+		mGame = GameFactory.getGameInstance(this);
 
 		// Setup the rest of the Computer players based on the preferences
+		int currentNumPlayers = mGame.getNumPlayers();
 		int numComputers = sharedPreferences.getInt(Constants.NUMBER_OF_COMPUTERS, 1);
 		String computerDifficulty = sharedPreferences.getString(Constants.DIFFICULTY_OF_COMPUTERS, Constants.EASY);
-		for (int j = i; j < 4 && (j - i < numComputers); j++) {
+		for (int j = currentNumPlayers; j < 4 && (j - currentNumPlayers < numComputers); j++) {
 			Player p = new Player();
-			p.setName("Computer " + (j - i + 1));
-			p.setId("Computer" + (j - i + 1));
+			p.setName("Computer " + (j - currentNumPlayers + 1));
+			p.setId("Computer" + (j - currentNumPlayers + 1));
 			p.setPosition(j + 1);
 			p.setIsComputer(true);
 			p.setComputerDifficulty(computerDifficulty);
 
-			players.add(p);
+			mGame.addPlayer(p);
 		}
 
 		// the GameController now handles the setup of the game.
-		gameController = GameFactory.getGameControllerInstance(this, connection, players, refresh);
-		Game game = GameFactory.getGameInstance(this);
-		game.setComputerDifficulty(computerDifficulty);
+		gameController = GameFactory.getGameControllerInstance(this, connection, refresh);
+		mGame.setComputerDifficulty(computerDifficulty);
 
 		// Draw the names from the Game on the gameboard
 		updateNamesOnGameboard();
@@ -414,27 +395,6 @@ public class GameboardActivity extends Activity {
 	}
 
 	/**
-	 * This method will get all the player names from the intent and set them up
-	 * on the gameboard.xml with the text views
-	 *
-	 * @return List of player names
-	 */
-	public NameDevWrapper[] getPlayerNames(Intent intent) {
-		NameDevWrapper[] playerNames = new NameDevWrapper[4];
-
-		playerNames[0] = new NameDevWrapper(intent.getStringArrayExtra(Constants.PLAYER_1));
-		playerNames[1] = new NameDevWrapper(intent.getStringArrayExtra(Constants.PLAYER_2));
-		playerNames[2] = new NameDevWrapper(intent.getStringArrayExtra(Constants.PLAYER_3));
-		playerNames[3] = new NameDevWrapper(intent.getStringArrayExtra(Constants.PLAYER_4));
-
-		if (Util.isDebugBuild()) {
-			Log.d(TAG, Arrays.toString(playerNames));
-		}
-
-		return playerNames;
-	}
-
-	/**
 	 * Update the names that are displayed on the Gameboard.
 	 *
 	 * This data is pulled from the Game instance
@@ -581,37 +541,5 @@ public class GameboardActivity extends Activity {
 				playerTextViews[i].setTextColor(getResources().getColor(R.color.black));
 			}
 		}
-	}
-
-
-	/**
-	 * A class that contains a device name and id
-	 */
-	private class NameDevWrapper {
-		/**
-		 * Create a NameDevWrapper from a string array
-		 * 
-		 * 		playerName[0] = deviceId
-		 * 		playerName[1] = name
-		 * 
-		 * @param playerName an array of a device id and a name
-		 * 			as defined above
-		 */
-		public NameDevWrapper(String[] playerName) {
-			if (playerName != null) {
-				name = playerName[1];
-				deviceId = playerName[0];
-			}
-		}
-
-		/**
-		 * The name of this NameDevWrapper
-		 */
-		public String name;
-
-		/**
-		 * The device ID of this NameDevWrapper
-		 */
-		public String deviceId;
 	}
 }
