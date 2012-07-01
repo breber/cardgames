@@ -88,18 +88,11 @@ public class ConnectActivity extends Activity {
 		public void onReceive(Context context, Intent intent) {
 			String object = intent.getStringExtra(ConnectionConstants.KEY_MESSAGE_RX);
 			int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
+			String deviceAddress = intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
 
 			String action = intent.getAction();
-
-			if (Util.isDebugBuild()) {
-				Log.d(TAG, "onReceive: action: " + action);
-				Log.d(TAG, "onReceive: msgType: " + messageType);
-			}
-
 			if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
 				if (messageType == Constants.GET_PLAYER_NAME) {
-					String deviceAddress = intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
-
 					try {
 						JSONObject obj = new JSONObject(object);
 						String playerName = obj.getString(PLAYER_NAME);
@@ -110,10 +103,17 @@ public class ConnectActivity extends Activity {
 						}
 
 						// Find the player in our game, and update their name
+						boolean foundPlayer = false;
 						for (Player p : mGame.getPlayers()) {
 							if (p.getId().equalsIgnoreCase(deviceAddress)) {
 								p.setName(playerName);
+								foundPlayer = true;
+								break;
 							}
+						}
+
+						if (Util.isDebugBuild() && !foundPlayer) {
+							Log.e(TAG, "Received request to update name, but didn't find player...");
 						}
 					} catch (JSONException ex) {
 						ex.printStackTrace();
@@ -121,22 +121,21 @@ public class ConnectActivity extends Activity {
 				}
 			} else if (ConnectionConstants.STATE_CHANGE_INTENT.equals(action)) {
 				int state = intent.getIntExtra(ConnectionConstants.KEY_STATE_MESSAGE, ConnectionConstants.STATE_LISTEN);
-				String deviceId = intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
 
 				if (Util.isDebugBuild()) {
-					Log.d(TAG, "onReceive: [" + deviceId + "]: new state = " + state);
+					Log.d(TAG, "onReceive: [" + deviceAddress + "]: new state = " + state);
 				}
 
 				// If we are now in the LISTEN state, remove the player's name from the list
 				if (state == ConnectionConstants.STATE_LISTEN || state == ConnectionConstants.STATE_NONE) {
 					if (!mGame.isActive()) {
 						// If we haven't started a game yet, just drop the player
-						mGame.dropPlayer(deviceId);
+						mGame.dropPlayer(deviceAddress);
 					} else {
 						// We have started a game, so we want to mark this player as
 						// disconnected so that we can potentially replace them
 						for (Player p : mGame.getPlayers()) {
-							if (p.getId().equalsIgnoreCase(deviceId)) {
+							if (p.getId().equalsIgnoreCase(deviceAddress)) {
 								p.setDisconnected(true);
 								p.clearName();
 							}
@@ -145,10 +144,10 @@ public class ConnectActivity extends Activity {
 				} else if (state == ConnectionConstants.STATE_CONNECTED) {
 					boolean needToAdd = true;
 					for (Player p : mGame.getPlayers()) {
-						if (p.getId().equalsIgnoreCase(deviceId)) {
+						if (p.getId().equalsIgnoreCase(deviceAddress)) {
 							// Set deviceId again to make sure they aren't listed
 							// as disconnected
-							p.setId(deviceId);
+							p.setId(deviceAddress);
 							needToAdd = false;
 							break;
 						}
@@ -161,21 +160,27 @@ public class ConnectActivity extends Activity {
 						// place. If not, we will add a new player for them
 						for (Player p : mGame.getPlayers()) {
 							if (p.isDisconnected()) {
-								p.setId(deviceId);
+								p.setId(deviceAddress);
 								needToAdd = false;
 							}
 						}
 					}
 
-					if (needToAdd) {
-						// When we enter into the connected state, add a new player
-						// to the game
+					if (needToAdd && !isReconnect) {
+						// If we didn't already have a Player object for the given deviceId
+						// (they were trying to reconnect), or there aren't any disconnected
+						// players, and we are not on the reconnect screen, add a new player to the
+						// current game.
 						Player p = new Player();
-						p.setId(deviceId);
+						p.setId(deviceAddress);
 						mGame.addPlayer(p);
 					}
 				}
 			} else if (ConnectionFactory.CONNECTION_ENABLED.equals(action)) {
+				// If we get a notification that the connection has been
+				// enabled (a Wifi connection has been started), update
+				// the name we display on the connection screen, and
+				// start listening for connections
 				updateName();
 				startListeningForDevices();
 			}

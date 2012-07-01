@@ -108,6 +108,9 @@ public class Player {
 		if (isComputer) {
 			isDisconnected = false;
 		}
+
+		// TODO: we might want to set a name for the computer if we
+		//		 previously cleared it...
 	}
 
 	/**
