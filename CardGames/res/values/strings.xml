@@ -128,10 +128,7 @@ The game will start with player 1 and continue in a counterclockwise fashion aro
     <string-array name="game_array">
         <item>Crazy Eights</item>
     </string-array>
-    <string-array name="connection_array">
-        <item>WiFi</item>
-        <item>Bluetooth</item>
-    </string-array>
+
     <string name="ipv6Address">****:****:****:****:****:****:****:****</string>
 
 </resources>

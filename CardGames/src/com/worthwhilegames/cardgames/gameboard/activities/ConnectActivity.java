@@ -303,10 +303,10 @@ public class ConnectActivity extends Activity {
 		ConnectionType currentType = ConnectionFactory.getConnectionType(this);
 
 		// If Bluetooth isn't enabled, request that it be enabled (if we are currently using Bluetooth)
-		if (!mBluetoothAdapter.isEnabled() && currentType == ConnectionType.BLUETOOTH) {
+		if (!mBluetoothAdapter.isEnabled() && currentType == ConnectionType.Bluetooth) {
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-		} else if (!wifiManager.isWifiEnabled() && currentType == ConnectionType.WIFI) {
+		} else if (!wifiManager.isWifiEnabled() && currentType == ConnectionType.WiFi) {
 			// Wifi is not currently enabled, so try and enable it
 			wifiManager.setWifiEnabled(true);
 
@@ -321,9 +321,9 @@ public class ConnectActivity extends Activity {
 		// to on their own device.
 		TextView tv = (TextView) findViewById(R.id.myName);
 
-		if (currentType == ConnectionType.BLUETOOTH) {
+		if (currentType == ConnectionType.Bluetooth) {
 			tv.setText(getResources().getString(R.string.deviceName) + "\n" + mBluetoothAdapter.getName());
-		} else if (currentType == ConnectionType.WIFI) {
+		} else if (currentType == ConnectionType.WiFi) {
 			InetAddress currentAddress = Util.getLocalIpAddress();
 			// TODO: how should we handle the case where the user doesn't have an IP address?
 			tv.setText(getResources().getString(R.string.deviceName) + "\n" + ((currentAddress == null) ? "Unknown" : currentAddress.getHostAddress()));
@@ -463,7 +463,7 @@ public class ConnectActivity extends Activity {
 			mConnectionServer = ConnectionServer.getInstance(this);
 		}
 
-		if (ConnectionFactory.getConnectionType(this) == ConnectionType.BLUETOOTH) {
+		if (ConnectionFactory.getConnectionType(this) == ConnectionType.Bluetooth) {
 			Util.ensureDiscoverable(this, mBluetoothAdapter);
 		}
 

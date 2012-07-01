@@ -243,16 +243,6 @@ public class Constants {
 	public static final String CONNECTION_TYPE = "CONNECTION TYPE";
 
 	/**
-	 * A constant representing the connection type bluetooth
-	 */
-	public static final String BLUETOOTH = "Bluetooth";
-
-	/**
-	 * A constant representing the connection type wifi
-	 */
-	public static final String WIFI = "WiFi";
-
-	/**
 	 * A constant to represent a key in the shared preferences for the sound
 	 * effects option
 	 */

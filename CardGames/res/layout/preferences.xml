@@ -116,7 +116,6 @@
                     android:id="@+id/connectionOption"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:entries="@array/connection_array"
                     android:prompt="@string/connectionType" />
             </TableRow>
         </TableLayout>

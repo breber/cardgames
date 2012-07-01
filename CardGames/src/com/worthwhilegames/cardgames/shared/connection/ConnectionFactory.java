@@ -1,5 +1,6 @@
 package com.worthwhilegames.cardgames.shared.connection;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -22,15 +23,15 @@ public class ConnectionFactory {
 	 */
 	public static ConnectionType getConnectionType(Context ctx) {
 		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, 0);
-		String connectionType = prefs.getString(Constants.CONNECTION_TYPE, Constants.WIFI);
+		String connectionType = prefs.getString(Constants.CONNECTION_TYPE, ConnectionType.WiFi.toString());
 
-		if (Constants.WIFI.equals(connectionType)) {
-			return ConnectionType.WIFI;
-		} else if (Constants.BLUETOOTH.equals(connectionType)) {
-			return ConnectionType.BLUETOOTH;
+		if (ConnectionType.WiFi.toString().equals(connectionType)) {
+			return ConnectionType.WiFi;
+		} else if (ConnectionType.Bluetooth.toString().equals(connectionType)) {
+			return ConnectionType.Bluetooth;
 		}
 
-		return ConnectionType.WIFI;
+		return ConnectionType.WiFi;
 	}
 
 	/**
@@ -39,16 +40,15 @@ public class ConnectionFactory {
 	 * @return a ServerSocket
 	 */
 	public static IServerSocket getServerSocket(Context ctx) {
-		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, 0);
-		String connectionType = prefs.getString(Constants.CONNECTION_TYPE, Constants.WIFI);
+		ConnectionType currentType = getConnectionType(ctx);
 
-		if (Constants.WIFI.equals(connectionType)) {
-			return new WifiServerSocket();
-		} else if (Constants.BLUETOOTH.equals(connectionType)) {
+		switch (currentType) {
+		case Bluetooth:
 			return new BluetoothServerSocket();
+		case WiFi:
+		default:
+			return new WifiServerSocket();
 		}
-
-		return new WifiServerSocket();
 	}
 
 	/**
@@ -57,15 +57,24 @@ public class ConnectionFactory {
 	 * @return a ServerSocket
 	 */
 	public static ISocket getSocket(Context ctx, String address) {
-		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, 0);
-		String connectionType = prefs.getString(Constants.CONNECTION_TYPE, Constants.WIFI);
+		ConnectionType currentType = getConnectionType(ctx);
 
-		if (Constants.WIFI.equals(connectionType)) {
-			return new WifiSocket(address);
-		} else if (Constants.BLUETOOTH.equals(connectionType)) {
+		switch (currentType) {
+		case Bluetooth:
 			return new BluetoothSocket(address);
+		case WiFi:
+		default:
+			return new WifiSocket(address);
 		}
+	}
 
-		return new WifiSocket(address);
+	/**
+	 * Checks to see if we have bluetooth capabilities
+	 * @return
+	 */
+	public static boolean hasBluetoothCapabilities() {
+		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+
+		return adapter != null;
 	}
 }

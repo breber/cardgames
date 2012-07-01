@@ -11,7 +11,11 @@ import static com.worthwhilegames.cardgames.shared.Constants.NUMBER_OF_COMPUTERS
 import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
 import static com.worthwhilegames.cardgames.shared.Constants.SOUND_EFFECTS;
 import static com.worthwhilegames.cardgames.shared.Constants.SPEECH_VOLUME;
-import static com.worthwhilegames.cardgames.shared.Constants.WIFI;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -25,6 +29,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.connection.ConnectionFactory;
+import com.worthwhilegames.cardgames.shared.connection.ConnectionType;
 
 /**
  * This class will be used as an activity for the preferences screen. Within
@@ -225,17 +231,24 @@ public class PreferencesActivity extends Activity {
 
 		// connection type spinner
 		connectionSpinner = (Spinner) findViewById(R.id.connectionOption);
+		ConnectionType[] connectionTypes = ConnectionType.values();
+		List<ConnectionType> modifiedConnectionTypes = new ArrayList<ConnectionType>(Arrays.asList(connectionTypes));
+
+		// If we don't have Bluetooth capabilities, remove that option
+		if (!ConnectionFactory.hasBluetoothCapabilities()) {
+			modifiedConnectionTypes.remove(ConnectionType.Bluetooth);
+		}
+
+		ArrayAdapter<ConnectionType> connectionAdapter = new ArrayAdapter<ConnectionType>(this, android.R.layout.simple_spinner_item, modifiedConnectionTypes);
+		connectionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		connectionSpinner.setAdapter(connectionAdapter);
 
 		if (connectionSpinner != null) {
 			// value of the game type based upon the shared preferences
-			String connection_type = sharedPref.getString(CONNECTION_TYPE, WIFI);
-
-			// make an array adapter of all options specified in the xml
-			@SuppressWarnings("unchecked")
-			ArrayAdapter<String> gameAdapter = (ArrayAdapter<String>) connectionSpinner.getAdapter(); // cast to an ArrayAdapter
+			ConnectionType connectionType = ConnectionType.valueOf(sharedPref.getString(CONNECTION_TYPE, ConnectionType.WiFi.toString()));
 
 			// get the current position of the selected item
-			int connectionPosition = gameAdapter.getPosition(connection_type);
+			int connectionPosition = connectionAdapter.getPosition(connectionType);
 
 			// set the option checked based on the preferences
 			connectionSpinner.setSelection(connectionPosition);
@@ -287,7 +300,7 @@ public class PreferencesActivity extends Activity {
 
 		// set connection type
 		if (gameSpinner != null) {
-			prefsEditor.putString(CONNECTION_TYPE, (String) connectionSpinner.getSelectedItem());
+			prefsEditor.putString(CONNECTION_TYPE, connectionSpinner.getSelectedItem().toString());
 		}
 
 		// commit the changes to the shared preferences

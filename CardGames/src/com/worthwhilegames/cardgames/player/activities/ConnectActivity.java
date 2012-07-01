@@ -80,11 +80,11 @@ public class ConnectActivity extends Activity {
 
 				ConnectionType type = ConnectionFactory.getConnectionType(ConnectActivity.this);
 
-				if (type == ConnectionType.BLUETOOTH) {
+				if (type == ConnectionType.Bluetooth) {
 					// Show the device list
 					Intent showDeviceList = new Intent(ConnectActivity.this, DeviceListActivity.class);
 					startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
-				} else if (type == ConnectionType.WIFI) {
+				} else if (type == ConnectionType.WiFi) {
 					WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 					manager.setWifiEnabled(true);
 
@@ -132,11 +132,11 @@ public class ConnectActivity extends Activity {
 
 		ConnectionType type = ConnectionFactory.getConnectionType(this);
 
-		if (type == ConnectionType.BLUETOOTH) {
+		if (type == ConnectionType.Bluetooth) {
 			// Show the device list
 			Intent showDeviceList = new Intent(this, DeviceListActivity.class);
 			startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
-		} else if (type == ConnectionType.WIFI) {
+		} else if (type == ConnectionType.WiFi) {
 			WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 			manager.setWifiEnabled(true);
 
