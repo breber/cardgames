@@ -105,6 +105,13 @@ public class CrazyEightsTabletGame implements Game {
 	}
 
 	/**
+	 * Clear the game instance
+	 */
+	public static void clearInstance() {
+		instance = null;
+	}
+
+	/**
 	 * A constructor for the crazy eights game type. This constructor will initialize the all the variables
 	 * for a game of crazy eights including the rules, players, deck, shuffled deck pile and the discard pile.
 	 * 

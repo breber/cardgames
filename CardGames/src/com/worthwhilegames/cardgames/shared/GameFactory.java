@@ -54,6 +54,15 @@ public class GameFactory {
 	}
 
 	/**
+	 * Clear the game instance
+	 */
+	public static void clearGameInstance(Context ctx) {
+		if (getGameType(ctx) == CardGame.CRAZY_EIGHTS) {
+			CrazyEightsTabletGame.clearInstance();
+		}
+	}
+
+	/**
 	 * Get an instance of a GameController
 	 *
 	 * @return the GameController instance as specified by the currently specified game type

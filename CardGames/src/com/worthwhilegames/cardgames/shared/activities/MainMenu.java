@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.gameboard.activities.ConnectActivity;
 import com.worthwhilegames.cardgames.player.activities.ShowCardsActivity;
+import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.SoundManager;
 import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
@@ -132,9 +133,12 @@ public class MainMenu extends Activity {
 		// game, finish this activity
 		if (requestCode == QUIT_GAME && resultCode == RESULT_OK) {
 			finish();
-		} else if (requestCode == CONNECT_ACTIVITY && resultCode == RESULT_CANCELED) {
+		} else if (requestCode == CONNECT_ACTIVITY) {
 			// Disconnect all users when we are back at the main menu
 			ConnectionServer.getInstance(this).disconnect();
+
+			// Clear the game
+			GameFactory.clearGameInstance(this);
 		}
 	}
 }

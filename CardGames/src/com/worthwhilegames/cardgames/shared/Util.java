@@ -12,6 +12,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.worthwhilegames.cardgames.BuildConfig;
+
 /**
  * A Utility class that contains common generic methods relevant
  * to any object in the application
@@ -33,7 +35,7 @@ public class Util {
 	 * @return whether this is a production build or not
 	 */
 	public static boolean isDebugBuild() {
-		return false;
+		return BuildConfig.DEBUG;
 	}
 
 	/**
