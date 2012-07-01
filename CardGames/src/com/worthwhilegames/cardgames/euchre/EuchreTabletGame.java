@@ -349,7 +349,7 @@ public class EuchreTabletGame implements Game{
 		//TODO make the match score limit a setting?
 		return matchScores[0] >= EUCHRE_SCORE_LIMIT || matchScores[1] >= EUCHRE_SCORE_LIMIT;
 	}
-	
+
 	public int getWinningTeam(){
 		if(matchScores[0] >= matchScores[1]){
 			return 0;
@@ -596,7 +596,7 @@ public class EuchreTabletGame implements Game{
 	public void setCardLead(Card cardLead) {
 		this.cardLead = cardLead;
 	}
-	
+
 	public void resetScores(){
 		roundScores[0] = 0;
 		roundScores[1] = 0;
@@ -613,13 +613,13 @@ public class EuchreTabletGame implements Game{
 	}
 
 	@Override
-	public int getMaxNumPlayers() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public void addPlayer(Player p) {
 		players.add(p);
 	}
+
+	@Override
+	public int getMaxNumPlayers() {
+		return 4;
+	}
+
 }
