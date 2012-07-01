@@ -32,9 +32,9 @@ public class GameFactory {
 	 * @return the Game instance as specified by the type of game currently specified
 	 */
 	public static Game getGameInstance(Context ctx) {
-		if (getGameType(ctx) == CardGame.CRAZY_EIGHTS) {
+		if (getGameType(ctx) == CardGame.CrazyEights) {
 			return CrazyEightsTabletGame.getInstance();
-		} else if (getGameType(ctx) == CardGame.EUCHRE) {
+		} else if (getGameType(ctx) == CardGame.Euchre) {
 			return EuchreTabletGame.getInstance();
 		}
 
@@ -45,7 +45,7 @@ public class GameFactory {
 	 * Clear the game instance
 	 */
 	public static void clearGameInstance(Context ctx) {
-		if (getGameType(ctx) == CardGame.CRAZY_EIGHTS) {
+		if (getGameType(ctx) == CardGame.CrazyEights) {
 			CrazyEightsTabletGame.clearInstance();
 		}
 	}
@@ -57,9 +57,9 @@ public class GameFactory {
 	 */
 	public static GameController getGameControllerInstance(GameboardActivity activity,
 			ConnectionServer connectionServer, ImageView refreshButton) {
-		if (getGameType(activity) == CardGame.CRAZY_EIGHTS) {
+		if (getGameType(activity) == CardGame.CrazyEights) {
 			return new CrazyEightsGameController(activity, connectionServer, refreshButton);
-		} else if (getGameType(activity) == CardGame.EUCHRE) {
+		} else if (getGameType(activity) == CardGame.Euchre) {
 			return new EuchreGameController(activity, connectionServer, refreshButton);
 		}
 
@@ -73,9 +73,9 @@ public class GameFactory {
 	 */
 	public static PlayerController getPlayerControllerInstance(Context context, Button playButton,
 			Button drawButton, ConnectionClient connectionClient, ArrayList<Card> cardHand) {
-		if (getGameType(context) == CardGame.CRAZY_EIGHTS) {
+		if (getGameType(context) == CardGame.CrazyEights) {
 			return new CrazyEightsPlayerController(context, playButton,	drawButton, connectionClient, cardHand);
-		} else if (getGameType(context) == CardGame.EUCHRE) {
+		} else if (getGameType(context) == CardGame.Euchre) {
 			return new EuchrePlayerController(context, playButton,	drawButton, connectionClient, cardHand);
 		}
 
@@ -89,15 +89,15 @@ public class GameFactory {
 	 */
 	public static CardGame getGameType(Context ctx) {
 		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, 0);
-		String gameType = prefs.getString(Constants.GAME_TYPE, Constants.CRAZY_EIGHTS);
+		String gameType = prefs.getString(Constants.GAME_TYPE, CardGame.CrazyEights.toString());
 
-		if (Constants.CRAZY_EIGHTS.equals(gameType)) {
-			return CardGame.CRAZY_EIGHTS;
-		} else if (Constants.EUCHRE.equals(gameType)) {
-			return CardGame.EUCHRE;
+		if (CardGame.CrazyEights.toString().equals(gameType)) {
+			return CardGame.CrazyEights;
+		} else if (CardGame.Euchre.toString().equals(gameType)) {
+			return CardGame.Euchre;
 		}
 
-		return CardGame.CRAZY_EIGHTS;
+		return CardGame.CrazyEights;
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class GameFactory {
 	 * @return the type maximum number of players allowed
 	 */
 	public static int getMaxAllowedPlayers(Context ctx) {
-		if (Constants.CRAZY_EIGHTS.equals(getGameType(ctx))) {
+		if (CardGame.CrazyEights.equals(getGameType(ctx))) {
 			return C8Constants.MAX_NUM_PLAYERS;
 		}
 

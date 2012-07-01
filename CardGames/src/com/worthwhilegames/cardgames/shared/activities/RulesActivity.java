@@ -29,7 +29,7 @@ public class RulesActivity extends Activity {
 		TextView body = (TextView) findViewById(R.id.informationBody);
 
 		// Set the rules for the Crazy Eight game type
-		if (GameFactory.getGameType(this) == CardGame.CRAZY_EIGHTS) {
+		if (GameFactory.getGameType(this) == CardGame.CrazyEights) {
 			body.setText(R.string.crazy_eight_game_rules_text);
 		}
 	}

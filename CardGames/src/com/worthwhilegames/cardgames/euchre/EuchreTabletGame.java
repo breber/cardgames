@@ -276,7 +276,7 @@ public class EuchreTabletGame implements Game{
 
 
 		//redeal
-		this.gameDeck = new Deck(CardGame.EUCHRE);
+		this.gameDeck = new Deck(CardGame.Euchre);
 		shuffledDeck = gameDeck.getCardIDs();
 		this.shuffleDeck();
 		this.deal();

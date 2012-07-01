@@ -261,18 +261,6 @@ public class Constants {
 	public static final String GAME_TYPE = "GAME TYPE";
 
 	/**
-	 * A constant to represent a key in the shared preferences for the game type
-	 * crazy eights
-	 */
-	public static final String CRAZY_EIGHTS = "Crazy Eights";
-
-	/**
-	 * A constant to represent a key in the shared preferences for the game type
-	 * euchre
-	 */
-	public static final String EUCHRE = "Euchre";
-
-	/**
 	 * A constant to represent a key in the shared preferences for the image
 	 * resource to use as the back of the card
 	 */

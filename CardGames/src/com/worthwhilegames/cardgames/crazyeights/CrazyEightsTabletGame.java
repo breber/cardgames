@@ -104,7 +104,7 @@ public class CrazyEightsTabletGame implements Game {
 	 */
 	private CrazyEightsTabletGame() {
 		players = new ArrayList<Player>();
-		gameDeck = new Deck(CardGame.CRAZY_EIGHTS);
+		gameDeck = new Deck(CardGame.CrazyEights);
 		shuffledDeck = gameDeck.getCardIDs();
 		discardPile = new ArrayList<Card>();
 	}

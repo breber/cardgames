@@ -9,7 +9,6 @@ import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PLAY_LEAD_CAR
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ROUND_OVER;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.SECOND_ROUND_BETTING;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP;
-import static com.worthwhilegames.cardgames.shared.Constants.CURRENT_STATE;
 import static com.worthwhilegames.cardgames.shared.Constants.ID;
 import static com.worthwhilegames.cardgames.shared.Constants.IS_TURN;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
@@ -68,7 +67,7 @@ public class EuchreGameController implements GameController{
 	 * activity
 	 */
 	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
-	
+
 	/**
 	 * The ConnectionServer that sends and receives messages from other devices
 	 */
@@ -342,23 +341,14 @@ public class EuchreGameController implements GameController{
 			// Send the refresh signal (again) to all players just to make
 			// sure everyone has the latest information
 			refreshPlayers();
-<<<<<<< HEAD
-		}
-
-
-=======
 		} else if (requestCode == DECLARE_WINNER && resultCode == Activity.RESULT_CANCELED){
 			// This should restart the game.
-			Deck deck = new Deck(EUCHRE);
-			Rules rules = new EuchreGameRules();
-			game = EuchreTabletGame.getInstance(players, deck, rules);
+			game = EuchreTabletGame.getInstance();
 			game.setup();
-			
+
 			startRound();
 		}
-			
-		
->>>>>>> tried to make the euchre game have  a replay button. worked on ending
+
 		return false;
 	}
 
@@ -464,11 +454,7 @@ public class EuchreGameController implements GameController{
 			server.write(ROUND_OVER, null, players.get(i).getId());
 		}
 	}
-<<<<<<< HEAD
 
-
-=======
-	
 	/**
 	 * This will send winner and loser messages to all the players depending on
 	 * if they won or not
@@ -492,7 +478,7 @@ public class EuchreGameController implements GameController{
 
 		String winner1Name = players.get(teamWhoWon).getName();
 		String winner2Name = players.get(teamWhoWon+2).getName();
-		
+
 		String winningTeam = winner1Name + " and " + winner2Name;
 
 		// Have the tablet verbally congratulate the winner
@@ -503,9 +489,7 @@ public class EuchreGameController implements GameController{
 		gameResults.putExtra(GameResultsActivity.WINNER_NAME, winningTeam);
 		gameContext.startActivityForResult(gameResults, DECLARE_WINNER);
 	}
-	
-	
->>>>>>> tried to make the euchre game have  a replay button. worked on ending
+
 	/**
 	 * This will take in the received card and play it
 	 * 
@@ -558,7 +542,7 @@ public class EuchreGameController implements GameController{
 				// Create the base refresh info object
 				JSONObject refreshInfo = new JSONObject();
 				refreshInfo.put(Constants.TURN, pTurn.equals(p));
-				refreshInfo.put(CURRENT_STATE, currentState);
+				refreshInfo.put(Constants.CURRENT_STATE, currentState);
 				refreshInfo.put(Constants.PLAYER_NAME, p.getName());
 				refreshInfo.put(TRUMP, game.getTrump());
 				arr.put(refreshInfo);

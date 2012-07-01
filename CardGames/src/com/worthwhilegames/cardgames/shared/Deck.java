@@ -51,10 +51,10 @@ public class Deck {
 
 		switch(gameName) {
 
-		case CRAZY_EIGHTS:
+		case CrazyEights:
 			cardId = R.drawable.back_blue_1;
 			break;
-		case EUCHRE:
+		case Euchre:
 			cardId = R.drawable.back_blue_1;
 			break;
 		}
@@ -78,7 +78,7 @@ public class Deck {
 	private void fillArray() {
 
 		switch(gameName) {
-		case CRAZY_EIGHTS:
+		case CrazyEights:
 			cardImages.add(new Card(0, 0, R.drawable.clubs_a, 0));
 			cardImages.add(new Card(0, 1, R.drawable.clubs_2, 1));
 			cardImages.add(new Card(0, 2, R.drawable.clubs_3, 2));
@@ -135,7 +135,7 @@ public class Deck {
 			cardImages.add(new Card(4, 1, R.drawable.joker_r, 53));
 			break;
 			
-		case EUCHRE:
+		case Euchre:
 			cardImages.add(new Card(0, 0, R.drawable.clubs_a, 0));
 			cardImages.add(new Card(0, 8, R.drawable.clubs_9, 8));
 			cardImages.add(new Card(0, 9, R.drawable.clubs_10, 9));
@@ -173,9 +173,9 @@ public class Deck {
 	 */
 	public static CardTranslator getCardTranslatorForGame(CardGame game) {
 		switch(game) {
-		case CRAZY_EIGHTS:
+		case CrazyEights:
 			return new CrazyEightsCardTranslator();
-		case EUCHRE:
+		case Euchre:
 			return new EuchreCardTranslator();
 		default:
 			return null;

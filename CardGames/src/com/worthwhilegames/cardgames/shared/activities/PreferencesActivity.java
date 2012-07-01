@@ -1,7 +1,6 @@
 package com.worthwhilegames.cardgames.shared.activities;
 
 import static com.worthwhilegames.cardgames.shared.Constants.CONNECTION_TYPE;
-import static com.worthwhilegames.cardgames.shared.Constants.CRAZY_EIGHTS;
 import static com.worthwhilegames.cardgames.shared.Constants.DIFFICULTY_OF_COMPUTERS;
 import static com.worthwhilegames.cardgames.shared.Constants.EASY;
 import static com.worthwhilegames.cardgames.shared.Constants.GAME_TYPE;
@@ -28,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.CardGame;
 import com.worthwhilegames.cardgames.shared.Language;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionType;
 
@@ -217,17 +217,16 @@ public class PreferencesActivity extends Activity {
 
 		// Game type spinner
 		gameSpinner = (Spinner) findViewById(R.id.gameOption);
+		ArrayAdapter<CardGame> gameAdapter = new ArrayAdapter<CardGame>(this, android.R.layout.simple_spinner_item, CardGame.values());
+		gameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		gameSpinner.setAdapter(gameAdapter);
 
 		if (gameSpinner != null) {
 			// value of the game type based upon the shared preferences
-			String game_type = sharedPref.getString(GAME_TYPE, CRAZY_EIGHTS);
-
-			// make an array adapter of all options specified in the xml
-			@SuppressWarnings("unchecked")
-			ArrayAdapter<String> gameAdapter = (ArrayAdapter<String>) gameSpinner.getAdapter(); // cast to an ArrayAdapter
+			CardGame gameType = CardGame.valueOf(sharedPref.getString(GAME_TYPE, CardGame.CrazyEights.toString()));
 
 			// get the current position of the selected item
-			int gamePosition = gameAdapter.getPosition(game_type);
+			int gamePosition = gameAdapter.getPosition(gameType);
 
 			// set the option checked based on the preferences
 			gameSpinner.setSelection(gamePosition);
@@ -294,7 +293,7 @@ public class PreferencesActivity extends Activity {
 
 		// set game type
 		if (gameSpinner != null) {
-			prefsEditor.putString(GAME_TYPE, (String) gameSpinner.getSelectedItem());
+			prefsEditor.putString(GAME_TYPE, gameSpinner.getSelectedItem().toString());
 		}
 
 		// set connection type
