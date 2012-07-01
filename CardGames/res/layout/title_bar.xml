@@ -7,13 +7,12 @@
 
     <ImageButton
         android:id="@+id/titleSettingsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/settingsIconSize"
+        android:layout_height="@dimen/settingsIconSize"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dip"
-        android:background="@drawable/ic_menu_settings"
-        android:text=""
+        android:background="@drawable/ic_tab_preferences_unselected"
         android:visibility="invisible" />
 
     <com.worthwhilegames.cardgames.shared.TextView

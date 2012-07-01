@@ -15,5 +15,6 @@
     <dimen name="infoTextViewPaddingLeftRight">40dip</dimen>
     <dimen name="infoTextViewPaddingTopBottom">10dip</dimen>
     <dimen name="selectSuitImage">85dp</dimen>
+    <dimen name="settingsIconSize">35dip</dimen>
 
 </resources>
