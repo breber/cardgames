@@ -146,7 +146,9 @@ public class ConnectionServer extends ConnectionCommon {
 			mAcceptThread = new AcceptThread(mContext, mHandler, services, this);
 		}
 
-		mAcceptThread.start();
+		if (!mAcceptThread.isAlive()) {
+			mAcceptThread.start();
+		}
 	}
 
 	/**
