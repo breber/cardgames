@@ -223,7 +223,13 @@ public class PreferencesActivity extends Activity {
 
 		if (gameSpinner != null) {
 			// value of the game type based upon the shared preferences
-			CardGame gameType = CardGame.valueOf(sharedPref.getString(GAME_TYPE, CardGame.CrazyEights.toString()));
+			CardGame gameType = null;
+
+			try {
+				gameType = CardGame.valueOf(sharedPref.getString(GAME_TYPE, CardGame.CrazyEights.toString()));
+			} catch (IllegalArgumentException ex) {
+				gameType = CardGame.CrazyEights;
+			}
 
 			// get the current position of the selected item
 			int gamePosition = gameAdapter.getPosition(gameType);
@@ -243,7 +249,13 @@ public class PreferencesActivity extends Activity {
 
 		if (connectionSpinner != null) {
 			// value of the game type based upon the shared preferences
-			ConnectionType connectionType = ConnectionType.valueOf(sharedPref.getString(CONNECTION_TYPE, ConnectionType.WiFi.toString()));
+			ConnectionType connectionType = null;
+
+			try {
+				connectionType = ConnectionType.valueOf(sharedPref.getString(CONNECTION_TYPE, ConnectionType.WiFi.toString()));
+			} catch (IllegalArgumentException ex) {
+				connectionType = ConnectionType.WiFi;
+			}
 
 			// get the current position of the selected item
 			int connectionPosition = connectionAdapter.getPosition(connectionType);
