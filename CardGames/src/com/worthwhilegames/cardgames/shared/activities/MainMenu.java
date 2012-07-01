@@ -13,6 +13,7 @@ import com.worthwhilegames.cardgames.gameboard.activities.ConnectActivity;
 import com.worthwhilegames.cardgames.player.activities.ShowCardsActivity;
 import com.worthwhilegames.cardgames.shared.SoundManager;
 import com.worthwhilegames.cardgames.shared.Util;
+import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
 
 /**
  * The Main menu of the application
@@ -24,7 +25,13 @@ public class MainMenu extends Activity {
 	 */
 	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
 
-	/* (non-Javadoc)
+	/**
+	 * The request code to handle the result of the Connect Activity
+	 */
+	private static final int CONNECT_ACTIVITY = Math.abs("CONNECT_ACTIVITY".hashCode());
+
+	/*
+	 * (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
@@ -52,7 +59,7 @@ public class MainMenu extends Activity {
 
 					// Open the gameboard connect activity
 					Intent playButtonClick = new Intent(MainMenu.this, ConnectActivity.class);
-					startActivity(playButtonClick);
+					startActivityForResult(playButtonClick, CONNECT_ACTIVITY);
 				}
 			});
 		}
@@ -85,7 +92,7 @@ public class MainMenu extends Activity {
 		about.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent aboutButtonClick = new Intent(MainMenu.this,	AboutActivity.class);
+				Intent aboutButtonClick = new Intent(MainMenu.this, AboutActivity.class);
 				startActivity(aboutButtonClick);
 			}
 		});
@@ -102,8 +109,8 @@ public class MainMenu extends Activity {
 		});
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see android.app.Activity#onBackPressed()
 	 */
 	@Override
@@ -114,16 +121,20 @@ public class MainMenu extends Activity {
 		startActivityForResult(intent, QUIT_GAME);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	/*
+	 * (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int,
+	 * android.content.Intent)
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// If they clicked yes on the prompt asking if they want to quit the
 		// game, finish this activity
-		if (requestCode == QUIT_GAME && resultCode == RESULT_OK){
+		if (requestCode == QUIT_GAME && resultCode == RESULT_OK) {
 			finish();
+		} else if (requestCode == CONNECT_ACTIVITY && resultCode == RESULT_CANCELED) {
+			// Disconnect all users when we are back at the main menu
+			ConnectionServer.getInstance(this).disconnect();
 		}
 	}
 }
