@@ -6,7 +6,6 @@ import static com.worthwhilegames.cardgames.shared.Constants.DIFFICULTY_OF_COMPU
 import static com.worthwhilegames.cardgames.shared.Constants.EASY;
 import static com.worthwhilegames.cardgames.shared.Constants.GAME_TYPE;
 import static com.worthwhilegames.cardgames.shared.Constants.LANGUAGE;
-import static com.worthwhilegames.cardgames.shared.Constants.LANGUAGE_US;
 import static com.worthwhilegames.cardgames.shared.Constants.NUMBER_OF_COMPUTERS;
 import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
 import static com.worthwhilegames.cardgames.shared.Constants.SOUND_EFFECTS;
@@ -29,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.Language;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionFactory;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionType;
 
@@ -195,14 +195,19 @@ public class PreferencesActivity extends Activity {
 		// based on the value of the language from the preferences set the
 		// correct radio button
 		localeSpinner = (Spinner) findViewById(R.id.langOption);
+		ArrayAdapter<Language> localeAdapter = new ArrayAdapter<Language>(this, android.R.layout.simple_spinner_item, Language.values());
+		localeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		localeSpinner.setAdapter(localeAdapter);
 
 		if (localeSpinner != null) {
 			// get the value from shared preferences
-			String language = sharedPref.getString(LANGUAGE, LANGUAGE_US);
+			Language language = null;
 
-			// make an array adapter of all options specified in the xml
-			@SuppressWarnings("unchecked")
-			ArrayAdapter<String> localeAdapter = (ArrayAdapter<String>) localeSpinner.getAdapter(); // cast to an ArrayAdapter
+			try {
+				language = Language.valueOf(sharedPref.getString(LANGUAGE, Language.US.toString()));
+			} catch (IllegalArgumentException ex) {
+				language = Language.US;
+			}
 
 			// get the position of the current item
 			int localePosition = localeAdapter.getPosition(language);
@@ -290,7 +295,7 @@ public class PreferencesActivity extends Activity {
 
 		// set language to preferences
 		if (localeSpinner != null) {
-			prefsEditor.putString(LANGUAGE,	(String) localeSpinner.getSelectedItem());
+			prefsEditor.putString(LANGUAGE,	localeSpinner.getSelectedItem().toString());
 		}
 
 		// set game type

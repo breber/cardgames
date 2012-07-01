@@ -107,13 +107,6 @@ The game will start with player 1 and continue in a counterclockwise fashion aro
     <string name="playerNWon">%s Wins!</string>
     <string name="congratulationMessage">Congratulations %s! You Won!</string>
 
-    <string-array name="locale_array">
-        <item>US</item>
-        <item>UK</item>
-        <item>German</item>
-        <item>France</item>
-        <item>Canada</item>
-    </string-array>
     <string-array name="computer_difficulty_array">
         <item>Easy</item>
         <item>Medium</item>

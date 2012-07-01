@@ -184,32 +184,6 @@ public class Constants {
 	 */
 	public static final int DRAW_CARD = 10;
 
-	/* Language Options */
-	/**
-	 * A string representing the US locale
-	 */
-	public static final String LANGUAGE_US = "US";
-
-	/**
-	 * A string representing the German locale
-	 */
-	public static final String LANGUAGE_GERMAN = "German";
-
-	/**
-	 * A string representing the France locale
-	 */
-	public static final String LANGUAGE_FRANCE = "France";
-
-	/**
-	 * A string representing the Canada locale
-	 */
-	public static final String LANGUAGE_CANADA = "Canada";
-
-	/**
-	 * A string representing the UK locale
-	 */
-	public static final String LANGUAGE_UK = "UK";
-
 	/* Preferences Options */
 	/**
 	 * The name of the shared preferences to be used when getting the object

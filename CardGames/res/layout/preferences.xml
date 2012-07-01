@@ -78,7 +78,6 @@
                     android:id="@+id/langOption"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:entries="@array/locale_array"
                     android:prompt="@string/lang" />
             </TableRow>
 

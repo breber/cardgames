@@ -1,11 +1,6 @@
 package com.worthwhilegames.cardgames.shared;
 
 import static com.worthwhilegames.cardgames.shared.Constants.LANGUAGE;
-import static com.worthwhilegames.cardgames.shared.Constants.LANGUAGE_CANADA;
-import static com.worthwhilegames.cardgames.shared.Constants.LANGUAGE_FRANCE;
-import static com.worthwhilegames.cardgames.shared.Constants.LANGUAGE_GERMAN;
-import static com.worthwhilegames.cardgames.shared.Constants.LANGUAGE_UK;
-import static com.worthwhilegames.cardgames.shared.Constants.LANGUAGE_US;
 
 import java.util.Locale;
 import java.util.Random;
@@ -148,20 +143,20 @@ public class SoundManager {
 			public void onInit(int status) {
 				if (status == TextToSpeech.SUCCESS) {
 					// get the user preference
-					String lang = sharedPreferences.getString(LANGUAGE, LANGUAGE_US);
+					String lang = sharedPreferences.getString(LANGUAGE, Language.US.toString());
 					int langResult = TextToSpeech.LANG_MISSING_DATA;
 
 					if (tts == null) {
 						langResult = TextToSpeech.LANG_MISSING_DATA;
-					} else if (lang.equals(LANGUAGE_US)) { // default
+					} else if (lang.equals(Language.US.toString())) { // default
 						langResult = tts.setLanguage(Locale.US);
-					} else if (lang.equals(LANGUAGE_GERMAN)) {
+					} else if (lang.equals(Language.German.toString())) {
 						langResult = tts.setLanguage(Locale.GERMAN);
-					} else if (lang.equals(LANGUAGE_FRANCE)) {
+					} else if (lang.equals(Language.French.toString())) {
 						langResult = tts.setLanguage(Locale.FRANCE);
-					} else if (lang.equals(LANGUAGE_CANADA)) {
+					} else if (lang.equals(Language.Canadian.toString())) {
 						langResult = tts.setLanguage(Locale.CANADA);
-					} else if (lang.equals(LANGUAGE_UK)) {
+					} else if (lang.equals(Language.UK.toString())) {
 						langResult = tts.setLanguage(Locale.UK);
 					}
 
