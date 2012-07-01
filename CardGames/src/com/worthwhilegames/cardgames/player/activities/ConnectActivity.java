@@ -13,11 +13,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.TextView;
-import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.activities.DeviceListActivity;
 import com.worthwhilegames.cardgames.shared.activities.WifiConnectActivity;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
@@ -61,10 +59,6 @@ public class ConnectActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			int currentState = intent.getIntExtra(ConnectionConstants.KEY_STATE_MESSAGE, -1);
-
-			if (Util.isDebugBuild()) {
-				Toast.makeText(ConnectActivity.this, "onReceive " + currentState, Toast.LENGTH_LONG).show();
-			}
 
 			// If the Connection state is connected, update the message displayed,
 			// and register a new receiver to handle the game initiation message
@@ -120,10 +114,6 @@ public class ConnectActivity extends Activity {
 
 				ConnectActivity.this.setResult(RESULT_OK, returnIntent);
 				ConnectActivity.this.finish();
-			} else {
-				if (Util.isDebugBuild()) {
-					Toast.makeText(ConnectActivity.this, "messageType: " + messageType, Toast.LENGTH_SHORT).show();
-				}
 			}
 		}
 	};

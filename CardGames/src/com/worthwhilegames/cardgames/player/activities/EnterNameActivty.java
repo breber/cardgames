@@ -44,7 +44,7 @@ public class EnterNameActivty extends Activity implements OnEditorActionListener
 
 		EditText nameTextBox = (EditText) findViewById(R.id.dialogPromptTextbox);
 		nameTextBox.setOnEditorActionListener(this);
-		nameTextBox.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+		nameTextBox.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
 		nameTextBox.setFilters(new InputFilter[] { new InputFilter.LengthFilter(10) } );
 
 		//create button for the view

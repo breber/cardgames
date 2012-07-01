@@ -70,6 +70,7 @@ public class WifiConnectActivity extends Activity implements OnEditorActionListe
 		final EditText textView = (EditText) findViewById(R.id.dialogPromptTextbox);
 
 		if (isIPv4) {
+			textView.setInputType(InputType.TYPE_CLASS_PHONE);
 			textView.setHint(R.string.ipv4Address);
 		} else {
 			textView.setHint(R.string.ipv6Address);
