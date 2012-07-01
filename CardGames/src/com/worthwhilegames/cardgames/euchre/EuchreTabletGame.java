@@ -108,7 +108,7 @@ public class EuchreTabletGame implements Game{
 
 	 * list of the cards played the last round
 	 */
-	private ArrayList<Card> cardsPlayed;
+	public Card[] cardsPlayed = new Card[4];
 
 	/**
 	 * The first card played for a trick or the card flipped over to bet on
@@ -203,8 +203,7 @@ public class EuchreTabletGame implements Game{
 		cardLead = iter.next();
 		iter.remove();
 		trump = cardLead.getSuit();
-
-		cardsPlayed.add(getDealer(), cardLead);
+		cardsPlayed[getDealer()] = cardLead;
 	}
 
 	/**
@@ -225,7 +224,7 @@ public class EuchreTabletGame implements Game{
 	@Override
 	public void discard(Player player, Card card) {
 		player.getCards().remove(card);
-		cardsPlayed.add(players.indexOf(player), card);
+		cardsPlayed[players.indexOf(player)] = card;
 	}
 
 	/**
@@ -336,7 +335,7 @@ public class EuchreTabletGame implements Game{
 
 	public Card getDiscardPileTop() {
 		//no discard pile
-		return null;
+		return cardLead;
 	}
 
 	@Override
@@ -385,12 +384,12 @@ public class EuchreTabletGame implements Game{
 	 * @return the card id of the winning card
 	 */
 	public void determineTrickWinner(){
-		Card winningCard = cardsPlayed.get(0);
+		Card winningCard = cardsPlayed[0];
 		adjustCards(winningCard);
 		int winningPlayer = 0;
 
-		for(int i = 1; i < cardsPlayed.size(); i++){
-			Card card = cardsPlayed.get(i);
+		for(int i = 1; i < cardsPlayed.length; i++){
+			Card card = cardsPlayed[i];
 			adjustCards(card);
 			winningCard = compareCards(winningCard, card, cardLead.getSuit());
 			if(winningCard.equals(card)){
@@ -583,10 +582,7 @@ public class EuchreTabletGame implements Game{
 	public void clearCardsPlayed(){
 		//get rid of record of what has been played
 		//TODO hopefully the cardsPlayed can be used by the gameboard to show which cards have been played.
-		cardsPlayed.set(0, null);
-		cardsPlayed.set(1, null);
-		cardsPlayed.set(2, null);
-		cardsPlayed.set(3, null);
+		cardsPlayed = new Card[4];
 	}
 
 	public Card getCardLead() {

@@ -44,8 +44,8 @@
             android:text="@string/bet_option"/>
 
         <com.worthwhilegames.cardgames.shared.Button
-            android:id="@+id/betOption"
-            style="@+id/goAloneOption"
+            android:id="@+id/goAloneOption"
+            style="@style/GameButtonBlack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dip"

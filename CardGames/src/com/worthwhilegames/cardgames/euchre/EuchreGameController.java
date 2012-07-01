@@ -3,7 +3,6 @@ package com.worthwhilegames.cardgames.euchre;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.BET;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.FIRST_ROUND_BETTING;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.GO_ALONE;
-import static com.worthwhilegames.cardgames.euchre.EuchreConstants.LEAD_TRICK;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PICK_IT_UP;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PLAY_LEAD_CARD;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ROUND_OVER;
@@ -233,52 +232,44 @@ public class EuchreGameController implements GameController{
 			String object = intent.getStringExtra(ConnectionConstants.KEY_MESSAGE_RX);
 			int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
 
+			switch (messageType) {
+			case FIRST_ROUND_BETTING:
+				isComputerPlaying = false;
+				handleBetting(FIRST_ROUND_BETTING, object);
+				break;
+			case SECOND_ROUND_BETTING:
+				isComputerPlaying = false;
+				handleBetting(SECOND_ROUND_BETTING, object);
+				break;
+			case PLAY_LEAD_CARD:
+				isComputerPlaying = false;
+				Card tmpCard = playReceivedCard(object);
+				game.setCardLead(tmpCard);
+				advanceTurn();
+				break;
+			case PICK_IT_UP:
+				isComputerPlaying = false;
 
-			if(whoseTurn != getWhoSentMessage(context, intent)){
+				//Get which card they discarded and discard it.
+				mySM.playCardSound();
+				currentState = PLAY_LEAD_CARD;
+				playReceivedCard(object);
+				game.clearCardsPlayed();
+
+				//start the first turn of the round
+				whoseTurn = game.getTrickLeader();
+				sendNextTurn(currentState, game.getCardLead());
+				break;
+			case Constants.PLAY_CARD:
+				isComputerPlaying = false;
+				playReceivedCard(object);
+				advanceTurn();
+				break;
+			case Constants.REFRESH:
 				refreshPlayers();
-			} else {
-				//the right person responded.
-				switch (messageType) {
-				case FIRST_ROUND_BETTING:
-					isComputerPlaying = false;
-					handleBetting(FIRST_ROUND_BETTING, object);
-					break;
-				case SECOND_ROUND_BETTING:
-					isComputerPlaying = false;
-					handleBetting(SECOND_ROUND_BETTING, object);
-					break;
-				case PLAY_LEAD_CARD:
-					isComputerPlaying = false;
-					Card tmpCard = playReceivedCard(object);
-					game.setCardLead(tmpCard);
-					advanceTurn();
-					break;
-				case PICK_IT_UP:
-					isComputerPlaying = false;
-
-					//Get which card they discarded and discard it.
-					mySM.playCardSound();
-					currentState = LEAD_TRICK;
-					playReceivedCard(object);
-					game.clearCardsPlayed();
-
-					//start the first turn of the round
-					whoseTurn = game.getTrickLeader();
-					server.write(LEAD_TRICK, null, players.get(whoseTurn).getId());
-					break;
-				case Constants.PLAY_CARD:
-					isComputerPlaying = false;
-					playReceivedCard(object);
-					advanceTurn();
-					break;
-				case Constants.REFRESH:
-					refreshPlayers();
-					break;
-				}
+				break;
 			}
-
 		}
-
 	}
 
 	/**
@@ -592,7 +583,7 @@ public class EuchreGameController implements GameController{
 					Log.d(TAG, "startComputerTurn: letting computer know it can play");
 				}
 
-				handler.sendMessage(null);
+				handler.sendEmptyMessage(0);
 			}
 		}).start();
 	}
@@ -620,7 +611,7 @@ public class EuchreGameController implements GameController{
 			case PICK_IT_UP:
 				cardSelected = cards.get(0);
 				break;
-			case LEAD_TRICK:
+			case PLAY_LEAD_CARD:
 				cardSelected = cards.get(0);
 				break;
 			case IS_TURN:
@@ -643,7 +634,7 @@ public class EuchreGameController implements GameController{
 			case PICK_IT_UP:
 				cardSelected = cards.get(0);
 				break;
-			case LEAD_TRICK:
+			case PLAY_LEAD_CARD:
 				cardSelected = cards.get(0);
 				break;
 			case IS_TURN:
@@ -666,7 +657,7 @@ public class EuchreGameController implements GameController{
 			case PICK_IT_UP:
 				cardSelected = cards.get(0);
 				break;
-			case LEAD_TRICK:
+			case PLAY_LEAD_CARD:
 				cardSelected = cards.get(0);
 				break;
 			case IS_TURN:
@@ -791,7 +782,7 @@ public class EuchreGameController implements GameController{
 		}
 
 		// Highlight the name of the current player
-		gameContext.highlightPlayer(whoseTurn);
+		gameContext.highlightPlayer(whoseTurn+1);
 
 		//TODO update scores on gameboard
 		gameContext.updateUi();

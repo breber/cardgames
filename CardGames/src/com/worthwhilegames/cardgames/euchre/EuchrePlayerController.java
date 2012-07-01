@@ -420,8 +420,8 @@ public class EuchrePlayerController implements PlayerController {
 		if (isEnabled) {
 			// it is your turn grey out cards
 			for (Card c : cardHand) {
-				boolean isPlayable = gameRules.checkCard(cardSelected, trumpSuit, cardLead.getSuit(), cardHand) ;
-				playerContext.setCardPlayable(c.getIdNum(), isPlayable);
+				boolean isPlayable = gameRules.checkCard(c, trumpSuit, cardLead.getSuit(), cardHand) ;
+				playerContext.setCardPlayable(c.getIdNum(), isPlayable || currentState == PICK_IT_UP || currentState == PLAY_LEAD_CARD);
 			}
 		} else {
 			// it is not your turn make cards normal

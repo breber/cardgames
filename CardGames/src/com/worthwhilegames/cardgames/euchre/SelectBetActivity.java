@@ -34,7 +34,7 @@ public class SelectBetActivity extends Activity {
 	 * This intent will be set to the result of this activity bet object will 
 	 * be returned
 	 */
-	private Intent returnIntent;
+	private Intent returnIntent = new Intent();
 	
 	/**
 	 * the trump suit
@@ -62,9 +62,9 @@ public class SelectBetActivity extends Activity {
 		
 		trumpSuit = (ImageView) findViewById(R.id.betTrumpSuit);
 		TextView title = (TextView) findViewById(R.id.betTitle);
-		round = savedInstanceState.getInt(BET_ROUND);
+		round = getIntent().getIntExtra(BET_ROUND, FIRST_ROUND_BETTING);
 		if( round == FIRST_ROUND_BETTING ){
-			trump = savedInstanceState.getInt(TRUMP);
+			trump = getIntent().getIntExtra(TRUMP, SUIT_SPADES);
 			trumpSuit.setEnabled(false);
 			title.setText(R.string.bet_round_one_title);
 		} else {
@@ -104,8 +104,8 @@ public class SelectBetActivity extends Activity {
 					trumpSuit.startAnimation(scale);
 					return;
 				}
-				returnIntent.putExtra(TRUMP, SUIT_SPADES);
-				returnIntent.putExtra(BET, false);
+				returnIntent.putExtra(TRUMP, trump);
+				returnIntent.putExtra(BET, true);
 				returnIntent.putExtra(GO_ALONE, false);
 				SelectBetActivity.this.setResult(RESULT_OK, returnIntent);
 				SelectBetActivity.this.finish();
@@ -126,7 +126,7 @@ public class SelectBetActivity extends Activity {
 					trumpSuit.startAnimation(scale);
 					return;
 				}
-				returnIntent.putExtra(TRUMP, SUIT_SPADES);
+				returnIntent.putExtra(TRUMP, trump);
 				returnIntent.putExtra(BET, true);
 				returnIntent.putExtra(GO_ALONE, true);
 				SelectBetActivity.this.setResult(RESULT_OK, returnIntent);
@@ -166,7 +166,8 @@ public class SelectBetActivity extends Activity {
 		SelectBetActivity.this.finish();
 	}
 	
-	public void handleActivityResult(int requestCode, int resultCode, Intent data) {
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CHOOSE_SUIT) {
 			trump = resultCode;
 			updateTrumpSuit();
@@ -192,7 +193,7 @@ public class SelectBetActivity extends Activity {
 		case (-1):
 		default:
 			//TODO set this to  ? image
-			trumpSuit.setBackgroundResource(R.drawable.button);
+			trumpSuit.setBackgroundResource(R.drawable.spadesuitimage);
 			break;
 		}
 			

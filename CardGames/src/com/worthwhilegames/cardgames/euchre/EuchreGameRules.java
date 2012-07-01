@@ -27,6 +27,7 @@ public class EuchreGameRules implements Rules{
 	@Override
 	public boolean checkCard(Card cardPlayed, int trump, int suitLed, List<Card> cards) {
 
+		
 		adjustJacks(cards, trump);
 
 		boolean canFollowSuit = false;
