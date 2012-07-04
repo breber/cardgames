@@ -28,6 +28,26 @@ public class Constants {
 	 * A constant to represent the name of the font to use
 	 */
 	public static final String FONT_NAME = "hammersmithone.ttf";
+	
+	/**
+	 * A constant to scale a card to the full card size
+	 */
+	public static final int fullCard = 1;
+	
+	/**
+	 * A constant to scale a card to half the card size horizontally cut
+	 */
+	public static final int halfCard = 2;
+	
+	/**
+	 * A constant to scale a card to half of the card size vertically cut
+	 */
+	public static final int halfCardVertCut = 3;
+	
+	/**
+	 * A constant to scale a card to a fourth of the size
+	 */
+	public static final int fourthCard = 4;
 
 
 	/* Game Constants */

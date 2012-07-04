@@ -10,6 +10,7 @@ import static com.worthwhilegames.cardgames.euchre.EuchreConstants.SECOND_ROUND_
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP;
 import static com.worthwhilegames.cardgames.shared.Constants.ID;
 import static com.worthwhilegames.cardgames.shared.Constants.IS_TURN;
+import static com.worthwhilegames.cardgames.shared.Constants.PLAY_CARD;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
 import static com.worthwhilegames.cardgames.shared.Constants.VALUE;
 
@@ -234,22 +235,17 @@ public class EuchreGameController implements GameController{
 
 			switch (messageType) {
 			case FIRST_ROUND_BETTING:
-				isComputerPlaying = false;
 				handleBetting(FIRST_ROUND_BETTING, object);
 				break;
 			case SECOND_ROUND_BETTING:
-				isComputerPlaying = false;
 				handleBetting(SECOND_ROUND_BETTING, object);
 				break;
 			case PLAY_LEAD_CARD:
-				isComputerPlaying = false;
 				Card tmpCard = playReceivedCard(object);
 				game.setCardLead(tmpCard);
 				advanceTurn();
 				break;
 			case PICK_IT_UP:
-				isComputerPlaying = false;
-
 				//Get which card they discarded and discard it.
 				currentState = PLAY_LEAD_CARD;
 				playReceivedCard(object);
@@ -259,8 +255,7 @@ public class EuchreGameController implements GameController{
 				whoseTurn = game.getTrickLeader();
 				sendNextTurn(currentState, game.getCardLead());
 				break;
-			case Constants.PLAY_CARD:
-				isComputerPlaying = false;
+			case PLAY_CARD:
 				playReceivedCard(object);
 				advanceTurn();
 				break;

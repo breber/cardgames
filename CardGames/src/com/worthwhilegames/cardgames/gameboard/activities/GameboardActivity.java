@@ -1,6 +1,10 @@
 package com.worthwhilegames.cardgames.gameboard.activities;
 
 import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
+import static com.worthwhilegames.cardgames.shared.Constants.fourthCard;
+import static com.worthwhilegames.cardgames.shared.Constants.fullCard;
+import static com.worthwhilegames.cardgames.shared.Constants.halfCard;
+import static com.worthwhilegames.cardgames.shared.Constants.halfCardVertCut;
 
 import java.util.List;
 
@@ -130,19 +134,33 @@ public class GameboardActivity extends Activity {
 	private LinearLayout[] playerLinearLayouts = new LinearLayout[4];
 
 	/**
+<<<<<<< HEAD
 	 * These are the TextViews for the count of remaining cards not being displayed
 	 */
 	private TextView[] playerRemainingCards = new TextView[4];
 
 	/**
 	 * The discard pile ImageView
+=======
+	 * The card position 1 ImageView
+>>>>>>> made 4 cards on the gameboard it is not pretty. also made the cards on
 	 */
-	private ImageView discard;
+	private ImageView cardPosition1;
 
 	/**
-	 * The draw pile ImageView
+	 * The card position 2 (discard pile) ImageView
 	 */
-	private ImageView draw;
+	private ImageView cardPosition2;
+
+	/**
+	 * The card position 3 ImageView
+	 */
+	private ImageView cardPosition3;
+
+	/**
+	 * The card position 4 (draw pile) ImageView
+	 */
+	private ImageView cardPosition4;
 
 	/**
 	 * The current suit ImageView
@@ -262,8 +280,11 @@ public class GameboardActivity extends Activity {
 		playerRemainingCards[2] = (TextView) findViewById(R.id.player3RemainingCount);
 		playerRemainingCards[3] = (TextView) findViewById(R.id.player4RemainingCount);
 
-		discard = (ImageView) findViewById(R.id.discardpile);
-		draw = (ImageView) findViewById(R.id.drawpile);
+		cardPosition1 = (ImageView) findViewById(R.id.cardPosition1);
+		cardPosition2 = (ImageView) findViewById(R.id.cardPosition2);
+		cardPosition3 = (ImageView) findViewById(R.id.cardPosition3);
+		cardPosition4 = (ImageView) findViewById(R.id.cardPosition4);
+
 		suitView = (ImageView) findViewById(R.id.gameboard_suit);
 
 		// Set up the scale factors for the card images
@@ -276,6 +297,7 @@ public class GameboardActivity extends Activity {
 			tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenHeight / 15);
 		}
 
+		//TODO set as a fourth of a card?
 		// Set up the layout params for the cards
 		cardParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight);
 
@@ -470,7 +492,7 @@ public class GameboardActivity extends Activity {
 				}
 
 				// Scale card
-				Bitmap scaledCard = scaleCard(resId, j < (cardsToDisplay - 1));
+				Bitmap scaledCard = scaleCard(resId, (j < (cardsToDisplay - 1)) ? fourthCard : halfCard);
 				image.setImageBitmap(scaledCard);
 
 				// Check for max displayed
@@ -491,39 +513,41 @@ public class GameboardActivity extends Activity {
 		// Card Position 1
 		Card card1 = game.getCardAtPosition(1);
 		if( card1 != null ){
-			//TODO set position 1 to card 1 and visible
+			Bitmap position1 = scaleCard(card1.getResourceId(), fullCard);
+			cardPosition1.setImageBitmap(position1);
+			cardPosition1.setVisibility(View.VISIBLE);
 		} else {
-			//TODO set position 1 to invisible
+			cardPosition1.setVisibility(View.INVISIBLE);
 		}
 
-		// Card Position 2
+		// Card Position 2 (discard)
 		Card card2 = game.getCardAtPosition(2);
 		if( card2 != null ){
-			// Place Discard Image
-			Bitmap discardImage = scaleCard(card2.getResourceId(), false);
-			discard.setImageBitmap(discardImage);
-			discard.setVisibility(View.VISIBLE);
+			Bitmap position2 = scaleCard(card2.getResourceId(), fullCard);
+			cardPosition2.setImageBitmap(position2);
+			cardPosition2.setVisibility(View.VISIBLE);
 		} else {
-			discard.setVisibility(View.INVISIBLE);
+			cardPosition2.setVisibility(View.INVISIBLE);
 		}
 
 		// Card Position 3
 		Card card3 = game.getCardAtPosition(3);
 		if( card3 != null ){
-			//TODO set position 3 to card 3 and visible
+			Bitmap position3 = scaleCard(card3.getResourceId(), fullCard);
+			cardPosition3.setImageBitmap(position3);
+			cardPosition3.setVisibility(View.VISIBLE);
 		} else {
-			//TODO set position 3 to invisible
+			cardPosition3.setVisibility(View.INVISIBLE);
 		}
 
-		// Card Position 4
+		// Card Position 4 (draw)
 		Card card4 = game.getCardAtPosition(4);
 		if( card4 != null ){
-			// Place Draw Image
-			Bitmap drawImage = scaleCard(card4.getResourceId(), false);// TODO: customize back of card
-			draw.setImageBitmap(drawImage);
-			draw.setVisibility(View.VISIBLE);
+			Bitmap position4 = scaleCard(card4.getResourceId(), fullCard);
+			cardPosition4.setImageBitmap(position4);
+			cardPosition4.setVisibility(View.VISIBLE);
 		} else {
-			draw.setVisibility(View.INVISIBLE);
+			cardPosition4.setVisibility(View.INVISIBLE);
 		}
 	}
 
@@ -533,14 +557,20 @@ public class GameboardActivity extends Activity {
 	 * @param resId the resource id of the card to scale
 	 * @return a scaled card image
 	 */
-	private Bitmap scaleCard(int resId, boolean halfCard) {
+	private Bitmap scaleCard(int resId, int cardPortion) {
 		Bitmap fullCard = BitmapFactory.decodeResource(getResources(), resId);
 		float scaleFactor = (cardHeight + 0.0f) / fullCard.getHeight();
 		Matrix tempMatrix = new Matrix();
 		tempMatrix.setScale(scaleFactor, scaleFactor);
 
-		// Draw half card
-		if (halfCard) {
+		// Draw fourth card
+		if (cardPortion == fourthCard) {//TODO display 1/4 of a card
+			return Bitmap.createBitmap(fullCard, 0, 0,
+					fullCard.getWidth() / 2, fullCard.getHeight() / 2, tempMatrix, true);
+		} else if (cardPortion == halfCard) {
+			return Bitmap.createBitmap(fullCard, 0, 0,
+					fullCard.getWidth(), fullCard.getHeight() / 2, tempMatrix, true);
+		} else if (cardPortion == halfCardVertCut) {
 			return Bitmap.createBitmap(fullCard, 0, 0,
 					fullCard.getWidth() / 2, fullCard.getHeight(), tempMatrix, true);
 		} else {
