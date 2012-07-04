@@ -18,6 +18,7 @@ import static com.worthwhilegames.cardgames.shared.Constants.SETUP;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
 import static com.worthwhilegames.cardgames.shared.Constants.VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.WINNER;
+import static com.worthwhilegames.cardgames.shared.Constants.PLAY_CARD;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -260,7 +261,7 @@ public class EuchrePlayerController implements PlayerController {
 			case IS_TURN:
 				mySM.sayTurn(playerName);
 				this.setCardLead(object);
-				currentState = IS_TURN;
+				currentState = PLAY_CARD;
 				
 				setButtonsEnabled(true);
 				isTurn = true;

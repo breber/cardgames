@@ -15,6 +15,7 @@ import java.util.Random;
 
 import android.util.Log;
 
+import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.CardGame;
 import com.worthwhilegames.cardgames.shared.Constants;
@@ -223,7 +224,7 @@ public class EuchreTabletGame implements Game{
 	 */
 	@Override
 	public void discard(Player player, Card card) {
-		player.getCards().remove(card);
+		player.removeCard(card);
 		cardsPlayed[players.indexOf(player)] = card;
 	}
 
@@ -616,6 +617,14 @@ public class EuchreTabletGame implements Game{
 	@Override
 	public int getMaxNumPlayers() {
 		return 4;
+	}
+
+	@Override
+	public Card getCardAtPosition(int position) {
+		if( position > 0 && position < 5 ){
+			return cardsPlayed[position-1];
+		}
+		return null;
 	}
 
 }

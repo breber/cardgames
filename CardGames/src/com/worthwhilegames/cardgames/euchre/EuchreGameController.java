@@ -251,7 +251,6 @@ public class EuchreGameController implements GameController{
 				isComputerPlaying = false;
 
 				//Get which card they discarded and discard it.
-				mySM.playCardSound();
 				currentState = PLAY_LEAD_CARD;
 				playReceivedCard(object);
 				game.clearCardsPlayed();
@@ -674,8 +673,22 @@ public class EuchreGameController implements GameController{
 		if( currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING){
 			this.handleBetting(currentState, compBet.toString());
 		} else if (cardSelected != null) {
-			//Play Card
-			mySM.playCardSound();
+			if( currentState == PICK_IT_UP ) {
+				//Get which card they discarded and discard it.
+				currentState = PLAY_LEAD_CARD;
+				game.discard(players.get(whoseTurn), cardSelected);
+				game.clearCardsPlayed();
+
+				//start the first turn of the round
+				whoseTurn = game.getTrickLeader();
+				sendNextTurn(currentState, game.getCardLead());
+				return;
+			}
+
+			if( currentState == PLAY_LEAD_CARD ) {
+				//set card lead
+				game.setCardLead(cardSelected);
+			}
 			game.discard(players.get(whoseTurn), cardSelected);
 			advanceTurn();
 		} else {

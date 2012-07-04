@@ -488,13 +488,43 @@ public class GameboardActivity extends Activity {
 			i++;
 		}
 
-		// Place Discard Image
-		Bitmap discardImage = scaleCard(game.getDiscardPileTop().getResourceId(), false);
-		discard.setImageBitmap(discardImage);
+		// Card Position 1
+		Card card1 = game.getCardAtPosition(1);
+		if( card1 != null ){
+			//TODO set position 1 to card 1 and visible
+		} else {
+			//TODO set position 1 to invisible
+		}
 
-		// Place Draw Image
-		Bitmap drawImage = scaleCard(CARD_BACK, false);
-		draw.setImageBitmap(drawImage);
+		// Card Position 2
+		Card card2 = game.getCardAtPosition(2);
+		if( card2 != null ){
+			// Place Discard Image
+			Bitmap discardImage = scaleCard(card2.getResourceId(), false);
+			discard.setImageBitmap(discardImage);
+			discard.setVisibility(View.VISIBLE);
+		} else {
+			discard.setVisibility(View.INVISIBLE);
+		}
+
+		// Card Position 3
+		Card card3 = game.getCardAtPosition(3);
+		if( card3 != null ){
+			//TODO set position 3 to card 3 and visible
+		} else {
+			//TODO set position 3 to invisible
+		}
+
+		// Card Position 4
+		Card card4 = game.getCardAtPosition(4);
+		if( card4 != null ){
+			// Place Draw Image
+			Bitmap drawImage = scaleCard(card4.getResourceId(), false);// TODO: customize back of card
+			draw.setImageBitmap(drawImage);
+			draw.setVisibility(View.VISIBLE);
+		} else {
+			draw.setVisibility(View.INVISIBLE);
+		}
 	}
 
 	/**
