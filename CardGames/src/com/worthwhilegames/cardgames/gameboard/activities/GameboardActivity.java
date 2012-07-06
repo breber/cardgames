@@ -299,7 +299,7 @@ public class GameboardActivity extends Activity {
 
 		//TODO set as a fourth of a card?
 		// Set up the layout params for the cards
-		cardParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight);
+		cardParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight / 2);
 
 		// Create the scaled suit images
 		scaledSuitImages[0] = scaleButton(R.drawable.clubsuitimage);
