@@ -77,15 +77,7 @@ public class GameboardActivity extends Activity {
 	 * width  = WRAP_CONTENT
 	 * height = cardHeight
 	 */
-	private static LinearLayout.LayoutParams paramsH;
-
-	/**
-	 * LayoutParams for adding a card to a player on the short edge of the screen
-	 * 
-	 * width  = cardHeight
-	 * height = WRAP_CONTENT
-	 */
-	private static LinearLayout.LayoutParams paramsV;
+	private static LinearLayout.LayoutParams cardParams;
 
 	/**
 	 * The height of each card
@@ -98,11 +90,14 @@ public class GameboardActivity extends Activity {
 	private static int buttonHeight;
 
 	/**
-	 * Parameters specific to a players position are stored here so that
-	 * we can just reference them by their position, instead of having a bunch
-	 * of if-elseif-else logic in the card placement code
+	 * Represents the resource id to use for the back of the cards
 	 */
-	private static PlayerLayoutParams[] playerParams = new PlayerLayoutParams[4];
+	private static int CARD_BACK;
+
+	/**
+	 * The maximum number of cards displayed for each player
+	 */
+	private static int[] maxDisplayed = new int[] { Constants.MAX_DISPLAYED, Constants.MAX_DIS_SIDES, Constants.MAX_DISPLAYED, Constants.MAX_DIS_SIDES };
 
 	/**
 	 * Holds the scaled Bitmaps of the suit images
@@ -130,6 +125,11 @@ public class GameboardActivity extends Activity {
 	 * These are the LinearLayouts for all the player cards
 	 */
 	private LinearLayout[] playerLinearLayouts = new LinearLayout[4];
+
+	/**
+	 * These are the TextViews for the count of remaining cards not being displayed
+	 */
+	private TextView[] playerRemainingCards = new TextView[4];
 
 	/**
 	 * The discard pile ImageView
@@ -185,37 +185,6 @@ public class GameboardActivity extends Activity {
 		}
 	};
 
-	// Set up playerParams on initial Class load
-	static {
-		playerParams[0] = new GameboardActivity.PlayerLayoutParams(Constants.MAX_DISPLAYED, 0) {
-			@Override
-			public boolean displayHalfCard(int numCards, int totalInHand) {
-				return numCards != totalInHand - 1;
-			}
-		};
-
-		playerParams[1] = new GameboardActivity.PlayerLayoutParams(Constants.MAX_DIS_SIDES, -90) {
-			@Override
-			public boolean displayHalfCard(int numCards, int totalInHand) {
-				return numCards != 0;
-			}
-		};
-
-		playerParams[2] = new GameboardActivity.PlayerLayoutParams(Constants.MAX_DISPLAYED, 0) {
-			@Override
-			public boolean displayHalfCard(int numCards, int totalInHand) {
-				return numCards != totalInHand - 1;
-			}
-		};
-
-		playerParams[3] = new GameboardActivity.PlayerLayoutParams(Constants.MAX_DIS_SIDES, 90) {
-			@Override
-			public boolean displayHalfCard(int numCards, int totalInHand) {
-				return numCards != totalInHand - 1;
-			}
-		};
-	}
-
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -224,6 +193,11 @@ public class GameboardActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gameboard);
 		initUIElements();
+
+		sharedPreferences = getSharedPreferences(PREFERENCES, 0);
+
+		// Get the image to use for the back of a card
+		CARD_BACK = sharedPreferences.getInt(Constants.CARD_BACK, R.drawable.back_blue_1);
 
 		// Update the refresh button image
 		ImageView refresh = (ImageView) findViewById(R.id.gameboard_refresh);
@@ -234,8 +208,6 @@ public class GameboardActivity extends Activity {
 		registerReceiver();
 
 		connection = ConnectionServer.getInstance(this);
-
-		sharedPreferences = getSharedPreferences(PREFERENCES, 0);
 
 		int numOfConnections = connection.getConnectedDeviceCount();
 		List<Player> players = new ArrayList<Player>();
@@ -304,6 +276,11 @@ public class GameboardActivity extends Activity {
 		playerLinearLayouts[2] = (LinearLayout) findViewById(R.id.player3ll);
 		playerLinearLayouts[3] = (LinearLayout) findViewById(R.id.player4ll);
 
+		playerRemainingCards[0] = (TextView) findViewById(R.id.player1RemainingCount);
+		playerRemainingCards[1] = (TextView) findViewById(R.id.player2RemainingCount);
+		playerRemainingCards[2] = (TextView) findViewById(R.id.player3RemainingCount);
+		playerRemainingCards[3] = (TextView) findViewById(R.id.player4RemainingCount);
+
 		discard = (ImageView) findViewById(R.id.discardpile);
 		draw = (ImageView) findViewById(R.id.drawpile);
 		suitView = (ImageView) findViewById(R.id.gameboard_suit);
@@ -319,8 +296,7 @@ public class GameboardActivity extends Activity {
 		}
 
 		// Set up the layout params for the cards
-		paramsH = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight);
-		paramsV = new LinearLayout.LayoutParams(cardHeight, LinearLayout.LayoutParams.WRAP_CONTENT);
+		cardParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight);
 
 		// Create the scaled suit images
 		scaledSuitImages[0] = scaleButton(R.drawable.clubsuitimage);
@@ -464,17 +440,11 @@ public class GameboardActivity extends Activity {
 	 * This data is pulled from the Game instance
 	 */
 	public void updateNamesOnGameboard() {
-		// TODO: can we do this without adding spaces?
 		List<Player> players = GameFactory.getGameInstance(this).getPlayers();
 		for (int i = 0; i < 4; i++) {
 			if (i < players.size()) {
 				playerTextViews[i].setVisibility(View.VISIBLE);
-				int blankSpaces = (Constants.NAME_MAX_CHARS - players.get(i).getName().length())/2;
-				String spaces = "";
-				for (int x = 0; x < blankSpaces; x++) {
-					spaces += " ";
-				}
-				playerTextViews[i].setText(spaces + players.get(i).getName() + spaces);
+				playerTextViews[i].setText(players.get(i).getName());
 			} else {
 				playerTextViews[i].setVisibility(View.INVISIBLE);
 			}
@@ -519,8 +489,7 @@ public class GameboardActivity extends Activity {
 				image.setId(c.getIdNum());
 				image.setScaleType(ScaleType.FIT_CENTER);
 
-				// TODO: customizable back
-				int resId = R.drawable.back_blue_1;
+				int resId = CARD_BACK;
 
 				// If we are in debug mode, show the face
 				// Otherwise stick with the back of the card
@@ -528,27 +497,24 @@ public class GameboardActivity extends Activity {
 					resId = c.getResourceId();
 				}
 
+				int cardsToDisplay = cards.size();
+				if (cardsToDisplay > maxDisplayed[i]) {
+					cardsToDisplay = maxDisplayed[i];
+				}
+
 				// Scale card
-				Bitmap scaledCard = scaleCard(resId, i, playerParams[i].displayHalfCard(j, cards.size()));;
-
-				// Rotate if necessary
-				Matrix tempMatrix = new Matrix();
-				tempMatrix.postRotate(playerParams[i].rotate);
-				scaledCard = Bitmap.createBitmap(scaledCard, 0, 0,
-						scaledCard.getWidth(), scaledCard.getHeight(), tempMatrix, true);
-
+				Bitmap scaledCard = scaleCard(resId, j < (cardsToDisplay - 1));
 				image.setImageBitmap(scaledCard);
 
 				// Check for max displayed
-				boolean display = playerLinearLayouts[i].getChildCount() < playerParams[i].maxDisplayed;
-				if (display) {
-					if (i == 1 || i == 3) {
-						playerLinearLayouts[i].addView(image, paramsV);
-					} else {
-						playerLinearLayouts[i].addView(image, paramsH);
-					}
+				if (j < maxDisplayed[i]) {
+					playerLinearLayouts[i].addView(image, cardParams);
+					playerRemainingCards[i].setVisibility(View.INVISIBLE);
 				} else {
-					// TODO: add count of how many cards are not shown
+					// Display how many cards are remaining that aren't displayed
+					playerRemainingCards[i].setText("+" + Math.abs(maxDisplayed[i] - cards.size()));
+					playerRemainingCards[i].setVisibility(View.VISIBLE);
+					break;
 				}
 			}
 
@@ -556,11 +522,11 @@ public class GameboardActivity extends Activity {
 		}
 
 		// Place Discard Image
-		Bitmap discardImage = scaleCard(game.getDiscardPileTop().getResourceId(), 0, false);
+		Bitmap discardImage = scaleCard(game.getDiscardPileTop().getResourceId(), false);
 		discard.setImageBitmap(discardImage);
 
 		// Place Draw Image
-		Bitmap drawImage = scaleCard(R.drawable.back_blue_1, 0, false);// TODO: customize back of card
+		Bitmap drawImage = scaleCard(CARD_BACK, false);
 		draw.setImageBitmap(drawImage);
 	}
 
@@ -570,7 +536,7 @@ public class GameboardActivity extends Activity {
 	 * @param resId the resource id of the card to scale
 	 * @return a scaled card image
 	 */
-	private Bitmap scaleCard(int resId, int position, boolean halfCard) {
+	private Bitmap scaleCard(int resId, boolean halfCard) {
 		Bitmap fullCard = BitmapFactory.decodeResource(getResources(), resId);
 		float scaleFactor = (cardHeight + 0.0f) / fullCard.getHeight();
 		Matrix tempMatrix = new Matrix();
@@ -648,38 +614,4 @@ public class GameboardActivity extends Activity {
 		 */
 		public String deviceId;
 	}
-
-	/**
-	 * Information needed for a player's layout
-	 */
-	private abstract static class PlayerLayoutParams {
-		/**
-		 * The maximum number of cards to display for this user
-		 */
-		public int maxDisplayed;
-
-		/**
-		 * The amount to rotate each card
-		 */
-		public int rotate;
-
-		/**
-		 * @param maxDisplayed
-		 * @param rotate
-		 */
-		public PlayerLayoutParams(int maxDisplayed, int rotate) {
-			this.maxDisplayed = maxDisplayed;
-			this.rotate = rotate;
-		}
-
-		/**
-		 * Should we create a half card?
-		 * 
-		 * @param numCards the number of cards currently displayed
-		 * @param totalInHand the total number of cards in the user's hand
-		 * @return whether to generate a half card for this card
-		 */
-		public abstract boolean displayHalfCard(int numCards, int totalInHand);
-	}
-
 }

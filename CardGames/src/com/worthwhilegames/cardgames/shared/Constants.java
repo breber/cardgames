@@ -17,12 +17,12 @@ public class Constants {
 	/**
 	 * The maximum number of cards to be displayed on longest sides of tablet
 	 */
-	public static final int MAX_DISPLAYED = 13;
+	public static final int MAX_DISPLAYED = 12;
 
 	/**
 	 * The maximum number of cards to be displayed on shortest sides of tablet
 	 */
-	public static final int MAX_DIS_SIDES = 7;
+	public static final int MAX_DIS_SIDES = 6;
 
 	/**
 	 * A constant to represent the name of the font to use
@@ -250,6 +250,12 @@ public class Constants {
 	 * crazy eights
 	 */
 	public static final String CRAZY_EIGHTS = "Crazy Eights";
+
+	/**
+	 * A constant to represent a key in the shared preferences for the image
+	 * resource to use as the back of the card
+	 */
+	public static final String CARD_BACK = "BACKOFCARD";
 
 	/* AI Constants */
 	/**

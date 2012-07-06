@@ -83,8 +83,14 @@ public class MainMenu extends Activity {
 		rules.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent ruleButtonClick = new Intent(MainMenu.this, RulesActivity.class);
-				startActivity(ruleButtonClick);
+				if (Util.isDebugBuild()) {
+					// Open the gameboard connect activity
+					Intent playButtonClick = new Intent(MainMenu.this, ConnectActivity.class);
+					startActivityForResult(playButtonClick, CONNECT_ACTIVITY);
+				} else {
+					Intent ruleButtonClick = new Intent(MainMenu.this, RulesActivity.class);
+					startActivity(ruleButtonClick);
+				}
 			}
 		});
 
