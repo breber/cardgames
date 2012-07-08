@@ -1,7 +1,6 @@
 package com.worthwhilegames.cardgames.shared;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -23,22 +22,6 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
  * of Game to use, we will do that all in this class.
  */
 public class GameFactory {
-
-	/**
-	 * Get an instance of a Game
-	 *
-	 * @param players - the players to use for the game
-	 * @param deck - the deck of cards to use
-	 * @param rules - the rules definitions
-	 * @return the Game instance as specified by the type of game currently specified
-	 */
-	public static Game getGameInstance(Context ctx, List<Player> players, Deck deck, Rules rules) {
-		if (getGameType(ctx) == CardGame.CRAZY_EIGHTS) {
-			return CrazyEightsTabletGame.getInstance(players, deck, rules);
-		}
-
-		return null;
-	}
 
 	/**
 	 * Get an instance of an already started Game
@@ -68,9 +51,9 @@ public class GameFactory {
 	 * @return the GameController instance as specified by the currently specified game type
 	 */
 	public static GameController getGameControllerInstance(GameboardActivity activity,
-			ConnectionServer connectionServer, List<Player> players, ImageView refreshButton) {
+			ConnectionServer connectionServer, ImageView refreshButton) {
 		if (getGameType(activity) == CardGame.CRAZY_EIGHTS) {
-			return new CrazyEightsGameController(activity, connectionServer, players, refreshButton);
+			return new CrazyEightsGameController(activity, connectionServer, refreshButton);
 		}
 
 		return null;

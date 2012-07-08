@@ -93,14 +93,30 @@ public interface Game {
 
 	/**
 	 * set the default computer difficulty
+	 * 
 	 * @param diff computer difficulty
 	 */
 	public void setComputerDifficulty(String diff);
 
 	/**
 	 * get the default computer difficulty
+	 * 
 	 * @return the computer difficulty
 	 */
 	public String getComputerDifficulty();
+
+	/**
+	 * Add a player to the game
+	 * 
+	 * @param p the player to add
+	 */
+	public void addPlayer(Player p);
+
+	/**
+	 * Returns whether the game has been started or not
+	 * 
+	 * @return whether a game is currently active
+	 */
+	public boolean isActive();
 
 }

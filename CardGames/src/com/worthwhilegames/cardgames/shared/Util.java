@@ -62,10 +62,11 @@ public class Util {
 	 * @param ctx
 	 * @param btAdapter
 	 */
-	public static void ensureDiscoverable(Context ctx, BluetoothAdapter btAdapter) {
+	public static void ensureDiscoverable(Context ctx) {
 		if (Util.isDebugBuild()) {
 			Log.d(TAG_GENERIC, "ensure discoverable");
 		}
+		BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		if (btAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
 			Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);

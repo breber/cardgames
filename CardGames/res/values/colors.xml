@@ -5,5 +5,7 @@
     <color name="black">#ff000000</color>
     <color name="transparent">#00000000</color>
     <color name="transparent_grey">#77888888</color>
+    <color name="disabled_device">#ff454545</color>
+    <color name="enabled_device">#ffc3c3c3</color>
 
 </resources>
