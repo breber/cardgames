@@ -21,7 +21,6 @@ import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.Deck;
 import com.worthwhilegames.cardgames.shared.Game;
 import com.worthwhilegames.cardgames.shared.Player;
-import com.worthwhilegames.cardgames.shared.Rules;
 import com.worthwhilegames.cardgames.shared.Util;
 
 public class EuchreTabletGame implements Game{
@@ -45,11 +44,6 @@ public class EuchreTabletGame implements Game{
 	 * A private variable representing the game deck for the euchre game
 	 */
 	private Deck gameDeck;
-
-	/**
-	 * A private variable for the rules interface for the euchre game
-	 */
-	private Rules rules;
 
 	/**
 	 * A private variable to represent the difficulty of computers in the current game
@@ -97,15 +91,6 @@ public class EuchreTabletGame implements Game{
 	private int[] matchScores = new int[2];;
 
 	/**
-<<<<<<< HEAD
-	 * A card to represent the first card turned over for players to bet on
-	 */
-	private Card topCard;
-
-	/**
-=======
->>>>>>> Made some changes to the controllers. including updating refresh to
-
 	 * list of the cards played the last round
 	 */
 	public Card[] cardsPlayed = new Card[4];
@@ -145,20 +130,11 @@ public class EuchreTabletGame implements Game{
 	/**
 	 * A constructor for the crazy eights game type. This constructor will initialize the all the variables
 	 * for a game of euchre including the rules, players, deck, shuffled deck pile and the discard pile.
-	 * 
-	 * @param players a list of Player objects in the current game
-	 * @param gameDeck a deck of cards to be used in the game euchre
-	 * @param rules a Rules object for the euchre game
 	 */
-	public EuchreTabletGame(List<Player> players, Deck gameDeck, Rules rules) {
-		this.players = players;
-		this.gameDeck = gameDeck;
-		this.rules = rules;
-		shuffledDeck = gameDeck.getCardIDs();
-	}
-
 	public EuchreTabletGame() {
-		// TODO
+		players = new ArrayList<Player>();
+		gameDeck = new Deck(CardGame.Euchre);
+		shuffledDeck = gameDeck.getCardIDs();
 	}
 
 	/**
@@ -503,14 +479,6 @@ public class EuchreTabletGame implements Game{
 
 	public void setGameDeck(Deck gameDeck) {
 		this.gameDeck = gameDeck;
-	}
-
-	public Rules getRules() {
-		return rules;
-	}
-
-	public void setRules(Rules rules) {
-		this.rules = rules;
 	}
 
 	public int getTrump() {
