@@ -1,6 +1,5 @@
 package com.worthwhilegames.cardgames.crazyeights;
 
-import static com.worthwhilegames.cardgames.shared.CardGame.CRAZY_EIGHTS;
 import static com.worthwhilegames.cardgames.shared.Constants.ID;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
 import static com.worthwhilegames.cardgames.shared.Constants.VALUE;
@@ -29,11 +28,9 @@ import com.worthwhilegames.cardgames.gameboard.activities.GameboardActivity;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.CardTranslator;
 import com.worthwhilegames.cardgames.shared.Constants;
-import com.worthwhilegames.cardgames.shared.Deck;
 import com.worthwhilegames.cardgames.shared.Game;
 import com.worthwhilegames.cardgames.shared.GameController;
 import com.worthwhilegames.cardgames.shared.Player;
-import com.worthwhilegames.cardgames.shared.Rules;
 import com.worthwhilegames.cardgames.shared.SoundManager;
 import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
@@ -160,17 +157,13 @@ public class CrazyEightsGameController implements GameController {
 	 *            Context of the GameBoardActivity
 	 * @param connectionGiven
 	 *            The ConnectionServer that will be used
-	 * @param playersGiven
-	 *            The players that will be used in the game
 	 * @param refreshGiven
 	 *            The refresh button which will be handled by this
 	 *            GameController
 	 */
-	public CrazyEightsGameController(GameboardActivity context,	ConnectionServer connectionGiven,
-			List<Player> playersGiven, ImageView refreshGiven) {
+	public CrazyEightsGameController(GameboardActivity context,	ConnectionServer connectionGiven, ImageView refreshGiven) {
 		gameContext = context;
 		server = connectionGiven;
-		players = playersGiven;
 		refreshButton = refreshGiven;
 		mySM = SoundManager.getInstance(context);
 
@@ -186,10 +179,10 @@ public class CrazyEightsGameController implements GameController {
 			}
 		});
 
-		Deck deck = new Deck(CRAZY_EIGHTS);
-		Rules rules = new CrazyEightGameRules();
-		game = CrazyEightsTabletGame.getInstance(players, deck, rules);
+		game = CrazyEightsTabletGame.getInstance();
 		game.setup();
+
+		players = game.getPlayers();
 
 		gameContext.highlightPlayer(1);
 
@@ -280,7 +273,6 @@ public class CrazyEightsGameController implements GameController {
 				// We chose to add a new player, so start the ConnectActivity
 				// with the deviceId and isReconnect parameters
 				Intent i = new Intent(gameContext, ConnectActivity.class);
-				i.putExtra(ConnectActivity.IS_RECONNECT, true);
 				i.putExtra(ConnectionConstants.KEY_DEVICE_ID, data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID));
 				gameContext.startActivityForResult(i, CHOOSE_PLAYER);
 

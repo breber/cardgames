@@ -43,6 +43,16 @@ public class Player {
 	private String computerDifficulty = Constants.EASY;
 
 	/**
+	 * Represents whether this player has a name yet
+	 */
+	private boolean hasName = false;
+
+	/**
+	 * Represents whether this player has been disconnected
+	 */
+	private boolean isDisconnected = false;
+
+	/**
 	 * A default player constructor. A fields will be set with getters and setters
 	 */
 	public Player() {
@@ -94,6 +104,13 @@ public class Player {
 	 */
 	public void setIsComputer(boolean isComp) {
 		isComputer = isComp;
+
+		if (isComputer) {
+			isDisconnected = false;
+		}
+
+		// TODO: we might want to set a name for the computer if we
+		//		 previously cleared it...
 	}
 
 	/**
@@ -146,6 +163,7 @@ public class Player {
 	 */
 	public void setName(String name) {
 		this.name = name;
+		hasName = true;
 	}
 
 	/**
@@ -164,6 +182,7 @@ public class Player {
 	 */
 	public void setId(String id) {
 		this.id = id;
+		isDisconnected = false;
 	}
 
 	/**
@@ -182,6 +201,34 @@ public class Player {
 	 */
 	public void setPosition(int position) {
 		this.position = position;
+	}
+
+	/**
+	 * @return the hasName
+	 */
+	public boolean hasName() {
+		return hasName;
+	}
+
+	/**
+	 * @param hasName the hasName to set
+	 */
+	public void clearName() {
+		hasName = false;
+	}
+
+	/**
+	 * @return the isDisconnected
+	 */
+	public boolean isDisconnected() {
+		return isDisconnected;
+	}
+
+	/**
+	 * @param isDisconnected the isDisconnected to set
+	 */
+	public void setDisconnected(boolean isDisconnected) {
+		this.isDisconnected = isDisconnected;
 	}
 
 	/**

@@ -11,11 +11,11 @@ import java.util.Random;
 import android.util.Log;
 
 import com.worthwhilegames.cardgames.shared.Card;
+import com.worthwhilegames.cardgames.shared.CardGame;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.Deck;
 import com.worthwhilegames.cardgames.shared.Game;
 import com.worthwhilegames.cardgames.shared.Player;
-import com.worthwhilegames.cardgames.shared.Rules;
 import com.worthwhilegames.cardgames.shared.Util;
 
 /**
@@ -42,11 +42,6 @@ public class CrazyEightsTabletGame implements Game {
 	 * A private variable representing the game deck for the crazy eights game
 	 */
 	private Deck gameDeck;
-
-	/**
-	 * A private variable for the rules interface for the crazy eights game
-	 */
-	private Rules rules;
 
 	/**
 	 * A private variable to represent the difficulty of computers in the current game
@@ -77,17 +72,9 @@ public class CrazyEightsTabletGame implements Game {
 	private int maxNumberOfPlayers = 4;
 
 	/**
-	 * Create a new instance of the tablet game so that multiple classes are able to reference
-	 * the same card game and only one instance will be made available. This method uses the custom
-	 * constructor made in this class.
-	 * 
-	 * @return an instance of CrazyEightsTabletGame
+	 * Represents whether the game is currently active
 	 */
-	public static CrazyEightsTabletGame getInstance(List<Player> players, Deck deck, Rules rules) {
-		instance = new CrazyEightsTabletGame(players, deck, rules);
-
-		return instance;
-	}
+	private boolean gameActive = false;
 
 	/**
 	 * Create a new instance of the tablet game so that multiple classes are able to reference
@@ -98,7 +85,7 @@ public class CrazyEightsTabletGame implements Game {
 	 */
 	public static CrazyEightsTabletGame getInstance() {
 		if (instance == null) {
-			throw new IllegalArgumentException();
+			instance = new CrazyEightsTabletGame();
 		}
 
 		return instance;
@@ -114,15 +101,10 @@ public class CrazyEightsTabletGame implements Game {
 	/**
 	 * A constructor for the crazy eights game type. This constructor will initialize the all the variables
 	 * for a game of crazy eights including the rules, players, deck, shuffled deck pile and the discard pile.
-	 * 
-	 * @param players a list of Player objects in the current game
-	 * @param gameDeck a deck of cards to be used in the game crazy eights
-	 * @param rules a Rules object for the crazy eights game
 	 */
-	public CrazyEightsTabletGame(List<Player> players, Deck gameDeck, Rules rules) {
-		this.players = players;
-		this.gameDeck = gameDeck;
-		this.rules = rules;
+	public CrazyEightsTabletGame() {
+		players = new ArrayList<Player>();
+		gameDeck = new Deck(CardGame.CRAZY_EIGHTS);
 		shuffledDeck = gameDeck.getCardIDs();
 		discardPile = new ArrayList<Card>();
 	}
@@ -135,84 +117,12 @@ public class CrazyEightsTabletGame implements Game {
 		return players;
 	}
 
-	/**
-	 * This method is a setter for the list of players in the current game
-	 * 
-	 * @param players a list of players that will be playing the game
-	 */
-	public void setPlayers(List<Player> players) {
-		this.players = players;
-	}
-
-	/**
-	 * This method is a getter for the deck object
-	 * 
-	 * @return a Deck object for the game type of crazy eights
-	 */
-	public Deck getGameDeck() {
-		return gameDeck;
-	}
-
-	/**
-	 * This method is a setter for the game deck to be used with the game
-	 * 
-	 * @param gameDeck a Deck object to represent the cards in the crazy eights game
-	 */
-	public void setGameDeck(Deck gameDeck) {
-		this.gameDeck = gameDeck;
-	}
-
-	/**
-	 * This method is a getter for the discard pile list
-	 * 
-	 * @return a list of Card objects in the discard pile
-	 */
-	public List<Card> getDiscardPile() {
-		return discardPile;
-	}
-
-	/**
-	 * This method is a setter for the current discard pile
-	 * 
-	 * @param discardPile a list of Card objects currently in the discard pile
-	 */
-	public void setDiscardPile(ArrayList<Card> discardPile) {
-		this.discardPile = discardPile;
-	}
-
-	/**
-	 * This method is a getter for the current game's Rules object
-	 * 
-	 * @return a Rules object to represent the current rules of the game
-	 */
-	public Rules getRules() {
-		return rules;
-	}
-
-	/**
-	 * This method is a setter for the Rules object
-	 * 
-	 * @param rules a Rules object from the rules interface to be used with the current game
-	 */
-	public void setRules(Rules rules) {
-		this.rules = rules;
-	}
-
 	/* (non-Javadoc)
 	 * @see com.worthwhilegames.cardgames.shared.Game#getShuffledDeck()
 	 */
 	@Override
 	public ArrayList<Card> getShuffledDeck() {
 		return shuffledDeck;
-	}
-
-	/**
-	 * This method is a setter for the shuffled deck
-	 * 
-	 * @param shuffledDeck an array list of cards to represent the shuffled deck
-	 */
-	public void setShuffledDeck(ArrayList<Card> shuffledDeck) {
-		this.shuffledDeck = shuffledDeck;
 	}
 
 	/* (non-Javadoc)
@@ -296,6 +206,7 @@ public class CrazyEightsTabletGame implements Game {
 	 */
 	@Override
 	public void deal() {
+		gameActive = true;
 		int numHumanPlayers = 0;
 
 		if (Util.isDebugBuild()) {
@@ -408,15 +319,20 @@ public class CrazyEightsTabletGame implements Game {
 			}
 		}
 
-		if (p != null) {
-			p.setIsComputer(true);
-			p.setComputerDifficulty(computerDifficulty);
+		if (gameActive) {
+			if (p != null) {
+				p.setIsComputer(true);
+				p.setComputerDifficulty(computerDifficulty);
 
-			maxNumberOfPlayers--;
-		} else {
-			if (Util.isDebugBuild()) {
-				Log.d(TAG, "dropPlayer: couldn't find player with id: " + playerMacAddress);
+				maxNumberOfPlayers--;
+			} else {
+				if (Util.isDebugBuild()) {
+					Log.d(TAG, "dropPlayer: couldn't find player with id: " + playerMacAddress);
+				}
 			}
+		} else {
+			// If the game hasn't been started yet, just remove them from the list
+			players.remove(p);
 		}
 	}
 
@@ -442,5 +358,21 @@ public class CrazyEightsTabletGame implements Game {
 	@Override
 	public int getMaxNumPlayers() {
 		return maxNumberOfPlayers;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.worthwhilegames.cardgames.shared.Game#addPlayer(com.worthwhilegames.cardgames.shared.Player)
+	 */
+	@Override
+	public void addPlayer(Player p) {
+		players.add(p);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.worthwhilegames.cardgames.shared.Game#isActive()
+	 */
+	@Override
+	public boolean isActive() {
+		return gameActive;
 	}
 }
