@@ -13,14 +13,13 @@ import static com.worthwhilegames.cardgames.shared.Constants.CURRENT_STATE;
 import static com.worthwhilegames.cardgames.shared.Constants.ID;
 import static com.worthwhilegames.cardgames.shared.Constants.IS_TURN;
 import static com.worthwhilegames.cardgames.shared.Constants.LOSER;
+import static com.worthwhilegames.cardgames.shared.Constants.PLAY_CARD;
 import static com.worthwhilegames.cardgames.shared.Constants.REFRESH;
 import static com.worthwhilegames.cardgames.shared.Constants.SETUP;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
 import static com.worthwhilegames.cardgames.shared.Constants.VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.WINNER;
-import static com.worthwhilegames.cardgames.shared.Constants.PLAY_CARD;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -51,29 +50,29 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 
 public class EuchrePlayerController implements PlayerController {
-	
+
 
 	/**
 	 * The Logcat Debug tag
 	 */
 	private static final String TAG = EuchreGameController.class.getName();
-	
+
 	/**
 	 * The request code to keep track of the "Are you sure you want to quit"
 	 * activity
 	 */
 	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
-	
+
 	/**
 	 * intent code for betting in first round
 	 */
 	private static final int BET_FIRST_ROUND = Math.abs("BET_FIRST_ROUND".hashCode());
-	
+
 	/**
 	 * intent code for betting in second round
 	 */
 	private static final int BET_SECOND_ROUND = Math.abs("BET_SECOND_ROUND".hashCode());
-	
+
 	/**
 	 * The cards of this player
 	 */
@@ -84,7 +83,7 @@ public class EuchrePlayerController implements PlayerController {
 	 * and do other things as if this class was the ShowCardsActivity.
 	 */
 	private ShowCardsActivity playerContext;
-	
+
 	/**
 	 * The card that is on the discard pile
 	 */
@@ -95,7 +94,7 @@ public class EuchrePlayerController implements PlayerController {
 	 * played
 	 */
 	private EuchreGameRules gameRules;
-	
+
 	/**
 	 * The play button on the layout
 	 */
@@ -110,27 +109,27 @@ public class EuchrePlayerController implements PlayerController {
 	 * This is true if it is the players turn
 	 */
 	private boolean isTurn = false;
-	
+
 	/**
 	 * This is to keep track if a betting activity is open now or not
 	 */
 	private boolean isBettingNow = false;
-	
+
 	/**
 	 * The current selected Card
 	 */
 	private Card cardSelected;
-	
+
 	/**
 	 * The client that is used to send messages to the GameBoard
 	 */
 	private ConnectionClient connection;
-	
+
 	/**
 	 * This is how we can make sure that the card resource IDs are correct
 	 */
 	private CardTranslator ct;
-	
+
 	/**
 	 * This is a SoundManager instance that can do text to speech and other
 	 * sounds.
@@ -141,12 +140,12 @@ public class EuchrePlayerController implements PlayerController {
 	 * The player's name
 	 */
 	private String playerName;
-	
+
 	/**
 	 * The suit that is currently Trump
 	 */
 	private int trumpSuit;
-	
+
 	/**
 	 * current state of play
 	 */
@@ -156,15 +155,14 @@ public class EuchrePlayerController implements PlayerController {
 	 * The LinearLayout holding all card images
 	 */
 	private LinearLayout playerHandLayout;
-	
-	public EuchrePlayerController(Context context, Button playGiven, Button drawGiven, 
-			ConnectionClient connectionGiven, ArrayList<Card> cardHandGiven) {
+
+	public EuchrePlayerController(Activity context, List<Card> cardHandGiven) {
 		playerContext = (ShowCardsActivity) context;
-		play = playGiven;
-		draw = drawGiven;
+		play = (Button) context.findViewById(R.id.passOption);
+		draw = (Button) context.findViewById(R.id.betOption);
+
 		play.setOnClickListener(getPlayOnClickListener());
 		draw.setOnClickListener(getDrawOnClickListener());
-		draw.setVisibility(Button.INVISIBLE);
 		setButtonsEnabled(false);
 		mySM = SoundManager.getInstance(context);
 		cardHand = cardHandGiven;
@@ -173,7 +171,7 @@ public class EuchrePlayerController implements PlayerController {
 
 		gameRules = new EuchreGameRules();
 		ct = new EuchreCardTranslator();
-		connection = connectionGiven;
+		connection = ConnectionClient.getInstance(context);
 	}
 
 	/* (non-Javadoc)
@@ -216,7 +214,7 @@ public class EuchrePlayerController implements PlayerController {
 				isTurn = true;
 				this.setCardLead(object);
 				currentState = FIRST_ROUND_BETTING;
-				
+
 				//start select bet activity for round 1
 				isBettingNow = true;
 				Intent selectBetIntent1 = new Intent(playerContext, SelectBetActivity.class);
@@ -229,7 +227,7 @@ public class EuchrePlayerController implements PlayerController {
 				isTurn = true;
 				this.setCardLead(object);
 				currentState = SECOND_ROUND_BETTING;
-				
+
 				// start select bet activity to let the player bet
 				isBettingNow = true;
 				Intent selectBetIntent2 = new Intent(playerContext, SelectBetActivity.class);
@@ -257,12 +255,12 @@ public class EuchrePlayerController implements PlayerController {
 				}
 				dealerDiscard();
 				break;
-				
+
 			case IS_TURN:
 				mySM.sayTurn(playerName);
 				this.setCardLead(object);
 				currentState = PLAY_CARD;
-				
+
 				setButtonsEnabled(true);
 				isTurn = true;
 				break;
@@ -296,8 +294,8 @@ public class EuchrePlayerController implements PlayerController {
 				} catch (JSONException ex) {
 					ex.printStackTrace();
 				}
-				
-				
+
+
 				if(isTurn && (currentState == FIRST_ROUND_BETTING ||  currentState == SECOND_ROUND_BETTING)){
 					if(isBettingNow){
 						//don't want to open 2 betting windows
@@ -309,7 +307,7 @@ public class EuchrePlayerController implements PlayerController {
 					if(currentState == FIRST_ROUND_BETTING){
 						playerContext.startActivityForResult(selectBetIntent3, BET_FIRST_ROUND);
 					} else {
-						playerContext.startActivityForResult(selectBetIntent3, BET_SECOND_ROUND);							
+						playerContext.startActivityForResult(selectBetIntent3, BET_SECOND_ROUND);
 					}
 					isBettingNow = true;
 					break;
@@ -321,7 +319,7 @@ public class EuchrePlayerController implements PlayerController {
 				currentState = ROUND_OVER;
 				break;
 			case WINNER://TODO don't disconnect
-				
+
 				Intent winner = new Intent(playerContext, GameResultsActivity.class);
 				winner.putExtra(GameResultsActivity.IS_WINNER, true);
 				playerContext.startActivityForResult(winner, QUIT_GAME);
@@ -344,11 +342,11 @@ public class EuchrePlayerController implements PlayerController {
 			int betTrump 		= data.getIntExtra(TRUMP, cardLead.getSuit());
 			boolean betBet 		= data.getBooleanExtra(BET, false);
 			boolean betGoAlone 	= data.getBooleanExtra(GO_ALONE, false);
-			
+
 			EuchreBet bet = new EuchreBet(betTrump, betBet, betGoAlone);
 
 			connection.write(FIRST_ROUND_BETTING, bet.toString());
-			isBettingNow = false; 
+			isBettingNow = false;
 			setButtonsEnabled(false);
 			isTurn = false;
 		} else if (requestCode == BET_SECOND_ROUND) {
@@ -356,20 +354,20 @@ public class EuchrePlayerController implements PlayerController {
 			int betTrump 		= data.getIntExtra(TRUMP, cardLead.getSuit());
 			boolean betBet 		= data.getBooleanExtra(BET, false);
 			boolean betGoAlone 	= data.getBooleanExtra(GO_ALONE, false);
-			
+
 			EuchreBet bet = new EuchreBet(betTrump, betBet, betGoAlone);
-			
+
 			connection.write(SECOND_ROUND_BETTING, bet.toString());
 			isBettingNow = false;
 			setButtonsEnabled(false);
 			isTurn = false;
-			
+
 		} else if (requestCode == QUIT_GAME && requestCode == Activity.RESULT_CANCELED) {
 			setButtonsEnabled(false);
 			cardHand.removeAll(cardHand);
-			
+
 		}
-		
+
 	}
 
 	@Override
@@ -377,11 +375,11 @@ public class EuchrePlayerController implements PlayerController {
 		return new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if ( (isTurn && cardSelected != null) && 
-						( gameRules.checkCard(cardSelected, trumpSuit, cardLead.getSuit(), cardHand) 
-						|| currentState == PICK_IT_UP || currentState == PLAY_LEAD_CARD ) && cardHand.size() != 0) {
+				if ( (isTurn && cardSelected != null) &&
+						( gameRules.checkCard(cardSelected, trumpSuit, cardLead.getSuit(), cardHand)
+								|| currentState == PICK_IT_UP || currentState == PLAY_LEAD_CARD ) && cardHand.size() != 0) {
 					// play card or discard if it is pick_it_up mode
-					
+
 					connection.write(currentState, cardSelected);
 
 					playerContext.removeFromHand(cardSelected.getIdNum());
@@ -393,7 +391,7 @@ public class EuchrePlayerController implements PlayerController {
 					setButtonsEnabled(false);
 					isTurn = false;
 				}
-				
+
 			}
 		};
 	}
@@ -407,7 +405,7 @@ public class EuchrePlayerController implements PlayerController {
 	public OnClickListener getCardClickListener() {
 		return new CardSelectionClickListener();
 	}
-	
+
 	/**
 	 * Used to set the play and draw buttons to enable or disabled
 	 * Also if it is the player's turn then set the cards to be greyed
@@ -444,13 +442,13 @@ public class EuchrePlayerController implements PlayerController {
 	public void setPlayerName(String name) {
 		playerName = name;
 	}
-	
+
 	private void dealerDiscard(){
 		setButtonsEnabled(true);
 		play.setText(R.string.Discard);
 		isTurn = true;
 	}
-	
+
 	private void setCardLead(String object){
 		try {
 			JSONObject obj = new JSONObject(object);
@@ -462,7 +460,7 @@ public class EuchrePlayerController implements PlayerController {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * This will be used for each card ImageView and will allow the card to be
 	 * selected when it is Clicked

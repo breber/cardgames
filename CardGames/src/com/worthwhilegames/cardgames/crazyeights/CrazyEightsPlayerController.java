@@ -10,7 +10,7 @@ import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
 import static com.worthwhilegames.cardgames.shared.Constants.VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.WINNER;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,7 +65,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	/**
 	 * The cards of this player
 	 */
-	private ArrayList<Card> cardHand;
+	private List<Card> cardHand;
 
 	/**
 	 * An instance of the ShowCardsActivity that can be used to display cards
@@ -134,16 +134,14 @@ public class CrazyEightsPlayerController implements PlayerController {
 	 * This will initialize an instance of a CrazyEightsPlayerController
 	 * 
 	 * @param context This is an instance of the ShowCardsActivity
-	 * @param playGiven The Play button
-	 * @param drawGiven The Draw button
-	 * @param connectionGiven The connection client
 	 * @param cardHandGiven The list of cards that this player has
 	 */
-	public CrazyEightsPlayerController(Context context, Button playGiven,
-			Button drawGiven, ConnectionClient connectionGiven,	ArrayList<Card> cardHandGiven) {
+	public CrazyEightsPlayerController(Activity context, List<Card> cardHandGiven) {
 		playerContext = (ShowCardsActivity) context;
-		play = playGiven;
-		draw = drawGiven;
+		// Get the play and draw buttons so that the playerController can
+		// do stuff with them
+		play = (Button) context.findViewById(R.id.btPlayCard);
+		draw = (Button) context.findViewById(R.id.btDrawCard);
 		play.setOnClickListener(getPlayOnClickListener());
 		draw.setOnClickListener(getDrawOnClickListener());
 		setButtonsEnabled(false);
@@ -154,7 +152,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 
 		gameRules = new CrazyEightGameRules();
 		ct = new CrazyEightsCardTranslator();
-		connection = connectionGiven;
+		connection = ConnectionClient.getInstance(context);
 	}
 
 	/* (non-Javadoc)

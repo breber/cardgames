@@ -13,7 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -117,6 +117,11 @@ public class ShowCardsActivity extends Activity {
 		int screenHeight = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
 		cardHeight = screenHeight * 3 / 5;
 
+		// Initialize the buttons
+		ViewStub buttonLayout = (ViewStub) findViewById(R.id.playerHandButtonView);
+		buttonLayout.setLayoutResource(GameFactory.getPlayerButtonViewLayout(this));
+		buttonLayout.inflate();
+
 		// Create a new, empty hand
 		cardHand = new ArrayList<Card>();
 
@@ -130,13 +135,8 @@ public class ShowCardsActivity extends Activity {
 		// Set up the Layout for the cards
 		playerHandLayout = (LinearLayout) findViewById(R.id.playerCardContainer);
 
-		// Get the play and draw buttons so that the playerController can
-		// do stuff with them
-		Button play = (Button) findViewById(R.id.btPlayCard);
-		Button draw = (Button) findViewById(R.id.btDrawCard);
-
 		// Get the player controller instance
-		playerController = GameFactory.getPlayerControllerInstance(this, play, draw, connection, cardHand);
+		playerController = GameFactory.getPlayerControllerInstance(this, cardHand);
 
 		// Start the connection screen from here so that we can register the message receive
 		// broadcast receiver so that we don't miss any messages
@@ -191,7 +191,7 @@ public class ShowCardsActivity extends Activity {
 			// should be back at the main menu
 			this.unregisterReceiver();
 			setResult(RESULT_OK);
-			finish();			
+			finish();
 		} else if (requestCode == DISCONNECTED) {
 			// Whatever result we get from the disconnected activity,
 			// just finish this activity since they will need to reconnect anyways.

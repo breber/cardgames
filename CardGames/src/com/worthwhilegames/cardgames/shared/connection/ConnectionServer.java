@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,7 +43,7 @@ public class ConnectionServer extends ConnectionCommon {
 	/**
 	 * The context of this thread
 	 */
-	private static Context mContext;
+	private static Activity mContext;
 
 	/**
 	 * The Handler to handle all messages coming from the BluetoothConnectionService
@@ -82,7 +82,7 @@ public class ConnectionServer extends ConnectionCommon {
 	 * Create a new ConnectionServer
 	 * @param ctx
 	 */
-	protected ConnectionServer(Context ctx) {
+	protected ConnectionServer(Activity ctx) {
 		mContext = ctx;
 		services = new HashMap<String, ConnectionService>();
 		mAcceptThread = new AcceptThread(mContext, mHandler, services, this);
@@ -94,7 +94,7 @@ public class ConnectionServer extends ConnectionCommon {
 	 * @param ctx the Context of this BluetoothServer
 	 * @return the BluetoothServer
 	 */
-	public static ConnectionServer getInstance(Context ctx) {
+	public static ConnectionServer getInstance(Activity ctx) {
 		if (instance == null) {
 			instance = new ConnectionServer(ctx);
 		}

@@ -15,7 +15,6 @@ import java.util.Random;
 
 import android.util.Log;
 
-import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.CardGame;
 import com.worthwhilegames.cardgames.shared.Constants;

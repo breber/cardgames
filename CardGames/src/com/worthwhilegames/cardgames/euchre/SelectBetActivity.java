@@ -20,57 +20,59 @@ import android.widget.ImageView;
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.player.activities.SelectSuitActivity;
 import com.worthwhilegames.cardgames.shared.Button;
-import com.worthwhilegames.cardgames.shared.TextView;
 
 
 public class SelectBetActivity extends Activity {
-	
+
 	/**
 	 * intent code for choosing suit
 	 */
 	private static final int CHOOSE_SUIT = Math.abs("CHOOSE_SUIT".hashCode());
-	
+
 	/**
-	 * This intent will be set to the result of this activity bet object will 
+	 * This intent will be set to the result of this activity bet object will
 	 * be returned
 	 */
 	private Intent returnIntent = new Intent();
-	
+
 	/**
 	 * the trump suit
 	 */
 	private int trump;
-	
+
 	/**
 	 * the round of betting
 	 */
 	private int round;
-	
+
 	/**
 	 * The trump suit button
 	 */
-	ImageView trumpSuit;
-	
-	
+	private ImageView trumpSuit;
+
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.placebet);
-		
+		// TODO: fix this! All the functionality in this Activity
+		//       should be moved to the EuchrePlayerController since
+		//       these buttons are now displayed on the ShowCardsActivity
+		setContentView(R.layout.euchrebuttons);
+
 		trumpSuit = (ImageView) findViewById(R.id.betTrumpSuit);
-		TextView title = (TextView) findViewById(R.id.betTitle);
+		//		TextView title = (TextView) findViewById(R.id.betTitle);
 		round = getIntent().getIntExtra(BET_ROUND, FIRST_ROUND_BETTING);
 		if( round == FIRST_ROUND_BETTING ){
 			trump = getIntent().getIntExtra(TRUMP, SUIT_SPADES);
 			trumpSuit.setEnabled(false);
-			title.setText(R.string.bet_round_one_title);
+			//			title.setText(R.string.bet_round_one_title);
 		} else {
 			trump = -1;
 			trumpSuit.setEnabled(true);
-			title.setText(R.string.bet_round_two_title);
+			//			title.setText(R.string.bet_round_two_title);
 		}
 		updateTrumpSuit();
 
@@ -145,7 +147,7 @@ public class SelectBetActivity extends Activity {
 				} else {
 					v.setEnabled(false);
 					Intent selectSuit = new Intent(SelectBetActivity.this, SelectSuitActivity.class);
-					SelectBetActivity.this.startActivityForResult(selectSuit, CHOOSE_SUIT);					
+					SelectBetActivity.this.startActivityForResult(selectSuit, CHOOSE_SUIT);
 					v.setEnabled(true);
 				}
 			}
@@ -165,19 +167,19 @@ public class SelectBetActivity extends Activity {
 		SelectBetActivity.this.setResult(RESULT_OK, returnIntent);
 		SelectBetActivity.this.finish();
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CHOOSE_SUIT) {
 			trump = resultCode;
 			updateTrumpSuit();
-		}	
-		
+		}
+
 	}
-	
+
 	private void updateTrumpSuit(){
 		switch(trump){
-		
+
 		case SUIT_CLUBS:
 			trumpSuit.setBackgroundResource(R.drawable.clubsuitimage);
 			break;
@@ -196,8 +198,8 @@ public class SelectBetActivity extends Activity {
 			trumpSuit.setBackgroundResource(R.drawable.spadesuitimage);
 			break;
 		}
-			
+
 	}
-	
-	
+
+
 }
