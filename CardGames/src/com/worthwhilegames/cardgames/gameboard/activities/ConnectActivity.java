@@ -17,8 +17,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.Constants;
@@ -50,7 +50,7 @@ public class ConnectActivity extends Activity {
 	 * An array of ImageViews. These are the "tablet" images that light up when a player
 	 * has connected and is waiting for the game to begin.
 	 */
-	private ImageView[] playerImageViews = new ImageView[4];
+	private View[] playerImageViews = new View[4];
 
 	/**
 	 * An array of TextViews.  These are the labels inside the ImageViews that will have
@@ -206,10 +206,10 @@ public class ConnectActivity extends Activity {
 
 		// Get the ImageView and TextView references so that we can display different
 		// states for connected/disconnected devices
-		playerImageViews[0] = (ImageView) findViewById(R.id.connectDeviceP1);
-		playerImageViews[1] = (ImageView) findViewById(R.id.connectDeviceP2);
-		playerImageViews[2] = (ImageView) findViewById(R.id.connectDeviceP3);
-		playerImageViews[3] = (ImageView) findViewById(R.id.connectDeviceP4);
+		playerImageViews[0] = findViewById(R.id.connectDeviceP1);
+		playerImageViews[1] = findViewById(R.id.connectDeviceP2);
+		playerImageViews[2] = findViewById(R.id.connectDeviceP3);
+		playerImageViews[3] = findViewById(R.id.connectDeviceP4);
 
 		playerTextViews[0] = (TextView) findViewById(R.id.connectDeviceP1TextView);
 		playerTextViews[1] = (TextView) findViewById(R.id.connectDeviceP2TextView);
@@ -220,6 +220,23 @@ public class ConnectActivity extends Activity {
 		playerProgressBars[1] = (ProgressBar) findViewById(R.id.connectDeviceP2ProgressBar);
 		playerProgressBars[2] = (ProgressBar) findViewById(R.id.connectDeviceP3ProgressBar);
 		playerProgressBars[3] = (ProgressBar) findViewById(R.id.connectDeviceP4ProgressBar);
+
+
+		// Update ImageView sizes
+		int screenHeight = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
+		int screenWidth = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
+		int deviceHeight = screenHeight / 3 - 10;
+		int deviceWidth = screenWidth / 4;
+
+		View connectingDevice = findViewById(R.id.connectDeviceTablet);
+		connectingDevice.setLayoutParams(new RelativeLayout.LayoutParams(deviceWidth, deviceHeight));
+		connectingDevice.setEnabled(true);
+
+		for (View v : playerImageViews) {
+			v.setLayoutParams(new RelativeLayout.LayoutParams(deviceWidth, deviceHeight));
+			v.setEnabled(false);
+		}
+
 
 		mConnectionServer = ConnectionServer.getInstance(this);
 		mGame = GameFactory.getGameInstance(this);
@@ -370,14 +387,14 @@ public class ConnectActivity extends Activity {
 		for (Player p : mGame.getPlayers()) {
 			if (p.hasName()) {
 				playerTextViews[i].setText(p.getName());
-				playerImageViews[i].setImageResource(R.drawable.on_device);
+				playerImageViews[i].setEnabled(true);
 				playerTextViews[i].setVisibility(View.VISIBLE);
 				playerProgressBars[i].setVisibility(View.INVISIBLE);
 			} else {
 				if (p.isDisconnected()) {
-					playerImageViews[i].setImageResource(R.drawable.off_device);
+					playerImageViews[i].setEnabled(false);
 				} else {
-					playerImageViews[i].setImageResource(R.drawable.on_device);
+					playerImageViews[i].setEnabled(true);
 				}
 				playerTextViews[i].setVisibility(View.INVISIBLE);
 				playerProgressBars[i].setVisibility(View.VISIBLE);
@@ -388,7 +405,7 @@ public class ConnectActivity extends Activity {
 
 		// For the rest of the devices, set them to off
 		while (i < 4) {
-			playerImageViews[i].setImageResource(R.drawable.off_device);
+			playerImageViews[i].setEnabled(false);
 			playerTextViews[i].setVisibility(View.INVISIBLE);
 			playerProgressBars[i].setVisibility(View.INVISIBLE);
 

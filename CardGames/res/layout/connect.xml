@@ -26,12 +26,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
 
-                <ImageView
-                    android:id="@+id/connectDeviceP3"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:src="@drawable/off_device" />
+                    android:background="@drawable/device"
+                    android:padding="15dip" >
+
+                    <View
+                        android:id="@+id/connectDeviceP3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/deviceinner" />
+                </RelativeLayout>
 
                 <ProgressBar
                     android:id="@+id/connectDeviceP3ProgressBar"
@@ -64,12 +70,20 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".33" >
 
-                <ImageView
-                    android:id="@+id/connectDeviceP4"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:src="@drawable/off_device" />
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/device"
+                    android:padding="15dip" >
+
+                    <View
+                        android:id="@+id/connectDeviceP4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/deviceinner" >
+                    </View>
+                </RelativeLayout>
 
                 <ProgressBar
                     android:id="@+id/connectDeviceP4ProgressBar"
@@ -93,12 +107,19 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".33" >
 
-                <ImageView
-                    android:id="@+id/connectDeviceTablet"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:src="@drawable/on_device" />
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/device"
+                    android:padding="15dip" >
+
+                    <View
+                        android:id="@+id/connectDeviceTablet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/deviceinner" />
+                </RelativeLayout>
 
                 <com.worthwhilegames.cardgames.shared.TextView
                     style="@style/ConnectPlayerFont"
@@ -113,12 +134,19 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".33" >
 
-                <ImageView
-                    android:id="@+id/connectDeviceP2"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:src="@drawable/off_device" />
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/device"
+                    android:padding="15dip" >
+
+                    <View
+                        android:id="@+id/connectDeviceP2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/deviceinner" />
+                </RelativeLayout>
 
                 <ProgressBar
                     android:id="@+id/connectDeviceP2ProgressBar"
@@ -150,12 +178,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
 
-                <ImageView
-                    android:id="@+id/connectDeviceP1"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:src="@drawable/off_device" />
+                    android:background="@drawable/device"
+                    android:padding="15dip" >
+
+                    <View
+                        android:id="@+id/connectDeviceP1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/deviceinner" />
+                </RelativeLayout>
 
                 <ProgressBar
                     android:id="@+id/connectDeviceP1ProgressBar"
