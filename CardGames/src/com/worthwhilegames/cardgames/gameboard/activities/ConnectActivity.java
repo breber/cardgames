@@ -50,7 +50,7 @@ public class ConnectActivity extends Activity {
 	 * An array of ImageViews. These are the "tablet" images that light up when a player
 	 * has connected and is waiting for the game to begin.
 	 */
-	private View[] playerImageViews = new View[4];
+	private RelativeLayout[] playerImageViews = new RelativeLayout[4];
 
 	/**
 	 * An array of TextViews.  These are the labels inside the ImageViews that will have
@@ -206,10 +206,10 @@ public class ConnectActivity extends Activity {
 
 		// Get the ImageView and TextView references so that we can display different
 		// states for connected/disconnected devices
-		playerImageViews[0] = findViewById(R.id.connectDeviceP1);
-		playerImageViews[1] = findViewById(R.id.connectDeviceP2);
-		playerImageViews[2] = findViewById(R.id.connectDeviceP3);
-		playerImageViews[3] = findViewById(R.id.connectDeviceP4);
+		playerImageViews[0] = (RelativeLayout) findViewById(R.id.connectDeviceP1);
+		playerImageViews[1] = (RelativeLayout) findViewById(R.id.connectDeviceP2);
+		playerImageViews[2] = (RelativeLayout) findViewById(R.id.connectDeviceP3);
+		playerImageViews[3] = (RelativeLayout) findViewById(R.id.connectDeviceP4);
 
 		playerTextViews[0] = (TextView) findViewById(R.id.connectDeviceP1TextView);
 		playerTextViews[1] = (TextView) findViewById(R.id.connectDeviceP2TextView);
@@ -228,11 +228,15 @@ public class ConnectActivity extends Activity {
 		int deviceHeight = screenHeight / 3 - 10;
 		int deviceWidth = screenWidth / 4;
 
-		View connectingDevice = findViewById(R.id.connectDeviceTablet);
+		RelativeLayout connectingDevice = (RelativeLayout) findViewById(R.id.connectDeviceTablet);
 		connectingDevice.setLayoutParams(new RelativeLayout.LayoutParams(deviceWidth, deviceHeight));
 		connectingDevice.setEnabled(true);
 
-		for (View v : playerImageViews) {
+		// Update the device name size
+		TextView tv = (TextView) findViewById(R.id.myName);
+		tv.setMaxHeight(deviceHeight);
+
+		for (RelativeLayout v : playerImageViews) {
 			v.setLayoutParams(new RelativeLayout.LayoutParams(deviceWidth, deviceHeight));
 			v.setEnabled(false);
 		}
