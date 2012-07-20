@@ -684,6 +684,7 @@ public class EuchreGameController implements GameController{
 				//set card lead
 				game.setCardLead(cardSelected);
 			}
+			mySM.playCardSound();
 			game.discard(players.get(whoseTurn), cardSelected);
 			advanceTurn();
 		} else {

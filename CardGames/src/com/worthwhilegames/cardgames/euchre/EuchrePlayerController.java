@@ -1,9 +1,6 @@
 package com.worthwhilegames.cardgames.euchre;
 
-import static com.worthwhilegames.cardgames.euchre.EuchreConstants.BET;
-import static com.worthwhilegames.cardgames.euchre.EuchreConstants.BET_ROUND;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.FIRST_ROUND_BETTING;
-import static com.worthwhilegames.cardgames.euchre.EuchreConstants.GO_ALONE;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PICK_IT_UP;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PLAY_LEAD_CARD;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ROUND_OVER;
@@ -17,6 +14,10 @@ import static com.worthwhilegames.cardgames.shared.Constants.PLAY_CARD;
 import static com.worthwhilegames.cardgames.shared.Constants.REFRESH;
 import static com.worthwhilegames.cardgames.shared.Constants.SETUP;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
 import static com.worthwhilegames.cardgames.shared.Constants.VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.WINNER;
 
@@ -39,6 +40,7 @@ import android.widget.LinearLayout;
 
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.player.activities.GameResultsActivity;
+import com.worthwhilegames.cardgames.player.activities.SelectSuitActivity;
 import com.worthwhilegames.cardgames.player.activities.ShowCardsActivity;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.CardTranslator;
@@ -58,20 +60,15 @@ public class EuchrePlayerController implements PlayerController {
 	private static final String TAG = EuchreGameController.class.getName();
 
 	/**
+	 * intent code for choosing suit
+	 */
+	private static final int CHOOSE_SUIT = Math.abs("CHOOSE_SUIT".hashCode());
+
+	/**
 	 * The request code to keep track of the "Are you sure you want to quit"
 	 * activity
 	 */
 	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
-
-	/**
-	 * intent code for betting in first round
-	 */
-	private static final int BET_FIRST_ROUND = Math.abs("BET_FIRST_ROUND".hashCode());
-
-	/**
-	 * intent code for betting in second round
-	 */
-	private static final int BET_SECOND_ROUND = Math.abs("BET_SECOND_ROUND".hashCode());
 
 	/**
 	 * The cards of this player
@@ -96,14 +93,24 @@ public class EuchrePlayerController implements PlayerController {
 	private EuchreGameRules gameRules;
 
 	/**
-	 * The play button on the layout
+	 * The play button on the layout also the pass and discard button
 	 */
 	private Button play;
 
 	/**
-	 * The draw button on the layout
+	 * The Bet button on the layout
 	 */
-	private Button draw;
+	private Button bet;
+
+	/**
+	 * The Go Alone button on the layout
+	 */
+	private Button goAlone;
+
+	/**
+	 * The choose suit imageview that is used as a button
+	 */
+	private ImageView chooseSuit;
 
 	/**
 	 * This is true if it is the players turn
@@ -159,10 +166,14 @@ public class EuchrePlayerController implements PlayerController {
 	public EuchrePlayerController(Activity context, List<Card> cardHandGiven) {
 		playerContext = (ShowCardsActivity) context;
 		play = (Button) context.findViewById(R.id.passOption);
-		draw = (Button) context.findViewById(R.id.betOption);
+		bet = (Button) context.findViewById(R.id.betOption);
+		goAlone = (Button) context.findViewById(R.id.goAloneOption);
+		chooseSuit = (ImageView) context.findViewById(R.id.betTrumpSuit);
 
 		play.setOnClickListener(getPlayOnClickListener());
-		draw.setOnClickListener(getDrawOnClickListener());
+		bet.setOnClickListener(getBetOnClickListener());
+		goAlone.setOnClickListener(getGoAloneOnClickListener());
+		chooseSuit.setOnClickListener(getChooseSuitOnClickListener());
 		setButtonsEnabled(false);
 		mySM = SoundManager.getInstance(context);
 		cardHand = cardHandGiven;
@@ -209,31 +220,23 @@ public class EuchrePlayerController implements PlayerController {
 				setButtonsEnabled(false);
 				isTurn = false;
 				break;
-			case FIRST_ROUND_BETTING:
-				mySM.sayBet(playerName);
-				isTurn = true;
-				this.setCardLead(object);
-				currentState = FIRST_ROUND_BETTING;
-
-				//start select bet activity for round 1
-				isBettingNow = true;
-				Intent selectBetIntent1 = new Intent(playerContext, SelectBetActivity.class);
-				selectBetIntent1.putExtra(TRUMP, cardLead.getSuit());
-				selectBetIntent1.putExtra(BET_ROUND, FIRST_ROUND_BETTING);
-				playerContext.startActivityForResult(selectBetIntent1, BET_FIRST_ROUND);
-				break;
+			case FIRST_ROUND_BETTING: /* purposely have both here */
 			case SECOND_ROUND_BETTING:
 				mySM.sayBet(playerName);
 				isTurn = true;
 				this.setCardLead(object);
-				currentState = SECOND_ROUND_BETTING;
+				currentState = messageType;
+				if(currentState == SECOND_ROUND_BETTING){
+					trumpSuit = -1;
+				} else {
+					trumpSuit = cardLead.getSuit();
+				}
 
+				//start select bet activity for round 1
 				// start select bet activity to let the player bet
 				isBettingNow = true;
-				Intent selectBetIntent2 = new Intent(playerContext, SelectBetActivity.class);
-				selectBetIntent2.putExtra(TRUMP, cardLead.getSuit());
-				selectBetIntent2.putExtra(BET_ROUND, SECOND_ROUND_BETTING);
-				playerContext.startActivityForResult(selectBetIntent2, BET_SECOND_ROUND);
+				bettingView();
+				setButtonsEnabled(true);
 				break;
 			case PLAY_LEAD_CARD:
 				mySM.sayTurn(playerName);
@@ -253,7 +256,7 @@ public class EuchrePlayerController implements PlayerController {
 				} catch (JSONException ex) {
 					ex.printStackTrace();
 				}
-				dealerDiscard();
+				dealerDiscardView();
 				break;
 
 			case IS_TURN:
@@ -301,14 +304,8 @@ public class EuchrePlayerController implements PlayerController {
 						//don't want to open 2 betting windows
 						break;
 					}
-					Intent selectBetIntent3 = new Intent(playerContext, SelectBetActivity.class);
-					selectBetIntent3.putExtra(TRUMP, cardLead.getSuit());
-					selectBetIntent3.putExtra(BET_ROUND, SECOND_ROUND_BETTING);
-					if(currentState == FIRST_ROUND_BETTING){
-						playerContext.startActivityForResult(selectBetIntent3, BET_FIRST_ROUND);
-					} else {
-						playerContext.startActivityForResult(selectBetIntent3, BET_SECOND_ROUND);
-					}
+					bettingView();
+					setButtonsEnabled(true);
 					isBettingNow = true;
 					break;
 				}
@@ -337,37 +334,13 @@ public class EuchrePlayerController implements PlayerController {
 	@Override
 	public void handleActivityResult(int requestCode, int resultCode,
 			Intent data) {
-		if (requestCode == BET_FIRST_ROUND) {
-			//get bet from intent
-			int betTrump 		= data.getIntExtra(TRUMP, cardLead.getSuit());
-			boolean betBet 		= data.getBooleanExtra(BET, false);
-			boolean betGoAlone 	= data.getBooleanExtra(GO_ALONE, false);
-
-			EuchreBet bet = new EuchreBet(betTrump, betBet, betGoAlone);
-
-			connection.write(FIRST_ROUND_BETTING, bet.toString());
-			isBettingNow = false;
-			setButtonsEnabled(false);
-			isTurn = false;
-		} else if (requestCode == BET_SECOND_ROUND) {
-			//get bet from intent
-			int betTrump 		= data.getIntExtra(TRUMP, cardLead.getSuit());
-			boolean betBet 		= data.getBooleanExtra(BET, false);
-			boolean betGoAlone 	= data.getBooleanExtra(GO_ALONE, false);
-
-			EuchreBet bet = new EuchreBet(betTrump, betBet, betGoAlone);
-
-			connection.write(SECOND_ROUND_BETTING, bet.toString());
-			isBettingNow = false;
-			setButtonsEnabled(false);
-			isTurn = false;
-
+		if (requestCode == CHOOSE_SUIT) {
+			trumpSuit = resultCode;
+			updateTrumpSuit();
 		} else if (requestCode == QUIT_GAME && requestCode == Activity.RESULT_CANCELED) {
 			setButtonsEnabled(false);
 			cardHand.removeAll(cardHand);
-
 		}
-
 	}
 
 	@Override
@@ -387,11 +360,100 @@ public class EuchrePlayerController implements PlayerController {
 					cardSelected = null;
 					if( currentState == PICK_IT_UP ){
 						play.setText(R.string.Play);
+						playingView();
 					}
+
+					setButtonsEnabled(false);
+					isTurn = false;
+				} else if (currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING){
+					EuchreBet bet = new EuchreBet(trumpSuit, false, false);
+
+					connection.write(currentState, bet.toString());
+
+					isBettingNow = false;
+
+					playingView();
 					setButtonsEnabled(false);
 					isTurn = false;
 				}
 
+			}
+		};
+	}
+
+
+	public OnClickListener getBetOnClickListener() {
+		return new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if( currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING ) {
+					if(currentState == SECOND_ROUND_BETTING &&  trumpSuit == cardLead.getSuit() ){
+						trumpSuit = -1;
+						updateTrumpSuit();
+						//TODO tell player they can't choose the suit that was offered to bet on in the first round
+					}
+					if(trumpSuit == -1){
+						ScaleAnimation scale = new ScaleAnimation((float) 1.1, (float) 1.1,	(float) 1.2, (float) 1.2);
+						scale.scaleCurrentDuration(5);
+						chooseSuit.startAnimation(scale);
+						return;
+					}
+					EuchreBet bet = new EuchreBet(trumpSuit, true, false);
+
+					connection.write(currentState, bet.toString());
+
+					isBettingNow = false;
+
+					playingView();
+					setButtonsEnabled(false);
+					isTurn = false;
+				}
+			}
+		};
+	}
+
+	public OnClickListener getGoAloneOnClickListener() {
+		return new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if( currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING ) {
+					if(currentState == SECOND_ROUND_BETTING &&  trumpSuit == cardLead.getSuit() ){
+						trumpSuit = -1;
+						updateTrumpSuit();
+						//TODO tell player they can't choose the suit that was offered to bet on in the first round
+					}
+					if(trumpSuit == -1){
+						ScaleAnimation scale = new ScaleAnimation((float) 1.1, (float) 1.1,	(float) 1.2, (float) 1.2);
+						scale.scaleCurrentDuration(5);
+						chooseSuit.startAnimation(scale);
+						return;
+					}
+					EuchreBet bet = new EuchreBet(trumpSuit, true, true);
+
+					connection.write(currentState, bet.toString());
+
+					isBettingNow = false;
+
+					playingView();
+					setButtonsEnabled(false);
+					isTurn = false;
+				}
+			}
+		};
+	}
+
+	public OnClickListener getChooseSuitOnClickListener() {
+		return new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if( currentState == FIRST_ROUND_BETTING ){
+					//do nothing
+				} else if ( currentState == SECOND_ROUND_BETTING){
+					v.setEnabled(false);
+					Intent selectSuit = new Intent(playerContext, SelectSuitActivity.class);
+					playerContext.startActivityForResult(selectSuit, CHOOSE_SUIT);
+					v.setEnabled(true);
+				}
 			}
 		};
 	}
@@ -416,7 +478,9 @@ public class EuchrePlayerController implements PlayerController {
 	 */
 	private void setButtonsEnabled(boolean isEnabled) {
 		play.setEnabled(isEnabled);
-		if (isEnabled) {
+		bet.setEnabled(isEnabled);
+		goAlone.setEnabled(isEnabled);
+		if (isEnabled && currentState == PLAY_CARD) {
 			// it is your turn grey out cards
 			for (Card c : cardHand) {
 				boolean isPlayable = gameRules.checkCard(c, trumpSuit, cardLead.getSuit(), cardHand) ;
@@ -443,12 +507,51 @@ public class EuchrePlayerController implements PlayerController {
 		playerName = name;
 	}
 
-	private void dealerDiscard(){
-		setButtonsEnabled(true);
+	private void dealerDiscardView(){
 		play.setText(R.string.Discard);
+		play.setVisibility(View.VISIBLE);
+		play.setEnabled(true);
+		bet.setVisibility(View.INVISIBLE);
+		bet.setEnabled(false);
+		goAlone.setVisibility(View.INVISIBLE);
+		goAlone.setEnabled(false);
+		chooseSuit.setVisibility(View.INVISIBLE);
+		chooseSuit.setEnabled(false);
 		isTurn = true;
 	}
 
+	private void bettingView(){
+		play.setText(R.string.pass_option);
+		play.setVisibility(View.VISIBLE);
+		play.setEnabled(true);
+		bet.setVisibility(View.VISIBLE);
+		bet.setEnabled(true);
+		goAlone.setVisibility(View.VISIBLE);
+		goAlone.setEnabled(true);
+		chooseSuit.setVisibility(View.VISIBLE);
+		chooseSuit.setEnabled(currentState == SECOND_ROUND_BETTING);
+		updateTrumpSuit();
+		isTurn = true;
+	}
+
+	private void playingView(){
+		play.setText(R.string.Play);
+		play.setVisibility(View.VISIBLE);
+		play.setEnabled(true);
+		bet.setVisibility(View.INVISIBLE);
+		bet.setEnabled(false);
+		goAlone.setVisibility(View.INVISIBLE);
+		goAlone.setEnabled(false);
+		chooseSuit.setVisibility(View.INVISIBLE);
+		chooseSuit.setEnabled(false);
+
+		isTurn = true;
+	}
+
+	/**
+	 * takes the JSON object and sets that as the CardLead for the round
+	 * @param object the card lead
+	 */
 	private void setCardLead(String object){
 		try {
 			JSONObject obj = new JSONObject(object);
@@ -458,6 +561,32 @@ public class EuchrePlayerController implements PlayerController {
 			cardLead = new Card(suit, value, ct.getResourceForCardWithId(id), id);
 		} catch (JSONException ex) {
 			ex.printStackTrace();
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void updateTrumpSuit(){
+		switch(trumpSuit){
+
+		case SUIT_CLUBS:
+			chooseSuit.setBackgroundResource(R.drawable.clubsuitimage);
+			break;
+		case SUIT_DIAMONDS:
+			chooseSuit.setBackgroundResource(R.drawable.diamondsuitimage);
+			break;
+		case SUIT_HEARTS:
+			chooseSuit.setBackgroundResource(R.drawable.heartsuitimage);
+			break;
+		case SUIT_SPADES:
+			chooseSuit.setBackgroundResource(R.drawable.spadesuitimage);
+			break;
+		case (-1):
+		default:
+			//TODO set this to  ? image
+			chooseSuit.setBackgroundResource(R.drawable.spadesuitimage);
+			break;
 		}
 	}
 

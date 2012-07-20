@@ -198,7 +198,6 @@ public class SelectBetActivity extends Activity {
 			trumpSuit.setBackgroundResource(R.drawable.spadesuitimage);
 			break;
 		}
-
 	}
 
 

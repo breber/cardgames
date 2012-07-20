@@ -308,7 +308,6 @@ public class EuchreTabletGame implements Game{
 
 
 	@Override
-
 	public Card getDiscardPileTop() {
 		//no discard pile
 		return cardLead;

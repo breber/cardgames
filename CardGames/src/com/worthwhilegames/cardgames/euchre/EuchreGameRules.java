@@ -27,7 +27,7 @@ public class EuchreGameRules implements Rules{
 	@Override
 	public boolean checkCard(Card cardPlayed, int trump, int suitLed, List<Card> cards) {
 
-		
+		//TODO what if a left bower is played!!! it don't work.
 		adjustJacks(cards, trump);
 
 		boolean canFollowSuit = false;
