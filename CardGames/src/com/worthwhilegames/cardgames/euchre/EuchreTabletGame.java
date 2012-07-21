@@ -1,6 +1,10 @@
 package com.worthwhilegames.cardgames.euchre;
 
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ADJUSTED_ACE_VALUE;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ADJUSTED_L_VALUE;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ADJUSTED_R_VALUE;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.EUCHRE_SCORE_LIMIT;
+import static com.worthwhilegames.cardgames.shared.Constants.ACE_VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.JACK_VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
@@ -432,42 +436,42 @@ public class EuchreTabletGame implements Game{
 		case SUIT_CLUBS:
 			if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_SPADES){
 				card.setSuit(SUIT_CLUBS);
-				card.setValue(15);
+				card.setValue(ADJUSTED_L_VALUE);
 			}else if(card.getValue() == JACK_VALUE&& card.getSuit() == SUIT_CLUBS){
-				card.setValue(16);
+				card.setValue(ADJUSTED_R_VALUE);
 			}
 			break;
 
 		case SUIT_DIAMONDS:
 			if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_HEARTS){
 				card.setSuit(SUIT_DIAMONDS);
-				card.setValue(15);
+				card.setValue(ADJUSTED_L_VALUE);
 			}else if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_DIAMONDS){
-				card.setValue(16);
+				card.setValue(ADJUSTED_R_VALUE);
 			}
 			break;
 
 		case SUIT_HEARTS:
 			if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_DIAMONDS){
 				card.setSuit(SUIT_HEARTS);
-				card.setValue(15);
+				card.setValue(ADJUSTED_L_VALUE);
 			}else if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_HEARTS){
-				card.setValue(16);
+				card.setValue(ADJUSTED_R_VALUE);
 			}
 			break;
 
 		case SUIT_SPADES:
 			if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_CLUBS){
 				card.setSuit(SUIT_SPADES);
-				card.setValue(15);
+				card.setValue(ADJUSTED_L_VALUE);
 			}else if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_SPADES){
-				card.setValue(16);
+				card.setValue(ADJUSTED_R_VALUE);
 			}
 			break;
 		}
 
-		if(card.getValue() == 0){
-			card.setValue(14);
+		if(card.getValue() == ACE_VALUE){
+			card.setValue(ADJUSTED_ACE_VALUE);
 		}
 
 	}

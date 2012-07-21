@@ -8,6 +8,12 @@ import org.junit.Test;
 import com.worthwhilegames.cardgames.crazyeights.CrazyEightGameRules;
 import com.worthwhilegames.cardgames.shared.Card;
 
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_JOKER;
+
 /**
  * This class will test the rules of the crazy eights game
  */
@@ -30,8 +36,8 @@ public class CrazyEightsRulesTest {
 	 */
 	@Test
 	public void testValidDiscardSameSuit(){
-		discardTop = new Card(0, 10, 12, 0);
-		toDiscard = new Card(0, 15, 15, 9);
+		discardTop = new Card(SUIT_CLUBS, 10, 12, 0);
+		toDiscard = new Card(SUIT_CLUBS, 15, 15, 9);
 
 		assertEquals("Testing same suit discard.", true, r.checkCard(toDiscard, discardTop));
 	}
@@ -41,8 +47,8 @@ public class CrazyEightsRulesTest {
 	 */
 	@Test
 	public void testValidDiscardSameSuit2(){
-		discardTop = new Card(1, 10, 12, 0);
-		toDiscard = new Card(1, 15, 15, 9);
+		discardTop = new Card(SUIT_DIAMONDS, 10, 12, 0);
+		toDiscard = new Card(SUIT_DIAMONDS, 15, 15, 9);
 
 		assertEquals("Testing same suit discard.", true, r.checkCard(toDiscard, discardTop));
 	}
@@ -52,8 +58,8 @@ public class CrazyEightsRulesTest {
 	 */
 	@Test
 	public void testValidDiscardSameSuit3(){
-		discardTop = new Card(2, 10, 12, 0);
-		toDiscard = new Card(2, 15, 15, 9);
+		discardTop = new Card(SUIT_HEARTS, 10, 12, 0);
+		toDiscard = new Card(SUIT_HEARTS, 15, 15, 9);
 
 		assertEquals("Testing same suit discard.", true, r.checkCard(toDiscard, discardTop));
 	}
@@ -63,8 +69,8 @@ public class CrazyEightsRulesTest {
 	 */
 	@Test
 	public void testValidDiscardSameSuit4(){
-		discardTop = new Card(3, 10, 12, 0);
-		toDiscard = new Card(4, 15, 15, 9);
+		discardTop = new Card(SUIT_SPADES, 10, 12, 0);
+		toDiscard = new Card(SUIT_JOKER, 15, 15, 9);
 
 		assertEquals("Testing same suit discard.", true, r.checkCard(toDiscard, discardTop));
 	}
@@ -74,8 +80,8 @@ public class CrazyEightsRulesTest {
 	 */
 	@Test
 	public void testInvalidDiscard(){
-		discardTop = new Card(0, 10, 12, 0);
-		toDiscard = new Card(1, 15, 15, 9);
+		discardTop = new Card(SUIT_CLUBS, 10, 12, 0);
+		toDiscard = new Card(SUIT_DIAMONDS, 15, 15, 9);
 
 		assertEquals("Testing indiscard.", false, r.checkCard(toDiscard, discardTop));
 	}
@@ -85,8 +91,8 @@ public class CrazyEightsRulesTest {
 	 */
 	@Test
 	public void testValidDiscardSameNumber(){
-		discardTop = new Card(1, 15, 12, 0);
-		toDiscard = new Card(0, 15, 15, 9);
+		discardTop = new Card(SUIT_DIAMONDS, 15, 12, 0);
+		toDiscard = new Card(SUIT_CLUBS, 15, 15, 9);
 
 		assertEquals("Testing same value discard.", true, r.checkCard(toDiscard, discardTop));
 	}
@@ -96,8 +102,8 @@ public class CrazyEightsRulesTest {
 	 */
 	@Test
 	public void testValidDiscardSameNumber2(){
-		discardTop = new Card(1, 14, 12, 0);
-		toDiscard = new Card(0, 14, 15, 9);
+		discardTop = new Card(SUIT_DIAMONDS, 14, 12, 0);
+		toDiscard = new Card(SUIT_CLUBS, 14, 15, 9);
 
 		assertEquals("Testing same value discard.", true, r.checkCard(toDiscard, discardTop));
 	}
@@ -107,8 +113,8 @@ public class CrazyEightsRulesTest {
 	 */
 	@Test
 	public void testValidDiscardSameNumber3(){
-		discardTop = new Card(1, 0, 12, 0);
-		toDiscard = new Card(0, 0, 15, 9);
+		discardTop = new Card(SUIT_DIAMONDS, 0, 12, 0);
+		toDiscard = new Card(SUIT_CLUBS, 0, 15, 9);
 
 		assertEquals("Testing same value discard.", true, r.checkCard(toDiscard, discardTop));
 	}
@@ -118,8 +124,8 @@ public class CrazyEightsRulesTest {
 	 */
 	@Test
 	public void testValidDiscardJoker(){
-		discardTop = new Card(0, 0, 12, 0);
-		toDiscard = new Card(4, 0, 15, 9);
+		discardTop = new Card(SUIT_CLUBS, 0, 12, 0);
+		toDiscard = new Card(SUIT_JOKER, 0, 15, 9);
 
 		assertEquals("Testing joker discard.", true, r.checkCard(toDiscard, discardTop));
 	}
@@ -129,8 +135,8 @@ public class CrazyEightsRulesTest {
 	 */
 	@Test
 	public void testValidDiscardJoker2(){
-		discardTop = new Card(4, 0, 12, 0);
-		toDiscard = new Card(0, 0, 15, 9);
+		discardTop = new Card(SUIT_JOKER, 0, 12, 0);
+		toDiscard = new Card(SUIT_CLUBS, 0, 15, 9);
 
 		assertEquals("Testing joker discard.", true, r.checkCard(toDiscard, discardTop));
 	}
@@ -140,8 +146,8 @@ public class CrazyEightsRulesTest {
 	 */
 	@Test
 	public void testValidDiscardEight(){
-		discardTop = new Card(1, 0, 12, 0);
-		toDiscard = new Card(0, 7, 15, 9);
+		discardTop = new Card(SUIT_DIAMONDS, 0, 12, 0);
+		toDiscard = new Card(SUIT_CLUBS, 7, 15, 9);
 
 		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
 	}
@@ -151,8 +157,8 @@ public class CrazyEightsRulesTest {
 	 */
 	@Test
 	public void testValidDiscardEight2(){
-		discardTop = new Card(1, 0, 12, 0);
-		toDiscard = new Card(0, 7, 15, 9);
+		discardTop = new Card(SUIT_DIAMONDS, 0, 12, 0);
+		toDiscard = new Card(SUIT_CLUBS, 7, 15, 9);
 
 		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
 	}
@@ -162,8 +168,8 @@ public class CrazyEightsRulesTest {
 	 */
 	@Test
 	public void testValidDiscardEight3(){
-		discardTop = new Card(1, 0, 12, 0);
-		toDiscard = new Card(2, 7, 15, 9);
+		discardTop = new Card(SUIT_DIAMONDS, 0, 12, 0);
+		toDiscard = new Card(SUIT_HEARTS, 7, 15, 9);
 
 		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
 	}
@@ -173,8 +179,8 @@ public class CrazyEightsRulesTest {
 	 */
 	@Test
 	public void testValidDiscardEight4(){
-		discardTop = new Card(1, 0, 12, 0);
-		toDiscard = new Card(3, 7, 15, 9);
+		discardTop = new Card(SUIT_DIAMONDS, 0, 12, 0);
+		toDiscard = new Card(SUIT_SPADES, 7, 15, 9);
 
 		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
 	}
@@ -185,7 +191,7 @@ public class CrazyEightsRulesTest {
 	@Test
 	public void testCardNull(){
 		discardTop = null;
-		toDiscard = new Card(0, 0, 15, 9);
+		toDiscard = new Card(SUIT_CLUBS, 0, 15, 9);
 
 		assertEquals("Testing null card.", false, r.checkCard(toDiscard, discardTop));
 	}
@@ -195,7 +201,7 @@ public class CrazyEightsRulesTest {
 	 */
 	@Test
 	public void testDiscardPileNull(){
-		discardTop = new Card(1, 0, 12, 0);
+		discardTop = new Card(SUIT_DIAMONDS, 0, 12, 0);
 		toDiscard = null;
 
 		assertEquals("Testing discard pile null.", false, r.checkCard(toDiscard, discardTop));

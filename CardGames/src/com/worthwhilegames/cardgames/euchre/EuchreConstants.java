@@ -82,6 +82,21 @@ public class EuchreConstants {
 	 */
 	public static final int CHANGED_JACK_SUIT_LEFT = 99;
 
+	/**
+	 * A constant for the adjusted ace value
+	 */
+	public static final int ADJUSTED_ACE_VALUE = 14;
+
+	/**
+	 * A constant for the adjusted L Jack value
+	 */
+	public static final int ADJUSTED_L_VALUE = 15;
+
+	/**
+	 * A constant for the adjusted R Jack value
+	 */
+	public static final int ADJUSTED_R_VALUE = 16;
+
 
 	/**
 	 * These are some random terms
