@@ -56,12 +56,12 @@ public class CrazyEightsTabletGame implements Game {
 	/**
 	 * A list of all the cards in the shuffle deck
 	 */
-	private ArrayList<Card> shuffledDeck;
+	private List<Card> shuffledDeck;
 
 	/**
 	 * A list of all the cards in the discard pile
 	 */
-	private ArrayList<Card> discardPile;
+	private List<Card> discardPile;
 
 	/**
 	 * The maximum number of players to allow in the game
@@ -121,7 +121,7 @@ public class CrazyEightsTabletGame implements Game {
 	 * @see com.worthwhilegames.cardgames.shared.Game#getShuffledDeck()
 	 */
 	@Override
-	public ArrayList<Card> getShuffledDeck() {
+	public List<Card> getShuffledDeck() {
 		return shuffledDeck;
 	}
 
@@ -249,6 +249,15 @@ public class CrazyEightsTabletGame implements Game {
 				Log.d(TAG, "          player[" + p.getId() + "]: " + p);
 			}
 		}
+	}
+
+	/**
+	 * Get the discard pile
+	 * 
+	 * @return the discard pile
+	 */
+	public List<Card> getDiscardPile() {
+		return discardPile;
 	}
 
 	/* (non-Javadoc)

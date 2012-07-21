@@ -1,4 +1,4 @@
-package cs309.a1.crazyeights.test;
+package com.worthwhilegames.cardgames.crazyeights.test;
 
 import static org.junit.Assert.assertEquals;
 

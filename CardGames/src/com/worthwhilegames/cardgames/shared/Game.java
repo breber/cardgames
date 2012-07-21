@@ -1,6 +1,5 @@
 package com.worthwhilegames.cardgames.shared;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -89,7 +88,7 @@ public interface Game {
 	 * 
 	 * @return a list of Card objects representing the shuffled deck
 	 */
-	public ArrayList<Card> getShuffledDeck();
+	public List<Card> getShuffledDeck();
 
 	/**
 	 * set the default computer difficulty

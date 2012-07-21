@@ -1,8 +1,7 @@
-package cs309.a1.crazyeights.test;
+package com.worthwhilegames.cardgames.crazyeights.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,13 +9,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.worthwhilegames.cardgames.crazyeights.CrazyEightGameRules;
+import com.worthwhilegames.cardgames.crazyeights.C8Constants;
 import com.worthwhilegames.cardgames.crazyeights.CrazyEightsTabletGame;
 import com.worthwhilegames.cardgames.shared.Card;
-import com.worthwhilegames.cardgames.shared.CardGame;
-import com.worthwhilegames.cardgames.shared.Deck;
 import com.worthwhilegames.cardgames.shared.Player;
-import com.worthwhilegames.cardgames.shared.Rules;
 
 /**
  * This class will test the game logic behind the crazy eights game
@@ -24,9 +20,6 @@ import com.worthwhilegames.cardgames.shared.Rules;
 public class CrazyEightsTabletGameTest {
 
 	private CrazyEightsTabletGame game;
-	private List<Player> players;
-	private Deck deck;
-	private Rules rules;
 	private Iterator<Card> iter;
 
 	/**
@@ -34,20 +27,13 @@ public class CrazyEightsTabletGameTest {
 	 */
 	@Before
 	public void setup(){
-		players = new ArrayList<Player>();
 		Player p1 = new Player();
 		Player p2 = new Player();
-		players.add(p1);
-		players.add(p2);
 
+		game = CrazyEightsTabletGame.getInstance();
 
-		deck = new Deck(CardGame.CRAZY_EIGHTS);
-
-		rules = new CrazyEightGameRules();
-
-		// TODO: add methods to set players deck and rules
-		game = new CrazyEightsTabletGame(players, deck, rules);
-
+		game.addPlayer(p1);
+		game.addPlayer(p2);
 	}
 
 	/**
@@ -73,7 +59,7 @@ public class CrazyEightsTabletGameTest {
 	@Test
 	public void testNumberOfPlayersThree(){
 		Player player3 = new Player();
-		players.add(player3);
+		game.addPlayer(player3);
 		setupGame();
 		assertEquals("Testing number of players.", 3, game.getPlayers().size());
 	}
@@ -85,8 +71,8 @@ public class CrazyEightsTabletGameTest {
 	public void testNumberOfPlayersFour(){
 		Player player3 = new Player();
 		Player player4 = new Player();
-		players.add(player3);
-		players.add(player4);
+		game.addPlayer(player3);
+		game.addPlayer(player4);
 		setupGame();
 		assertEquals("Testing number of players.", 4, game.getPlayers().size());
 	}
@@ -115,7 +101,7 @@ public class CrazyEightsTabletGameTest {
 	@Test
 	public void testShuffleDeckSizeThreePlayers(){
 		Player player3 = new Player();
-		players.add(player3);
+		game.addPlayer(player3);
 		setupGame();
 		assertEquals("Testing size of the shuffled deck.", 38, game.getShuffledDeck().size());
 	}
@@ -127,8 +113,8 @@ public class CrazyEightsTabletGameTest {
 	public void testShuffleDeckSizeFourPlayers(){
 		Player player3 = new Player();
 		Player player4 = new Player();
-		players.add(player3);
-		players.add(player4);
+		game.addPlayer(player3);
+		game.addPlayer(player4);
 		setupGame();
 		assertEquals("Testing size of the shuffled deck.", 33, game.getShuffledDeck().size());
 	}
@@ -139,7 +125,7 @@ public class CrazyEightsTabletGameTest {
 	@Test
 	public void testPlayer1NumberOfCard(){
 		setupGame();
-		assertEquals("Testing size of Player 1's hand.", NUMBER_OF_CARDS_PER_HAND, game.getPlayers().get(0).getCards().size());
+		assertEquals("Testing size of Player 1's hand.", C8Constants.NUMBER_OF_CARDS_PER_HAND, game.getPlayers().get(0).getCards().size());
 	}
 
 	/**
@@ -148,7 +134,7 @@ public class CrazyEightsTabletGameTest {
 	@Test
 	public void testPlayer2NumberOfCard(){
 		setupGame();
-		assertEquals("Testing size of Player 2's hand.", NUMBER_OF_CARDS_PER_HAND, game.getPlayers().get(1).getCards().size());
+		assertEquals("Testing size of Player 2's hand.", C8Constants.NUMBER_OF_CARDS_PER_HAND, game.getPlayers().get(1).getCards().size());
 	}
 
 	/**
@@ -266,7 +252,7 @@ public class CrazyEightsTabletGameTest {
 	public void testDealThreePlayers(){
 
 		Player player3 = new Player();
-		players.add(player3);
+		game.addPlayer(player3);
 
 		Player p = game.getPlayers().get(0);
 		Player p2 = game.getPlayers().get(1);
@@ -290,11 +276,10 @@ public class CrazyEightsTabletGameTest {
 	 */
 	@Test
 	public void testDealFourPlayers(){
-
 		Player player3 = new Player();
 		Player player4 = new Player();
-		players.add(player3);
-		players.add(player4);
+		game.addPlayer(player3);
+		game.addPlayer(player4);
 
 		Player p = game.getPlayers().get(0);
 		Player p2 = game.getPlayers().get(1);
