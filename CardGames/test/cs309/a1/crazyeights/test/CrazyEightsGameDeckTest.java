@@ -1,6 +1,5 @@
 package cs309.a1.crazyeights.test;
 
-import static cs309.a1.shared.CardGame.CRAZY_EIGHTS;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -11,9 +10,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import cs309.a1.shared.Card;
-import cs309.a1.shared.Deck;
-import cs309.a1.R;
+import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.Card;
+import com.worthwhilegames.cardgames.shared.CardGame;
+import com.worthwhilegames.cardgames.shared.Deck;
+
 
 /**
  * This class will test the crazy eights game deck
@@ -24,17 +25,17 @@ public class CrazyEightsGameDeckTest {
 
 	private Deck deck;
 	private ArrayList<Card> cardDeck = new ArrayList<Card>();
-	
+
 	/**
 	 * This method will be performed before every test
 	 */
 	@Before
 	public void setup(){
-		
-		deck = new Deck(CRAZY_EIGHTS);
-		
+
+		deck = new Deck(CardGame.CRAZY_EIGHTS);
+
 	}
-	
+
 	/**
 	 * Method to set up the initial deck of cards that are valid
 	 */
@@ -48,7 +49,7 @@ public class CrazyEightsGameDeckTest {
 		cardDeck.add(new Card(0, 6, R.drawable.clubs_7, 6));
 		cardDeck.add(new Card(0, 7, R.drawable.clubs_8, 7));
 		cardDeck.add(new Card(0, 8, R.drawable.clubs_9, 8));
-		cardDeck.add(new Card(0, 9, R.drawable.clubs_10_, 9));
+		cardDeck.add(new Card(0, 9, R.drawable.clubs_10, 9));
 		cardDeck.add(new Card(0, 10, R.drawable.clubs_j, 10));
 		cardDeck.add(new Card(0, 11, R.drawable.clubs_q, 11));
 		cardDeck.add(new Card(0, 12, R.drawable.clubs_k, 12));
@@ -95,21 +96,21 @@ public class CrazyEightsGameDeckTest {
 		cardDeck.add(new Card(4, 1, R.drawable.joker_r, 53));
 		cardDeck.add(new Card(5, 0, R.drawable.back_blue_1, 54));
 	}
-	
+
 	/**
 	 * Test to make sure the right cards are in the deck and all of their information matches
 	 */
 	@Test
 	public void testDeck(){
 		setupDeck();
-		
+
 		List<Card> cards = deck.getCardIDs();
-		
+
 		Iterator<Card> iter = cards.iterator();
 		int i = 0;
-		
+
 		while(iter.hasNext()){
-			
+
 			Card c = iter.next();
 			Card c1 = cardDeck.get(i);
 			assertEquals("Testing card "+i+" idNum", c1.getIdNum(), c.getIdNum());
@@ -118,26 +119,26 @@ public class CrazyEightsGameDeckTest {
 			assertEquals("Testing card "+i+" value", c1.getValue(), c.getValue());
 			i++;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Test the size of the deck
 	 */
 	@Test
 	public void testDeckSize(){
 		List<Card> cards = deck.getCardIDs();
-		
+
 		assertEquals("Testing the size of the deck", 54, cards.size());
 	}
-	
+
 	/**
 	 * Tear down
 	 */
 	@After
 	public void tearDown(){
-		
-		
+
+
 	}
 
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>MyProjectTest</name>
+	<name>CardGamesTest</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -18,7 +18,7 @@
 		<link>
 			<name>test</name>
 			<type>2</type>
-			<location>/Users/jamiekujawa/git/CardGames/CardGames/test</location>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/CardGames/test</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
