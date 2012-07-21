@@ -1,4 +1,4 @@
-package com.worthwhilegames.cardgames.crazyeights.test;
+package test.com.worthwhilegames.cardgames.crazyeights.test;
 
 import static org.junit.Assert.assertEquals;
 

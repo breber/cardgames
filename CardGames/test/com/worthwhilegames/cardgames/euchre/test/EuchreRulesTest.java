@@ -1,4 +1,4 @@
-package com.worthwhilegames.cardgames.euchre.test;
+package test.com.worthwhilegames.cardgames.euchre.test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,6 +8,11 @@ import org.junit.Test;
 import com.worthwhilegames.cardgames.euchre.EuchreGameRules;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.Player;
+
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
 
 public class EuchreRulesTest {
 
@@ -27,11 +32,11 @@ public class EuchreRulesTest {
 	@Test
 	public void testFollowSuit1() {
 
-		Card card1 = new Card(0, 0, 0, 0);// Ace of Clubs
-		Card card2 = new Card(1, 10, 0, 23);// Jack of Diamonds
-		Card card3 = new Card(0, 8, 0, 8);// Nine of clubs
-		Card card4 = new Card(2, 0, 0, 26);// Ace of Hearts
-		Card card5 = new Card(3, 11, 0, 50);// Queen of Spades
+		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);// Ace of Clubs
+		Card card2 = new Card(SUIT_DIAMONDS, 10, 0, 23);// Jack of Diamonds
+		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
+		Card card4 = new Card(SUIT_HEARTS, 0, 0, 26);// Ace of Hearts
+		Card card5 = new Card(SUIT_SPADES, 11, 0, 50);// Queen of Spades
 
 		player.addCard(card1);
 		player.addCard(card2);
@@ -39,8 +44,8 @@ public class EuchreRulesTest {
 		player.addCard(card4);
 		player.addCard(card5);
 
-		trump = 0;
-		suitLed = 0;
+		trump = SUIT_CLUBS;
+		suitLed = SUIT_CLUBS;
 
 		assertEquals("Testing valid play.", true,
 				r.checkCard(card1, trump, suitLed, player.getCards()));
@@ -93,11 +98,11 @@ public class EuchreRulesTest {
 	@Test
 	public void testFollowSuit2() {
 
-		Card card1 = new Card(0, 0, 0, 0);// Ace of Clubs
-		Card card2 = new Card(1, 10, 0, 23);// Jack of Diamonds
-		Card card3 = new Card(0, 8, 0, 8);// Nine of clubs
-		Card card4 = new Card(2, 0, 0, 26);// Ace of Hearts
-		Card card5 = new Card(3, 11, 0, 50);// Queen of Spades
+		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);// Ace of Clubs
+		Card card2 = new Card(SUIT_DIAMONDS, 10, 0, 23);// Jack of Diamonds
+		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
+		Card card4 = new Card(SUIT_HEARTS, 0, 0, 26);// Ace of Hearts
+		Card card5 = new Card(SUIT_SPADES, 11, 0, 50);// Queen of Spades
 
 		player.addCard(card1);
 		player.addCard(card2);
@@ -105,8 +110,8 @@ public class EuchreRulesTest {
 		player.addCard(card4);
 		player.addCard(card5);
 
-		trump = 0;
-		suitLed = 1;
+		trump = SUIT_CLUBS;
+		suitLed = SUIT_DIAMONDS;
 
 		assertEquals("Testing valid play.", false,
 				r.checkCard(card1, trump, suitLed, player.getCards()));
@@ -159,11 +164,11 @@ public class EuchreRulesTest {
 	@Test
 	public void testFollowSuit3() {
 
-		Card card1 = new Card(0, 0, 0, 0);// Ace of Clubs
-		Card card2 = new Card(1, 10, 0, 23);// Jack of Diamonds
-		Card card3 = new Card(0, 8, 0, 8);// Nine of clubs
-		Card card4 = new Card(2, 0, 0, 26);// Ace of Hearts
-		Card card5 = new Card(3, 11, 0, 50);// Queen of Spades
+		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);// Ace of Clubs
+		Card card2 = new Card(SUIT_DIAMONDS, 10, 0, 23);// Jack of Diamonds
+		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
+		Card card4 = new Card(SUIT_HEARTS, 0, 0, 26);// Ace of Hearts
+		Card card5 = new Card(SUIT_SPADES, 11, 0, 50);// Queen of Spades
 
 		player.addCard(card1);
 		player.addCard(card2);
@@ -171,8 +176,8 @@ public class EuchreRulesTest {
 		player.addCard(card4);
 		player.addCard(card5);
 
-		trump = 0;
-		suitLed = 2;
+		trump = SUIT_CLUBS;
+		suitLed = SUIT_HEARTS;
 
 		assertEquals("Testing valid play.", false,
 				r.checkCard(card1, trump, suitLed, player.getCards()));
@@ -225,11 +230,11 @@ public class EuchreRulesTest {
 	@Test
 	public void testFollowSuit4() {
 
-		Card card1 = new Card(0, 0, 0, 0);// Ace of Clubs
-		Card card2 = new Card(1, 10, 0, 23);// Jack of Diamonds
-		Card card3 = new Card(0, 8, 0, 8);// Nine of clubs
-		Card card4 = new Card(2, 0, 0, 26);// Ace of Hearts
-		Card card5 = new Card(3, 11, 0, 50);// Queen of Spades
+		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);// Ace of Clubs
+		Card card2 = new Card(SUIT_DIAMONDS, 10, 0, 23);// Jack of Diamonds
+		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
+		Card card4 = new Card(SUIT_HEARTS, 0, 0, 26);// Ace of Hearts
+		Card card5 = new Card(SUIT_SPADES, 11, 0, 50);// Queen of Spades
 
 		player.addCard(card1);
 		player.addCard(card2);
@@ -237,8 +242,8 @@ public class EuchreRulesTest {
 		player.addCard(card4);
 		player.addCard(card5);
 
-		trump = 0;
-		suitLed = 3;
+		trump = SUIT_CLUBS;
+		suitLed = SUIT_SPADES;
 
 		assertEquals("Testing valid play.", false,
 				r.checkCard(card1, trump, suitLed, player.getCards()));
@@ -291,11 +296,11 @@ public class EuchreRulesTest {
 	@Test
 	public void testCannotFollowSuit1() {
 
-		Card card1 = new Card(0, 0, 0, 0);// Ace of Clubs
-		Card card2 = new Card(0, 10, 0, 10);// Jack of Clubs
-		Card card3 = new Card(0, 8, 0, 8);// Nine of clubs
-		Card card4 = new Card(2, 0, 0, 26);// Ace of Hearts
-		Card card5 = new Card(3, 11, 0, 50);// Queen of Spades
+		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);// Ace of Clubs
+		Card card2 = new Card(SUIT_CLUBS, 10, 0, 10);// Jack of Clubs
+		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
+		Card card4 = new Card(SUIT_HEARTS, 0, 0, 26);// Ace of Hearts
+		Card card5 = new Card(SUIT_SPADES, 11, 0, 50);// Queen of Spades
 
 		player.addCard(card1);
 		player.addCard(card2);
@@ -303,8 +308,8 @@ public class EuchreRulesTest {
 		player.addCard(card4);
 		player.addCard(card5);
 
-		trump = 0;
-		suitLed = 1;
+		trump = SUIT_CLUBS;
+		suitLed = SUIT_DIAMONDS;
 
 		assertEquals("Testing valid play.", true,
 				r.checkCard(card1, trump, suitLed, player.getCards()));
@@ -357,11 +362,11 @@ public class EuchreRulesTest {
 	@Test
 	public void testJackTrump1() {
 
-		Card card1 = new Card(0, 0, 0, 0);// Ace of Clubs
-		Card card2 = new Card(0, 10, 0, 10);// Jack of Clubs
-		Card card3 = new Card(0, 8, 0, 8);// Nine of clubs
-		Card card4 = new Card(2, 0, 0, 26);// Ace of Hearts
-		Card card5 = new Card(0, 11, 0, 11);// Queen of Spades
+		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);// Ace of Clubs
+		Card card2 = new Card(SUIT_CLUBS, 10, 0, 10);// Jack of Clubs
+		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
+		Card card4 = new Card(SUIT_HEARTS, 0, 0, 26);// Ace of Hearts
+		Card card5 = new Card(SUIT_CLUBS, 11, 0, 11);// Queen of Spades
 
 		player.addCard(card1);
 		player.addCard(card2);
@@ -369,8 +374,8 @@ public class EuchreRulesTest {
 		player.addCard(card4);
 		player.addCard(card5);
 
-		trump = 3;
-		suitLed = 3;
+		trump = SUIT_SPADES;
+		suitLed = SUIT_SPADES;
 
 		assertEquals("Testing valid play.", false,
 				r.checkCard(card1, trump, suitLed, player.getCards()));
@@ -423,11 +428,11 @@ public class EuchreRulesTest {
 	@Test
 	public void testJackTrump2() {
 
-		Card card1 = new Card(0, 0, 0, 0);// Ace of Clubs
-		Card card2 = new Card(3, 10, 0, 49);// Jack of Spades
-		Card card3 = new Card(0, 8, 0, 8);// Nine of clubs
-		Card card4 = new Card(2, 0, 0, 26);// Ace of Hearts
-		Card card5 = new Card(0, 11, 0, 11);// Queen of clubs
+		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);// Ace of Clubs
+		Card card2 = new Card(SUIT_SPADES, 10, 0, 49);// Jack of Spades
+		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
+		Card card4 = new Card(SUIT_HEARTS, 0, 0, 26);// Ace of Hearts
+		Card card5 = new Card(SUIT_CLUBS, 11, 0, 11);// Queen of clubs
 
 		player.addCard(card1);
 		player.addCard(card2);
@@ -435,8 +440,8 @@ public class EuchreRulesTest {
 		player.addCard(card4);
 		player.addCard(card5);
 
-		trump = 0;
-		suitLed = 0;
+		trump = SUIT_CLUBS;
+		suitLed = SUIT_CLUBS;
 
 		assertEquals("Testing valid play.", true,
 				r.checkCard(card1, trump, suitLed, player.getCards()));
@@ -489,11 +494,11 @@ public class EuchreRulesTest {
 	@Test
 	public void testJackTrump3() {
 
-		Card card1 = new Card(0, 0, 0, 0);// Ace of Clubs
-		Card card2 = new Card(2, 10, 0, 36);// Jack of Hearts
-		Card card3 = new Card(0, 8, 0, 8);// Nine of clubs
-		Card card4 = new Card(2, 0, 0, 26);// Ace of Hearts
-		Card card5 = new Card(1, 10, 0, 23);// Jack of Diamonds
+		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);// Ace of Clubs
+		Card card2 = new Card(SUIT_HEARTS, 10, 0, 36);// Jack of Hearts
+		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
+		Card card4 = new Card(SUIT_HEARTS, 0, 0, 26);// Ace of Hearts
+		Card card5 = new Card(SUIT_DIAMONDS, 10, 0, 23);// Jack of Diamonds
 
 		player.addCard(card1);
 		player.addCard(card2);
@@ -501,8 +506,8 @@ public class EuchreRulesTest {
 		player.addCard(card4);
 		player.addCard(card5);
 
-		trump = 1;
-		suitLed = 2;
+		trump = SUIT_DIAMONDS;
+		suitLed = SUIT_HEARTS;
 
 		assertEquals("Testing valid play.", false,
 				r.checkCard(card1, trump, suitLed, player.getCards()));
@@ -555,11 +560,11 @@ public class EuchreRulesTest {
 	@Test
 	public void testJacks1() {
 
-		Card card1 = new Card(0, 10, 0, 10);// Jack of Clubs
-		Card card2 = new Card(2, 10, 0, 36);// Jack of Hearts
-		Card card3 = new Card(0, 8, 0, 8);// Nine of clubs
-		Card card4 = new Card(3, 10, 0, 49);// Jack of Spades
-		Card card5 = new Card(1, 10, 0, 23);// Jack of Diamonds
+		Card card1 = new Card(SUIT_CLUBS, 10, 0, 10);// Jack of Clubs
+		Card card2 = new Card(SUIT_HEARTS, 10, 0, 36);// Jack of Hearts
+		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
+		Card card4 = new Card(SUIT_SPADES, 10, 0, 49);// Jack of Spades
+		Card card5 = new Card(SUIT_DIAMONDS, 10, 0, 23);// Jack of Diamonds
 
 		player.addCard(card1);
 		player.addCard(card2);
@@ -567,8 +572,8 @@ public class EuchreRulesTest {
 		player.addCard(card4);
 		player.addCard(card5);
 
-		trump = 1;
-		suitLed = 2;
+		trump = SUIT_DIAMONDS;
+		suitLed = SUIT_HEARTS;
 
 		assertEquals("Testing valid play.", true,
 				r.checkCard(card1, trump, suitLed, player.getCards()));
@@ -621,11 +626,11 @@ public class EuchreRulesTest {
 	@Test
 	public void testJacks2() {
 
-		Card card1 = new Card(0, 10, 0, 10);// Jack of Clubs
-		Card card2 = new Card(2, 10, 0, 36);// Jack of Hearts
-		Card card3 = new Card(0, 8, 0, 8);// Nine of clubs
-		Card card4 = new Card(3, 10, 0, 49);// Jack of Spades
-		Card card5 = new Card(1, 10, 0, 23);// Jack of Diamonds
+		Card card1 = new Card(SUIT_CLUBS, 10, 0, 10);// Jack of Clubs
+		Card card2 = new Card(SUIT_HEARTS, 10, 0, 36);// Jack of Hearts
+		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
+		Card card4 = new Card(SUIT_SPADES, 10, 0, 49);// Jack of Spades
+		Card card5 = new Card(SUIT_DIAMONDS, 10, 0, 23);// Jack of Diamonds
 
 		player.addCard(card1);
 		player.addCard(card2);
@@ -633,8 +638,8 @@ public class EuchreRulesTest {
 		player.addCard(card4);
 		player.addCard(card5);
 
-		trump = 1;
-		suitLed = 1;
+		trump = SUIT_DIAMONDS;
+		suitLed = SUIT_DIAMONDS;
 
 		assertEquals("Testing valid play.", false,
 				r.checkCard(card1, trump, suitLed, player.getCards()));
@@ -687,11 +692,11 @@ public class EuchreRulesTest {
 	@Test
 	public void testJacks3() {
 
-		Card card1 = new Card(0, 10, 0, 10);// Jack of Clubs
-		Card card2 = new Card(2, 10, 0, 36);// Jack of Hearts
-		Card card3 = new Card(0, 8, 0, 8);// Nine of clubs
-		Card card4 = new Card(3, 10, 0, 49);// Jack of Spades
-		Card card5 = new Card(1, 10, 0, 23);// Jack of Diamonds
+		Card card1 = new Card(SUIT_CLUBS, 10, 0, 10);// Jack of Clubs
+		Card card2 = new Card(SUIT_HEARTS, 10, 0, 36);// Jack of Hearts
+		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
+		Card card4 = new Card(SUIT_SPADES, 10, 0, 49);// Jack of Spades
+		Card card5 = new Card(SUIT_DIAMONDS, 10, 0, 23);// Jack of Diamonds
 
 		player.addCard(card1);
 		player.addCard(card2);
@@ -699,8 +704,8 @@ public class EuchreRulesTest {
 		player.addCard(card4);
 		player.addCard(card5);
 
-		trump = 3;
-		suitLed = 1;
+		trump = SUIT_SPADES;
+		suitLed = SUIT_DIAMONDS;
 
 		assertEquals("Testing valid play.", false,
 				r.checkCard(card1, trump, suitLed, player.getCards()));

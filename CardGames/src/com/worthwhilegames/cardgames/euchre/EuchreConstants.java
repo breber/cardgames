@@ -77,6 +77,11 @@ public class EuchreConstants {
 	 */
 	public static final int TRUMP_SUIT = 37;
 
+	/**
+	 * A constant to tell that the suit value of a jack has been changed
+	 */
+	public static final int CHANGED_JACK_SUIT_LEFT = 99;
+
 
 	/**
 	 * These are some random terms

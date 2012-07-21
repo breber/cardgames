@@ -1,4 +1,4 @@
-package com.worthwhilegames.cardgames.euchre.test;
+package test.com.worthwhilegames.cardgames.euchre.test;
 
 import static org.junit.Assert.assertEquals;
 

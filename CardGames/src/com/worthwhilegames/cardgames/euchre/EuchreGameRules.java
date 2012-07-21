@@ -1,5 +1,6 @@
 package com.worthwhilegames.cardgames.euchre;
 
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.CHANGED_JACK_SUIT_LEFT;
 import static com.worthwhilegames.cardgames.shared.Constants.JACK_VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
@@ -54,7 +55,7 @@ public class EuchreGameRules implements Rules{
 			returnValue = true;
 		}else if(cardPlayed.getSuit() == suitLed){
 			returnValue = true;
-		}else if(cardPlayed.getSuit() == 99){
+		}else if(cardPlayed.getSuit() == CHANGED_JACK_SUIT_LEFT){
 
 			returnValue = true;
 		}
@@ -79,28 +80,28 @@ public class EuchreGameRules implements Rules{
 			case SUIT_CLUBS:
 				if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_SPADES){
 					card.setSuit(SUIT_CLUBS);
-					card.setValue(99);
+					card.setValue(CHANGED_JACK_SUIT_LEFT);
 				}
 				break;
 
 			case SUIT_DIAMONDS:
 				if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_HEARTS){
 					card.setSuit(SUIT_DIAMONDS);
-					card.setValue(99);
+					card.setValue(CHANGED_JACK_SUIT_LEFT);
 				}
 				break;
 
 			case SUIT_HEARTS:
 				if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_DIAMONDS){
 					card.setSuit(SUIT_HEARTS);
-					card.setValue(99);
+					card.setValue(CHANGED_JACK_SUIT_LEFT);
 				}
 				break;
 
 			case SUIT_SPADES:
 				if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_CLUBS){
 					card.setSuit(SUIT_SPADES);
-					card.setValue(99);
+					card.setValue(CHANGED_JACK_SUIT_LEFT);
 				}
 
 				break;
@@ -120,28 +121,28 @@ public class EuchreGameRules implements Rules{
 
 			switch(trump){
 			case SUIT_CLUBS:
-				if(card.getValue() == 99 && card.getSuit() == SUIT_CLUBS){
+				if(card.getValue() == CHANGED_JACK_SUIT_LEFT && card.getSuit() == SUIT_CLUBS){
 					card.setSuit(SUIT_SPADES);
 					card.setValue(JACK_VALUE);
 				}
 				break;
 
 			case SUIT_DIAMONDS:
-				if(card.getValue() == 99 && card.getSuit() == SUIT_DIAMONDS){
+				if(card.getValue() == CHANGED_JACK_SUIT_LEFT && card.getSuit() == SUIT_DIAMONDS){
 					card.setSuit(SUIT_HEARTS);
 					card.setValue(JACK_VALUE);
 				}
 				break;
 
 			case SUIT_HEARTS:
-				if(card.getValue() == 99 && card.getSuit() == SUIT_HEARTS){
+				if(card.getValue() == CHANGED_JACK_SUIT_LEFT && card.getSuit() == SUIT_HEARTS){
 					card.setSuit(SUIT_DIAMONDS);
 					card.setValue(JACK_VALUE);
 				}
 				break;
 
 			case SUIT_SPADES:
-				if(card.getValue() == 99 && card.getSuit() == SUIT_SPADES){
+				if(card.getValue() == CHANGED_JACK_SUIT_LEFT && card.getSuit() == SUIT_SPADES){
 					card.setSuit(SUIT_CLUBS);
 					card.setValue(JACK_VALUE);
 				}
