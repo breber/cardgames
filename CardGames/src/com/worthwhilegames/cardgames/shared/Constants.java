@@ -69,12 +69,12 @@ public class Constants {
 	/**
 	 * A constant to represent the Spades suit
 	 */
-	public static final int SUIT_SPADES = 2;
+	public static final int SUIT_SPADES = 3;
 
 	/**
 	 * A constant to represent the Hearts suit
 	 */
-	public static final int SUIT_HEARTS = 3;
+	public static final int SUIT_HEARTS = 2;
 
 	/**
 	 * A constant to represent the jokers

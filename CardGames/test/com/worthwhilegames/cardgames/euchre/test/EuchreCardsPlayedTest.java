@@ -33,15 +33,15 @@ public class EuchreCardsPlayedTest {
 		Card card3 = new Card(0, 8, 0, 8);//Nine of clubs
 		Card card4 = new Card(2, 0, 0, 26);//Ace of Hearts
 		
-		cards.add(card1);
-		cards.add(card2);
-		cards.add(card3);
-		cards.add(card4);
+		t.cardsPlayed[0] = card1;
+		t.cardsPlayed[1] = card2;
+		t.cardsPlayed[2] = card3;
+		t.cardsPlayed[3] = card4;
 
 		t.setTrump(0);
-		suitLed = 0;
+		t.setCardLead(card2);
 		
-		assertEquals("Testing winner.", 0, t.determineTrickWinner(cards, suitLed));
+		assertEquals("Testing winner.", 0, t.determineTrickWinner());
 		
 	}
 	
@@ -53,15 +53,15 @@ public class EuchreCardsPlayedTest {
 		Card card3 = new Card(3, 10, 0, 49);//Jack of spades
 		Card card4 = new Card(0, 12, 0, 12);//King of clubs
 		
-		cards.add(card1);
-		cards.add(card2);
-		cards.add(card3);
-		cards.add(card4);
+		t.cardsPlayed[0] = card1;
+		t.cardsPlayed[1] = card2;
+		t.cardsPlayed[2] = card3;
+		t.cardsPlayed[3] = card4;
 
 		t.setTrump(0);
-		suitLed = 0;
+		t.setCardLead(card2);
 		
-		assertEquals("Testing winner.", 10, t.determineTrickWinner(cards, suitLed));
+		assertEquals("Testing winner.", 1, t.determineTrickWinner());
 		
 	}
 	
@@ -73,15 +73,15 @@ public class EuchreCardsPlayedTest {
 		Card card3 = new Card(3, 10, 0, 49);//Jack of spades
 		Card card4 = new Card(0, 12, 0, 12);//King of clubs
 		
-		cards.add(card1);
-		cards.add(card2);
-		cards.add(card3);
-		cards.add(card4);
+		t.cardsPlayed[0] = card1;
+		t.cardsPlayed[1] = card2;
+		t.cardsPlayed[2] = card3;
+		t.cardsPlayed[3] = card4;
 
-		t.setTrump(2);
-		suitLed = 3;
+		t.setTrump(0);
+		t.setCardLead(card4);
 		
-		assertEquals("Testing winner.", 49, t.determineTrickWinner(cards, suitLed));
+		assertEquals("Testing winner.", 1, t.determineTrickWinner());
 		
 	}
 	
@@ -93,15 +93,15 @@ public class EuchreCardsPlayedTest {
 		Card card3 = new Card(3, 8, 0, 49);//Nine of spades
 		Card card4 = new Card(0, 12, 0, 12);//King of clubs
 		
-		cards.add(card1);
-		cards.add(card2);
-		cards.add(card3);
-		cards.add(card4);
+		t.cardsPlayed[0] = card1;
+		t.cardsPlayed[1] = card2;
+		t.cardsPlayed[2] = card3;
+		t.cardsPlayed[3] = card4;
 
 		t.setTrump(3);
-		suitLed = 0;
+		t.setCardLead(card3);
 		
-		assertEquals("Testing winner.", 10, t.determineTrickWinner(cards, suitLed));
+		assertEquals("Testing winner.", 1, t.determineTrickWinner());
 		
 	}
 	
@@ -113,15 +113,15 @@ public class EuchreCardsPlayedTest {
 		Card card3 = new Card(3, 10, 0, 49);//Jack of spades
 		Card card4 = new Card(0, 12, 0, 12);//King of clubs
 		
-		cards.add(card1);
-		cards.add(card2);
-		cards.add(card3);
-		cards.add(card4);
+		t.cardsPlayed[0] = card1;
+		t.cardsPlayed[1] = card2;
+		t.cardsPlayed[2] = card3;
+		t.cardsPlayed[3] = card4;
 
 		t.setTrump(1);
-		suitLed = 0;
+		t.setCardLead(card3);
 		
-		assertEquals("Testing winner.", 0, t.determineTrickWinner(cards, suitLed));
+		assertEquals("Testing winner.", 2, t.determineTrickWinner());
 		
 	}
 }
