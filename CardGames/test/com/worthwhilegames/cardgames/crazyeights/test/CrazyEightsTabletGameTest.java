@@ -410,22 +410,20 @@ public class CrazyEightsTabletGameTest {
 
 	@Test
 	public void getNumPlayersTest(){
-		setup();
+		setupGame();
 
 		assertEquals("Testing number of players", 2, game.getNumPlayers());
 	}
 
 	@Test
 	public void testDropGetNumPlayers(){
-		setup();
+		setupGame();
 
 		game.getPlayers().get(0).setId("Mac Address");
-
 
 		game.dropPlayer("Mac Address");
 
 		assertEquals("Testing number of players", 2, game.getNumPlayers());
-
 	}
 
 	/**
@@ -433,7 +431,6 @@ public class CrazyEightsTabletGameTest {
 	 */
 	@After
 	public void tearDown(){
-
-
+		CrazyEightsTabletGame.clearInstance();
 	}
 }
