@@ -1,5 +1,9 @@
-package test.com.worthwhilegames.cardgames.euchre.test;
+package com.worthwhilegames.cardgames.euchre.test;
 
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
@@ -8,11 +12,6 @@ import org.junit.Test;
 import com.worthwhilegames.cardgames.euchre.EuchreGameRules;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.Player;
-
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
 
 public class EuchreRulesTest {
 
@@ -31,7 +30,6 @@ public class EuchreRulesTest {
 
 	@Test
 	public void testFollowSuit1() {
-
 		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);// Ace of Clubs
 		Card card2 = new Card(SUIT_DIAMONDS, 10, 0, 23);// Jack of Diamonds
 		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
@@ -92,12 +90,10 @@ public class EuchreRulesTest {
 		assertEquals(card5.getValue(), player.getCards().get(4).getValue());
 		assertEquals(card5.getResourceId(), player.getCards().get(4)
 				.getResourceId());
-
 	}
 
 	@Test
 	public void testFollowSuit2() {
-
 		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);// Ace of Clubs
 		Card card2 = new Card(SUIT_DIAMONDS, 10, 0, 23);// Jack of Diamonds
 		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
@@ -158,12 +154,10 @@ public class EuchreRulesTest {
 		assertEquals(card5.getValue(), player.getCards().get(4).getValue());
 		assertEquals(card5.getResourceId(), player.getCards().get(4)
 				.getResourceId());
-
 	}
 
 	@Test
 	public void testFollowSuit3() {
-
 		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);// Ace of Clubs
 		Card card2 = new Card(SUIT_DIAMONDS, 10, 0, 23);// Jack of Diamonds
 		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
@@ -224,12 +218,10 @@ public class EuchreRulesTest {
 		assertEquals(card5.getValue(), player.getCards().get(4).getValue());
 		assertEquals(card5.getResourceId(), player.getCards().get(4)
 				.getResourceId());
-
 	}
 
 	@Test
 	public void testFollowSuit4() {
-
 		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);// Ace of Clubs
 		Card card2 = new Card(SUIT_DIAMONDS, 10, 0, 23);// Jack of Diamonds
 		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
@@ -290,12 +282,10 @@ public class EuchreRulesTest {
 		assertEquals(card5.getValue(), player.getCards().get(4).getValue());
 		assertEquals(card5.getResourceId(), player.getCards().get(4)
 				.getResourceId());
-
 	}
 
 	@Test
 	public void testCannotFollowSuit1() {
-
 		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);// Ace of Clubs
 		Card card2 = new Card(SUIT_CLUBS, 10, 0, 10);// Jack of Clubs
 		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
@@ -356,12 +346,10 @@ public class EuchreRulesTest {
 		assertEquals(card5.getValue(), player.getCards().get(4).getValue());
 		assertEquals(card5.getResourceId(), player.getCards().get(4)
 				.getResourceId());
-
 	}
 
 	@Test
 	public void testJackTrump1() {
-
 		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);// Ace of Clubs
 		Card card2 = new Card(SUIT_CLUBS, 10, 0, 10);// Jack of Clubs
 		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
@@ -422,12 +410,10 @@ public class EuchreRulesTest {
 		assertEquals(card5.getValue(), player.getCards().get(4).getValue());
 		assertEquals(card5.getResourceId(), player.getCards().get(4)
 				.getResourceId());
-
 	}
 
 	@Test
 	public void testJackTrump2() {
-
 		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);// Ace of Clubs
 		Card card2 = new Card(SUIT_SPADES, 10, 0, 49);// Jack of Spades
 		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
@@ -488,12 +474,10 @@ public class EuchreRulesTest {
 		assertEquals(card5.getValue(), player.getCards().get(4).getValue());
 		assertEquals(card5.getResourceId(), player.getCards().get(4)
 				.getResourceId());
-
 	}
 
 	@Test
 	public void testJackTrump3() {
-
 		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);// Ace of Clubs
 		Card card2 = new Card(SUIT_HEARTS, 10, 0, 36);// Jack of Hearts
 		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
@@ -554,12 +538,10 @@ public class EuchreRulesTest {
 		assertEquals(card5.getValue(), player.getCards().get(4).getValue());
 		assertEquals(card5.getResourceId(), player.getCards().get(4)
 				.getResourceId());
-
 	}
 
 	@Test
 	public void testJacks1() {
-
 		Card card1 = new Card(SUIT_CLUBS, 10, 0, 10);// Jack of Clubs
 		Card card2 = new Card(SUIT_HEARTS, 10, 0, 36);// Jack of Hearts
 		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
@@ -620,12 +602,10 @@ public class EuchreRulesTest {
 		assertEquals(card5.getValue(), player.getCards().get(4).getValue());
 		assertEquals(card5.getResourceId(), player.getCards().get(4)
 				.getResourceId());
-
 	}
 
 	@Test
 	public void testJacks2() {
-
 		Card card1 = new Card(SUIT_CLUBS, 10, 0, 10);// Jack of Clubs
 		Card card2 = new Card(SUIT_HEARTS, 10, 0, 36);// Jack of Hearts
 		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
@@ -686,12 +666,10 @@ public class EuchreRulesTest {
 		assertEquals(card5.getValue(), player.getCards().get(4).getValue());
 		assertEquals(card5.getResourceId(), player.getCards().get(4)
 				.getResourceId());
-
 	}
 
 	@Test
 	public void testJacks3() {
-
 		Card card1 = new Card(SUIT_CLUBS, 10, 0, 10);// Jack of Clubs
 		Card card2 = new Card(SUIT_HEARTS, 10, 0, 36);// Jack of Hearts
 		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
@@ -752,6 +730,5 @@ public class EuchreRulesTest {
 		assertEquals(card5.getValue(), player.getCards().get(4).getValue());
 		assertEquals(card5.getResourceId(), player.getCards().get(4)
 				.getResourceId());
-
 	}
 }

@@ -1,4 +1,4 @@
-package test.com.worthwhilegames.cardgames.crazyeights.test;
+package com.worthwhilegames.cardgames.crazyeights.test;
 
 import static com.worthwhilegames.cardgames.shared.Constants.ACE_VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.BLACK_JOKER_VALUE;
@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,16 +49,14 @@ public class CrazyEightsGameDeckTest {
 	 * This method will be performed before every test
 	 */
 	@Before
-	public void setup(){
-
+	public void setup() {
 		deck = new Deck(CardGame.CrazyEights);
-
 	}
 
 	/**
 	 * Method to set up the initial deck of cards that are valid
 	 */
-	public void setupDeck(){
+	public void setupDeck() {
 		cardDeck.add(new Card(SUIT_CLUBS, ACE_VALUE, R.drawable.clubs_a, 0));
 		cardDeck.add(new Card(SUIT_CLUBS, TWO_VALUE, R.drawable.clubs_2, 1));
 		cardDeck.add(new Card(SUIT_CLUBS, THREE_VALUE, R.drawable.clubs_3, 2));
@@ -120,7 +117,7 @@ public class CrazyEightsGameDeckTest {
 	 * Test to make sure the right cards are in the deck and all of their information matches
 	 */
 	@Test
-	public void testDeck(){
+	public void testDeck() {
 		setupDeck();
 
 		List<Card> cards = deck.getCardIDs();
@@ -128,36 +125,24 @@ public class CrazyEightsGameDeckTest {
 		Iterator<Card> iter = cards.iterator();
 		int i = 0;
 
-		while(iter.hasNext()){
-
+		while (iter.hasNext()) {
 			Card c = iter.next();
 			Card c1 = cardDeck.get(i);
-			assertEquals("Testing card "+i+" idNum", c1.getIdNum(), c.getIdNum());
-			assertEquals("Testing card "+i+" resourceId", c1.getResourceId(), c.getResourceId());
-			assertEquals("Testing card "+i+" suit", c1.getSuit(), c.getSuit());
-			assertEquals("Testing card "+i+" value", c1.getValue(), c.getValue());
+			assertEquals("Testing card " + i + " idNum", c1.getIdNum(), c.getIdNum());
+			assertEquals("Testing card " + i + " resourceId", c1.getResourceId(), c.getResourceId());
+			assertEquals("Testing card " + i + " suit", c1.getSuit(), c.getSuit());
+			assertEquals("Testing card " + i + " value", c1.getValue(), c.getValue());
 			i++;
 		}
-
 	}
 
 	/**
 	 * Test the size of the deck
 	 */
 	@Test
-	public void testDeckSize(){
+	public void testDeckSize() {
 		List<Card> cards = deck.getCardIDs();
 
 		assertEquals("Testing the size of the deck", 54, cards.size());
 	}
-
-	/**
-	 * Tear down
-	 */
-	@After
-	public void tearDown(){
-
-
-	}
-
 }

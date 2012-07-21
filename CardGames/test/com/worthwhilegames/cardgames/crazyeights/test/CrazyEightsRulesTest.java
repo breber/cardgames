@@ -1,5 +1,10 @@
-package test.com.worthwhilegames.cardgames.crazyeights.test;
+package com.worthwhilegames.cardgames.crazyeights.test;
 
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_JOKER;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
@@ -7,12 +12,6 @@ import org.junit.Test;
 
 import com.worthwhilegames.cardgames.crazyeights.CrazyEightGameRules;
 import com.worthwhilegames.cardgames.shared.Card;
-
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_JOKER;
 
 /**
  * This class will test the rules of the crazy eights game
@@ -27,7 +26,7 @@ public class CrazyEightsRulesTest {
 	 * This method will be performed before every test
 	 */
 	@Before
-	public void setup(){
+	public void setup() {
 		r = new CrazyEightGameRules();
 	}
 
@@ -35,7 +34,7 @@ public class CrazyEightsRulesTest {
 	 * Test a valid discard of card of the same suit
 	 */
 	@Test
-	public void testValidDiscardSameSuit(){
+	public void testValidDiscardSameSuit() {
 		discardTop = new Card(SUIT_CLUBS, 10, 12, 0);
 		toDiscard = new Card(SUIT_CLUBS, 15, 15, 9);
 
@@ -46,7 +45,7 @@ public class CrazyEightsRulesTest {
 	 * Test a valid discard of card of the same suit
 	 */
 	@Test
-	public void testValidDiscardSameSuit2(){
+	public void testValidDiscardSameSuit2() {
 		discardTop = new Card(SUIT_DIAMONDS, 10, 12, 0);
 		toDiscard = new Card(SUIT_DIAMONDS, 15, 15, 9);
 
@@ -57,7 +56,7 @@ public class CrazyEightsRulesTest {
 	 * Test a valid discard of card of the same suit
 	 */
 	@Test
-	public void testValidDiscardSameSuit3(){
+	public void testValidDiscardSameSuit3() {
 		discardTop = new Card(SUIT_HEARTS, 10, 12, 0);
 		toDiscard = new Card(SUIT_HEARTS, 15, 15, 9);
 
@@ -68,7 +67,7 @@ public class CrazyEightsRulesTest {
 	 * Test a valid discard of card of the same suit
 	 */
 	@Test
-	public void testValidDiscardSameSuit4(){
+	public void testValidDiscardSameSuit4() {
 		discardTop = new Card(SUIT_SPADES, 10, 12, 0);
 		toDiscard = new Card(SUIT_JOKER, 15, 15, 9);
 
@@ -79,7 +78,7 @@ public class CrazyEightsRulesTest {
 	 * Test an invalid discard
 	 */
 	@Test
-	public void testInvalidDiscard(){
+	public void testInvalidDiscard() {
 		discardTop = new Card(SUIT_CLUBS, 10, 12, 0);
 		toDiscard = new Card(SUIT_DIAMONDS, 15, 15, 9);
 
@@ -90,7 +89,7 @@ public class CrazyEightsRulesTest {
 	 * Test a valid discard of card of the same number
 	 */
 	@Test
-	public void testValidDiscardSameNumber(){
+	public void testValidDiscardSameNumber() {
 		discardTop = new Card(SUIT_DIAMONDS, 15, 12, 0);
 		toDiscard = new Card(SUIT_CLUBS, 15, 15, 9);
 
@@ -101,7 +100,7 @@ public class CrazyEightsRulesTest {
 	 * Test a valid discard of card of the same number
 	 */
 	@Test
-	public void testValidDiscardSameNumber2(){
+	public void testValidDiscardSameNumber2() {
 		discardTop = new Card(SUIT_DIAMONDS, 14, 12, 0);
 		toDiscard = new Card(SUIT_CLUBS, 14, 15, 9);
 
@@ -112,7 +111,7 @@ public class CrazyEightsRulesTest {
 	 * Test a valid discard of card of the same number
 	 */
 	@Test
-	public void testValidDiscardSameNumber3(){
+	public void testValidDiscardSameNumber3() {
 		discardTop = new Card(SUIT_DIAMONDS, 0, 12, 0);
 		toDiscard = new Card(SUIT_CLUBS, 0, 15, 9);
 
@@ -123,7 +122,7 @@ public class CrazyEightsRulesTest {
 	 * Test a valid discard of a joker
 	 */
 	@Test
-	public void testValidDiscardJoker(){
+	public void testValidDiscardJoker() {
 		discardTop = new Card(SUIT_CLUBS, 0, 12, 0);
 		toDiscard = new Card(SUIT_JOKER, 0, 15, 9);
 
@@ -134,7 +133,7 @@ public class CrazyEightsRulesTest {
 	 * Test a valid discard of a joker
 	 */
 	@Test
-	public void testValidDiscardJoker2(){
+	public void testValidDiscardJoker2() {
 		discardTop = new Card(SUIT_JOKER, 0, 12, 0);
 		toDiscard = new Card(SUIT_CLUBS, 0, 15, 9);
 
@@ -145,7 +144,7 @@ public class CrazyEightsRulesTest {
 	 * Test a valid discard of an eight
 	 */
 	@Test
-	public void testValidDiscardEight(){
+	public void testValidDiscardEight() {
 		discardTop = new Card(SUIT_DIAMONDS, 0, 12, 0);
 		toDiscard = new Card(SUIT_CLUBS, 7, 15, 9);
 
@@ -156,7 +155,7 @@ public class CrazyEightsRulesTest {
 	 * Test a valid discard of an eight
 	 */
 	@Test
-	public void testValidDiscardEight2(){
+	public void testValidDiscardEight2() {
 		discardTop = new Card(SUIT_DIAMONDS, 0, 12, 0);
 		toDiscard = new Card(SUIT_CLUBS, 7, 15, 9);
 
@@ -167,7 +166,7 @@ public class CrazyEightsRulesTest {
 	 * Test a valid discard of an eight
 	 */
 	@Test
-	public void testValidDiscardEight3(){
+	public void testValidDiscardEight3() {
 		discardTop = new Card(SUIT_DIAMONDS, 0, 12, 0);
 		toDiscard = new Card(SUIT_HEARTS, 7, 15, 9);
 
@@ -178,7 +177,7 @@ public class CrazyEightsRulesTest {
 	 * Test a valid discard of an eight
 	 */
 	@Test
-	public void testValidDiscardEight4(){
+	public void testValidDiscardEight4() {
 		discardTop = new Card(SUIT_DIAMONDS, 0, 12, 0);
 		toDiscard = new Card(SUIT_SPADES, 7, 15, 9);
 
@@ -189,7 +188,7 @@ public class CrazyEightsRulesTest {
 	 * Test a null card
 	 */
 	@Test
-	public void testCardNull(){
+	public void testCardNull() {
 		discardTop = null;
 		toDiscard = new Card(SUIT_CLUBS, 0, 15, 9);
 
@@ -200,7 +199,7 @@ public class CrazyEightsRulesTest {
 	 * Test to see if the discard pile is null
 	 */
 	@Test
-	public void testDiscardPileNull(){
+	public void testDiscardPileNull() {
 		discardTop = new Card(SUIT_DIAMONDS, 0, 12, 0);
 		toDiscard = null;
 

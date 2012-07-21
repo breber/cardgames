@@ -1,4 +1,4 @@
-package test.com.worthwhilegames.cardgames.euchre.test;
+package com.worthwhilegames.cardgames.euchre.test;
 
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
@@ -21,13 +21,12 @@ public class EuchreCardsPlayedTest {
 	 * This method will be performed before every test
 	 */
 	@Before
-	public void setup(){
+	public void setup() {
 		t = EuchreTabletGame.getInstance();
 	}
 
 	@Test
-	public void testWinner(){
-
+	public void testWinner() {
 		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);//Ace of Clubs
 		Card card2 = new Card(SUIT_DIAMONDS, 10, 0, 23);//Jack of Diamonds
 		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);//Nine of clubs
@@ -42,12 +41,10 @@ public class EuchreCardsPlayedTest {
 		t.setCardLead(card2);
 
 		assertEquals("Testing winner.", 0, t.determineTrickWinner());
-
 	}
 
 	@Test
-	public void testWinner2(){
-
+	public void testWinner2() {
 		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);//Ace of clubs
 		Card card2 = new Card(SUIT_CLUBS, 10, 0, 10);//Jack of clubs
 		Card card3 = new Card(SUIT_SPADES, 10, 0, 49);//Jack of spades
@@ -62,12 +59,10 @@ public class EuchreCardsPlayedTest {
 		t.setCardLead(card2);
 
 		assertEquals("Testing winner.", 1, t.determineTrickWinner());
-
 	}
 
 	@Test
-	public void testWinner3(){
-
+	public void testWinner3() {
 		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);//Ace of clubs
 		Card card2 = new Card(SUIT_CLUBS, 10, 0, 10);//Jack of clubs
 		Card card3 = new Card(SUIT_SPADES, 10, 0, 49);//Jack of spades
@@ -82,12 +77,10 @@ public class EuchreCardsPlayedTest {
 		t.setCardLead(card4);
 
 		assertEquals("Testing winner.", 1, t.determineTrickWinner());
-
 	}
 
 	@Test
-	public void testWinner4(){
-
+	public void testWinner4() {
 		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);//Ace of clubs
 		Card card2 = new Card(SUIT_CLUBS, 10, 0, 10);//Jack of clubs
 		Card card3 = new Card(SUIT_SPADES, 8, 0, 49);//Nine of spades
@@ -102,12 +95,10 @@ public class EuchreCardsPlayedTest {
 		t.setCardLead(card3);
 
 		assertEquals("Testing winner.", 1, t.determineTrickWinner());
-
 	}
 
 	@Test
-	public void testWinner5(){
-
+	public void testWinner5() {
 		Card card1 = new Card(SUIT_CLUBS, 0, 0, 0);//Ace of clubs
 		Card card2 = new Card(SUIT_CLUBS, 10, 0, 10);//Jack of clubs
 		Card card3 = new Card(SUIT_SPADES, 10, 0, 49);//Jack of spades
@@ -122,7 +113,6 @@ public class EuchreCardsPlayedTest {
 		t.setCardLead(card3);
 
 		assertEquals("Testing winner.", 2, t.determineTrickWinner());
-
 	}
 
 	@After
