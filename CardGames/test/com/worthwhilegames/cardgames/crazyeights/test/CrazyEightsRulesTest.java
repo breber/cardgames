@@ -16,25 +16,15 @@ public class CrazyEightsRulesTest {
 	private CrazyEightGameRules r;
 	private Card discardTop;
 	private Card toDiscard;
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * This method will be performed before every test
 	 */
 	@Before
 	public void setup(){
-<<<<<<< HEAD
 		r = new CrazyEightGameRules();
 	}
 
-=======
-		 r = new CrazyEightGameRules();
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test a valid discard of card of the same suit
 	 */
@@ -42,17 +32,10 @@ public class CrazyEightsRulesTest {
 	public void testValidDiscardSameSuit(){
 		discardTop = new Card(0, 10, 12, 0);
 		toDiscard = new Card(0, 15, 15, 9);
-<<<<<<< HEAD
 
 		assertEquals("Testing same suit discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 
-=======
-		
-		assertEquals("Testing same suit discard.", true, r.checkCard(toDiscard, discardTop));
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test a valid discard of card of the same suit
 	 */
@@ -60,17 +43,10 @@ public class CrazyEightsRulesTest {
 	public void testValidDiscardSameSuit2(){
 		discardTop = new Card(1, 10, 12, 0);
 		toDiscard = new Card(1, 15, 15, 9);
-<<<<<<< HEAD
 
 		assertEquals("Testing same suit discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 
-=======
-		
-		assertEquals("Testing same suit discard.", true, r.checkCard(toDiscard, discardTop));
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test a valid discard of card of the same suit
 	 */
@@ -78,17 +54,10 @@ public class CrazyEightsRulesTest {
 	public void testValidDiscardSameSuit3(){
 		discardTop = new Card(2, 10, 12, 0);
 		toDiscard = new Card(2, 15, 15, 9);
-<<<<<<< HEAD
 
 		assertEquals("Testing same suit discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 
-=======
-		
-		assertEquals("Testing same suit discard.", true, r.checkCard(toDiscard, discardTop));
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test a valid discard of card of the same suit
 	 */
@@ -96,17 +65,10 @@ public class CrazyEightsRulesTest {
 	public void testValidDiscardSameSuit4(){
 		discardTop = new Card(3, 10, 12, 0);
 		toDiscard = new Card(4, 15, 15, 9);
-<<<<<<< HEAD
 
 		assertEquals("Testing same suit discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 
-=======
-		
-		assertEquals("Testing same suit discard.", true, r.checkCard(toDiscard, discardTop));
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test an invalid discard
 	 */
@@ -114,17 +76,10 @@ public class CrazyEightsRulesTest {
 	public void testInvalidDiscard(){
 		discardTop = new Card(0, 10, 12, 0);
 		toDiscard = new Card(1, 15, 15, 9);
-<<<<<<< HEAD
 
 		assertEquals("Testing indiscard.", false, r.checkCard(toDiscard, discardTop));
 	}
 
-=======
-		
-		assertEquals("Testing indiscard.", false, r.checkCard(toDiscard, discardTop));
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test a valid discard of card of the same number
 	 */
@@ -132,17 +87,10 @@ public class CrazyEightsRulesTest {
 	public void testValidDiscardSameNumber(){
 		discardTop = new Card(1, 15, 12, 0);
 		toDiscard = new Card(0, 15, 15, 9);
-<<<<<<< HEAD
 
 		assertEquals("Testing same value discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 
-=======
-		
-		assertEquals("Testing same value discard.", true, r.checkCard(toDiscard, discardTop));
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test a valid discard of card of the same number
 	 */
@@ -150,17 +98,10 @@ public class CrazyEightsRulesTest {
 	public void testValidDiscardSameNumber2(){
 		discardTop = new Card(1, 14, 12, 0);
 		toDiscard = new Card(0, 14, 15, 9);
-<<<<<<< HEAD
 
 		assertEquals("Testing same value discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 
-=======
-		
-		assertEquals("Testing same value discard.", true, r.checkCard(toDiscard, discardTop));
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test a valid discard of card of the same number
 	 */
@@ -168,17 +109,10 @@ public class CrazyEightsRulesTest {
 	public void testValidDiscardSameNumber3(){
 		discardTop = new Card(1, 0, 12, 0);
 		toDiscard = new Card(0, 0, 15, 9);
-<<<<<<< HEAD
 
 		assertEquals("Testing same value discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 
-=======
-		
-		assertEquals("Testing same value discard.", true, r.checkCard(toDiscard, discardTop));
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test a valid discard of a joker
 	 */
@@ -186,17 +120,10 @@ public class CrazyEightsRulesTest {
 	public void testValidDiscardJoker(){
 		discardTop = new Card(0, 0, 12, 0);
 		toDiscard = new Card(4, 0, 15, 9);
-<<<<<<< HEAD
 
 		assertEquals("Testing joker discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 
-=======
-		
-		assertEquals("Testing joker discard.", true, r.checkCard(toDiscard, discardTop));
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test a valid discard of a joker
 	 */
@@ -204,17 +131,10 @@ public class CrazyEightsRulesTest {
 	public void testValidDiscardJoker2(){
 		discardTop = new Card(4, 0, 12, 0);
 		toDiscard = new Card(0, 0, 15, 9);
-<<<<<<< HEAD
 
 		assertEquals("Testing joker discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 
-=======
-		
-		assertEquals("Testing joker discard.", true, r.checkCard(toDiscard, discardTop));
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test a valid discard of an eight
 	 */
@@ -222,17 +142,10 @@ public class CrazyEightsRulesTest {
 	public void testValidDiscardEight(){
 		discardTop = new Card(1, 0, 12, 0);
 		toDiscard = new Card(0, 7, 15, 9);
-<<<<<<< HEAD
 
 		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 
-=======
-		
-		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test a valid discard of an eight
 	 */
@@ -240,17 +153,10 @@ public class CrazyEightsRulesTest {
 	public void testValidDiscardEight2(){
 		discardTop = new Card(1, 0, 12, 0);
 		toDiscard = new Card(0, 7, 15, 9);
-<<<<<<< HEAD
 
 		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 
-=======
-		
-		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test a valid discard of an eight
 	 */
@@ -258,17 +164,10 @@ public class CrazyEightsRulesTest {
 	public void testValidDiscardEight3(){
 		discardTop = new Card(1, 0, 12, 0);
 		toDiscard = new Card(2, 7, 15, 9);
-<<<<<<< HEAD
 
 		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 
-=======
-		
-		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test a valid discard of an eight
 	 */
@@ -276,17 +175,10 @@ public class CrazyEightsRulesTest {
 	public void testValidDiscardEight4(){
 		discardTop = new Card(1, 0, 12, 0);
 		toDiscard = new Card(3, 7, 15, 9);
-<<<<<<< HEAD
 
 		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
 	}
 
-=======
-		
-		assertEquals("Testing eight discard.", true, r.checkCard(toDiscard, discardTop));
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test a null card
 	 */
@@ -294,17 +186,10 @@ public class CrazyEightsRulesTest {
 	public void testCardNull(){
 		discardTop = null;
 		toDiscard = new Card(0, 0, 15, 9);
-<<<<<<< HEAD
 
 		assertEquals("Testing null card.", false, r.checkCard(toDiscard, discardTop));
 	}
 
-=======
-		
-		assertEquals("Testing null card.", false, r.checkCard(toDiscard, discardTop));
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test to see if the discard pile is null
 	 */
@@ -312,11 +197,7 @@ public class CrazyEightsRulesTest {
 	public void testDiscardPileNull(){
 		discardTop = new Card(1, 0, 12, 0);
 		toDiscard = null;
-<<<<<<< HEAD
 
-=======
-		
->>>>>>> Foundation for the game Euchre.
 		assertEquals("Testing discard pile null.", false, r.checkCard(toDiscard, discardTop));
 	}
 }

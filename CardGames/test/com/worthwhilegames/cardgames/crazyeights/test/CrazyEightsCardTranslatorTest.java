@@ -14,35 +14,21 @@ import com.worthwhilegames.cardgames.crazyeights.CrazyEightsCardTranslator;
 public class CrazyEightsCardTranslatorTest {
 
 	private CrazyEightsCardTranslator t;
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * This method will be performed before every test
 	 */
 	@Before
 	public void setup(){
-<<<<<<< HEAD
 		t = new CrazyEightsCardTranslator();
 	}
 
-=======
-		 t = new CrazyEightsCardTranslator();
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test the diamonds
 	 */
 	@Test
 	public void testDiamonds(){
-<<<<<<< HEAD
 
-=======
-		
->>>>>>> Foundation for the game Euchre.
 		assertEquals("Testing Diamonds ace.", R.drawable.diamonds_a, t.getResourceForCardWithId(13));
 		assertEquals("Testing Diamonds 2.", R.drawable.diamonds_2, t.getResourceForCardWithId(14));
 		assertEquals("Testing Diamonds 3.", R.drawable.diamonds_3, t.getResourceForCardWithId(15));
@@ -56,25 +42,15 @@ public class CrazyEightsCardTranslatorTest {
 		assertEquals("Testing Diamonds jack.", R.drawable.diamonds_j, t.getResourceForCardWithId(23));
 		assertEquals("Testing Diamonds queen.", R.drawable.diamonds_q, t.getResourceForCardWithId(24));
 		assertEquals("Testing Diamonds king.", R.drawable.diamonds_k, t.getResourceForCardWithId(25));
-<<<<<<< HEAD
 
 	}
 
-=======
-		
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test the hearts
 	 */
 	@Test
 	public void testHearts(){
-<<<<<<< HEAD
 
-=======
-		
->>>>>>> Foundation for the game Euchre.
 		assertEquals("Testing Hearts ace.", R.drawable.hearts_a, t.getResourceForCardWithId(26));
 		assertEquals("Testing Hearts 2.", R.drawable.hearts_2, t.getResourceForCardWithId(27));
 		assertEquals("Testing Hearts 3.", R.drawable.hearts_3, t.getResourceForCardWithId(28));
@@ -88,11 +64,7 @@ public class CrazyEightsCardTranslatorTest {
 		assertEquals("Testing Hearts jack.", R.drawable.hearts_j, t.getResourceForCardWithId(36));
 		assertEquals("Testing Hearts queen.", R.drawable.hearts_q, t.getResourceForCardWithId(37));
 		assertEquals("Testing Hearts king.", R.drawable.hearts_k, t.getResourceForCardWithId(38));
-<<<<<<< HEAD
 
-=======
-		
->>>>>>> Foundation for the game Euchre.
 	}
 
 	/**
@@ -100,11 +72,7 @@ public class CrazyEightsCardTranslatorTest {
 	 */
 	@Test
 	public void testSpades(){
-<<<<<<< HEAD
 
-=======
-		
->>>>>>> Foundation for the game Euchre.
 		assertEquals("Testing Spades ace.", R.drawable.spades_a, t.getResourceForCardWithId(39));
 		assertEquals("Testing Spades 2.", R.drawable.spades_2, t.getResourceForCardWithId(40));
 		assertEquals("Testing Spades 3.", R.drawable.spades_3, t.getResourceForCardWithId(41));
@@ -118,25 +86,15 @@ public class CrazyEightsCardTranslatorTest {
 		assertEquals("Testing Spades jack.", R.drawable.spades_j, t.getResourceForCardWithId(49));
 		assertEquals("Testing Spades queen.", R.drawable.spades_q, t.getResourceForCardWithId(50));
 		assertEquals("Testing Spades king.", R.drawable.spades_k, t.getResourceForCardWithId(51));
-<<<<<<< HEAD
 
 	}
 
-=======
-		
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test the clubs
 	 */
 	@Test
 	public void testClubs(){
-<<<<<<< HEAD
 
-=======
-		
->>>>>>> Foundation for the game Euchre.
 		assertEquals("Testing Clubs ace.", R.drawable.clubs_a, t.getResourceForCardWithId(0));
 		assertEquals("Testing Clubs 2.", R.drawable.clubs_2, t.getResourceForCardWithId(1));
 		assertEquals("Testing Clubs 3.", R.drawable.clubs_3, t.getResourceForCardWithId(2));
@@ -150,30 +108,17 @@ public class CrazyEightsCardTranslatorTest {
 		assertEquals("Testing Clubs jack.", R.drawable.clubs_j, t.getResourceForCardWithId(10));
 		assertEquals("Testing Clubs queen.", R.drawable.clubs_q, t.getResourceForCardWithId(11));
 		assertEquals("Testing Clubs king.", R.drawable.clubs_k, t.getResourceForCardWithId(12));
-<<<<<<< HEAD
 
 	}
 
-=======
-		
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test the jokers
 	 */
 	@Test
 	public void testJokers(){
-<<<<<<< HEAD
 
 		assertEquals("Testing Joker black.", R.drawable.joker_b, t.getResourceForCardWithId(52));
 		assertEquals("Testing Joker red.", R.drawable.joker_r, t.getResourceForCardWithId(53));
 
-=======
-		
-		assertEquals("Testing Joker black.", R.drawable.joker_b, t.getResourceForCardWithId(52));
-		assertEquals("Testing Joker red.", R.drawable.joker_r, t.getResourceForCardWithId(53));
-		
->>>>>>> Foundation for the game Euchre.
 	}
 }

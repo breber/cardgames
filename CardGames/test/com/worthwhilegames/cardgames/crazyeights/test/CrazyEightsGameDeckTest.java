@@ -12,15 +12,9 @@ import org.junit.Test;
 
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.Card;
-<<<<<<< HEAD
 import com.worthwhilegames.cardgames.shared.CardGame;
 import com.worthwhilegames.cardgames.shared.Deck;
 
-=======
-import com.worthwhilegames.cardgames.shared.Deck;
-
-import static com.worthwhilegames.cardgames.shared.CardGame.CRAZY_EIGHTS;
->>>>>>> Foundation for the game Euchre.
 
 /**
  * This class will test the crazy eights game deck
@@ -31,29 +25,17 @@ public class CrazyEightsGameDeckTest {
 
 	private Deck deck;
 	private ArrayList<Card> cardDeck = new ArrayList<Card>();
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * This method will be performed before every test
 	 */
 	@Before
 	public void setup(){
-<<<<<<< HEAD
 
-		deck = new Deck(CardGame.CRAZY_EIGHTS);
+		deck = new Deck(CardGame.CrazyEights);
 
 	}
 
-=======
-		
-		deck = new Deck(CRAZY_EIGHTS);
-		
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Method to set up the initial deck of cards that are valid
 	 */
@@ -114,18 +96,13 @@ public class CrazyEightsGameDeckTest {
 		cardDeck.add(new Card(4, 1, R.drawable.joker_r, 53));
 		cardDeck.add(new Card(5, 0, R.drawable.back_blue_1, 54));
 	}
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test to make sure the right cards are in the deck and all of their information matches
 	 */
 	@Test
 	public void testDeck(){
 		setupDeck();
-<<<<<<< HEAD
 
 		List<Card> cards = deck.getCardIDs();
 
@@ -134,16 +111,6 @@ public class CrazyEightsGameDeckTest {
 
 		while(iter.hasNext()){
 
-=======
-		
-		List<Card> cards = deck.getCardIDs();
-		
-		Iterator<Card> iter = cards.iterator();
-		int i = 0;
-		
-		while(iter.hasNext()){
-			
->>>>>>> Foundation for the game Euchre.
 			Card c = iter.next();
 			Card c1 = cardDeck.get(i);
 			assertEquals("Testing card "+i+" idNum", c1.getIdNum(), c.getIdNum());
@@ -152,44 +119,26 @@ public class CrazyEightsGameDeckTest {
 			assertEquals("Testing card "+i+" value", c1.getValue(), c.getValue());
 			i++;
 		}
-<<<<<<< HEAD
 
 	}
 
-=======
-		
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Test the size of the deck
 	 */
 	@Test
 	public void testDeckSize(){
 		List<Card> cards = deck.getCardIDs();
-<<<<<<< HEAD
 
 		assertEquals("Testing the size of the deck", 54, cards.size());
 	}
 
-=======
-		
-		assertEquals("Testing the size of the deck", 54, cards.size());
-	}
-	
->>>>>>> Foundation for the game Euchre.
 	/**
 	 * Tear down
 	 */
 	@After
 	public void tearDown(){
-<<<<<<< HEAD
 
 
-=======
-		
-		
->>>>>>> Foundation for the game Euchre.
 	}
 
 }

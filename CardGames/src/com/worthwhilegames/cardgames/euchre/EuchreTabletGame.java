@@ -131,7 +131,7 @@ public class EuchreTabletGame implements Game{
 	 * A constructor for the crazy eights game type. This constructor will initialize the all the variables
 	 * for a game of euchre including the rules, players, deck, shuffled deck pile and the discard pile.
 	 */
-	public EuchreTabletGame() {
+	private EuchreTabletGame() {
 		players = new ArrayList<Player>();
 		gameDeck = new Deck(CardGame.Euchre);
 		shuffledDeck = gameDeck.getCardIDs();
