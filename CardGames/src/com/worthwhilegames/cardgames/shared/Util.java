@@ -7,9 +7,6 @@ import java.util.Enumeration;
 
 import org.apache.http.conn.util.InetAddressUtils;
 
-import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 import com.worthwhilegames.cardgames.BuildConfig;
@@ -54,25 +51,6 @@ public class Util {
 	 */
 	public static void setIsGameboard(boolean isGameboard) {
 		Util.isGameboard = isGameboard;
-	}
-
-	/**
-	 * Make sure that the device is in Bluetooth "Discoverable" mode
-	 *
-	 * @param ctx
-	 * @param btAdapter
-	 */
-	public static void ensureDiscoverable(Context ctx) {
-		if (Util.isDebugBuild()) {
-			Log.d(TAG_GENERIC, "ensure discoverable");
-		}
-		BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
-
-		if (btAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-			Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-			discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3600);
-			ctx.startActivity(discoverableIntent);
-		}
 	}
 
 	/**

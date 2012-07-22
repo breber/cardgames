@@ -103,8 +103,20 @@ public class ConnectionFactory {
 			ctx.registerReceiver(rx, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 			wifiManager.setWifiEnabled(true);
 		} else if (ConnectionType.Bluetooth.equals(getConnectionType(ctx))) {
-			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			ctx.startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+			// If we are the gameboard, just request discoverable mode
+			if (Util.isGameboard()) {
+				BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+
+				if (btAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+					Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+					discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3600);
+					ctx.startActivityForResult(discoverableIntent, REQUEST_ENABLE_BT);
+				}
+			} else {
+				// Otherwise request bluetooth enabled
+				Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+				ctx.startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+			}
 		}
 	}
 

@@ -246,7 +246,6 @@ public class ConnectActivity extends Activity {
 		mGame = GameFactory.getGameInstance(this);
 		isReconnect = mGame.getNumPlayers() > 0;
 
-
 		// Make sure that all connections are enabled
 		ConnectionFactory.ensureConnectionEnabled(this);
 
@@ -368,10 +367,10 @@ public class ConnectActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// If we are coming back from the Bluetooth Enable request, and
 		// it was successful, start listening for device connections
-		if (resultCode == RESULT_OK && requestCode == ConnectionFactory.REQUEST_ENABLE_BT) {
+		if (resultCode != RESULT_CANCELED && requestCode == ConnectionFactory.REQUEST_ENABLE_BT) {
 			updateName();
 			startListeningForDevices();
-		} else if (resultCode != RESULT_OK && requestCode == ConnectionFactory.REQUEST_ENABLE_BT) {
+		} else if (resultCode == RESULT_CANCELED && requestCode == ConnectionFactory.REQUEST_ENABLE_BT) {
 			// The user didn't enable bluetooth - send them back to main menu
 			setResult(RESULT_CANCELED);
 			finish();
