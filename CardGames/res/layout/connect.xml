@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".33" >
 
-                <com.worthwhilegames.cardgames.shared.TextView
+                <com.worthwhilegames.cardgames.shared.ResizingTextView
                     android:id="@+id/myName"
                     style="@style/GameButton"
                     android:layout_width="fill_parent"
