@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".33" >
 
-                <com.worthwhilegames.cardgames.shared.ResizingTextView
+                <com.worthwhilegames.cardgames.shared.TextView
                     android:id="@+id/myName"
                     style="@style/GameButton"
                     android:layout_width="fill_parent"
@@ -35,7 +35,8 @@
                     android:layout_centerHorizontal="true"
                     android:maxLines="2"
                     android:scrollHorizontally="true"
-                    android:text="@string/deviceName" />
+                    android:text="@string/deviceName"
+                    android:textSize="@dimen/connectScreenText" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -70,6 +71,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:text="@string/player_3"
+                            android:textSize="@dimen/connectScreenText"
                             android:visibility="invisible" />
                     </RelativeLayout>
                 </RelativeLayout>
@@ -89,7 +91,8 @@
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/statebutton"
                     android:text="@string/start"
-                    android:textColor="@color/buttontextcolor" />
+                    android:textColor="@color/buttontextcolor"
+                    android:textSize="@dimen/connectScreenText" />
             </RelativeLayout>
         </TableRow>
 
@@ -133,6 +136,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:text="@string/player_4"
+                            android:textSize="@dimen/connectScreenText"
                             android:visibility="invisible" />
                     </RelativeLayout>
                 </RelativeLayout>
@@ -162,6 +166,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:text="@string/connecting"
+                            android:textSize="@dimen/connectScreenText"
                             android:textStyle="bold" />
                     </RelativeLayout>
                 </RelativeLayout>
@@ -199,6 +204,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:text="@string/player_2"
+                            android:textSize="@dimen/connectScreenText"
                             android:visibility="invisible" />
                     </RelativeLayout>
                 </RelativeLayout>
@@ -239,6 +245,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:text="@string/player_1"
+                        android:textSize="@dimen/connectScreenText"
                         android:visibility="invisible" />
                 </RelativeLayout>
             </RelativeLayout>

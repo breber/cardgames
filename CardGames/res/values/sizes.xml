@@ -16,5 +16,6 @@
     <dimen name="infoTextViewPaddingTopBottom">10dip</dimen>
     <dimen name="selectSuitImage">85dp</dimen>
     <dimen name="settingsIconSize">35dip</dimen>
+    <dimen name="connectScreenText">20sp</dimen>
 
 </resources>

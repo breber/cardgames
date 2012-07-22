@@ -10,5 +10,6 @@
     <dimen name="mainMenuButtonSpacing">15dip</dimen>
     <dimen name="popupMarginLeftRight">100dip</dimen>
     <dimen name="settingsIconSize">55dip</dimen>
+    <dimen name="connectScreenText">30sp</dimen>
 
 </resources>
