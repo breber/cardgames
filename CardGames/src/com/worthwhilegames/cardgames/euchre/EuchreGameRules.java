@@ -24,7 +24,14 @@ public class EuchreGameRules implements Rules{
 	}
 
 	/**
+	 * This method will check a card to see if it can be played or not.
 	 * 
+	 * @param cardPlayed the card the user decided to play
+	 * @param cardLed the lead card played in the hand
+	 * @param cards a list of cards in the user's hand
+	 * @param trump the trump of the current round
+	 * 
+	 * @return true if the card played is valid. False otherwise.
 	 */
 	@Override
 	public boolean checkCard(Card cardPlayed, int trump, Card cardLed, List<Card> cards) {
@@ -50,8 +57,6 @@ public class EuchreGameRules implements Rules{
 
 		boolean returnValue = false;
 
-
-
 		if(!canFollowSuit){
 			returnValue = true;
 		}else if(cardPlayed.getSuit() == cardLed.getSuit()){
@@ -67,6 +72,14 @@ public class EuchreGameRules implements Rules{
 		return returnValue;
 	}
 
+	/**
+	 * This method will adjust the jacks to make sure that the left/right jack can be distinguished
+	 * and when a card is checked for validity the check card method returns true with the left/right
+	 * jack.
+	 * 
+	 * @param cards a list of cards to adjust to new values based on the trump
+	 * @param trump the trump of the current round
+	 */
 	public void adjustJacks(List<Card> cards , int trump){
 
 		int numCards = cards.size();
@@ -110,6 +123,12 @@ public class EuchreGameRules implements Rules{
 		}
 	}
 
+	/**
+	 * This method will revert the jacks back to their original suit/value if they were changed.
+	 * 
+	 * @param cards the list of cards to revert
+	 * @param trump the trump of the current round.
+	 */
 	public void revertJacks(List<Card> cards, int trump){
 
 		int numCards = cards.size();
