@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -61,12 +62,6 @@ public class EuchreGameController implements GameController{
 	 * request code to allow the gameboard to choose which player to connect
 	 */
 	private static final int CHOOSE_PLAYER = Math.abs("CHOOSE_PLAYER".hashCode());
-
-	/**
-	 * The request code to keep track of the "Are you sure you want to quit"
-	 * activity
-	 */
-	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
 
 	/**
 	 * The ConnectionServer that sends and receives messages from other devices
@@ -253,6 +248,9 @@ public class EuchreGameController implements GameController{
 
 				//start the first turn of the round
 				whoseTurn = game.getTrickLeader();
+
+				// TODO: look at this...something about trump
+				refreshPlayers();
 				sendNextTurn(currentState, game.getCardLead());
 				break;
 			case PLAY_CARD:
@@ -430,10 +428,16 @@ public class EuchreGameController implements GameController{
 	/**
 	 * This method will send players info about the score
 	 */
-	private void declareRoundScores(){
-
-		//TODO remove toast
-		Toast.makeText(gameContext, "Scores team 1:" + game.getMatchScores()[0] + " Team 2:" + game.getMatchScores()[1], Toast.LENGTH_SHORT);
+	private void declareRoundScores() {
+		if (Util.isDebugBuild()) {
+			// TODO: should this be shown every time?
+			// TODO: this should probably be styled
+			AlertDialog.Builder dlg = new AlertDialog.Builder(gameContext);
+			dlg.setTitle("Scores!");
+			dlg.setMessage("Scores team 1:" + game.getMatchScores()[0] +
+					" Team 2:" + game.getMatchScores()[1]);
+			dlg.show();
+		}
 
 		for (int i = 0; i < game.getNumPlayers(); i++) {
 			server.write(ROUND_OVER, null, players.get(i).getId());
@@ -689,7 +693,9 @@ public class EuchreGameController implements GameController{
 			advanceTurn();
 		} else {
 			//TODO something broke.
-			Toast.makeText(gameContext, "FAILURE BY COMPUTER", Toast.LENGTH_LONG);
+			if (Util.isDebugBuild()) {
+				Toast.makeText(gameContext, "FAILURE BY COMPUTER", Toast.LENGTH_LONG).show();
+			}
 			// If card is null then there are no cards to draw so just move on and allow the turn to advance
 			mySM.drawCardSound();
 		}
@@ -759,6 +765,9 @@ public class EuchreGameController implements GameController{
 				game.clearCardsPlayed();
 
 				currentState = PLAY_LEAD_CARD;
+
+				// TODO: look at this...something about trump
+				refreshPlayers();
 			} else {
 				if(whoseTurn != game.getDealer()){
 					incrementWhoseTurn();

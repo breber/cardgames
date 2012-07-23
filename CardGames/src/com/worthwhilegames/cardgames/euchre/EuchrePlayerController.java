@@ -349,8 +349,8 @@ public class EuchrePlayerController implements PlayerController {
 			@Override
 			public void onClick(View v) {
 				if ( (isTurn && cardSelected != null) &&
-						( gameRules.checkCard(cardSelected, trumpSuit, cardLead, cardHand)
-								|| currentState == PICK_IT_UP || currentState == PLAY_LEAD_CARD ) && cardHand.size() != 0) {
+						( currentState == PICK_IT_UP || currentState == PLAY_LEAD_CARD ||
+						gameRules.checkCard(cardSelected, trumpSuit, cardLead, cardHand) ) && cardHand.size() != 0) {
 					// play card or discard if it is pick_it_up mode
 
 					connection.write(currentState, cardSelected);
