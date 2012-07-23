@@ -27,10 +27,11 @@ public class EuchreGameRules implements Rules{
 	 * 
 	 */
 	@Override
-	public boolean checkCard(Card cardPlayed, int trump, int suitLed, List<Card> cards) {
+	public boolean checkCard(Card cardPlayed, int trump, Card cardLed, List<Card> cards) {
 
 		List<Card> cardsPlayed = new ArrayList<Card>();
 		cardsPlayed.add(cardPlayed);
+		cardsPlayed.add(cardLed);
 
 		//TODO what if a left bower is played!!! it don't work.
 		adjustJacks(cards, trump);
@@ -42,7 +43,7 @@ public class EuchreGameRules implements Rules{
 
 		for(int i = 0; i < numCards; i++){
 			Card card = cards.get(i);
-			if(suitLed == card.getSuit()){
+			if(cardLed.getSuit() == card.getSuit()){
 				canFollowSuit = true;
 			}
 		}
@@ -53,7 +54,7 @@ public class EuchreGameRules implements Rules{
 
 		if(!canFollowSuit){
 			returnValue = true;
-		}else if(cardPlayed.getSuit() == suitLed){
+		}else if(cardPlayed.getSuit() == cardLed.getSuit()){
 			returnValue = true;
 		}else if(cardPlayed.getSuit() == CHANGED_JACK_SUIT_LEFT){
 

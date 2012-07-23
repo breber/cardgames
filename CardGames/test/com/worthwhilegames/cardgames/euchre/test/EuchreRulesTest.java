@@ -16,7 +16,7 @@ import com.worthwhilegames.cardgames.shared.Player;
 public class EuchreRulesTest {
 
 	private EuchreGameRules r;
-	private int suitLed;
+	private Card cardLed;
 	private int trump;
 	private Player player = new Player();
 
@@ -43,18 +43,18 @@ public class EuchreRulesTest {
 		player.addCard(card5);
 
 		trump = SUIT_CLUBS;
-		suitLed = SUIT_CLUBS;
+		cardLed = new Card(SUIT_CLUBS, 0, 0, 0);
 
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card1, trump, suitLed, player.getCards()));
+				r.checkCard(card1, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card2, trump, suitLed, player.getCards()));
+				r.checkCard(card2, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card3, trump, suitLed, player.getCards()));
+				r.checkCard(card3, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card4, trump, suitLed, player.getCards()));
+				r.checkCard(card4, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card5, trump, suitLed, player.getCards()));
+				r.checkCard(card5, trump, cardLed, player.getCards()));
 
 		// card 1
 		assertEquals(card1.getIdNum(), player.getCards().get(0).getIdNum());
@@ -107,18 +107,18 @@ public class EuchreRulesTest {
 		player.addCard(card5);
 
 		trump = SUIT_CLUBS;
-		suitLed = SUIT_DIAMONDS;
+		cardLed = new Card(SUIT_DIAMONDS, 0, 0, 0);
 
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card1, trump, suitLed, player.getCards()));
+				r.checkCard(card1, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card2, trump, suitLed, player.getCards()));
+				r.checkCard(card2, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card3, trump, suitLed, player.getCards()));
+				r.checkCard(card3, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card4, trump, suitLed, player.getCards()));
+				r.checkCard(card4, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card5, trump, suitLed, player.getCards()));
+				r.checkCard(card5, trump, cardLed, player.getCards()));
 
 		// card 1
 		assertEquals(card1.getIdNum(), player.getCards().get(0).getIdNum());
@@ -171,18 +171,18 @@ public class EuchreRulesTest {
 		player.addCard(card5);
 
 		trump = SUIT_CLUBS;
-		suitLed = SUIT_HEARTS;
+		cardLed = new Card(SUIT_HEARTS, 0, 0, 0);
 
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card1, trump, suitLed, player.getCards()));
+				r.checkCard(card1, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card2, trump, suitLed, player.getCards()));
+				r.checkCard(card2, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card3, trump, suitLed, player.getCards()));
+				r.checkCard(card3, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card4, trump, suitLed, player.getCards()));
+				r.checkCard(card4, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card5, trump, suitLed, player.getCards()));
+				r.checkCard(card5, trump, cardLed, player.getCards()));
 
 		// card 1
 		assertEquals(card1.getIdNum(), player.getCards().get(0).getIdNum());
@@ -235,18 +235,18 @@ public class EuchreRulesTest {
 		player.addCard(card5);
 
 		trump = SUIT_CLUBS;
-		suitLed = SUIT_SPADES;
+		cardLed = new Card(SUIT_SPADES, 0, 0, 0);
 
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card1, trump, suitLed, player.getCards()));
+				r.checkCard(card1, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card2, trump, suitLed, player.getCards()));
+				r.checkCard(card2, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card3, trump, suitLed, player.getCards()));
+				r.checkCard(card3, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card4, trump, suitLed, player.getCards()));
+				r.checkCard(card4, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card5, trump, suitLed, player.getCards()));
+				r.checkCard(card5, trump, cardLed, player.getCards()));
 
 		// card 1
 		assertEquals(card1.getIdNum(), player.getCards().get(0).getIdNum());
@@ -299,18 +299,18 @@ public class EuchreRulesTest {
 		player.addCard(card5);
 
 		trump = SUIT_CLUBS;
-		suitLed = SUIT_DIAMONDS;
+		cardLed = new Card(SUIT_DIAMONDS, 0, 0, 0);
 
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card1, trump, suitLed, player.getCards()));
+				r.checkCard(card1, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card2, trump, suitLed, player.getCards()));
+				r.checkCard(card2, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card3, trump, suitLed, player.getCards()));
+				r.checkCard(card3, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card4, trump, suitLed, player.getCards()));
+				r.checkCard(card4, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card5, trump, suitLed, player.getCards()));
+				r.checkCard(card5, trump, cardLed, player.getCards()));
 
 		// card 1
 		assertEquals(card1.getIdNum(), player.getCards().get(0).getIdNum());
@@ -363,18 +363,18 @@ public class EuchreRulesTest {
 		player.addCard(card5);
 
 		trump = SUIT_SPADES;
-		suitLed = SUIT_SPADES;
+		cardLed = new Card(SUIT_SPADES, 0, 0, 0);
 
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card1, trump, suitLed, player.getCards()));
+				r.checkCard(card1, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card2, trump, suitLed, player.getCards()));
+				r.checkCard(card2, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card3, trump, suitLed, player.getCards()));
+				r.checkCard(card3, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card4, trump, suitLed, player.getCards()));
+				r.checkCard(card4, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card5, trump, suitLed, player.getCards()));
+				r.checkCard(card5, trump, cardLed, player.getCards()));
 
 		// card 1
 		assertEquals(card1.getIdNum(), player.getCards().get(0).getIdNum());
@@ -427,18 +427,18 @@ public class EuchreRulesTest {
 		player.addCard(card5);
 
 		trump = SUIT_CLUBS;
-		suitLed = SUIT_CLUBS;
+		cardLed = new Card(SUIT_CLUBS, 0, 0, 0);
 
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card1, trump, suitLed, player.getCards()));
+				r.checkCard(card1, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card2, trump, suitLed, player.getCards()));
+				r.checkCard(card2, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card3, trump, suitLed, player.getCards()));
+				r.checkCard(card3, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card4, trump, suitLed, player.getCards()));
+				r.checkCard(card4, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card5, trump, suitLed, player.getCards()));
+				r.checkCard(card5, trump, cardLed, player.getCards()));
 
 		// card 1
 		assertEquals(card1.getIdNum(), player.getCards().get(0).getIdNum());
@@ -491,18 +491,18 @@ public class EuchreRulesTest {
 		player.addCard(card5);
 
 		trump = SUIT_DIAMONDS;
-		suitLed = SUIT_HEARTS;
+		cardLed = new Card(SUIT_HEARTS, 0, 0, 0);
 
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card1, trump, suitLed, player.getCards()));
+				r.checkCard(card1, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card2, trump, suitLed, player.getCards()));
+				r.checkCard(card2, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card3, trump, suitLed, player.getCards()));
+				r.checkCard(card3, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card4, trump, suitLed, player.getCards()));
+				r.checkCard(card4, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card5, trump, suitLed, player.getCards()));
+				r.checkCard(card5, trump, cardLed, player.getCards()));
 
 		// card 1
 		assertEquals(card1.getIdNum(), player.getCards().get(0).getIdNum());
@@ -555,18 +555,18 @@ public class EuchreRulesTest {
 		player.addCard(card5);
 
 		trump = SUIT_DIAMONDS;
-		suitLed = SUIT_HEARTS;
+		cardLed = new Card(SUIT_HEARTS, 0, 0, 0);
 
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card1, trump, suitLed, player.getCards()));
+				r.checkCard(card1, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card2, trump, suitLed, player.getCards()));
+				r.checkCard(card2, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card3, trump, suitLed, player.getCards()));
+				r.checkCard(card3, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card4, trump, suitLed, player.getCards()));
+				r.checkCard(card4, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card5, trump, suitLed, player.getCards()));
+				r.checkCard(card5, trump, cardLed, player.getCards()));
 
 		// card 1
 		assertEquals(card1.getIdNum(), player.getCards().get(0).getIdNum());
@@ -619,18 +619,18 @@ public class EuchreRulesTest {
 		player.addCard(card5);
 
 		trump = SUIT_DIAMONDS;
-		suitLed = SUIT_DIAMONDS;
+		cardLed = new Card(SUIT_DIAMONDS, 0, 0, 0);
 
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card1, trump, suitLed, player.getCards()));
+				r.checkCard(card1, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card2, trump, suitLed, player.getCards()));
+				r.checkCard(card2, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card3, trump, suitLed, player.getCards()));
+				r.checkCard(card3, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card4, trump, suitLed, player.getCards()));
+				r.checkCard(card4, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card5, trump, suitLed, player.getCards()));
+				r.checkCard(card5, trump, cardLed, player.getCards()));
 
 		// card 1
 		assertEquals(card1.getIdNum(), player.getCards().get(0).getIdNum());
@@ -683,18 +683,82 @@ public class EuchreRulesTest {
 		player.addCard(card5);
 
 		trump = SUIT_SPADES;
-		suitLed = SUIT_DIAMONDS;
+		cardLed = new Card(SUIT_DIAMONDS, 0, 0, 0);
 
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card1, trump, suitLed, player.getCards()));
+				r.checkCard(card1, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card2, trump, suitLed, player.getCards()));
+				r.checkCard(card2, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card3, trump, suitLed, player.getCards()));
+				r.checkCard(card3, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", false,
-				r.checkCard(card4, trump, suitLed, player.getCards()));
+				r.checkCard(card4, trump, cardLed, player.getCards()));
 		assertEquals("Testing valid play.", true,
-				r.checkCard(card5, trump, suitLed, player.getCards()));
+				r.checkCard(card5, trump, cardLed, player.getCards()));
+
+		// card 1
+		assertEquals(card1.getIdNum(), player.getCards().get(0).getIdNum());
+		assertEquals(card1.getSuit(), player.getCards().get(0).getSuit());
+		assertEquals(card1.getValue(), player.getCards().get(0).getValue());
+		assertEquals(card1.getResourceId(), player.getCards().get(0)
+				.getResourceId());
+
+		// card 2
+		assertEquals(card2.getIdNum(), player.getCards().get(1).getIdNum());
+		assertEquals(card2.getSuit(), player.getCards().get(1).getSuit());
+		assertEquals(card2.getValue(), player.getCards().get(1).getValue());
+		assertEquals(card2.getResourceId(), player.getCards().get(1)
+				.getResourceId());
+
+		// card 3
+		assertEquals(card3.getIdNum(), player.getCards().get(2).getIdNum());
+		assertEquals(card3.getSuit(), player.getCards().get(2).getSuit());
+		assertEquals(card3.getValue(), player.getCards().get(2).getValue());
+		assertEquals(card3.getResourceId(), player.getCards().get(2)
+				.getResourceId());
+
+		// card 4
+		assertEquals(card4.getIdNum(), player.getCards().get(3).getIdNum());
+		assertEquals(card4.getSuit(), player.getCards().get(3).getSuit());
+		assertEquals(card4.getValue(), player.getCards().get(3).getValue());
+		assertEquals(card4.getResourceId(), player.getCards().get(3)
+				.getResourceId());
+
+		// card 5
+		assertEquals(card5.getIdNum(), player.getCards().get(4).getIdNum());
+		assertEquals(card5.getSuit(), player.getCards().get(4).getSuit());
+		assertEquals(card5.getValue(), player.getCards().get(4).getValue());
+		assertEquals(card5.getResourceId(), player.getCards().get(4)
+				.getResourceId());
+	}
+
+	@Test
+	public void testJacks4() {
+		Card card1 = new Card(SUIT_CLUBS, 10, 0, 10);// Jack of Clubs
+		Card card2 = new Card(SUIT_HEARTS, 10, 0, 36);// Jack of Hearts
+		Card card3 = new Card(SUIT_CLUBS, 8, 0, 8);// Nine of clubs
+		Card card4 = new Card(SUIT_SPADES, 10, 0, 49);// Jack of Spades
+		Card card5 = new Card(SUIT_DIAMONDS, 10, 0, 23);// Jack of Diamonds
+
+		player.addCard(card1);
+		player.addCard(card2);
+		player.addCard(card3);
+		player.addCard(card4);
+		player.addCard(card5);
+
+		trump = SUIT_SPADES;
+		cardLed = new Card(SUIT_CLUBS, 10, 0, 0);
+
+		assertEquals("Testing valid play.", true,
+				r.checkCard(card1, trump, cardLed, player.getCards()));
+		assertEquals("Testing valid play.", false,
+				r.checkCard(card2, trump, cardLed, player.getCards()));
+		assertEquals("Testing valid play.", false,
+				r.checkCard(card3, trump, cardLed, player.getCards()));
+		assertEquals("Testing valid play.", true,
+				r.checkCard(card4, trump, cardLed, player.getCards()));
+		assertEquals("Testing valid play.", false,
+				r.checkCard(card5, trump, cardLed, player.getCards()));
 
 		// card 1
 		assertEquals(card1.getIdNum(), player.getCards().get(0).getIdNum());

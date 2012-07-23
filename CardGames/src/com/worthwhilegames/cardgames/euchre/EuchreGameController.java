@@ -610,7 +610,7 @@ public class EuchreGameController implements GameController{
 				break;
 			case IS_TURN:
 				for (Card c : cards) {
-					if (gameRules.checkCard(c, game.getTrump(), cardLead.getSuit(), cards)) {
+					if (gameRules.checkCard(c, game.getTrump(), cardLead, cards)) {
 						cardSelected = c;
 						break;
 					}
@@ -633,7 +633,7 @@ public class EuchreGameController implements GameController{
 				break;
 			case IS_TURN:
 				for (Card c : cards) {
-					if (gameRules.checkCard(c, game.getTrump(), cardLead.getSuit(), cards)) {
+					if (gameRules.checkCard(c, game.getTrump(), cardLead, cards)) {
 						cardSelected = c;
 						break;
 					}
@@ -656,7 +656,7 @@ public class EuchreGameController implements GameController{
 				break;
 			case IS_TURN:
 				for (Card c : cards) {
-					if (gameRules.checkCard(c, game.getTrump(), cardLead.getSuit(), cards)) {
+					if (gameRules.checkCard(c, game.getTrump(), cardLead, cards)) {
 						cardSelected = c;
 						break;
 					}

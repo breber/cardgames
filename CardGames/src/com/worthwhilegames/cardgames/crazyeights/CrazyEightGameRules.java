@@ -53,7 +53,7 @@ public class CrazyEightGameRules implements Rules {
 	}
 
 	@Override
-	public boolean checkCard(Card cardPlayed, int trump, int suitLed,
+	public boolean checkCard(Card cardPlayed, int trump, Card cardLed,
 			List<Card> cards) {
 		return false;
 	}

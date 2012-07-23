@@ -349,7 +349,7 @@ public class EuchrePlayerController implements PlayerController {
 			@Override
 			public void onClick(View v) {
 				if ( (isTurn && cardSelected != null) &&
-						( gameRules.checkCard(cardSelected, trumpSuit, cardLead.getSuit(), cardHand)
+						( gameRules.checkCard(cardSelected, trumpSuit, cardLead, cardHand)
 								|| currentState == PICK_IT_UP || currentState == PLAY_LEAD_CARD ) && cardHand.size() != 0) {
 					// play card or discard if it is pick_it_up mode
 
@@ -483,7 +483,7 @@ public class EuchrePlayerController implements PlayerController {
 		if (isEnabled && currentState == PLAY_CARD) {
 			// it is your turn grey out cards
 			for (Card c : cardHand) {
-				boolean isPlayable = gameRules.checkCard(c, trumpSuit, cardLead.getSuit(), cardHand) ;
+				boolean isPlayable = gameRules.checkCard(c, trumpSuit, cardLead, cardHand) ;
 				playerContext.setCardPlayable(c.getIdNum(), isPlayable || currentState == PICK_IT_UP || currentState == PLAY_LEAD_CARD);
 			}
 		} else {
