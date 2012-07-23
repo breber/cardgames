@@ -101,11 +101,6 @@
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.CardGames.Dialog" />
         <activity
-            android:name=".euchre.SelectBetActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.CardGames.Dialog" />
-        <activity
             android:name=".player.activities.EnterNameActivty"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="sensorLandscape"
