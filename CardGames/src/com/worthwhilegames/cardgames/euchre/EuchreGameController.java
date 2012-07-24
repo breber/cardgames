@@ -133,7 +133,7 @@ public class EuchreGameController implements GameController{
 	/**
 	 * Handler to handle a computer's turn
 	 */
-	private Handler handler = new Handler() {
+	private Handler computerHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			if (Util.isDebugBuild()) {
@@ -143,6 +143,26 @@ public class EuchreGameController implements GameController{
 			if (!isPaused) {
 				isComputerPlaying = false;
 				playComputerTurn();
+			} else {
+				if (Util.isDebugBuild()) {
+					Log.d(TAG, "handleMessage: game paused. not going to play now");
+				}
+			}
+		}
+	};
+
+	/**
+	 * Handler to handle showing all 4 cards played
+	 */
+	private Handler cardPlayingHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			if (Util.isDebugBuild()) {
+				Log.d(TAG, "handleMessage: waiting to remove cards");
+			}
+
+			if (!isPaused) {
+				endTurnRound();
 			} else {
 				if (Util.isDebugBuild()) {
 					Log.d(TAG, "handleMessage: game paused. not going to play now");
@@ -361,7 +381,7 @@ public class EuchreGameController implements GameController{
 		// If a computer was playing before the game was paused
 		// let them know that they can play now
 		if (isComputerPlaying) {
-			handler.sendEmptyMessage(0);
+			computerHandler.sendEmptyMessage(0);
 		}
 	}
 
@@ -386,31 +406,8 @@ public class EuchreGameController implements GameController{
 		incrementWhoseTurn();
 
 		if(whoseTurn == game.getTrickLeader()){
-			//The round is over
-			game.determineTrickWinner();
-
-			//TODO better way to determine if round is over
-			if(players.get(0).getCards().size() == 0){
-				game.endRound();
-				if(game.isGameOver(players.get(0))){
-					declareWinner(game.getWinningTeam());
-					return;
-				}
-				declareRoundScores();
-				startRound();
-			} else {
-				//round not over just the current trick
-
-				//TODO update scores on gameboard
-				gameContext.updateUi();
-
-				//make the trick leader to play next
-				whoseTurn = game.getTrickLeader();
-				currentState = PLAY_LEAD_CARD;
-
-				sendNextTurn(currentState, game.getCardLead());
-			}
-
+			gameContext.updateUi();
+			startTrickEndWait();
 			return;
 		}
 
@@ -424,6 +421,31 @@ public class EuchreGameController implements GameController{
 	}
 
 
+	private void endTurnRound(){
+		game.determineTrickWinner();
+
+		//TODO better way to determine if round is over
+		if(players.get(0).getCards().size() == 0){
+			game.endRound();
+			if(game.isGameOver(players.get(0))){
+				declareWinner(game.getWinningTeam());
+				return;
+			}
+			declareRoundScores();
+			startRound();
+		} else {
+			//round not over just the current trick
+
+			//TODO update scores on gameboard
+			gameContext.updateUi();
+
+			//make the trick leader to play next
+			whoseTurn = game.getTrickLeader();
+			currentState = PLAY_LEAD_CARD;
+
+			sendNextTurn(currentState, game.getCardLead());
+		}
+	}
 
 	/**
 	 * This method will send players info about the score
@@ -581,7 +603,32 @@ public class EuchreGameController implements GameController{
 					Log.d(TAG, "startComputerTurn: letting computer know it can play");
 				}
 
-				handler.sendEmptyMessage(0);
+				computerHandler.sendEmptyMessage(0);
+			}
+		}).start();
+	}
+
+	/**
+	 * Start a computer's turn.
+	 * 
+	 * Starts another thread that waits, and then posts a message to the
+	 * mHandler letting it know it can play.
+	 */
+	private void startTrickEndWait() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(Constants.COMPUTER_WAIT_TIME);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				if (Util.isDebugBuild()) {
+					Log.d(TAG, "startTrickEndWait: showing the cards that have been played at the end of a trick");
+				}
+
+				cardPlayingHandler.sendEmptyMessage(0);
 			}
 		}).start();
 	}
@@ -693,6 +740,7 @@ public class EuchreGameController implements GameController{
 			advanceTurn();
 		} else {
 			//TODO something broke.
+			Toast.makeText(gameContext, "FAILURE BY COMPUTER", Toast.LENGTH_LONG).show();
 			if (Util.isDebugBuild()) {
 				Toast.makeText(gameContext, "FAILURE BY COMPUTER", Toast.LENGTH_LONG).show();
 			}
@@ -722,7 +770,7 @@ public class EuchreGameController implements GameController{
 				if(bet.getTrumpSuit() == game.getCardLead().getSuit()){
 					//set trump and trump caller
 					game.setTrump(bet.getTrumpSuit());
-					game.pickItUp(players.get(whoseTurn));
+					game.setPlayerCalledTrump(whoseTurn);
 					// Update the Game board display with an indication of the current suit
 					gameContext.updateSuit(game.getTrump());
 
@@ -753,7 +801,7 @@ public class EuchreGameController implements GameController{
 		} else if(round == SECOND_ROUND_BETTING) {
 			if(bet.getPlaceBet()){
 				game.setTrump(bet.getTrumpSuit());
-				game.pickItUp(players.get(whoseTurn));
+				game.setPlayerCalledTrump(whoseTurn);
 				gameContext.updateSuit(game.getTrump());
 
 				if(bet.getGoAlone()){

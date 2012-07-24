@@ -224,7 +224,14 @@ public class EuchreTabletGame implements Game{
 	}
 
 	/**
-	 * * This will end a series of 5 tricks and calculate the score
+	 * This will end a series of 5 tricks and calculate the score
+	 * 
+	 * Betting team gets 3-4 tricks +1 point  betting team
+	 * Betting team gets 5   tricks +2 points betting team
+	 * Betting team gets 0-2 tricks +2 points non-betting team
+	 * Betting team go alone gets 5   tricks +4 points for betting team
+	 * Betting team go alone gets 3-4 tricks +1 point for betting team
+	 * Betting team go alone gets 0-2 tricks +2 points for non-betting team
 	 */
 	public void endRound(){
 
@@ -242,6 +249,8 @@ public class EuchreTabletGame implements Game{
 		}
 
 
+		roundScores[0] = 0;
+		roundScores[1] = 0;
 		this.clearCardsPlayed();
 
 	}
