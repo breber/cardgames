@@ -619,6 +619,10 @@ public class EuchreTabletGame implements Game{
 
 	public void setPlayerGoingAlone(boolean isPlayerGoingAlone) {
 		this.isPlayerGoingAlone = isPlayerGoingAlone;
+		if(isPlayerGoingAlone){
+			List<Card> tempCards = players.get(getPlayerBeingSkipped()).getCards();
+			tempCards.removeAll(tempCards);
+		}
 	}
 
 	public int getPlayerBeingSkipped(){

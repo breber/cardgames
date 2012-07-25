@@ -775,14 +775,9 @@ public class EuchreGameController implements GameController{
 					gameContext.updateSuit(game.getTrump());
 
 					game.setPlayerGoingAlone(bet.getGoAlone());
-					if(game.isPlayerGoingAlone()){
-						List<Card> tempCards;
-						if( game.getPlayerCalledTrump() > 1 ){
-							tempCards = players.get(game.getPlayerCalledTrump() - 2).getCards();
-						} else {
-							tempCards = players.get(game.getPlayerCalledTrump() + 2).getCards();
-						}
-						tempCards.removeAll(tempCards);
+					if(game.isPlayerGoingAlone() && whoseTurn == game.getPlayerBeingSkipped() ){
+						incrementWhoseTurn();
+						game.setTrickLeader(whoseTurn);
 					}
 					whoseTurn = game.getDealer();
 					currentState = PICK_IT_UP;
@@ -814,13 +809,9 @@ public class EuchreGameController implements GameController{
 				whoseTurn = game.getTrickLeader();
 
 				game.setPlayerGoingAlone(bet.getGoAlone());
-				if(game.isPlayerGoingAlone()){
-					List<Card> tempCards = players.get(game.getPlayerBeingSkipped()).getCards();
-					tempCards.removeAll(tempCards);
-					if( whoseTurn == game.getPlayerBeingSkipped()){
-						incrementWhoseTurn();
-						game.setTrickLeader(whoseTurn);
-					}
+				if(game.isPlayerGoingAlone() && whoseTurn == game.getPlayerBeingSkipped() ){
+					incrementWhoseTurn();
+					game.setTrickLeader(whoseTurn);
 				}
 				game.clearCardsPlayed();
 
@@ -876,7 +867,7 @@ public class EuchreGameController implements GameController{
 			whoseTurn = 0;
 		}
 
-		if( game.isPlayerGoingAlone() && whoseTurn != game.getPlayerCalledTrump() && (whoseTurn % 2) == (game.getPlayerCalledTrump() % 2) ){
+		if( game.isPlayerGoingAlone() && whoseTurn == game.getPlayerBeingSkipped() ){
 			incrementWhoseTurn();
 		}
 	}
