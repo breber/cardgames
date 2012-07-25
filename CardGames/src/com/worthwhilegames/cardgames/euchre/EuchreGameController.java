@@ -774,9 +774,15 @@ public class EuchreGameController implements GameController{
 					// Update the Game board display with an indication of the current suit
 					gameContext.updateSuit(game.getTrump());
 
-					whoseTurn = game.getDealer();
-					if(bet.getGoAlone()){
-						//TODO go alone stuff
+					game.setPlayerGoingAlone(bet.getGoAlone());
+					if(game.isPlayerGoingAlone()){
+						List<Card> tempCards;
+						if( game.getPlayerCalledTrump() > 1 ){
+							tempCards = players.get(game.getPlayerCalledTrump() - 2).getCards();
+						} else {
+							tempCards = players.get(game.getPlayerCalledTrump() + 2).getCards();
+						}
+						tempCards.removeAll(tempCards);
 					}
 					whoseTurn = game.getDealer();
 					currentState = PICK_IT_UP;
@@ -804,12 +810,18 @@ public class EuchreGameController implements GameController{
 				game.setPlayerCalledTrump(whoseTurn);
 				gameContext.updateSuit(game.getTrump());
 
-				if(bet.getGoAlone()){
-					//TODO go alone stuff
-				}
 				//set the turn to the first player to play and go
 				whoseTurn = game.getTrickLeader();
 
+				game.setPlayerGoingAlone(bet.getGoAlone());
+				if(game.isPlayerGoingAlone()){
+					List<Card> tempCards = players.get(game.getPlayerBeingSkipped()).getCards();
+					tempCards.removeAll(tempCards);
+					if( whoseTurn == game.getPlayerBeingSkipped()){
+						incrementWhoseTurn();
+						game.setTrickLeader(whoseTurn);
+					}
+				}
 				game.clearCardsPlayed();
 
 				currentState = PLAY_LEAD_CARD;
@@ -858,11 +870,14 @@ public class EuchreGameController implements GameController{
 	 * This function will change whose turn it is to the next player.
 	 */
 	private void incrementWhoseTurn(){
-		//TODO make stuff for go alone.
 		if (whoseTurn < game.getNumPlayers() - 1) {
 			whoseTurn++;
 		} else {
 			whoseTurn = 0;
+		}
+
+		if( game.isPlayerGoingAlone() && whoseTurn != game.getPlayerCalledTrump() && (whoseTurn % 2) == (game.getPlayerCalledTrump() % 2) ){
+			incrementWhoseTurn();
 		}
 	}
 

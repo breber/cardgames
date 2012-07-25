@@ -65,6 +65,11 @@ public class EuchreTabletGame implements Game{
 	private int playerCalledTrump;
 
 	/**
+	 * A boolean to set if the player who called trump is going alone
+	 */
+	private boolean isPlayerGoingAlone;
+
+	/**
 	 * An integer to represent the player who is the dealer
 	 */
 	private int dealer;
@@ -226,20 +231,22 @@ public class EuchreTabletGame implements Game{
 	/**
 	 * This will end a series of 5 tricks and calculate the score
 	 * 
+	 * Betting team gets 0-2 tricks +2 points non-betting team
 	 * Betting team gets 3-4 tricks +1 point  betting team
 	 * Betting team gets 5   tricks +2 points betting team
-	 * Betting team gets 0-2 tricks +2 points non-betting team
-	 * Betting team go alone gets 5   tricks +4 points for betting team
-	 * Betting team go alone gets 3-4 tricks +1 point for betting team
 	 * Betting team go alone gets 0-2 tricks +2 points for non-betting team
+	 * Betting team go alone gets 3-4 tricks +1 point for betting team
+	 * Betting team go alone gets 5   tricks +4 points for betting team
 	 */
 	public void endRound(){
 
 		int bettingTeam = playerCalledTrump % 2;
 		if( roundScores[bettingTeam] >= 3){
-			//TODO add go alone scoring
 			if( roundScores[bettingTeam] > 4 ){
 				matchScores[bettingTeam] += 2;
+				if( this.isPlayerGoingAlone ){
+					matchScores[bettingTeam] += 2;
+				}
 			} else {
 				matchScores[bettingTeam] ++;
 			}
@@ -604,6 +611,22 @@ public class EuchreTabletGame implements Game{
 			return cardsPlayed[position-1];
 		}
 		return null;
+	}
+
+	public boolean isPlayerGoingAlone() {
+		return isPlayerGoingAlone;
+	}
+
+	public void setPlayerGoingAlone(boolean isPlayerGoingAlone) {
+		this.isPlayerGoingAlone = isPlayerGoingAlone;
+	}
+
+	public int getPlayerBeingSkipped(){
+		if( this.playerCalledTrump > 1 ){
+			return playerCalledTrump - 2;
+		} else {
+			return playerCalledTrump + 2;
+		}
 	}
 
 }
