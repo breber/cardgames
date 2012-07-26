@@ -256,6 +256,7 @@ public class EuchrePlayerController implements PlayerController {
 				} catch (JSONException ex) {
 					ex.printStackTrace();
 				}
+				isTurn = true;
 				dealerDiscardView();
 				break;
 
@@ -308,6 +309,10 @@ public class EuchrePlayerController implements PlayerController {
 					setButtonsEnabled(true);
 					isBettingNow = true;
 					break;
+				} else if(isTurn && currentState == PICK_IT_UP){
+					dealerDiscardView();
+				} else {
+					playingView();
 				}
 				setButtonsEnabled(isTurn);
 				cardSelected = null;

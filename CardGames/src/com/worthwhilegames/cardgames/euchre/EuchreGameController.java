@@ -401,8 +401,6 @@ public class EuchreGameController implements GameController{
 	 * turn
 	 */
 	private void advanceTurn() {
-		isComputerPlaying = false;
-
 		incrementWhoseTurn();
 
 		if(whoseTurn == game.getTrickLeader()){
@@ -750,8 +748,6 @@ public class EuchreGameController implements GameController{
 	}
 
 	private void handleBetting(int round, String object) {
-		isComputerPlaying = false;
-
 		EuchreBet bet = null;
 		try {
 			JSONObject obj = new JSONObject(object);
@@ -843,7 +839,6 @@ public class EuchreGameController implements GameController{
 		currentState = state;
 		if (players.get(whoseTurn).getIsComputer()) {
 			if (!isComputerPlaying) {
-				isComputerPlaying = true;
 				startComputerTurn();
 			}
 		} else {
