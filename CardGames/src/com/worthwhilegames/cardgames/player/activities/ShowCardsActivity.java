@@ -282,7 +282,7 @@ public class ShowCardsActivity extends Activity {
 				iv.setBackgroundColor(getResources().getColor(R.color.gold));
 			} else {
 				ImageView iv = (ImageView) findViewById(c.getIdNum());
-				iv.setBackgroundColor(getResources().getColor(R.color.transparent));
+				iv.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 			}
 		}
 	}

@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:text="@string/about_text_gameboard"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/black" />
+            android:textColor="@android:color/black" />
     </ScrollView>
 
 </LinearLayout>

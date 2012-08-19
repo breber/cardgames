@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/enter_name_here"
         android:maxLength="40"
-        android:textColor="@color/black" />
+        android:textColor="@android:color/black" />
 
     <com.worthwhilegames.cardgames.shared.Button
         android:id="@+id/ok"

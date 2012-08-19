@@ -538,7 +538,7 @@ public class GameboardActivity extends Activity {
 			if ((i + 1) == playerNumber) {
 				playerTextViews[i].setTextColor(getResources().getColor(R.color.gold));
 			} else {
-				playerTextViews[i].setTextColor(getResources().getColor(R.color.black));
+				playerTextViews[i].setTextColor(getResources().getColor(android.R.color.black));
 			}
 		}
 	}

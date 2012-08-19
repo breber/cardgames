@@ -38,7 +38,7 @@
                     android:paddingRight="10dip"
                     android:text="@string/Volume"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@color/black" />
+                    android:textColor="@android:color/black" />
 
                 <SeekBar
                     android:id="@+id/volume"
@@ -55,7 +55,7 @@
                     android:paddingRight="10dip"
                     android:text="@string/SpeechVolume"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@color/black" />
+                    android:textColor="@android:color/black" />
 
                 <CheckBox
                     android:id="@+id/checkBoxSpeechVolume"
@@ -72,7 +72,7 @@
                     android:paddingRight="10dip"
                     android:text="@string/lang"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@color/black" />
+                    android:textColor="@android:color/black" />
 
                 <Spinner
                     android:id="@+id/langOption"
@@ -90,7 +90,7 @@
                     android:paddingRight="10dip"
                     android:text="@string/Game"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@color/black" />
+                    android:textColor="@android:color/black" />
 
                 <Spinner
                     android:id="@+id/gameOption"
@@ -109,7 +109,7 @@
                     android:paddingRight="10dip"
                     android:text="@string/connectionType"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@color/black" />
+                    android:textColor="@android:color/black" />
 
                 <Spinner
                     android:id="@+id/connectionOption"
