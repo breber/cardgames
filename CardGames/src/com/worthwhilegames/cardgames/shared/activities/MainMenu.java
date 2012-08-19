@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -65,18 +67,30 @@ public class MainMenu extends Activity {
 			});
 		}
 
-		// Set the listener for the Join Game button
-		Button play = (Button) findViewById(R.id.btJoin);
-		play.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// Set that we are NOT the gameboard
-				Util.setIsGameboard(false);
 
-				Intent playButtonClick = new Intent(MainMenu.this, ShowCardsActivity.class);
-				startActivity(playButtonClick);
-			}
-		});
+		Button play = (Button) findViewById(R.id.btJoin);
+		if (Util.isGoogleTv(this)) {
+			// If this is a Google TV, hide the Join Game button
+			play.setVisibility(View.GONE);
+
+			ViewGroup.MarginLayoutParams createParams = (MarginLayoutParams) create.getLayoutParams();
+			createParams.setMargins((int)getResources().getDimension(R.dimen.mainMenuLargeButtonPadding),
+					(int) getResources().getDimension(R.dimen.mainMenuButtonSpacing),
+					(int) getResources().getDimension(R.dimen.mainMenuLargeButtonPadding),
+					(int) getResources().getDimension(R.dimen.mainMenuButtonSpacing));
+		} else {
+			// Set the listener for the Join Game button
+			play.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// Set that we are NOT the gameboard
+					Util.setIsGameboard(false);
+
+					Intent playButtonClick = new Intent(MainMenu.this, ShowCardsActivity.class);
+					startActivity(playButtonClick);
+				}
+			});
+		}
 
 		// Set the listener for the rules button
 		Button rules = (Button) findViewById(R.id.btRules);

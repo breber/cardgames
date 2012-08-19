@@ -7,6 +7,7 @@ import java.util.Enumeration;
 
 import org.apache.http.conn.util.InetAddressUtils;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.worthwhilegames.cardgames.BuildConfig;
@@ -42,6 +43,16 @@ public class Util {
 	 */
 	public static boolean isGameboard() {
 		return Util.isGameboard;
+	}
+
+	/**
+	 * Returns whether this device is a Google TV
+	 * 
+	 * @param ctx
+	 * @return whether this device is a Google TV
+	 */
+	public static boolean isGoogleTv(Context ctx) {
+		return ctx.getPackageManager().hasSystemFeature("com.google.android.tv");
 	}
 
 	/**
