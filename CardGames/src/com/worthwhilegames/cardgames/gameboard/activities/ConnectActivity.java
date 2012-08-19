@@ -339,7 +339,7 @@ public class ConnectActivity extends Activity {
 	 */
 	private boolean canStartGame() {
 		SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, 0);
-		int maxComputers = sharedPreferences.getInt(Constants.NUMBER_OF_COMPUTERS, 1);
+		int maxComputers = sharedPreferences.getInt(Constants.NUMBER_OF_COMPUTERS, 3);
 		boolean namesEntered = mGame.getPlayers().size() > 0;
 
 		for (Player p : mGame.getPlayers()) {

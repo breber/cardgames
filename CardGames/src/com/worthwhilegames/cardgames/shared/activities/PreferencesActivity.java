@@ -160,7 +160,7 @@ public class PreferencesActivity extends Activity {
 
 		if (numComputerSpinner != null) {
 			// get the value from shared preferences
-			Integer numberOfComputers = sharedPref.getInt(NUMBER_OF_COMPUTERS, 1);
+			Integer numberOfComputers = sharedPref.getInt(NUMBER_OF_COMPUTERS, 3);
 
 			// make an array adapter of all options specified in the xml
 			@SuppressWarnings("unchecked")

@@ -221,7 +221,7 @@ public class GameboardActivity extends Activity {
 
 		// Setup the rest of the Computer players based on the preferences
 		int currentNumPlayers = mGame.getNumPlayers();
-		int numComputers = sharedPreferences.getInt(Constants.NUMBER_OF_COMPUTERS, 1);
+		int numComputers = sharedPreferences.getInt(Constants.NUMBER_OF_COMPUTERS, 3);
 		String computerDifficulty = sharedPreferences.getString(Constants.DIFFICULTY_OF_COMPUTERS, Constants.EASY);
 		for (int j = currentNumPlayers; j < 4 && (j - currentNumPlayers < numComputers); j++) {
 			Player p = new Player();
