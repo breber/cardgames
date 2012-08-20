@@ -134,33 +134,18 @@ public class GameboardActivity extends Activity {
 	private LinearLayout[] playerLinearLayouts = new LinearLayout[4];
 
 	/**
-<<<<<<< HEAD
 	 * These are the TextViews for the count of remaining cards not being displayed
 	 */
 	private TextView[] playerRemainingCards = new TextView[4];
 
 	/**
-	 * The discard pile ImageView
-=======
-	 * The card position 1 ImageView
->>>>>>> made 4 cards on the gameboard it is not pretty. also made the cards on
+	 * The ImageViews for the cards in the center of the screen
+	 * 
+	 * For games that don't use 4 cards in the middle:
+	 * Position 2 = discard pile
+	 * Position 4 = draw pile
 	 */
-	private ImageView cardPosition1;
-
-	/**
-	 * The card position 2 (discard pile) ImageView
-	 */
-	private ImageView cardPosition2;
-
-	/**
-	 * The card position 3 ImageView
-	 */
-	private ImageView cardPosition3;
-
-	/**
-	 * The card position 4 (draw pile) ImageView
-	 */
-	private ImageView cardPosition4;
+	private ImageView[] centerCards = new ImageView[4];
 
 	/**
 	 * The current suit ImageView
@@ -280,10 +265,10 @@ public class GameboardActivity extends Activity {
 		playerRemainingCards[2] = (TextView) findViewById(R.id.player3RemainingCount);
 		playerRemainingCards[3] = (TextView) findViewById(R.id.player4RemainingCount);
 
-		cardPosition1 = (ImageView) findViewById(R.id.cardPosition1);
-		cardPosition2 = (ImageView) findViewById(R.id.cardPosition2);
-		cardPosition3 = (ImageView) findViewById(R.id.cardPosition3);
-		cardPosition4 = (ImageView) findViewById(R.id.cardPosition4);
+		centerCards[0] = (ImageView) findViewById(R.id.cardPosition1);
+		centerCards[1] = (ImageView) findViewById(R.id.cardPosition2);
+		centerCards[2] = (ImageView) findViewById(R.id.cardPosition3);
+		centerCards[3] = (ImageView) findViewById(R.id.cardPosition4);
 
 		suitView = (ImageView) findViewById(R.id.gameboard_suit);
 
@@ -297,7 +282,6 @@ public class GameboardActivity extends Activity {
 			tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenHeight / 15);
 		}
 
-		//TODO set as a fourth of a card?
 		// Set up the layout params for the cards
 		cardParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight / 2);
 
@@ -510,44 +494,17 @@ public class GameboardActivity extends Activity {
 			i++;
 		}
 
-		// Card Position 1
-		Card card1 = game.getCardAtPosition(1);
-		if( card1 != null ){
-			Bitmap position1 = scaleCard(card1.getResourceId(), fullCard);
-			cardPosition1.setImageBitmap(position1);
-			cardPosition1.setVisibility(View.VISIBLE);
-		} else {
-			cardPosition1.setVisibility(View.INVISIBLE);
-		}
+		// Set all the cards in the center of the screen
+		for (int j = 0; j < 4; j++) {
+			Card c = game.getCardAtPosition(j + 1);
+			if (c != null) {
+				Bitmap scaledCard = scaleCard(c.getResourceId(), fullCard);
 
-		// Card Position 2 (discard)
-		Card card2 = game.getCardAtPosition(2);
-		if( card2 != null ){
-			Bitmap position2 = scaleCard(card2.getResourceId(), fullCard);
-			cardPosition2.setImageBitmap(position2);
-			cardPosition2.setVisibility(View.VISIBLE);
-		} else {
-			cardPosition2.setVisibility(View.INVISIBLE);
-		}
-
-		// Card Position 3
-		Card card3 = game.getCardAtPosition(3);
-		if( card3 != null ){
-			Bitmap position3 = scaleCard(card3.getResourceId(), fullCard);
-			cardPosition3.setImageBitmap(position3);
-			cardPosition3.setVisibility(View.VISIBLE);
-		} else {
-			cardPosition3.setVisibility(View.INVISIBLE);
-		}
-
-		// Card Position 4 (draw)
-		Card card4 = game.getCardAtPosition(4);
-		if( card4 != null ){
-			Bitmap position4 = scaleCard(card4.getResourceId(), fullCard);
-			cardPosition4.setImageBitmap(position4);
-			cardPosition4.setVisibility(View.VISIBLE);
-		} else {
-			cardPosition4.setVisibility(View.INVISIBLE);
+				centerCards[j].setImageBitmap(scaledCard);
+				centerCards[j].setVisibility(View.VISIBLE);
+			} else {
+				centerCards[j].setVisibility(View.INVISIBLE);
+			}
 		}
 	}
 
@@ -555,6 +512,8 @@ public class GameboardActivity extends Activity {
 	 * Scale a card image with the given resource
 	 * 
 	 * @param resId the resource id of the card to scale
+	 * @param cardPortion the amount of the card to show
+	 * 
 	 * @return a scaled card image
 	 */
 	private Bitmap scaleCard(int resId, int cardPortion) {
@@ -564,7 +523,7 @@ public class GameboardActivity extends Activity {
 		tempMatrix.setScale(scaleFactor, scaleFactor);
 
 		// Draw fourth card
-		if (cardPortion == fourthCard) {//TODO display 1/4 of a card
+		if (cardPortion == fourthCard) {
 			return Bitmap.createBitmap(fullCard, 0, 0,
 					fullCard.getWidth() / 2, fullCard.getHeight() / 2, tempMatrix, true);
 		} else if (cardPortion == halfCard) {

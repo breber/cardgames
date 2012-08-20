@@ -198,6 +198,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/centerCardsOneThree"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical" >
 
@@ -206,12 +207,12 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:adjustViewBounds="true"
-            android:paddingRight="100dip"
+            android:paddingRight="10dip"
             android:src="@drawable/back_blue_1" />
-
     </LinearLayout>
-    
+
     <LinearLayout
+        android:id="@+id/centerCardsOneThree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -224,23 +225,23 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:adjustViewBounds="true"
-            android:paddingTop="100dip"
             android:src="@drawable/back_blue_1" />
 
         <ImageView
             android:id="@+id/cardPosition1"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:adjustViewBounds="true" 
-            android:paddingBottom="100dip"
+            android:adjustViewBounds="true"
+            android:paddingTop="10dip"
             android:src="@drawable/back_blue_1" />
     </LinearLayout>
-    
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/centerCardsOneThree"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical" >
 
@@ -249,7 +250,7 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:adjustViewBounds="true"
-            android:paddingLeft="100dip"
+            android:paddingLeft="10dip"
             android:src="@drawable/back_blue_1" />
     </LinearLayout>
 
