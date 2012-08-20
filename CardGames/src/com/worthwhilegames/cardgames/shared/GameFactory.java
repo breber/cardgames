@@ -130,4 +130,20 @@ public class GameFactory {
 
 		return R.layout.genericbuttons;
 	}
+
+	/**
+	 * Gets the resource ID of the text to display for the rules screen
+	 *
+	 * @return the resource id of the text to display
+	 */
+	public static int getGameRulesText(Activity ctx) {
+		if (CardGame.CrazyEights.equals(getGameType(ctx))) {
+			return R.string.crazy_eight_game_rules_text;
+		} else if (CardGame.Euchre.equals(getGameType(ctx))) {
+			// TODO: get some text for Euchre rules
+			throw new IllegalStateException("No rules text available for this game...");
+		}
+
+		return R.string.crazy_eight_game_rules_text;
+	}
 }
