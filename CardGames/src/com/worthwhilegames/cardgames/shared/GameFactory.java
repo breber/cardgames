@@ -146,4 +146,22 @@ public class GameFactory {
 
 		return R.string.crazy_eight_game_rules_text;
 	}
+
+	/**
+	 * Get the number of players required in order to play the game
+	 * 
+	 * @param ctx
+	 * @return the minimum number of players required to play the game
+	 */
+	public static int getRequiredNumPlayers(Activity ctx) {
+		if (CardGame.CrazyEights.equals(getGameType(ctx))) {
+			// Crazy Eights needs at least 2 players
+			return 2;
+		} else if (CardGame.Euchre.equals(getGameType(ctx))) {
+			// Euchre needs 4 players
+			return 4;
+		}
+
+		return 2;
+	}
 }

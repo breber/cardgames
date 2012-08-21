@@ -225,8 +225,13 @@ public class GameboardActivity extends Activity {
 		// Setup the rest of the Computer players based on the preferences
 		int currentNumPlayers = mGame.getNumPlayers();
 		int numComputers = sharedPreferences.getInt(Constants.NUMBER_OF_COMPUTERS, 3);
+		int requiredNumPlayers = GameFactory.getRequiredNumPlayers(this);
 		String computerDifficulty = sharedPreferences.getString(Constants.DIFFICULTY_OF_COMPUTERS, Constants.EASY);
-		for (int j = currentNumPlayers; j < 4 && (j - currentNumPlayers < numComputers); j++) {
+
+		// Add a new computer as long as we have less than 4 players AND
+		//   -we have less than the required number of players for the game OR
+		//   -we have less than the number of computers specified in the preferences
+		for (int j = currentNumPlayers; j < 4 && ((j < requiredNumPlayers) || (j - currentNumPlayers < numComputers)); j++) {
 			Player p = new Player();
 			p.setName("Computer " + (j - currentNumPlayers + 1));
 			p.setId("Computer" + (j - currentNumPlayers + 1));
