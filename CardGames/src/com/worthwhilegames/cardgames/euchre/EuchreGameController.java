@@ -10,8 +10,13 @@ import static com.worthwhilegames.cardgames.euchre.EuchreConstants.SECOND_ROUND_
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP;
 import static com.worthwhilegames.cardgames.shared.Constants.ID;
 import static com.worthwhilegames.cardgames.shared.Constants.IS_TURN;
+import static com.worthwhilegames.cardgames.shared.Constants.JACK_VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.PLAY_CARD;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
+import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
 import static com.worthwhilegames.cardgames.shared.Constants.VALUE;
 
 import java.util.List;
@@ -643,6 +648,23 @@ public class EuchreGameController implements GameController{
 		Card cardSelected = null;
 		EuchreBet compBet = new EuchreBet(game.getCardLead().getSuit(), false, false);
 
+
+		int[] suitScores = new int[4];
+		int bestSuitToBetOn = 0;
+		int maxSuitScore = 0;
+
+		if( currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING){
+			suitScores = this.computeSuitScores(cards);
+
+			for(int i = 0; i < 4; i++){
+				if(suitScores[i] > maxSuitScore){
+					maxSuitScore = suitScores[i];
+					bestSuitToBetOn = i;
+				}
+			}
+		}
+
+
 		//computer with difficulty
 		//TODO right now only has easy
 		if (players.get(whoseTurn).getComputerDifficulty().equals(Constants.EASY)) {
@@ -650,6 +672,10 @@ public class EuchreGameController implements GameController{
 			case FIRST_ROUND_BETTING:
 				break;
 			case SECOND_ROUND_BETTING:
+				if( whoseTurn == game.getDealer() ){
+					//Stick it to the Dealer situation must bet
+
+				}
 				break;
 			case PICK_IT_UP:
 				cardSelected = cards.get(0);
@@ -745,6 +771,55 @@ public class EuchreGameController implements GameController{
 			// If card is null then there are no cards to draw so just move on and allow the turn to advance
 			mySM.drawCardSound();
 		}
+	}
+
+	/**
+	 * This will try to decide which suit has the best chance for you to win.
+	 * Tries to quantify the value of the hand based on the trump decided.
+	 * 
+	 * @param cards - input cards for the method to analyze
+	 * @return an array of scores that should quantify which trump suit
+	 * 		   would be best for a player to call
+	 */
+	private int[] computeSuitScores( List<Card> cards ){
+		//TODO move to a constants class
+		int trumpCardValueFactor = 2;
+
+		int[] scores = new int[4];
+
+		//TODO number of suits constant for 4
+		//go through each suit as a possible trump suit and calculate the score
+		for( int tempTrump = 0; tempTrump < 4; tempTrump ++){
+			for(Card c: cards){
+				if(c.getValue() == JACK_VALUE){
+					if( c.getSuit() == tempTrump ){
+						//this is the right bower
+						scores[tempTrump] += c.getValue() * ( trumpCardValueFactor + 1 );
+					} else {
+						if( (c.getSuit() == SUIT_CLUBS && tempTrump == SUIT_SPADES) ||
+								(c.getSuit() == SUIT_SPADES && tempTrump == SUIT_CLUBS) ||
+								(c.getSuit() == SUIT_DIAMONDS && tempTrump == SUIT_HEARTS) ||
+								(c.getSuit() == SUIT_HEARTS && tempTrump == SUIT_DIAMONDS) ){
+							//this is the left bower
+							scores[tempTrump] += c.getValue() * ( trumpCardValueFactor + .75 );
+						} else {
+							//this is a regular card of non trump suit
+							scores[tempTrump] += c.getValue() ;
+						}
+					}
+				} else {
+					if(c.getSuit() == tempTrump){
+						//this is a trump suit card, not a Jack
+						scores[tempTrump] += c.getValue() * trumpCardValueFactor;
+					} else {
+						//this is a regular card
+						scores[tempTrump] += c.getValue() ;
+					}
+				}
+			}
+		}
+
+		return scores;
 	}
 
 	private void handleBetting(int round, String object) {
