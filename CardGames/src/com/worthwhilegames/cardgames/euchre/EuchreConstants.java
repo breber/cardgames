@@ -97,6 +97,32 @@ public class EuchreConstants {
 	 */
 	public static final int ADJUSTED_R_VALUE = 16;
 
+	/* Betting Computer Logic Constants */
+
+	/**
+	 * Multiplier for trump card values when analyzing a computer's turn
+	 */
+	public static final int TRUMP_CARD_VALUE_FACTOR = 2;
+
+	public static final int EASY_COMP_R1_BET_THRESHOLD = 77;
+
+	public static final int EASY_COMP_R2_BET_THRESHOLD = 76;
+
+	public static final int EASY_COMP_GO_ALONE_THRESHOLD = 20;
+
+	public static final int MEDIUM_COMP_R1_BET_THRESHOLD = 80;
+
+	public static final int MEDIUM_COMP_R2_BET_THRESHOLD = 80;
+
+	public static final int MEDIUM_COMP_GO_ALONE_THRESHOLD = 25;
+
+	public static final int HARD_COMP_R1_BET_THRESHOLD = 80;
+
+	public static final int HARD_COMP_R2_BET_THRESHOLD = 78;
+
+	public static final int HARD_COMP_GO_ALONE_THRESHOLD = 30;
+
+
 
 	/**
 	 * These are some random terms

@@ -255,9 +255,10 @@ public class EuchreTabletGame implements Game{
 			matchScores[(bettingTeam +1) % 2] += 2;
 		}
 
-
+		//reset values
 		roundScores[0] = 0;
 		roundScores[1] = 0;
+		this.setPlayerGoingAlone(false);
 		this.clearCardsPlayed();
 
 	}
@@ -271,6 +272,7 @@ public class EuchreTabletGame implements Game{
 
 
 		//redeal
+
 		this.gameDeck = new Deck(CardGame.Euchre);
 		shuffledDeck = gameDeck.getCardIDs();
 		this.shuffleDeck();

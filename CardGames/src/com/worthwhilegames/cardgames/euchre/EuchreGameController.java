@@ -1,13 +1,27 @@
 package com.worthwhilegames.cardgames.euchre;
 
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ADJUSTED_ACE_VALUE;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ADJUSTED_L_VALUE;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ADJUSTED_R_VALUE;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.BET;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.EASY_COMP_GO_ALONE_THRESHOLD;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.EASY_COMP_R1_BET_THRESHOLD;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.EASY_COMP_R2_BET_THRESHOLD;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.FIRST_ROUND_BETTING;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.GO_ALONE;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.HARD_COMP_GO_ALONE_THRESHOLD;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.HARD_COMP_R1_BET_THRESHOLD;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.HARD_COMP_R2_BET_THRESHOLD;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.MEDIUM_COMP_GO_ALONE_THRESHOLD;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.MEDIUM_COMP_R1_BET_THRESHOLD;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.MEDIUM_COMP_R2_BET_THRESHOLD;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PICK_IT_UP;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PLAY_LEAD_CARD;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ROUND_OVER;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.SECOND_ROUND_BETTING;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP;
+import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP_CARD_VALUE_FACTOR;
+import static com.worthwhilegames.cardgames.shared.Constants.ACE_VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.ID;
 import static com.worthwhilegames.cardgames.shared.Constants.IS_TURN;
 import static com.worthwhilegames.cardgames.shared.Constants.JACK_VALUE;
@@ -204,9 +218,7 @@ public class EuchreGameController implements GameController{
 		game.setup();
 
 		players = game.getPlayers();
-
 		startRound();
-
 	}
 
 	private void startRound(){
@@ -271,10 +283,10 @@ public class EuchreGameController implements GameController{
 				playReceivedCard(object);
 				game.clearCardsPlayed();
 
-				//start the first turn of the round
+				//start the first turn of the round by going one person the the right of the dealer.
 				whoseTurn = game.getTrickLeader();
 
-				// TODO: look at this...something about trump
+				// TODO: look at this...something about trump being sent by refresh
 				refreshPlayers();
 				sendNextTurn(currentState, game.getCardLead());
 				break;
@@ -428,7 +440,7 @@ public class EuchreGameController implements GameController{
 		game.determineTrickWinner();
 
 		//TODO better way to determine if round is over
-		if(players.get(0).getCards().size() == 0){
+		if(players.get(0).getCards().size() == 0 && players.get(1).getCards().size() == 0){
 			game.endRound();
 			if(game.isGameOver(players.get(0))){
 				declareWinner(game.getWinningTeam());
@@ -459,8 +471,10 @@ public class EuchreGameController implements GameController{
 			// TODO: this should probably be styled
 			AlertDialog.Builder dlg = new AlertDialog.Builder(gameContext);
 			dlg.setTitle("Scores!");
-			dlg.setMessage("Scores team 1:" + game.getMatchScores()[0] +
-					" Team 2:" + game.getMatchScores()[1]);
+			dlg.setMessage("Team " + players.get(0).getName() + " and " + players.get(2).getName()
+					+ ": " + game.getMatchScores()[0] +
+					" \nTeam " + players.get(1).getName() + " and " + players.get(3).getName()
+					+ ": " + game.getMatchScores()[1]);
 			dlg.show();
 		}
 
@@ -665,16 +679,28 @@ public class EuchreGameController implements GameController{
 		}
 
 
-		//computer with difficulty
-		//TODO right now only has easy
+		//computer with difficulty easy
 		if (players.get(whoseTurn).getComputerDifficulty().equals(Constants.EASY)) {
 			switch(currentState){
 			case FIRST_ROUND_BETTING:
+				if( suitScores[game.getCardLead().getSuit()] > EASY_COMP_R1_BET_THRESHOLD ){
+					if( suitScores[game.getCardLead().getSuit()] > EASY_COMP_R1_BET_THRESHOLD + EASY_COMP_GO_ALONE_THRESHOLD) {
+						compBet = new EuchreBet(game.getCardLead().getSuit(), true, true);
+					} else {
+						compBet = new EuchreBet(game.getCardLead().getSuit(), true, false);
+					}
+				}
 				break;
 			case SECOND_ROUND_BETTING:
-				if( whoseTurn == game.getDealer() ){
+				if( maxSuitScore > EASY_COMP_R1_BET_THRESHOLD ){
+					if( maxSuitScore > EASY_COMP_R2_BET_THRESHOLD + EASY_COMP_GO_ALONE_THRESHOLD) {
+						compBet = new EuchreBet(bestSuitToBetOn, true, true);
+					} else {
+						compBet = new EuchreBet(bestSuitToBetOn, true, false);
+					}
+				} else if( whoseTurn == game.getDealer() ){
 					//Stick it to the Dealer situation must bet
-
+					compBet = new EuchreBet(bestSuitToBetOn, true, false);
 				}
 				break;
 			case PICK_IT_UP:
@@ -697,11 +723,33 @@ public class EuchreGameController implements GameController{
 		} else if (players.get(whoseTurn).getComputerDifficulty().equals(Constants.MEDIUM) ) {
 			switch(currentState){
 			case FIRST_ROUND_BETTING:
+				if( suitScores[game.getCardLead().getSuit()] > MEDIUM_COMP_R1_BET_THRESHOLD ){
+					if( suitScores[game.getCardLead().getSuit()] > MEDIUM_COMP_R1_BET_THRESHOLD + MEDIUM_COMP_GO_ALONE_THRESHOLD) {
+						compBet = new EuchreBet(game.getCardLead().getSuit(), true, true);
+					} else {
+						compBet = new EuchreBet(game.getCardLead().getSuit(), true, false);
+					}
+				}
 				break;
 			case SECOND_ROUND_BETTING:
+				if( maxSuitScore > MEDIUM_COMP_R2_BET_THRESHOLD ){
+					if( maxSuitScore > MEDIUM_COMP_R2_BET_THRESHOLD + MEDIUM_COMP_GO_ALONE_THRESHOLD) {
+						compBet = new EuchreBet(bestSuitToBetOn, true, true);
+					} else {
+						compBet = new EuchreBet(bestSuitToBetOn, true, false);
+					}
+				} else if( whoseTurn == game.getDealer() ){
+					//Stick it to the Dealer situation must bet
+					compBet = new EuchreBet(bestSuitToBetOn, true, false);
+				}
 				break;
 			case PICK_IT_UP:
 				cardSelected = cards.get(0);
+				for(Card c: players.get(whoseTurn).getCards()){
+					if(this.computeCardScore(c, game.getTrump()) < this.computeCardScore(c, game.getTrump())){
+						cardSelected = c;
+					}
+				}
 				break;
 			case PLAY_LEAD_CARD:
 				cardSelected = cards.get(0);
@@ -720,11 +768,33 @@ public class EuchreGameController implements GameController{
 		} else if (players.get(whoseTurn).getComputerDifficulty().equals(Constants.HARD)) {
 			switch(currentState){
 			case FIRST_ROUND_BETTING:
+				if( suitScores[game.getCardLead().getSuit()] > HARD_COMP_R1_BET_THRESHOLD ){
+					if( suitScores[game.getCardLead().getSuit()] > HARD_COMP_R1_BET_THRESHOLD + HARD_COMP_GO_ALONE_THRESHOLD) {
+						compBet = new EuchreBet(game.getCardLead().getSuit(), true, true);
+					} else {
+						compBet = new EuchreBet(game.getCardLead().getSuit(), true, false);
+					}
+				}
 				break;
 			case SECOND_ROUND_BETTING:
+				if( maxSuitScore > HARD_COMP_R2_BET_THRESHOLD ){
+					if( maxSuitScore > HARD_COMP_R2_BET_THRESHOLD + HARD_COMP_GO_ALONE_THRESHOLD) {
+						compBet = new EuchreBet(bestSuitToBetOn, true, true);
+					} else {
+						compBet = new EuchreBet(bestSuitToBetOn, true, false);
+					}
+				} else if( whoseTurn == game.getDealer() ){
+					//Stick it to the Dealer situation must bet
+					compBet = new EuchreBet(bestSuitToBetOn, true, false);
+				}
 				break;
 			case PICK_IT_UP:
 				cardSelected = cards.get(0);
+				for(Card c: players.get(whoseTurn).getCards()){
+					if(this.computeCardScore(c, game.getTrump()) < this.computeCardScore(c, game.getTrump())){
+						cardSelected = c;
+					}
+				}
 				break;
 			case PLAY_LEAD_CARD:
 				cardSelected = cards.get(0);
@@ -782,44 +852,54 @@ public class EuchreGameController implements GameController{
 	 * 		   would be best for a player to call
 	 */
 	private int[] computeSuitScores( List<Card> cards ){
-		//TODO move to a constants class
-		int trumpCardValueFactor = 2;
-
 		int[] scores = new int[4];
 
-		//TODO number of suits constant for 4
 		//go through each suit as a possible trump suit and calculate the score
 		for( int tempTrump = 0; tempTrump < 4; tempTrump ++){
 			for(Card c: cards){
-				if(c.getValue() == JACK_VALUE){
-					if( c.getSuit() == tempTrump ){
-						//this is the right bower
-						scores[tempTrump] += c.getValue() * ( trumpCardValueFactor + 1 );
-					} else {
-						if( (c.getSuit() == SUIT_CLUBS && tempTrump == SUIT_SPADES) ||
-								(c.getSuit() == SUIT_SPADES && tempTrump == SUIT_CLUBS) ||
-								(c.getSuit() == SUIT_DIAMONDS && tempTrump == SUIT_HEARTS) ||
-								(c.getSuit() == SUIT_HEARTS && tempTrump == SUIT_DIAMONDS) ){
-							//this is the left bower
-							scores[tempTrump] += c.getValue() * ( trumpCardValueFactor + .75 );
-						} else {
-							//this is a regular card of non trump suit
-							scores[tempTrump] += c.getValue() ;
-						}
-					}
-				} else {
-					if(c.getSuit() == tempTrump){
-						//this is a trump suit card, not a Jack
-						scores[tempTrump] += c.getValue() * trumpCardValueFactor;
-					} else {
-						//this is a regular card
-						scores[tempTrump] += c.getValue() ;
-					}
-				}
+				scores[tempTrump] += this.computeCardScore(c, tempTrump);
 			}
 		}
 
 		return scores;
+	}
+
+	/**
+	 * This method will compute the card value based on trump and Ace value
+	 * @param c the card to find the value for
+	 * @param tempTrump the trump suit
+	 * @return an integer that is representative of the card's score
+	 */
+	private int computeCardScore( Card c, int tempTrump ) {
+		if(c.getValue() == JACK_VALUE){
+			if( c.getSuit() == tempTrump ){
+				//this is the right bower
+				return ADJUSTED_R_VALUE * ( TRUMP_CARD_VALUE_FACTOR );
+			} else {
+				if( (c.getSuit() == SUIT_CLUBS && tempTrump == SUIT_SPADES) ||
+						(c.getSuit() == SUIT_SPADES && tempTrump == SUIT_CLUBS) ||
+						(c.getSuit() == SUIT_DIAMONDS && tempTrump == SUIT_HEARTS) ||
+						(c.getSuit() == SUIT_HEARTS && tempTrump == SUIT_DIAMONDS) ){
+					//this is the left bower
+					return ADJUSTED_L_VALUE * ( TRUMP_CARD_VALUE_FACTOR );
+				} else {
+					//this is a regular card of non trump suit
+					return c.getValue() ;
+				}
+			}
+		} else {
+			int tempValue = c.getValue();
+			if( tempValue == ACE_VALUE ) {
+				tempValue = ADJUSTED_ACE_VALUE;
+			}
+			if(c.getSuit() == tempTrump){
+				//this is a trump suit card, not a Jack
+				return tempValue * TRUMP_CARD_VALUE_FACTOR;
+			} else {
+				//this is a regular card
+				return tempValue;
+			}
+		}
 	}
 
 	private void handleBetting(int round, String object) {
@@ -846,9 +926,8 @@ public class EuchreGameController implements GameController{
 					gameContext.updateSuit(game.getTrump());
 
 					game.setPlayerGoingAlone(bet.getGoAlone());
-					if(game.isPlayerGoingAlone() && whoseTurn == game.getPlayerBeingSkipped() ){
-						incrementWhoseTurn();
-						game.setTrickLeader(whoseTurn);
+					if(game.isPlayerGoingAlone() && game.getTrickLeader() == game.getPlayerBeingSkipped() ){
+						game.setTrickLeader(game.getTrickLeader() + 1);
 					}
 					whoseTurn = game.getDealer();
 					currentState = PICK_IT_UP;
@@ -880,9 +959,8 @@ public class EuchreGameController implements GameController{
 				whoseTurn = game.getTrickLeader();
 
 				game.setPlayerGoingAlone(bet.getGoAlone());
-				if(game.isPlayerGoingAlone() && whoseTurn == game.getPlayerBeingSkipped() ){
-					incrementWhoseTurn();
-					game.setTrickLeader(whoseTurn);
+				if(game.isPlayerGoingAlone() && game.getTrickLeader() == game.getPlayerBeingSkipped() ){
+					game.setTrickLeader(game.getTrickLeader() + 1);
 				}
 				game.clearCardsPlayed();
 
