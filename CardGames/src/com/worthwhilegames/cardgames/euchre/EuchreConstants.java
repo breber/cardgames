@@ -110,17 +110,23 @@ public class EuchreConstants {
 
 	public static final int EASY_COMP_GO_ALONE_THRESHOLD = 20;
 
+	public static final int EASY_COMP_DEALER_TEAM_ADVANTAGE = 0;
+
 	public static final int MEDIUM_COMP_R1_BET_THRESHOLD = 80;
 
 	public static final int MEDIUM_COMP_R2_BET_THRESHOLD = 80;
 
 	public static final int MEDIUM_COMP_GO_ALONE_THRESHOLD = 25;
 
+	public static final int MEDIUM_COMP_DEALER_TEAM_ADVANTAGE = 5;
+
 	public static final int HARD_COMP_R1_BET_THRESHOLD = 80;
 
 	public static final int HARD_COMP_R2_BET_THRESHOLD = 78;
 
 	public static final int HARD_COMP_GO_ALONE_THRESHOLD = 30;
+
+	public static final int HARD_COMP_DEALER_TEAM_ADVANTAGE = 7;
 
 
 
