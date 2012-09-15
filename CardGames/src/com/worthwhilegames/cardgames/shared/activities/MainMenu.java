@@ -24,11 +24,6 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
 public class MainMenu extends Activity {
 
 	/**
-	 * The request code to handle the result of the Quit Game Activity
-	 */
-	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
-
-	/**
 	 * The request code to handle the result of the Connect Activity
 	 */
 	private static final int CONNECT_ACTIVITY = Math.abs("CONNECT_ACTIVITY".hashCode());
@@ -132,28 +127,12 @@ public class MainMenu extends Activity {
 
 	/*
 	 * (non-Javadoc)
-	 * @see android.app.Activity#onBackPressed()
-	 */
-	@Override
-	public void onBackPressed() {
-		// When the user presses the back button, we will prompt them
-		// to make sure they want to quit
-		Intent intent = new Intent(this, QuitApplicationActivity.class);
-		startActivityForResult(intent, QUIT_GAME);
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see android.app.Activity#onActivityResult(int, int,
 	 * android.content.Intent)
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// If they clicked yes on the prompt asking if they want to quit the
-		// game, finish this activity
-		if (requestCode == QUIT_GAME && resultCode == RESULT_OK) {
-			finish();
-		} else if (requestCode == CONNECT_ACTIVITY) {
+		if (requestCode == CONNECT_ACTIVITY) {
 			// Disconnect all users when we are back at the main menu
 			ConnectionServer.getInstance(this).disconnect();
 
