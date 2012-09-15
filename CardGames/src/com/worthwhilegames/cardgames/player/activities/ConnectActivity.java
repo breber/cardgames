@@ -71,6 +71,9 @@ public class ConnectActivity extends Activity {
 				// because we are no longer connected like we used to be
 				readyToStart = false;
 
+				// Finish the get player name activity if it has been started
+				finishActivity(GET_PLAYER_NAME);
+
 				// Show the device list
 				Intent showDeviceList = new Intent(ConnectActivity.this, DeviceListActivity.class);
 				startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);

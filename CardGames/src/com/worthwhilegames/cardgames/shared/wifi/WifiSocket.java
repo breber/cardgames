@@ -29,12 +29,13 @@ public class WifiSocket implements ISocket {
 	 * Create a new WifiSocket to the given address
 	 * 
 	 * @param address the address to connect to
+	 * @param portNumber the port number to use
 	 */
-	public WifiSocket(String address) {
+	public WifiSocket(String address, int portNumber) {
 		InetAddress addr;
 		try {
 			addr = InetAddress.getByName(address);
-			mSocket = new Socket(addr, WifiConstants.PORT_NUMBER);
+			mSocket = new Socket(addr, portNumber);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

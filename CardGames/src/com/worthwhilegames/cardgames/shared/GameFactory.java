@@ -3,6 +3,7 @@ package com.worthwhilegames.cardgames.shared;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.ImageView;
 
@@ -88,7 +89,7 @@ public class GameFactory {
 	 *
 	 * @return the type of Game we are playing
 	 */
-	public static CardGame getGameType(Activity ctx) {
+	public static CardGame getGameType(Context ctx) {
 		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, 0);
 		String gameType = prefs.getString(Constants.GAME_TYPE, CardGame.CrazyEights.toString());
 
@@ -163,5 +164,22 @@ public class GameFactory {
 		}
 
 		return 2;
+	}
+
+	/**
+	 * Get the port number to use for each Game
+	 * 
+	 * @param ctx
+	 * @return the game specific port number
+	 */
+	public static int getPortNumber(Context ctx) {
+		if (CardGame.CrazyEights.equals(getGameType(ctx))) {
+			return 1234;
+		} else if (CardGame.Euchre.equals(getGameType(ctx))) {
+			// Euchre needs 4 players
+			return 1233;
+		}
+
+		return 1234;
 	}
 }

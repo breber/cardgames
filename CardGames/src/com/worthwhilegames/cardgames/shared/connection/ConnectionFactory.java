@@ -14,6 +14,7 @@ import android.net.wifi.WifiManager;
 
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.Constants;
+import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.wifi.WifiServerSocket;
 import com.worthwhilegames.cardgames.shared.wifi.WifiSocket;
@@ -118,7 +119,7 @@ public class ConnectionFactory {
 		switch (currentType) {
 		case WiFi:
 		default:
-			return new WifiSocket(address);
+			return new WifiSocket(address, GameFactory.getPortNumber(ctx));
 		}
 	}
 }

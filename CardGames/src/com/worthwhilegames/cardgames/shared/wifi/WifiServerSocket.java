@@ -9,6 +9,7 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.MulticastLock;
 
+import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.connection.IServerSocket;
 import com.worthwhilegames.cardgames.shared.connection.ISocket;
@@ -22,6 +23,11 @@ public class WifiServerSocket implements IServerSocket {
 	 * The ServerSocket
 	 */
 	private java.net.ServerSocket mServerSocket;
+
+	/**
+	 * The Context
+	 */
+	private Context mContext;
 
 	/**
 	 * The JmDNS instance
@@ -42,13 +48,15 @@ public class WifiServerSocket implements IServerSocket {
 	 * Create a new WifiServerSocket
 	 */
 	public WifiServerSocket(Context ctx) {
+		mContext = ctx;
+
 		WifiManager wifi = (WifiManager) ctx.getSystemService(android.content.Context.WIFI_SERVICE);
 		lock = wifi.createMulticastLock("CardGamesLock");
 		lock.setReferenceCounted(true);
 		lock.acquire();
 
 		try {
-			mServerSocket = new java.net.ServerSocket(WifiConstants.PORT_NUMBER, 0, Util.getLocalIpAddress());
+			mServerSocket = new java.net.ServerSocket(GameFactory.getPortNumber(ctx), 0, Util.getLocalIpAddress());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -61,7 +69,7 @@ public class WifiServerSocket implements IServerSocket {
 	public void setup() {
 		try {
 			jmdns = JmDNS.create(Util.getLocalIpAddress());
-			serviceInfo = ServiceInfo.create(WifiConstants.SERVICE_TYPE, "Crazy Eights: " + android.os.Build.MODEL, WifiConstants.PORT_NUMBER, "Card Games for Android");
+			serviceInfo = ServiceInfo.create(WifiConstants.SERVICE_TYPE, GameFactory.getGameType(mContext) + ": " + android.os.Build.MODEL, GameFactory.getPortNumber(mContext), "Card Games for Android");
 			jmdns.registerService(serviceInfo);
 		} catch (IOException e) {
 			e.printStackTrace();
