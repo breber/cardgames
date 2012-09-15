@@ -300,14 +300,19 @@ public class EuchrePlayerController implements PlayerController {
 				}
 
 
-				if(isTurn && (currentState == FIRST_ROUND_BETTING ||  currentState == SECOND_ROUND_BETTING)){
-					if(isBettingNow){
+				if((currentState == FIRST_ROUND_BETTING ||  currentState == SECOND_ROUND_BETTING)){
+					if(isTurn && isBettingNow){
 						//don't want to open 2 betting windows
 						break;
+					} else if( isTurn && !isBettingNow){
+						bettingView();
+						setButtonsEnabled(true);
+					} else {
+						playingView();
+						isTurn = false;
+						setButtonsEnabled(isTurn);
+						isBettingNow = true;
 					}
-					bettingView();
-					setButtonsEnabled(true);
-					isBettingNow = true;
 					break;
 				} else if(isTurn && currentState == PICK_IT_UP){
 					dealerDiscardView();
@@ -354,6 +359,7 @@ public class EuchrePlayerController implements PlayerController {
 			@Override
 			public void onClick(View v) {
 				if ( (isTurn && cardSelected != null) &&
+						currentState != FIRST_ROUND_BETTING && currentState != SECOND_ROUND_BETTING &&
 						( currentState == PICK_IT_UP || currentState == PLAY_LEAD_CARD ||
 						gameRules.checkCard(cardSelected, trumpSuit, cardLead, cardHand) ) && cardHand.size() != 0) {
 					// play card or discard if it is pick_it_up mode

@@ -379,7 +379,8 @@ public class EuchreComputerPlayer {
 		} else if( c2 == null){
 			return true;
 		}
-		//TODO may have to adjust cardLead suit??
+		//TODO test this adjust card lead
+		game.adjustCards(game.getCardLead());
 		return c1.equals(game.compareCards(c1, c1, game.getCardLead().getSuit()));
 	}
 

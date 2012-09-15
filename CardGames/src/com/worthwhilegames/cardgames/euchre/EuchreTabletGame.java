@@ -383,6 +383,7 @@ public class EuchreTabletGame implements Game{
 	public int determineTrickWinner(){
 		Card winningCard = cardsPlayed[0];
 		adjustCards(winningCard);
+		adjustCards(cardLead);
 		int winningPlayer = 0;
 
 		for(int i = 1; i < cardsPlayed.length; i++){

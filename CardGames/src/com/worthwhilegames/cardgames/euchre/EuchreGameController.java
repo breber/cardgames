@@ -545,7 +545,6 @@ public class EuchreGameController implements GameController{
 	private void refreshPlayers() {
 		Player pTurn = players.get(whoseTurn);
 
-		// TODO get the card lead with
 		Card leadingCard = game.getCardLead();
 
 		JSONObject cardLeadObj = leadingCard.toJSONObject();
