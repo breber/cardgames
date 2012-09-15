@@ -271,7 +271,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 			public void onClick(View v) {
 				if (isTurn && gameRules.checkCard(cardSelected, cardOnDiscard) && cardHand.size() != 0) {
 					// play card
-					if (cardSelected.getValue() == 7) {
+					if (cardSelected.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
 						Intent selectSuit = new Intent(playerContext, SelectSuitActivity.class);
 						playerContext.startActivityForResult(selectSuit, CHOOSE_SUIT);
 						// go to the onActivityResult to finish this turn
