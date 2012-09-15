@@ -8,7 +8,6 @@ import static com.worthwhilegames.cardgames.euchre.EuchreConstants.SECOND_ROUND_
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP;
 import static com.worthwhilegames.cardgames.shared.Constants.CURRENT_STATE;
 import static com.worthwhilegames.cardgames.shared.Constants.ID;
-import static com.worthwhilegames.cardgames.shared.Constants.IS_TURN;
 import static com.worthwhilegames.cardgames.shared.Constants.LOSER;
 import static com.worthwhilegames.cardgames.shared.Constants.PLAY_CARD;
 import static com.worthwhilegames.cardgames.shared.Constants.REFRESH;
@@ -261,7 +260,7 @@ public class EuchrePlayerController implements PlayerController {
 				dealerDiscardView();
 				break;
 
-			case IS_TURN:
+			case PLAY_CARD:
 				mySM.sayTurn(playerName);
 				this.setCardLead(object);
 				currentState = PLAY_CARD;

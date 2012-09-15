@@ -277,7 +277,6 @@ public class EuchreGameController implements GameController{
 				//start the first turn of the round by going one person the the right of the dealer.
 				whoseTurn = game.getTrickLeader();
 
-				// TODO: look at this...something about trump being sent by refresh
 				refreshPlayers();
 				sendNextTurn(currentState, game.getCardLead());
 				break;
@@ -417,7 +416,7 @@ public class EuchreGameController implements GameController{
 			return;
 		}
 
-		currentState = IS_TURN;
+		currentState = PLAY_CARD;
 
 		//tell the next person to play
 		sendNextTurn(currentState, game.getCardLead());
@@ -691,6 +690,11 @@ public class EuchreGameController implements GameController{
 
 
 
+	/**
+	 * This will handle the betting that is done by the players
+	 * @param round - which round of betting it is
+	 * @param object - JSON object that represents the betting
+	 */
 	private void handleBetting(int round, String object) {
 		EuchreBet bet = null;
 		try {
@@ -718,14 +722,18 @@ public class EuchreGameController implements GameController{
 					if(game.isPlayerGoingAlone() && game.getTrickLeader() == game.getPlayerBeingSkipped() ){
 						game.setTrickLeader(game.getTrickLeader() + 1);
 					}
-					whoseTurn = game.getDealer();
-					currentState = PICK_IT_UP;
+					if( !game.isPlayerGoingAlone() && game.getDealer() != game.getPlayerBeingSkipped()){
+						whoseTurn = game.getDealer();
+						currentState = PICK_IT_UP;
+						players.get(game.getDealer()).addCard(game.getCardLead());
+					} else {
+						whoseTurn = game.getTrickLeader();
+						currentState = PLAY_LEAD_CARD;
+					}
 
 					//tell the dealer to "pick it up"
 					mySM.drawCardSound();
 					game.clearCardsPlayed();
-
-					players.get(game.getDealer()).addCard(game.getCardLead());
 				} else {
 					//TODO error should not get here.
 				}
@@ -754,8 +762,6 @@ public class EuchreGameController implements GameController{
 				game.clearCardsPlayed();
 
 				currentState = PLAY_LEAD_CARD;
-
-				// TODO: look at this...something about trump
 				refreshPlayers();
 			} else {
 				if(whoseTurn != game.getDealer()){

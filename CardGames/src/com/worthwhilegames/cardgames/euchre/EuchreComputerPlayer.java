@@ -178,22 +178,44 @@ public class EuchreComputerPlayer {
 
 	public Card getLeadCard(int whoseTurn){
 		Card cardSelected = players.get(whoseTurn).getCards().get(0);
+		List<Card> cards = players.get(whoseTurn).getCards();
 
 		if(this.difficulty.equals(Constants.EASY)){
 			//Easy, randomly choose the first card.
-		}else if(this.difficulty.equals(Constants.MEDIUM)){
-			//TODO medium
+		}else if( this.difficulty.equals(Constants.MEDIUM) || this.difficulty.equals(Constants.HARD) ){
+			//get a card that is not trump
+			for(Card c: cards){
+				if(c.getSuit() != game.getTrump()){
+					cardSelected = c;
+					break;
+				}
+			}
 
-		} else if(this.difficulty.equals(Constants.HARD)){
+			//choose the highest non-trump card that I have
+			for(Card c: cards){
+				if(c.getSuit() != game.getTrump() && compareCards(c, cardSelected) ){
+					cardSelected = c;
+				}
+			}
 
-			//TODO hard
-
+			//We only have trump so we choose the highest trump we have
+			if(cardSelected.getSuit() == game.getTrump()){
+				for(Card c: cards){
+					if(compareCards(c, cardSelected) ){
+						cardSelected = c;
+					}
+				}
+			}
 		}
-
 
 		return cardSelected;
 	}
 
+	/**
+	 * When a card has been lead this will determine the card that the computer should play
+	 * @param whoseTurn - whose turn it is
+	 * @return the card to play
+	 */
 	public Card getCardOnTurn(int whoseTurn){
 		Card cardSelected = players.get(whoseTurn).getCards().get(0);
 
@@ -218,8 +240,7 @@ public class EuchreComputerPlayer {
 				}
 			}
 		} else if (this.difficulty.equals(Constants.HARD)){
-			//TODO hard
-			//make function to see if my card can beat all possible cards
+			//function to see if my card can beat all possible cards
 			Card possibleWinner = canBeatAllCardsPlayable(whoseTurn);
 			if( possibleWinner != null){
 				//go for the win
@@ -239,6 +260,10 @@ public class EuchreComputerPlayer {
 		return cardSelected;
 	}
 
+	/**
+	 * @param cards
+	 * @return
+	 */
 	private List<Card> getPlayableCards(List<Card> cards){
 		List<Card> playableCards = new ArrayList<Card>();
 
@@ -345,14 +370,37 @@ public class EuchreComputerPlayer {
 					}
 				} else {
 					//player has not played their card for this trick so we look at their hand.
+					otherPlayerCards = getPlayableCards(players.get(tempTurn).getCards());
 
+					for(Card otherC: otherPlayerCards){
+						if(teammateCard != null && compareCards(teammateCard, otherC)){
+							//teammateCard beats the other teams card here
+						} else {
+							if( playerWinningCard != null && compareCards(playerWinningCard, otherC)){
+								//this card already will win
+							} else{
+								playerWinningCard = null;
+								//need to find a card that can win
+								for(Card c: playerCards){
+									if(compareCards(c, otherC)){
+										if(playerWinningCard == null) {
+											playerWinningCard = c;
+										} else if( compareCards(playerWinningCard, c)){
+											//winning card is greater than current card but current card will still win
+											playerWinningCard = c;
+										}
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 
 			tempTurn = incrementWhoseTurn(tempTurn);
 		}while (tempTurn != game.getTrickLeader());
 
-
+		//TODO test!!
 		return playerWinningCard;
 	}
 
@@ -377,6 +425,15 @@ public class EuchreComputerPlayer {
 		return scores;
 	}
 
+	public boolean isTrumpSuit(Card c){
+		Card copyCard = new Card(c.getSuit(), c.getValue(), c.getResourceId(), c.getIdNum());
+		game.adjustCards(copyCard);
+		if(copyCard.getSuit() == game.getTrump()){
+			return true;
+		}
+		return false;
+	}
+
 
 	/**
 	 * If the first card is greater than the second card then return true else return false
@@ -390,9 +447,10 @@ public class EuchreComputerPlayer {
 		} else if( c2 == null){
 			return true;
 		}
-		//TODO test this adjust card lead
+		Card copyCard1 = new Card(c1.getSuit(), c1.getValue(), c1.getResourceId(), c1.getIdNum());
+		Card copyCard2 = new Card(c2.getSuit(), c2.getValue(), c2.getResourceId(), c2.getIdNum());
 		game.adjustCards(game.getCardLead());
-		return c1.equals(game.compareCards(c1, c1, game.getCardLead().getSuit()));
+		return c1.equals(game.compareCards(copyCard1, copyCard2, game.getCardLead().getSuit()));
 	}
 
 	/**
