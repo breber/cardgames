@@ -236,6 +236,7 @@ public class EuchrePlayerController implements PlayerController {
 				// start select bet activity to let the player bet
 				isBettingNow = true;
 				bettingView();
+				isTurn = true;
 				setButtonsEnabled(true);
 				break;
 			case PLAY_LEAD_CARD:
@@ -528,7 +529,6 @@ public class EuchrePlayerController implements PlayerController {
 		goAlone.setEnabled(false);
 		chooseSuit.setVisibility(View.INVISIBLE);
 		chooseSuit.setEnabled(false);
-		isTurn = true;
 	}
 
 	private void bettingView(){
@@ -542,7 +542,6 @@ public class EuchrePlayerController implements PlayerController {
 		chooseSuit.setVisibility(View.VISIBLE);
 		chooseSuit.setEnabled(currentState == SECOND_ROUND_BETTING);
 		updateTrumpSuit();
-		isTurn = true;
 	}
 
 	private void playingView(){
@@ -555,8 +554,6 @@ public class EuchrePlayerController implements PlayerController {
 		goAlone.setEnabled(false);
 		chooseSuit.setVisibility(View.INVISIBLE);
 		chooseSuit.setEnabled(false);
-
-		isTurn = true;
 	}
 
 	/**

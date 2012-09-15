@@ -220,7 +220,18 @@ public class EuchreComputerPlayer {
 		} else if (this.difficulty.equals(Constants.HARD)){
 			//TODO hard
 			//make function to see if my card can beat all possible cards
-
+			Card possibleWinner = canBeatAllCardsPlayable(whoseTurn);
+			if( possibleWinner != null){
+				//go for the win
+				cardSelected = possibleWinner;
+			} else {
+				//can't win, low ball it.
+				for( Card c: playable){
+					if( compareCards(cardSelected, c)){
+						cardSelected = c;
+					}
+				}
+			}
 		}
 
 
