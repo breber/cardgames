@@ -60,9 +60,22 @@ public class AcceptThread extends Thread {
 	 * When this turns false, don't try to find another connection
 	 */
 	private boolean continueChecking = true;
+
+	/**
+	 * The JmDNS instance
+	 */
 	private JmDNS jmdns = null;
+
+	/**
+	 * The ServiceInfo we are broadcasting
+	 */
 	private ServiceInfo serviceInfo;
+
+	/**
+	 * The Wifi MulticastLock
+	 */
 	private MulticastLock lock;
+
 	/**
 	 * Create a new AcceptThread
 	 * 
@@ -80,6 +93,7 @@ public class AcceptThread extends Thread {
 		// Create a new listening server socket
 		mmServerSocket = ConnectionFactory.getServerSocket(mContext);
 
+		// TODO: should this be in the generic AcceptThread?
 		WifiManager wifi = (WifiManager) ctx.getSystemService(android.content.Context.WIFI_SERVICE);
 		lock = wifi.createMulticastLock("CardGamesLock");
 		lock.setReferenceCounted(true);
@@ -93,7 +107,6 @@ public class AcceptThread extends Thread {
 	public void run() {
 		try {
 			jmdns = JmDNS.create(Util.getLocalIpAddress());
-			// TODO: get device name
 			serviceInfo = ServiceInfo.create(WifiConstants.SERVICE_TYPE, "Crazy Eights: " + android.os.Build.MODEL, 1234, "Card Games for Android");
 			jmdns.registerService(serviceInfo);
 		} catch (IOException e) {
