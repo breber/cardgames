@@ -2,6 +2,13 @@ package com.worthwhilegames.cardgames.shared.wifi;
 
 import java.io.IOException;
 
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceInfo;
+
+import android.content.Context;
+import android.net.wifi.WifiManager;
+import android.net.wifi.WifiManager.MulticastLock;
+
 import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.connection.IServerSocket;
 import com.worthwhilegames.cardgames.shared.connection.ISocket;
@@ -11,16 +18,54 @@ import com.worthwhilegames.cardgames.shared.connection.ISocket;
  */
 public class WifiServerSocket implements IServerSocket {
 
+	/**
+	 * The ServerSocket
+	 */
 	private java.net.ServerSocket mServerSocket;
+
+	/**
+	 * The JmDNS instance
+	 */
+	private JmDNS jmdns = null;
+
+	/**
+	 * The ServiceInfo we are broadcasting
+	 */
+	private ServiceInfo serviceInfo;
+
+	/**
+	 * The Wifi MulticastLock
+	 */
+	private MulticastLock lock;
 
 	/**
 	 * Create a new WifiServerSocket
 	 */
-	public WifiServerSocket() {
+	public WifiServerSocket(Context ctx) {
+		WifiManager wifi = (WifiManager) ctx.getSystemService(android.content.Context.WIFI_SERVICE);
+		lock = wifi.createMulticastLock("CardGamesLock");
+		lock.setReferenceCounted(true);
+		lock.acquire();
+
 		try {
 			mServerSocket = new java.net.ServerSocket(WifiConstants.PORT_NUMBER, 0, Util.getLocalIpAddress());
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.worthwhilegames.cardgames.shared.connection.IServerSocket#setup()
+	 */
+	@Override
+	public void setup() {
+		try {
+			jmdns = JmDNS.create(Util.getLocalIpAddress());
+			serviceInfo = ServiceInfo.create(WifiConstants.SERVICE_TYPE, "Crazy Eights: " + android.os.Build.MODEL, WifiConstants.PORT_NUMBER, "Card Games for Android");
+			jmdns.registerService(serviceInfo);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
 		}
 	}
 
@@ -41,6 +86,20 @@ public class WifiServerSocket implements IServerSocket {
 	 */
 	@Override
 	public void close() throws IOException {
+		if (jmdns != null) {
+			jmdns.unregisterAllServices();
+			try {
+				jmdns.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			jmdns = null;
+		}
+
+		if (lock.isHeld()) {
+			lock.release();
+		}
+
 		if (mServerSocket != null) {
 			mServerSocket.close();
 		}

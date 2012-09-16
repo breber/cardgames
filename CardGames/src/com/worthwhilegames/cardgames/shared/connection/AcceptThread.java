@@ -3,19 +3,13 @@ package com.worthwhilegames.cardgames.shared.connection;
 import java.io.IOException;
 import java.util.HashMap;
 
-import javax.jmdns.JmDNS;
-import javax.jmdns.ServiceInfo;
-
 import android.content.Context;
-import android.net.wifi.WifiManager;
-import android.net.wifi.WifiManager.MulticastLock;
 import android.os.Handler;
 import android.util.Log;
 
 import com.worthwhilegames.cardgames.shared.Game;
 import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.Util;
-import com.worthwhilegames.cardgames.shared.wifi.WifiConstants;
 
 /**
  * This thread runs while listening for incoming connections. When it finds
@@ -62,21 +56,6 @@ public class AcceptThread extends Thread {
 	private boolean continueChecking = true;
 
 	/**
-	 * The JmDNS instance
-	 */
-	private JmDNS jmdns = null;
-
-	/**
-	 * The ServiceInfo we are broadcasting
-	 */
-	private ServiceInfo serviceInfo;
-
-	/**
-	 * The Wifi MulticastLock
-	 */
-	private MulticastLock lock;
-
-	/**
 	 * Create a new AcceptThread
 	 * 
 	 * @param ctx The context of this thread
@@ -92,12 +71,6 @@ public class AcceptThread extends Thread {
 
 		// Create a new listening server socket
 		mmServerSocket = ConnectionFactory.getServerSocket(mContext);
-
-		// TODO: should this be in the generic AcceptThread?
-		WifiManager wifi = (WifiManager) ctx.getSystemService(android.content.Context.WIFI_SERVICE);
-		lock = wifi.createMulticastLock("CardGamesLock");
-		lock.setReferenceCounted(true);
-		lock.acquire();
 	}
 
 	/* (non-Javadoc)
@@ -105,14 +78,8 @@ public class AcceptThread extends Thread {
 	 */
 	@Override
 	public void run() {
-		try {
-			jmdns = JmDNS.create(Util.getLocalIpAddress());
-			serviceInfo = ServiceInfo.create(WifiConstants.SERVICE_TYPE, "Crazy Eights: " + android.os.Build.MODEL, 1234, "Card Games for Android");
-			jmdns.registerService(serviceInfo);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
-		}
+		// Perform any initial setup
+		mmServerSocket.setup();
 
 		// Try and get a reference to the game so that we can figure
 		// out how many human players there were so that we allow up
@@ -237,18 +204,6 @@ public class AcceptThread extends Thread {
 		if (Util.isDebugBuild()) {
 			Log.d(TAG, "Socket cancel " + this);
 		}
-
-		if (jmdns != null) {
-			jmdns.unregisterAllServices();
-			try {
-				jmdns.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			jmdns = null;
-		}
-
-		lock.release();
 
 		// Change the loop variable to prevent the loop from continuing
 		continueChecking = false;

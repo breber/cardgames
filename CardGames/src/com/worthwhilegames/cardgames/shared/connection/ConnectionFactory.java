@@ -103,7 +103,7 @@ public class ConnectionFactory {
 		switch (currentType) {
 		case WiFi:
 		default:
-			return new WifiServerSocket();
+			return new WifiServerSocket(ctx);
 		}
 	}
 
