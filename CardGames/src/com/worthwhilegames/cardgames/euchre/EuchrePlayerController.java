@@ -239,6 +239,7 @@ public class EuchrePlayerController implements PlayerController {
 				setButtonsEnabled(true);
 				break;
 			case PLAY_LEAD_CARD:
+				playingView();
 				mySM.sayTurn(playerName);
 				currentState = PLAY_LEAD_CARD;
 				setButtonsEnabled(true);
@@ -261,6 +262,7 @@ public class EuchrePlayerController implements PlayerController {
 				break;
 
 			case PLAY_CARD:
+				playingView();
 				mySM.sayTurn(playerName);
 				this.setCardLead(object);
 				currentState = PLAY_CARD;

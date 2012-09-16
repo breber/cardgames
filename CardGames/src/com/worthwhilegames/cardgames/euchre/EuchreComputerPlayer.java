@@ -190,7 +190,7 @@ public class EuchreComputerPlayer {
 
 			//choose the highest non-trump card that I have
 			for(Card c: cards){
-				if(isTrumpSuit(c) && compareCards(c, cardSelected) ){
+				if(!isTrumpSuit(c) && compareCards(c, cardSelected) ){
 					cardSelected = c;
 				}
 			}
@@ -214,9 +214,8 @@ public class EuchreComputerPlayer {
 	 * @return the card to play
 	 */
 	public Card getCardOnTurn(int whoseTurn){
-		Card cardSelected = players.get(whoseTurn).getCards().get(0);
-
 		List<Card> playable = this.getPlayableCards(players.get(whoseTurn).getCards());
+		Card cardSelected = playable.get(0);
 
 		if( this.difficulty.equals(Constants.EASY)){
 			//choose the first playable card
@@ -267,7 +266,6 @@ public class EuchreComputerPlayer {
 		for (Card c : cards) {
 			if (gameRules.checkCard(c, game.getTrump(), game.getCardLead() , cards)) {
 				playableCards.add(c);
-				break;
 			}
 		}
 
@@ -298,9 +296,10 @@ public class EuchreComputerPlayer {
 		while(tempTurn != whoseTurn){
 			if(whoseTurn % 2 == tempTurn % 2){
 				//we are looking at players teammate
-				teammateCard = game.getCardAtPosition(tempTurn);
+				teammateCard = game.getCardAtPosition(tempTurn + 1);
 			} else {
-				otherPlayerCard = game.getCardAtPosition(tempTurn);
+				//this gets the card from the position it would be on the gameboard
+				otherPlayerCard = game.getCardAtPosition(tempTurn + 1);
 
 				if(teammateCard != null && compareCards(teammateCard, otherPlayerCard)){
 					//teammateCard beats the other teams card here
@@ -341,9 +340,9 @@ public class EuchreComputerPlayer {
 
 		do {
 			if(tempTurn != whoseTurn){
-				if(game.getCardAtPosition(tempTurn) != null){
+				if(game.getCardAtPosition(tempTurn + 1) != null){
 					//player has already played their card for this trick
-					otherPlayerCard = game.getCardAtPosition(tempTurn);
+					otherPlayerCard = game.getCardAtPosition(tempTurn + 1);
 
 					if(teammateCard != null && compareCards(teammateCard, otherPlayerCard)){
 						//teammateCard beats the other teams card here
@@ -447,7 +446,9 @@ public class EuchreComputerPlayer {
 		Card copyCard1 = new Card(c1.getSuit(), c1.getValue(), c1.getResourceId(), c1.getIdNum());
 		Card copyCard2 = new Card(c2.getSuit(), c2.getValue(), c2.getResourceId(), c2.getIdNum());
 		game.adjustCards(game.getCardLead());
-		return c1.equals(game.compareCards(copyCard1, copyCard2, game.getCardLead().getSuit()));
+		game.adjustCards(copyCard1);
+		game.adjustCards(copyCard2);
+		return copyCard1.equals(game.compareCards(copyCard1, copyCard2, game.getCardLead().getSuit()));
 	}
 
 	/**
