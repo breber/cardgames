@@ -466,7 +466,7 @@ public class CrazyEightsGameController implements GameController {
 		} else {
 			// there are no cards to draw so make it no longer that players turn
 			// and refresh the players
-			advanceTurn(); // TODO test this when all cards are drawn
+			advanceTurn();
 			refreshPlayers();
 		}
 	}

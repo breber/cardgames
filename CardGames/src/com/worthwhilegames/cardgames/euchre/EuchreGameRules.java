@@ -40,7 +40,6 @@ public class EuchreGameRules implements Rules{
 		cardsPlayed.add(cardPlayed);
 		cardsPlayed.add(cardLed);
 
-		//TODO what if a left bower is played!!! it don't work.
 		adjustJacks(cards, trump);
 		adjustJacks(cardsPlayed, trump);
 

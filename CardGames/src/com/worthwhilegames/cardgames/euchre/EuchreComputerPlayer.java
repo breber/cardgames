@@ -69,7 +69,7 @@ public class EuchreComputerPlayer {
 	 */
 	public EuchreComputerPlayer(String difficulty){
 		this.difficulty = difficulty;
-		this.game = EuchreTabletGame.getInstance();
+		game = EuchreTabletGame.getInstance();
 		this.players = game.getPlayers();
 
 		//set up constants based on difficulty
@@ -99,10 +99,7 @@ public class EuchreComputerPlayer {
 	 * @return
 	 */
 	public EuchreBet getComputerBet( int whoseTurn, final int round, int tempTrump){
-		Card cardLead = game.getCardLead();
-
 		List<Card> cards = players.get(whoseTurn).getCards();
-		Card cardSelected = null;
 		EuchreBet compBet = new EuchreBet(game.getCardLead().getSuit(), false, false);
 
 
@@ -268,7 +265,7 @@ public class EuchreComputerPlayer {
 		List<Card> playableCards = new ArrayList<Card>();
 
 		for (Card c : cards) {
-			if (gameRules.checkCard(c, this.game.getTrump(), this.game.getCardLead() , cards)) {
+			if (gameRules.checkCard(c, game.getTrump(), game.getCardLead() , cards)) {
 				playableCards.add(c);
 				break;
 			}

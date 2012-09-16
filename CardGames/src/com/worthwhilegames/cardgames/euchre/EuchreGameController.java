@@ -21,7 +21,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,6 +35,7 @@ import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.gameboard.activities.ConnectActivity;
 import com.worthwhilegames.cardgames.gameboard.activities.GameResultsActivity;
 import com.worthwhilegames.cardgames.gameboard.activities.GameboardActivity;
+import com.worthwhilegames.cardgames.player.activities.RoundScoresActivity;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.CardTranslator;
 import com.worthwhilegames.cardgames.shared.Constants;
@@ -62,6 +62,11 @@ public class EuchreGameController implements GameController{
 	 * request code to allow the gameboard to choose which player to connect
 	 */
 	private static final int CHOOSE_PLAYER = Math.abs("CHOOSE_PLAYER".hashCode());
+
+	/**
+	 * request code to allow the gameboard to choose which player to connect
+	 */
+	private static final int DECLARE_ROUND_SCORES = Math.abs("DECLARE_ROUND_SCORES".hashCode());
 
 	/**
 	 * The ConnectionServer that sends and receives messages from other devices
@@ -109,11 +114,6 @@ public class EuchreGameController implements GameController{
 	 * will handle any button presses
 	 */
 	private ImageView refreshButton;
-
-	/**
-	 * The implementation of the Game Rules
-	 */
-	private EuchreGameRules gameRules = new EuchreGameRules();
 
 	/**
 	 * The sound manager
@@ -350,6 +350,9 @@ public class EuchreGameController implements GameController{
 			// Send the refresh signal (again) to all players just to make
 			// sure everyone has the latest information
 			refreshPlayers();
+		} else if (requestCode == DECLARE_ROUND_SCORES){
+			//They have seen the score move on with game.
+			startRound();
 		} else if (requestCode == DECLARE_WINNER && resultCode == Activity.RESULT_CANCELED){
 			// This should restart the game.
 			game = EuchreTabletGame.getInstance();
@@ -436,7 +439,6 @@ public class EuchreGameController implements GameController{
 				return;
 			}
 			declareRoundScores();
-			startRound();
 		} else {
 			//round not over just the current trick
 
@@ -456,16 +458,20 @@ public class EuchreGameController implements GameController{
 	 */
 	private void declareRoundScores() {
 		if (Util.isDebugBuild()) {
-			// TODO: should this be shown every time?
-			// TODO: this should probably be styled
-			AlertDialog.Builder dlg = new AlertDialog.Builder(gameContext);
+			//TODO delete this after the new dialog works
+			/*AlertDialog.Builder dlg = new AlertDialog.Builder(gameContext);
 			dlg.setTitle("Scores!");
 			dlg.setMessage("Team " + players.get(0).getName() + " and " + players.get(2).getName()
 					+ ": " + game.getMatchScores()[0] +
 					" \nTeam " + players.get(1).getName() + " and " + players.get(3).getName()
 					+ ": " + game.getMatchScores()[1]);
-			dlg.show();
+			dlg.show();*/
 		}
+
+		// TODO: should this be shown every time?
+		// TODO: this should probably be styled
+		Intent intent = new Intent(gameContext, RoundScoresActivity.class);
+		gameContext.startActivityForResult(intent, DECLARE_ROUND_SCORES);
 
 		for (int i = 0; i < game.getNumPlayers(); i++) {
 			server.write(ROUND_OVER, null, players.get(i).getId());
@@ -795,7 +801,6 @@ public class EuchreGameController implements GameController{
 		// Highlight the name of the current player
 		gameContext.highlightPlayer(whoseTurn+1);
 
-		//TODO update scores on gameboard
 		gameContext.updateUi();
 	}
 

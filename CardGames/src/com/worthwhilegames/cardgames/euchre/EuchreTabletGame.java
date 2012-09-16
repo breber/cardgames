@@ -360,7 +360,7 @@ public class EuchreTabletGame implements Game{
 
 	@Override
 	public ArrayList<Card> getShuffledDeck() {
-		// TODO Auto-generated method stub
+		//no need to implement this for Euchre
 		return null;
 	}
 
@@ -571,7 +571,6 @@ public class EuchreTabletGame implements Game{
 	 */
 	public void clearCardsPlayed(){
 		//get rid of record of what has been played
-		//TODO hopefully the cardsPlayed can be used by the gameboard to show which cards have been played.
 		cardsPlayed = new Card[4];
 	}
 

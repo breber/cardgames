@@ -126,6 +126,11 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.CardGames" />
+        <activity
+            android:name=".shared.activities.RoundScoresActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.CardGames.Dialog" />
 
         <!-- Ad Activities -->
         <activity
