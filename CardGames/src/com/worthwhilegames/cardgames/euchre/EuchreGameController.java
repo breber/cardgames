@@ -9,7 +9,6 @@ import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ROUND_OVER;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.SECOND_ROUND_BETTING;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP;
 import static com.worthwhilegames.cardgames.shared.Constants.ID;
-import static com.worthwhilegames.cardgames.shared.Constants.IS_TURN;
 import static com.worthwhilegames.cardgames.shared.Constants.PLAY_CARD;
 import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
@@ -658,7 +657,7 @@ public class EuchreGameController implements GameController{
 			case PLAY_LEAD_CARD:
 				cardSelected = computerPlayer.getLeadCard(whoseTurn);
 				break;
-			case IS_TURN:
+			case PLAY_CARD:
 				cardSelected = computerPlayer.getCardOnTurn(whoseTurn);
 				break;
 			default:

@@ -185,7 +185,7 @@ public class EuchreComputerPlayer {
 		}else if( this.difficulty.equals(Constants.MEDIUM) || this.difficulty.equals(Constants.HARD) ){
 			//get a card that is not trump
 			for(Card c: cards){
-				if(c.getSuit() != game.getTrump()){
+				if(!isTrumpSuit(c)){
 					cardSelected = c;
 					break;
 				}
@@ -193,13 +193,13 @@ public class EuchreComputerPlayer {
 
 			//choose the highest non-trump card that I have
 			for(Card c: cards){
-				if(c.getSuit() != game.getTrump() && compareCards(c, cardSelected) ){
+				if(isTrumpSuit(c) && compareCards(c, cardSelected) ){
 					cardSelected = c;
 				}
 			}
 
 			//We only have trump so we choose the highest trump we have
-			if(cardSelected.getSuit() == game.getTrump()){
+			if(isTrumpSuit(cardSelected)){
 				for(Card c: cards){
 					if(compareCards(c, cardSelected) ){
 						cardSelected = c;
