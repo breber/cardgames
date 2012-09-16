@@ -94,7 +94,7 @@ public class AcceptThread extends Thread {
 		try {
 			jmdns = JmDNS.create(Util.getLocalIpAddress());
 			// TODO: get device name
-			serviceInfo = ServiceInfo.create(WifiConstants.SERVICE_TYPE, "Card2 Games", 1010, "Card Games for Android");
+			serviceInfo = ServiceInfo.create(WifiConstants.SERVICE_TYPE, "Crazy Eights: " + android.os.Build.MODEL, 1234, "Card Games for Android");
 			jmdns.registerService(serviceInfo);
 		} catch (IOException e) {
 			e.printStackTrace();

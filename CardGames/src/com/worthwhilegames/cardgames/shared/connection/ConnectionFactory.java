@@ -56,7 +56,7 @@ public class ConnectionFactory {
 			if (currentAddress == null) {
 				sb.append("Unknown");
 			} else {
-				sb.append(currentAddress.getHostAddress());
+				sb.append(android.os.Build.MODEL);
 			}
 		}
 
