@@ -44,10 +44,6 @@ The game will start with player 1 and continue in a counterclockwise fashion aro
     <string name="no_devices_found">No devices found</string>
     <string name="title_device_list">Device List</string>
 
-    <!-- Wifi Connect Activity -->
-    <string name="enterIpAddress">Enter IP Address of Server</string>
-    <string name="ipv4Address">***.***.***.***</string>
-
     <!-- Connect Screen Handheld -->
     <string name="waitingForGame">Waiting for game to begin…</string>
 
@@ -121,7 +117,5 @@ The game will start with player 1 and continue in a counterclockwise fashion aro
     <string-array name="game_array">
         <item>Crazy Eights</item>
     </string-array>
-
-    <string name="ipv6Address">****:****:****:****:****:****:****:****</string>
 
 </resources>
