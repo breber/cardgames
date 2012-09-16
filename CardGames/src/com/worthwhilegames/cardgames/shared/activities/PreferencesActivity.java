@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.Language;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionFactory;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionType;
 
 /**
@@ -238,11 +237,6 @@ public class PreferencesActivity extends Activity {
 		connectionSpinner = (Spinner) findViewById(R.id.connectionOption);
 		ConnectionType[] connectionTypes = ConnectionType.values();
 		List<ConnectionType> modifiedConnectionTypes = new ArrayList<ConnectionType>(Arrays.asList(connectionTypes));
-
-		// If we don't have Bluetooth capabilities, remove that option
-		if (!ConnectionFactory.hasBluetoothCapabilities()) {
-			modifiedConnectionTypes.remove(ConnectionType.Bluetooth);
-		}
 
 		ArrayAdapter<ConnectionType> connectionAdapter = new ArrayAdapter<ConnectionType>(this, android.R.layout.simple_spinner_item, modifiedConnectionTypes);
 		connectionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

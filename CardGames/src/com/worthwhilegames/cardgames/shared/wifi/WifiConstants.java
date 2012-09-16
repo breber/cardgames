@@ -12,6 +12,11 @@ public class WifiConstants {
 	public static final String TAG = WifiConstants.class.getName();
 
 	/**
+	 * The Bonjour Service Type to use for this app
+	 */
+	public static final String SERVICE_TYPE = "_cardgames._tcp.local.";
+
+	/**
 	 * The port number to use
 	 */
 	public static final int PORT_NUMBER = 1234;

@@ -11,17 +11,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.TextView;
 import com.worthwhilegames.cardgames.shared.activities.DeviceListActivity;
-import com.worthwhilegames.cardgames.shared.activities.WifiConnectActivity;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionFactory;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionType;
 
 /**
  * The Activity that initiates the device list, and then
@@ -78,20 +74,9 @@ public class ConnectActivity extends Activity {
 				// because we are no longer connected like we used to be
 				readyToStart = false;
 
-				ConnectionType type = ConnectionFactory.getConnectionType(ConnectActivity.this);
-
-				if (type == ConnectionType.Bluetooth) {
-					// Show the device list
-					Intent showDeviceList = new Intent(ConnectActivity.this, DeviceListActivity.class);
-					startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
-				} else if (type == ConnectionType.WiFi) {
-					WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-					manager.setWifiEnabled(true);
-
-					// Show popup telling the user to enter the IP address of the tablet to connect to
-					Intent showDeviceList = new Intent(ConnectActivity.this, WifiConnectActivity.class);
-					startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
-				}
+				// Show the device list
+				Intent showDeviceList = new Intent(ConnectActivity.this, DeviceListActivity.class);
+				startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
 			}
 		}
 	};
@@ -130,20 +115,9 @@ public class ConnectActivity extends Activity {
 		TextView tv = (TextView) findViewById(R.id.progressDialogText);
 		tv.setText(R.string.connecting);
 
-		ConnectionType type = ConnectionFactory.getConnectionType(this);
-
-		if (type == ConnectionType.Bluetooth) {
-			// Show the device list
-			Intent showDeviceList = new Intent(this, DeviceListActivity.class);
-			startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
-		} else if (type == ConnectionType.WiFi) {
-			WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-			manager.setWifiEnabled(true);
-
-			// Show popup telling the user to enter the IP address of the tablet to connect to
-			Intent showDeviceList = new Intent(this, WifiConnectActivity.class);
-			startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
-		}
+		// Show the device list
+		Intent showDeviceList = new Intent(this, DeviceListActivity.class);
+		startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
 
 		returnIntent = new Intent();
 	}

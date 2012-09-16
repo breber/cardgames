@@ -38,6 +38,6 @@ public class DeviceListItem {
 	 */
 	@Override
 	public String toString() {
-		return deviceName + "\n" + deviceMacAddress;
+		return deviceName;
 	}
 }
