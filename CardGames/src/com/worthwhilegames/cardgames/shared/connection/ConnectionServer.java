@@ -155,10 +155,17 @@ public class ConnectionServer extends ConnectionCommon {
 	 * Stop listening for Connections
 	 */
 	public void stopListening() {
-		if (mAcceptThread != null) {
-			mAcceptThread.cancel();
-			mAcceptThread = null;
-		}
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				synchronized (ConnectionServer.this) {
+					if (mAcceptThread != null) {
+						mAcceptThread.cancel();
+						mAcceptThread = null;
+					}
+				}
+			}
+		}).start();
 	}
 
 	/**

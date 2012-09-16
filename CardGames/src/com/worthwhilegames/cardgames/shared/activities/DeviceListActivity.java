@@ -157,23 +157,28 @@ public class DeviceListActivity extends Activity implements ServiceListener {
 			Log.d(TAG, "cancelDiscovery()");
 		}
 
-		synchronized (DeviceListActivity.this) {
-			if (!isCancelling) {
-				isCancelling = true;
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				synchronized (DeviceListActivity.this) {
+					if (!isCancelling) {
+						isCancelling = true;
 
-				if (jmdns != null) {
-					jmdns.removeServiceListener(WifiConstants.SERVICE_TYPE, this);
-					try {
-						jmdns.close();
-					} catch (IOException e) {
-						e.printStackTrace();
+						if (jmdns != null) {
+							jmdns.removeServiceListener(WifiConstants.SERVICE_TYPE, DeviceListActivity.this);
+							try {
+								jmdns.close();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							jmdns = null;
+						}
+
+						lock.release();
 					}
-					jmdns = null;
 				}
-
-				lock.release();
 			}
-		}
+		}).start();
 	}
 
 	@Override

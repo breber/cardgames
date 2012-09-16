@@ -61,9 +61,6 @@ public class ConnectActivity extends Activity {
 			if (currentState == ConnectionConstants.STATE_CONNECTED) {
 				readyToStart = true;
 
-				TextView tv = (TextView) findViewById(R.id.progressDialogText);
-				tv.setText(getResources().getString(R.string.waitingForGame));
-
 				Intent getName = new Intent(ConnectActivity.this, EnterNameActivty.class);
 				startActivityForResult(getName, GET_PLAYER_NAME);
 
@@ -158,6 +155,9 @@ public class ConnectActivity extends Activity {
 			// Start listening for connection state changes
 			registerReceiver(receiver, new IntentFilter(ConnectionConstants.STATE_CHANGE_INTENT));
 		} else if (requestCode == GET_PLAYER_NAME && resultCode == RESULT_OK) {
+			TextView tv = (TextView) findViewById(R.id.progressDialogText);
+			tv.setText(getResources().getString(R.string.waitingForGame));
+
 			String playerName = data.getStringExtra(PLAYER_NAME);
 			returnIntent.putExtra(PLAYER_NAME, playerName);
 			JSONObject obj = new JSONObject();
