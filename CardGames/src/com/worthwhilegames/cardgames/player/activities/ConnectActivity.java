@@ -153,7 +153,13 @@ public class ConnectActivity extends Activity {
 			// We are coming back from the device list, and it wasn't cancelled, so
 			// grab the MAC address from the result intent, and start connection
 			String address = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-			client.connect(address);
+			int portNum = data.getIntExtra(DeviceListActivity.EXTRA_PORT_NUMBER, -1);
+
+			if (portNum > 0) {
+				client.connect(address, portNum);
+			} else {
+				client.connect(address);
+			}
 
 			// Start listening for connection state changes
 			registerReceiver(receiver, new IntentFilter(ConnectionConstants.STATE_CHANGE_INTENT));

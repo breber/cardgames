@@ -53,6 +53,11 @@ public class DeviceListActivity extends Activity implements ServiceListener {
 	public static String EXTRA_DEVICE_ADDRESS = "deviceAddress";
 
 	/**
+	 * Return Intent extra
+	 */
+	public static String EXTRA_PORT_NUMBER = "portNumber";
+
+	/**
 	 * A list of Device names that are currently added to the DeviceListAdapter
 	 */
 	private List<String> deviceNames = new ArrayList<String>();
@@ -263,11 +268,11 @@ public class DeviceListActivity extends Activity implements ServiceListener {
 			}).start();
 
 			DeviceListItem item = mDevicesArrayAdapter.getItem(arg2);
-			String address = item.getDeviceMacAddress();
 
 			// Create the result Intent and include the MAC address
 			Intent intent = new Intent();
-			intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+			intent.putExtra(EXTRA_DEVICE_ADDRESS, item.getDeviceMacAddress());
+			intent.putExtra(EXTRA_PORT_NUMBER, item.getPortNumber());
 
 			// Set result and finish this Activity
 			setResult(Activity.RESULT_OK, intent);
@@ -287,7 +292,7 @@ public class DeviceListActivity extends Activity implements ServiceListener {
 				// If we have a host address, show it in the UI
 				if (event.getInfo().getHostAddresses().length > 0) {
 					noDevicesFound.setVisibility(View.INVISIBLE);
-					mDevicesArrayAdapter.add(new DeviceListItem(event.getName(), event.getInfo().getHostAddresses()[0]));
+					mDevicesArrayAdapter.add(new DeviceListItem(event.getName(), event.getInfo().getHostAddresses()[0], event.getInfo().getPort()));
 					deviceNames.add(event.getDNS().getHostName());
 				}
 			}

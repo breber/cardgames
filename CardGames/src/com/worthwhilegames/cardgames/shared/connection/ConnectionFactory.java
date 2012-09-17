@@ -114,12 +114,21 @@ public class ConnectionFactory {
 	 * @return a ServerSocket
 	 */
 	public static ISocket getSocket(Context ctx, String address) {
+		return getSocket(ctx, address, GameFactory.getPortNumber(ctx));
+	}
+
+	/**
+	 * Get a new Socket based on the current connection type
+	 * 
+	 * @return a ServerSocket
+	 */
+	public static ISocket getSocket(Context ctx, String address, int portNumber) {
 		ConnectionType currentType = getConnectionType(ctx);
 
 		switch (currentType) {
 		case WiFi:
 		default:
-			return new WifiSocket(address, GameFactory.getPortNumber(ctx));
+			return new WifiSocket(address, portNumber);
 		}
 	}
 }
