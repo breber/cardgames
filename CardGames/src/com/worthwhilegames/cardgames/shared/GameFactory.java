@@ -28,6 +28,11 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
 public class GameFactory {
 
 	/**
+	 * The current game type, if one has been specified
+	 */
+	private static CardGame mGameType = null;
+
+	/**
 	 * Get an instance of an already started Game
 	 *
 	 * @return the Game instance as specified by the type of game currently specified
@@ -90,6 +95,10 @@ public class GameFactory {
 	 * @return the type of Game we are playing
 	 */
 	public static CardGame getGameType(Context ctx) {
+		if (mGameType != null) {
+			return mGameType;
+		}
+
 		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, 0);
 		String gameType = prefs.getString(Constants.GAME_TYPE, CardGame.CrazyEights.toString());
 
@@ -100,6 +109,36 @@ public class GameFactory {
 		}
 
 		return CardGame.CrazyEights;
+	}
+
+	/**
+	 * Change the Game Type at runtime, ignoring any preferences
+	 * 
+	 * @param cardGame the new game type
+	 */
+	public static void setGameType(CardGame cardGame) {
+		mGameType = cardGame;
+	}
+
+	/**
+	 * Sets the current game type based on the port number used to connect
+	 * 
+	 * @param portNumber
+	 */
+	public static void setGameTypeBasedOnPort(int portNumber) {
+		if (1234 == portNumber) {
+			mGameType = CardGame.CrazyEights;
+		} else if (1233 == portNumber) {
+			mGameType = CardGame.Euchre;
+		}
+	}
+
+	/**
+	 * Clear the previously stored game type, and fall back to using
+	 * the preferences
+	 */
+	public static void clearGameType() {
+		mGameType = null;
 	}
 
 	/**

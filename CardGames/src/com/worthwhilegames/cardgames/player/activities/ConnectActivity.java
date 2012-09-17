@@ -14,6 +14,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.TextView;
 import com.worthwhilegames.cardgames.shared.activities.DeviceListActivity;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
@@ -70,6 +71,9 @@ public class ConnectActivity extends Activity {
 				// If we went back to the listen state, display the device list
 				// because we are no longer connected like we used to be
 				readyToStart = false;
+
+				// Clear the previously stored GameType
+				GameFactory.clearGameType();
 
 				// Finish the get player name activity if it has been started
 				finishActivity(GET_PLAYER_NAME);
@@ -157,6 +161,9 @@ public class ConnectActivity extends Activity {
 
 			if (portNum > 0) {
 				client.connect(address, portNum);
+
+				// Update the GameType based on the port the server is running on
+				GameFactory.setGameTypeBasedOnPort(portNum);
 			} else {
 				client.connect(address);
 			}

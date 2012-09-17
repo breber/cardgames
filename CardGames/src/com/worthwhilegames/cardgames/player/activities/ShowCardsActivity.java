@@ -100,6 +100,10 @@ public class ShowCardsActivity extends Activity {
 				ShowCardsActivity.this.setResult(RESULT_OK);
 				finish();
 			} else {
+				if (playerController == null) {
+					setupGame();
+				}
+
 				// Give it up to the player controller to deal with
 				playerController.handleBroadcastReceive(context, intent);
 			}
@@ -117,11 +121,6 @@ public class ShowCardsActivity extends Activity {
 		int screenHeight = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
 		cardHeight = screenHeight * 3 / 5;
 
-		// Initialize the buttons
-		ViewStub buttonLayout = (ViewStub) findViewById(R.id.playerHandButtonView);
-		buttonLayout.setLayoutResource(GameFactory.getPlayerButtonViewLayout(this));
-		buttonLayout.inflate();
-
 		// Create a new, empty hand
 		cardHand = new ArrayList<Card>();
 
@@ -134,9 +133,6 @@ public class ShowCardsActivity extends Activity {
 
 		// Set up the Layout for the cards
 		playerHandLayout = (LinearLayout) findViewById(R.id.playerCardContainer);
-
-		// Get the player controller instance
-		playerController = GameFactory.getPlayerControllerInstance(this, cardHand);
 
 		// Start the connection screen from here so that we can register the message receive
 		// broadcast receiver so that we don't miss any messages
@@ -203,8 +199,11 @@ public class ShowCardsActivity extends Activity {
 				setResult(RESULT_CANCELED);
 				finish();
 			} else {
+				setupGame();
+
 				String playerName = data.getStringExtra(Constants.PLAYER_NAME);
 				playerController.setPlayerName(playerName);
+
 				// Register the state change receiver
 				registerReceiver(receiver, new IntentFilter(ConnectionConstants.STATE_CHANGE_INTENT));
 			}
@@ -221,6 +220,23 @@ public class ShowCardsActivity extends Activity {
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	/**
+	 * Setup the game information
+	 */
+	private void setupGame() {
+		synchronized (this) {
+			if (playerController == null) {
+				// Initialize the buttons
+				ViewStub buttonLayout = (ViewStub) findViewById(R.id.playerHandButtonView);
+				buttonLayout.setLayoutResource(GameFactory.getPlayerButtonViewLayout(this));
+				buttonLayout.inflate();
+
+				// Get the player controller instance
+				playerController = GameFactory.getPlayerControllerInstance(this, cardHand);
+			}
+		}
 	}
 
 	/**
