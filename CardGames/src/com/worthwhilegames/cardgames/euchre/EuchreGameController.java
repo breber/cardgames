@@ -303,8 +303,7 @@ public class EuchreGameController implements GameController{
 	}
 
 	@Override
-	public boolean handleActivityResult(int requestCode, int resultCode,
-			Intent data) { //TODO make in abstract class
+	public boolean handleActivityResult(int requestCode, int resultCode, Intent data) { //TODO make in abstract class
 		if (requestCode == GameboardActivity.DISCONNECTED) {
 			if (resultCode == Activity.RESULT_CANCELED) {
 				// We chose to drop the player, so let the Game know to do that
@@ -457,17 +456,6 @@ public class EuchreGameController implements GameController{
 	 * This method will send players info about the score
 	 */
 	private void declareRoundScores() {
-		if (Util.isDebugBuild()) {
-			//TODO delete this after the new dialog works
-			/*AlertDialog.Builder dlg = new AlertDialog.Builder(gameContext);
-			dlg.setTitle("Scores!");
-			dlg.setMessage("Team " + players.get(0).getName() + " and " + players.get(2).getName()
-					+ ": " + game.getMatchScores()[0] +
-					" \nTeam " + players.get(1).getName() + " and " + players.get(3).getName()
-					+ ": " + game.getMatchScores()[1]);
-			dlg.show();*/
-		}
-
 		// TODO: should this be shown every time?
 		// TODO: this should probably be styled
 		Intent intent = new Intent(gameContext, RoundScoresActivity.class);
@@ -727,7 +715,7 @@ public class EuchreGameController implements GameController{
 					if(game.isPlayerGoingAlone() && game.getTrickLeader() == game.getPlayerBeingSkipped() ){
 						game.setTrickLeader(game.getTrickLeader() + 1);
 					}
-					if( !game.isPlayerGoingAlone() && game.getDealer() != game.getPlayerBeingSkipped()){
+					if( !game.isPlayerGoingAlone() || game.getDealer() != game.getPlayerBeingSkipped()){
 						whoseTurn = game.getDealer();
 						currentState = PICK_IT_UP;
 						players.get(game.getDealer()).addCard(game.getCardLead());
