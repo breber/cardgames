@@ -183,7 +183,9 @@ public class GameboardActivity extends Activity {
 							p.setDisconnected(true);
 						}
 					}
+
 					Intent i = new Intent(GameboardActivity.this, ConnectionFailActivity.class);
+					i.putExtra(ConnectionConstants.KEY_DEVICE_ID, deviceId);
 					startActivityForResult(i, DISCONNECTED);
 
 					// Pause the players
