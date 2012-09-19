@@ -225,6 +225,9 @@ public class EuchreGameController implements GameController{
 
 		placeInitialCards();
 
+		//unbold the players names
+		gameContext.unboldAllPlayerText();
+
 		// If this is a computer, start having the computer play
 		currentState = FIRST_ROUND_BETTING;
 
@@ -351,12 +354,6 @@ public class EuchreGameController implements GameController{
 			refreshPlayers();
 		} else if (requestCode == DECLARE_ROUND_SCORES){
 			//They have seen the score move on with game.
-			startRound();
-		} else if (requestCode == DECLARE_WINNER && resultCode == Activity.RESULT_CANCELED){
-			// This should restart the game.
-			game = EuchreTabletGame.getInstance();
-			game.setup();
-
 			startRound();
 		}
 
@@ -499,6 +496,10 @@ public class EuchreGameController implements GameController{
 		Intent gameResults = new Intent(gameContext, GameResultsActivity.class);
 		gameResults.putExtra(GameResultsActivity.WINNER_NAME, winningTeam);
 		gameContext.startActivityForResult(gameResults, DECLARE_WINNER);
+
+		// Unregister the BroadcastReceiver so that we ignore disconnection
+		// messages from users
+		gameContext.unregisterReceiver();
 	}
 
 	/**
@@ -708,6 +709,8 @@ public class EuchreGameController implements GameController{
 					//set trump and trump caller
 					game.setTrump(bet.getTrumpSuit());
 					game.setPlayerCalledTrump(whoseTurn);
+					this.boldBettingTeam();
+
 					// Update the Game board display with an indication of the current suit
 					gameContext.updateSuit(game.getTrump());
 
@@ -743,6 +746,7 @@ public class EuchreGameController implements GameController{
 			if(bet.getPlaceBet()){
 				game.setTrump(bet.getTrumpSuit());
 				game.setPlayerCalledTrump(whoseTurn);
+				this.boldBettingTeam();
 				gameContext.updateSuit(game.getTrump());
 
 				//set the turn to the first player to play and go
@@ -804,6 +808,18 @@ public class EuchreGameController implements GameController{
 
 		if( game.isPlayerGoingAlone() && whoseTurn == game.getPlayerBeingSkipped() ){
 			incrementWhoseTurn();
+		}
+	}
+
+	/**
+	 * Bolds the betting team's names
+	 */
+	private void boldBettingTeam(){
+		gameContext.unboldAllPlayerText();
+		for(int i = 0; i < 4; i++){
+			if(game.getPlayerCalledTrump() % 2 == i %2){
+				gameContext.boldPlayerText(i);
+			}
 		}
 	}
 

@@ -327,13 +327,14 @@ public class EuchrePlayerController implements PlayerController {
 			case ROUND_OVER:
 				currentState = ROUND_OVER;
 				break;
-			case WINNER://TODO don't disconnect
-
+			case WINNER:
+				playerContext.unregisterReceiver();
 				Intent winner = new Intent(playerContext, GameResultsActivity.class);
 				winner.putExtra(GameResultsActivity.IS_WINNER, true);
 				playerContext.startActivityForResult(winner, QUIT_GAME);
 				break;
-			case LOSER://TODO don't disconnect
+			case LOSER:
+				playerContext.unregisterReceiver();
 				Intent loser = new Intent(playerContext, GameResultsActivity.class);
 				loser.putExtra(GameResultsActivity.IS_WINNER, false);
 				playerContext.startActivityForResult(loser, QUIT_GAME);
@@ -349,9 +350,6 @@ public class EuchrePlayerController implements PlayerController {
 		if (requestCode == CHOOSE_SUIT) {
 			trumpSuit = resultCode;
 			updateTrumpSuit();
-		} else if (requestCode == QUIT_GAME && requestCode == Activity.RESULT_CANCELED) {
-			setButtonsEnabled(false);
-			cardHand.removeAll(cardHand);
 		}
 	}
 

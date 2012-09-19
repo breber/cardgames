@@ -326,10 +326,15 @@ public class EuchreComputerPlayer {
 			tempTurn = incrementWhoseTurn(tempTurn);
 		}
 
-		//TODO test!!
 		return playerWinningCard;
 	}
 
+	/**
+	 * If the player can beat all cards that are playable then this will
+	 * return a card that can beat all cards playable, or else it will return null
+	 * @param whoseTurn - player whose turn it is
+	 * @return card that can beat all other cards or null
+	 */
 	private Card canBeatAllCardsPlayable(int whoseTurn){
 		List<Card> playerCards = getPlayableCards(players.get(whoseTurn).getCards());
 		Card playerWinningCard = null;
@@ -341,24 +346,29 @@ public class EuchreComputerPlayer {
 		do {
 			if(tempTurn != whoseTurn){
 				if(game.getCardAtPosition(tempTurn + 1) != null){
-					//player has already played their card for this trick
-					otherPlayerCard = game.getCardAtPosition(tempTurn + 1);
-
-					if(teammateCard != null && compareCards(teammateCard, otherPlayerCard)){
-						//teammateCard beats the other teams card here
+					if(whoseTurn % 2 == tempTurn % 2){
+						//we are looking at players teammate
+						teammateCard = game.getCardAtPosition(tempTurn + 1);
 					} else {
-						if( playerWinningCard != null && compareCards(playerWinningCard, otherPlayerCard)){
-							//this card already will win
-						} else{
-							playerWinningCard = null;
-							//need to find a card that can win
-							for(Card c: playerCards){
-								if(compareCards(c, otherPlayerCard)){
-									if(playerWinningCard == null) {
-										playerWinningCard = c;
-									} else if( compareCards(playerWinningCard, c)){
-										//winning card is greater than current card but current card will still win
-										playerWinningCard = c;
+						//player has already played their card for this trick
+						otherPlayerCard = game.getCardAtPosition(tempTurn + 1);
+
+						if(teammateCard != null && compareCards(teammateCard, otherPlayerCard)){
+							//teammateCard beats the other teams card here
+						} else {
+							if( playerWinningCard != null && compareCards(playerWinningCard, otherPlayerCard)){
+								//this card already will win
+							} else{
+								playerWinningCard = null;
+								//need to find a card that can win
+								for(Card c: playerCards){
+									if(compareCards(c, otherPlayerCard)){
+										if(playerWinningCard == null) {
+											playerWinningCard = c;
+										} else if( compareCards(playerWinningCard, c)){
+											//winning card is greater than current card but current card will still win
+											playerWinningCard = c;
+										}
 									}
 								}
 							}
@@ -396,7 +406,6 @@ public class EuchreComputerPlayer {
 			tempTurn = incrementWhoseTurn(tempTurn);
 		}while (tempTurn != game.getTrickLeader());
 
-		//TODO test!!
 		return playerWinningCard;
 	}
 

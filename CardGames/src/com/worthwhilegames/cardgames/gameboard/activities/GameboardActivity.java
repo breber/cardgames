@@ -17,6 +17,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -575,4 +576,22 @@ public class GameboardActivity extends Activity {
 			}
 		}
 	}
+
+	/**
+	 * Bold the specified player text
+	 * @param playerNumber player whose name will be bolded
+	 */
+	public void boldPlayerText(int playerNumber){
+		playerTextViews[playerNumber].setTypeface(null, Typeface.BOLD);
+	}
+
+	/**
+	 * Sets all the players text to normal
+	 */
+	public void unboldAllPlayerText(){
+		for (int i = 0; i < 4; i++) {
+			playerTextViews[i].setTypeface(null, Typeface.NORMAL);
+		}
+	}
+
 }

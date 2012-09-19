@@ -22,7 +22,6 @@
             android:paddingBottom="10sp"
             android:text="@string/player_1"
             android:textColor="@android:color/black"
-            android:textStyle="bold"
             android:visibility="invisible" />
 
         <RelativeLayout
@@ -69,7 +68,6 @@
             android:paddingBottom="10sp"
             android:text="@string/player_2"
             android:textColor="@android:color/black"
-            android:textStyle="bold"
             android:visibility="invisible" />
 
         <RelativeLayout
@@ -115,7 +113,6 @@
             android:paddingBottom="10sp"
             android:text="@string/player_3"
             android:textColor="@android:color/black"
-            android:textStyle="bold"
             android:visibility="invisible" />
 
         <RelativeLayout
@@ -162,7 +159,6 @@
             android:paddingBottom="10sp"
             android:text="@string/player_4"
             android:textColor="@android:color/black"
-            android:textStyle="bold"
             android:visibility="invisible" />
 
         <RelativeLayout
