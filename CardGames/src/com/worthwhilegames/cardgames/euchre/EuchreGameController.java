@@ -35,7 +35,6 @@ import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.gameboard.activities.ConnectActivity;
 import com.worthwhilegames.cardgames.gameboard.activities.GameResultsActivity;
 import com.worthwhilegames.cardgames.gameboard.activities.GameboardActivity;
-import com.worthwhilegames.cardgames.player.activities.RoundScoresActivity;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.CardTranslator;
 import com.worthwhilegames.cardgames.shared.Constants;
@@ -43,6 +42,7 @@ import com.worthwhilegames.cardgames.shared.GameController;
 import com.worthwhilegames.cardgames.shared.Player;
 import com.worthwhilegames.cardgames.shared.SoundManager;
 import com.worthwhilegames.cardgames.shared.Util;
+import com.worthwhilegames.cardgames.shared.activities.RoundScoresActivity;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
 

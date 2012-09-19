@@ -1,4 +1,4 @@
-package com.worthwhilegames.cardgames.player.activities;
+package com.worthwhilegames.cardgames.shared.activities;
 
 import java.util.List;
 
