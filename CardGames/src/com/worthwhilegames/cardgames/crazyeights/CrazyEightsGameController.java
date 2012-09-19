@@ -138,7 +138,7 @@ public class CrazyEightsGameController implements GameController {
 				Log.d(TAG, "handleMessage: about to play a card");
 			}
 
-			if (!isPaused) {
+			if (!isPaused && isComputerPlaying) {
 				isComputerPlaying = false;
 				playComputerTurn();
 				advanceTurn();
@@ -269,6 +269,7 @@ public class CrazyEightsGameController implements GameController {
 				String playerId = data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
 				game.dropPlayer(playerId);
 				refreshPlayers();
+				unpause();
 			} else if (resultCode == Activity.RESULT_OK) {
 				// We chose to add a new player, so start the ConnectActivity
 				// with the deviceId and isReconnect parameters
