@@ -203,6 +203,7 @@ public class EuchreComputerPlayer {
 					}
 				}
 			}
+			//TODO make hard computer find a card they can lead with that is of another suit that will win.
 		}
 
 		return cardSelected;
@@ -340,6 +341,7 @@ public class EuchreComputerPlayer {
 		Card playerWinningCard = null;
 		Card otherPlayerCard;
 		List<Card> otherPlayerCards;
+		List<Card> teammateCards = null;
 		Card teammateCard = null;
 		int tempTurn = game.getTrickLeader();
 
@@ -347,8 +349,12 @@ public class EuchreComputerPlayer {
 			if(tempTurn != whoseTurn){
 				if(game.getCardAtPosition(tempTurn + 1) != null){
 					if(whoseTurn % 2 == tempTurn % 2){
-						//we are looking at players teammate
+						//we are looking at players team mate
 						teammateCard = game.getCardAtPosition(tempTurn + 1);
+
+						if(playerWinningCard != null && compareCards(teammateCard, playerWinningCard)){
+							playerWinningCard = null;
+						}
 					} else {
 						//player has already played their card for this trick
 						otherPlayerCard = game.getCardAtPosition(tempTurn + 1);
@@ -375,25 +381,31 @@ public class EuchreComputerPlayer {
 						}
 					}
 				} else {
-					//player has not played their card for this trick so we look at their hand.
-					otherPlayerCards = getPlayableCards(players.get(tempTurn).getCards());
+					if(whoseTurn % 2 == tempTurn % 2){
+						//we are looking at players team mate
+						teammateCards = getPlayableCards(players.get(tempTurn).getCards());
+					} else {
 
-					for(Card otherC: otherPlayerCards){
-						if(teammateCard != null && compareCards(teammateCard, otherC)){
-							//teammateCard beats the other teams card here
-						} else {
-							if( playerWinningCard != null && compareCards(playerWinningCard, otherC)){
-								//this card already will win
-							} else{
-								playerWinningCard = null;
-								//need to find a card that can win
-								for(Card c: playerCards){
-									if(compareCards(c, otherC)){
-										if(playerWinningCard == null) {
-											playerWinningCard = c;
-										} else if( compareCards(playerWinningCard, c)){
-											//winning card is greater than current card but current card will still win
-											playerWinningCard = c;
+						//player has not played their card for this trick so we look at their hand.
+						otherPlayerCards = getPlayableCards(players.get(tempTurn).getCards());
+
+						for(Card otherC: otherPlayerCards){
+							if(teammateCard != null && compareCards(teammateCard, otherC)){
+								//teammateCard beats the other teams card here
+							} else {
+								if( playerWinningCard != null && compareCards(playerWinningCard, otherC)){
+									//this card already will win
+								} else{
+									playerWinningCard = null;
+									//need to find a card that can win
+									for(Card c: playerCards){
+										if(compareCards(c, otherC)){
+											if(playerWinningCard == null) {
+												playerWinningCard = c;
+											} else if( compareCards(playerWinningCard, c)){
+												//winning card is greater than current card but current card will still win
+												playerWinningCard = c;
+											}
 										}
 									}
 								}
@@ -405,6 +417,25 @@ public class EuchreComputerPlayer {
 
 			tempTurn = incrementWhoseTurn(tempTurn);
 		}while (tempTurn != game.getTrickLeader());
+
+		//check to see if your teammate will be forced to play a better card than what you can play
+		boolean teammateHasBetterCards = true;
+		if( teammateCards != null && playerWinningCard != null){
+			for(Card tmCard: teammateCards){
+				if(compareCards(playerWinningCard, tmCard)){
+					teammateHasBetterCards = false;
+					break;
+				}
+			}
+
+			//This should only happen if all of the teammates playable cards are better than
+			//     the winning card of the current player
+			if(teammateHasBetterCards){
+				playerWinningCard = null;
+			}
+
+		}
+
 
 		return playerWinningCard;
 	}

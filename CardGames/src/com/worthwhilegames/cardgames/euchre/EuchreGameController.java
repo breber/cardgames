@@ -125,6 +125,8 @@ public class EuchreGameController implements GameController{
 	 */
 	private boolean isComputerPlaying = false;
 
+	private boolean isWaitingToClearCards = false;
+
 	/**
 	 * Represents whether the game is paused or not
 	 */
@@ -145,7 +147,7 @@ public class EuchreGameController implements GameController{
 				Log.d(TAG, "handleMessage: about to play a card");
 			}
 
-			if (!isPaused) {
+			if (!isPaused && players.get(whoseTurn).getIsComputer() == true) {
 				isComputerPlaying = false;
 				playComputerTurn();
 			} else {
@@ -167,6 +169,7 @@ public class EuchreGameController implements GameController{
 			}
 
 			if (!isPaused) {
+				isWaitingToClearCards = false;
 				endTurnRound();
 			} else {
 				if (Util.isDebugBuild()) {
@@ -388,6 +391,12 @@ public class EuchreGameController implements GameController{
 		if (isComputerPlaying) {
 			computerHandler.sendEmptyMessage(0);
 		}
+
+		// If the game is paused while the cards were waiting to
+		// be removed then we should remove them now
+		if(isWaitingToClearCards){
+			cardPlayingHandler.sendEmptyMessage(0);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -572,12 +581,21 @@ public class EuchreGameController implements GameController{
 			}
 		}
 
+
 		// If the next player is a computer, and the computer isn't currently
 		// playing,
 		// have the computer initiate a move
-		if (players.get(whoseTurn).getIsComputer() && !isComputerPlaying) {
-			startComputerTurn();
+		if (players.get(whoseTurn).getIsComputer()) {
+			if(isComputerPlaying) {
+				// If a computer was playing before the game was refreshed
+				// let them know that they can play now
+				computerHandler.sendEmptyMessage(0);
+			}else{
+				//the computer turn has not even begun
+				startComputerTurn();
+			}
 		}
+
 	}
 
 
@@ -615,6 +633,7 @@ public class EuchreGameController implements GameController{
 	 * mHandler letting it know it can play.
 	 */
 	private void startTrickEndWait() {
+		isWaitingToClearCards = true;
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -732,6 +751,8 @@ public class EuchreGameController implements GameController{
 					game.clearCardsPlayed();
 				} else {
 					//TODO error should not get here.
+					refreshPlayers();
+					return;
 				}
 			} else {
 				if(whoseTurn == game.getDealer()){
@@ -751,6 +772,7 @@ public class EuchreGameController implements GameController{
 
 				//set the turn to the first player to play and go
 				whoseTurn = game.getTrickLeader();
+
 
 				game.setPlayerGoingAlone(bet.getGoAlone());
 				if(game.isPlayerGoingAlone() && game.getTrickLeader() == game.getPlayerBeingSkipped() ){

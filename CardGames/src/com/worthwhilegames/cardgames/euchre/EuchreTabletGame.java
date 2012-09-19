@@ -256,8 +256,6 @@ public class EuchreTabletGame implements Game{
 		}
 
 		//reset values
-		roundScores[0] = 0;
-		roundScores[1] = 0;
 		this.setPlayerGoingAlone(false);
 		this.clearCardsPlayed();
 
@@ -267,6 +265,10 @@ public class EuchreTabletGame implements Game{
 	 * This will start the next round by dealing new cards and setting up the card to bet on
 	 */
 	public void startRound(){
+		//reset scores
+		roundScores[0] = 0;
+		roundScores[1] = 0;
+
 		//make the dealer the next player this also resets the trick leader
 		this.setDealer(getDealer() + 1);
 

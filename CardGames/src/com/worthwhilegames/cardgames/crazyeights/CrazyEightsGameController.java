@@ -296,7 +296,7 @@ public class CrazyEightsGameController implements GameController {
 			// sure everyone has the latest information
 			refreshPlayers();
 
-			// Pause the players
+			// Unpause the players
 			unpause();
 
 			// Re-register the broadcast receivers
