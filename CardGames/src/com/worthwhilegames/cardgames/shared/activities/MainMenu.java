@@ -47,7 +47,7 @@ public class MainMenu extends Activity {
 		}).start();
 
 		// Set the listener for the Create Game button if it exists
-		Button create = (Button) findViewById(R.id.btCreate);
+		final Button create = (Button) findViewById(R.id.btCreate);
 		if (create != null) {
 			create.setOnClickListener(new OnClickListener() {
 				@Override
@@ -92,7 +92,7 @@ public class MainMenu extends Activity {
 		rules.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (Util.isDebugBuild()) {
+				if (Util.isDebugBuild() && create == null) {
 					// Open the gameboard connect activity
 					Intent playButtonClick = new Intent(MainMenu.this, ConnectActivity.class);
 					startActivityForResult(playButtonClick, CONNECT_ACTIVITY);
