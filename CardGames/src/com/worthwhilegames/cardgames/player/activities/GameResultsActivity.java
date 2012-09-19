@@ -58,19 +58,6 @@ public class GameResultsActivity extends Activity {
 				finish();
 			}
 		});
-		
-		// Add a handler to the Main Menu button
-		Button playAgain = (Button) findViewById(R.id.btPlayAgain);
-		playAgain.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// When they click the main menu button, finish this activity,
-				// which will allow the ShowCardsActivity to finish leaving them back
-				// at the MainMenu
-				setResult(RESULT_CANCELED);
-				finish();
-			}
-		});
 	}
 
 	/* (non-Javadoc)
