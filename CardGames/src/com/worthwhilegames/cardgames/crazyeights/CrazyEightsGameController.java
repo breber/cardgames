@@ -517,6 +517,9 @@ public class CrazyEightsGameController implements GameController {
 			}
 
 			try {
+				// TODO: this should be a JSONObject with the turn, the player name,
+				// and a JSONArray of cards.  A JSONArray with specific indicies probably isn't
+				// the best option
 				JSONArray arr = new JSONArray();
 
 				// Create the base refresh info object
