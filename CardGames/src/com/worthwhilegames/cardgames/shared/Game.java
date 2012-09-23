@@ -53,6 +53,15 @@ public interface Game {
 	 * @return a Card object that represents the top of the discard pile
 	 */
 	public Card getDiscardPileTop();
+	
+	/**
+	 * This method will return the card at the position requested
+	 * @param position position of the card to get
+	 * can be 1 through 4 for the four positions around the game board
+	 * 
+	 * @return card to be displayed at the position
+	 */
+	public Card getCardAtPosition(int position);
 
 	/**
 	 * This method will return the number of players involved in the current game

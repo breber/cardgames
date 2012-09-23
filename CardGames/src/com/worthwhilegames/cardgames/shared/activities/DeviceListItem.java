@@ -16,14 +16,21 @@ public class DeviceListItem {
 	private String deviceMacAddress;
 
 	/**
+	 * The port number to use
+	 */
+	private int portNumber;
+
+	/**
 	 * Create a DeviceListItem with the given name and MAC address
 	 * 
 	 * @param deviceName the name to display in the list
 	 * @param deviceMacAddress the address to use to connect to
+	 * @param portNumber the port number to use
 	 */
-	public DeviceListItem(String deviceName, String deviceMacAddress) {
+	public DeviceListItem(String deviceName, String deviceMacAddress, int portNumber) {
 		this.deviceName = deviceName;
 		this.deviceMacAddress = deviceMacAddress;
+		this.portNumber = portNumber;
 	}
 
 	/**
@@ -33,11 +40,18 @@ public class DeviceListItem {
 		return deviceMacAddress;
 	}
 
+	/**
+	 * @return the portNumber
+	 */
+	public int getPortNumber() {
+		return portNumber;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return deviceName + "\n" + deviceMacAddress;
+		return deviceName;
 	}
 }

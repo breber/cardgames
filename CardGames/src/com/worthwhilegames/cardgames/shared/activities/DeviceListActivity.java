@@ -1,19 +1,19 @@
 package com.worthwhilegames.cardgames.shared.activities;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.annotation.TargetApi;
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceEvent;
+import javax.jmdns.ServiceListener;
+
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Build;
+import android.net.wifi.WifiManager;
+import android.net.wifi.WifiManager.MulticastLock;
 import android.os.Bundle;
-import android.os.ParcelUuid;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.Util;
-import com.worthwhilegames.cardgames.shared.bluetooth.BluetoothConstants;
+import com.worthwhilegames.cardgames.shared.wifi.WifiConstants;
 
 /**
  * This Activity lists all devices that are discoverable, or paired and
@@ -41,7 +41,7 @@ import com.worthwhilegames.cardgames.shared.bluetooth.BluetoothConstants;
  *
  * 		RESULT_CANCELLED - If no device was chosen
  */
-public class DeviceListActivity extends Activity {
+public class DeviceListActivity extends Activity implements ServiceListener {
 	/**
 	 * The Logcat Debug tag
 	 */
@@ -53,9 +53,9 @@ public class DeviceListActivity extends Activity {
 	public static String EXTRA_DEVICE_ADDRESS = "deviceAddress";
 
 	/**
-	 * The request code for the Bluetooth Enable intent
+	 * Return Intent extra
 	 */
-	private static final int REQUEST_ENABLE_BT = 3;
+	public static String EXTRA_PORT_NUMBER = "portNumber";
 
 	/**
 	 * A list of Device names that are currently added to the DeviceListAdapter
@@ -78,14 +78,29 @@ public class DeviceListActivity extends Activity {
 	private ImageButton refreshDeviceListButton;
 
 	/**
-	 * The BluetoothAdapter used to query Bluetooth information
-	 */
-	private BluetoothAdapter mBtAdapter;
-
-	/**
 	 * The ArrayAdapter that is displayed in the ListView
 	 */
 	private ArrayAdapter<DeviceListItem> mDevicesArrayAdapter;
+
+	/**
+	 * The JmDNS instance used to find services
+	 */
+	private JmDNS jmdns = null;
+
+	/**
+	 * The Wifi Multicast Lock
+	 */
+	private MulticastLock lock;
+
+	/**
+	 * A Handler used to run things on the UI thread
+	 */
+	private Handler handler = new Handler();
+
+	/**
+	 * Represents whether we are cancelling the service
+	 */
+	private boolean isCancelling = false;
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -124,26 +139,9 @@ public class DeviceListActivity extends Activity {
 		devicesListView.setAdapter(mDevicesArrayAdapter);
 		devicesListView.setOnItemClickListener(mDeviceClickListener);
 
-		// Register for broadcasts when a device is discovered
-		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		registerReceiver(mReceiver, filter);
-
-		// Register for broadcasts when discovery has finished
-		filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-		registerReceiver(mReceiver, filter);
-
-		// Get the local Bluetooth adapter
-		mBtAdapter = BluetoothAdapter.getDefaultAdapter();
-
-		// If Bluetooth isn't currently enabled, request that it be enabled
-		if (!mBtAdapter.isEnabled()) {
-			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-		} else {
-			// Otherwise start discovering devices
-			mDevicesArrayAdapter.clear();
-			doDiscovery();
-		}
+		// Otherwise start discovering devices
+		mDevicesArrayAdapter.clear();
+		doDiscovery();
 	}
 
 	/* (non-Javadoc)
@@ -151,19 +149,67 @@ public class DeviceListActivity extends Activity {
 	 */
 	@Override
 	protected void onDestroy() {
-		// Make sure we're not doing discovery anymore
-		if (mBtAdapter != null) {
-			mBtAdapter.cancelDiscovery();
-		}
-
-		// Unregister all the receivers we may have registered
-		try {
-			unregisterReceiver(mReceiver);
-		} catch (IllegalArgumentException e) {
-			// We didn't get far enough to register the receiver
-		}
+		cancelDiscovery();
 
 		super.onDestroy();
+	}
+
+	/**
+	 * Cancel the search for services
+	 */
+	private void cancelDiscovery() {
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "cancelDiscovery()");
+		}
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				synchronized (DeviceListActivity.this) {
+					if (!isCancelling) {
+						isCancelling = true;
+
+						if (jmdns != null) {
+							jmdns.removeServiceListener(WifiConstants.SERVICE_TYPE, DeviceListActivity.this);
+							try {
+								jmdns.close();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							jmdns = null;
+						}
+
+						lock.release();
+					}
+				}
+			}
+		}).start();
+	}
+
+	@Override
+	public void serviceResolved(ServiceEvent ev) {
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "serviceResolved: " + deviceNames + " " + ev.getDNS().getHostName());
+		}
+
+		updateUi(ev);
+	}
+
+	@Override
+	public void serviceRemoved(ServiceEvent ev) {
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "Service removed: " + ev.getName());
+		}
+	}
+
+	@Override
+	public void serviceAdded(ServiceEvent event) {
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "serviceAdded");
+		}
+
+		// Required to force serviceResolved to be called again (after the first search)
+		jmdns.requestServiceInfo(event.getType(), event.getName(), 1);
 	}
 
 	/**
@@ -174,13 +220,25 @@ public class DeviceListActivity extends Activity {
 			Log.d(TAG, "doDiscovery()");
 		}
 
-		// If we're already discovering, stop it
-		if (mBtAdapter.isDiscovering()) {
-			mBtAdapter.cancelDiscovery();
-		}
+		// Create a Wifi Multicast Lock
+		WifiManager wifi = (WifiManager) getSystemService(android.content.Context.WIFI_SERVICE);
+		lock = wifi.createMulticastLock("CardGamesLock");
+		lock.setReferenceCounted(true);
+		lock.acquire();
 
-		// Request discover from BluetoothAdapter
-		mBtAdapter.startDiscovery();
+		// Create the JmDNS instance and start listening
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					jmdns = JmDNS.create(Util.getLocalIpAddress());
+					jmdns.addServiceListener(WifiConstants.SERVICE_TYPE, DeviceListActivity.this);
+				} catch (IOException e) {
+					e.printStackTrace();
+					return;
+				}
+			}
+		}).start();
 
 		refreshDeviceListButton.setVisibility(View.INVISIBLE);
 		deviceListProgress.setVisibility(View.VISIBLE);
@@ -192,41 +250,8 @@ public class DeviceListActivity extends Activity {
 	 */
 	@Override
 	public void onBackPressed() {
-		// Cancel discovery
-		mBtAdapter.cancelDiscovery();
-
 		setResult(RESULT_CANCELED);
 		finish();
-	}
-
-
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
-	 */
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (Util.isDebugBuild()) {
-			Log.d(TAG, "onActivityResult " + resultCode);
-		}
-
-		switch (requestCode) {
-		case REQUEST_ENABLE_BT:
-			// When the request to enable Bluetooth returns
-			if (resultCode == Activity.RESULT_OK) {
-				// Bluetooth is now enabled, so start discovering devices
-				mDevicesArrayAdapter.clear();
-				doDiscovery();
-			} else {
-				// User did not enable Bluetooth or an error occurred
-				if (Util.isDebugBuild()) {
-					Log.d(TAG, "BT not enabled");
-				}
-
-				// Indicate that the user cancelled the Activity, and finish the Activity
-				setResult(RESULT_CANCELED);
-				finish();
-			}
-		}
 	}
 
 	/**
@@ -235,15 +260,19 @@ public class DeviceListActivity extends Activity {
 	private OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
-			// Cancel discovery because it's costly and we're about to connect
-			mBtAdapter.cancelDiscovery();
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					cancelDiscovery();
+				}
+			}).start();
 
 			DeviceListItem item = mDevicesArrayAdapter.getItem(arg2);
-			String address = item.getDeviceMacAddress();
 
 			// Create the result Intent and include the MAC address
 			Intent intent = new Intent();
-			intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+			intent.putExtra(EXTRA_DEVICE_ADDRESS, item.getDeviceMacAddress());
+			intent.putExtra(EXTRA_PORT_NUMBER, item.getPortNumber());
 
 			// Set result and finish this Activity
 			setResult(Activity.RESULT_OK, intent);
@@ -252,75 +281,22 @@ public class DeviceListActivity extends Activity {
 	};
 
 	/**
-	 * The BroadcastReceiver that listens for discovered devices and adds them to the listview
+	 * Update the UI based on the given event
+	 * 
+	 * @param event the ServiceEvent
 	 */
-	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-
-			// When discovery finds a device
-			if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-				// Get the BluetoothDevice object from the Intent
-				BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-				boolean display = true;
-
-				// If we are running SDK version 15 or higher, check to see if the remote
-				// device is running a server using the UUID we specified.
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-					display = checkUuids(device);
-				}
-
-				// If we already have a device with the same name in the list, skip it
-				if (!deviceNames.contains(device.getName()) && display) {
-					// Otherwise display the device in the list
-					deviceNames.add(device.getName());
+	private void updateUi(final ServiceEvent event) {
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// If we have a host address, show it in the UI
+				if (event.getInfo().getHostAddresses().length > 0) {
 					noDevicesFound.setVisibility(View.INVISIBLE);
-					mDevicesArrayAdapter.add(new DeviceListItem(device.getName(), device.getAddress()));
-				}
-			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-				// Discovery is finished - hide the progress bar, and show the refresh button
-				deviceListProgress.setVisibility(View.INVISIBLE);
-				refreshDeviceListButton.setVisibility(View.VISIBLE);
-
-				// If there are no devices, show the "No Devices" message
-				if (mDevicesArrayAdapter.getCount() == 0) {
-					noDevicesFound.setText(R.string.no_devices_found);
+					mDevicesArrayAdapter.add(new DeviceListItem(event.getName(), event.getInfo().getHostAddresses()[0], event.getInfo().getPort()));
+					deviceNames.add(event.getDNS().getHostName());
 				}
 			}
-		}
-	};
-
-	/**
-	 * SDK version 15 and higher have the ability to get a remote
-	 * device's UUIDs for the Bluetooth services it is running. We
-	 * will check to see if they are running the server before we add
-	 * them to the list if we have that capability.
-	 *
-	 * @param dev the remote Bluetooth device
-	 * @return whether they have a service running on BluetoothConstants.MY_UUID
-	 */
-	@TargetApi(15)
-	private boolean checkUuids(BluetoothDevice dev) {
-		if (dev == null || dev.getUuids() == null) {
-			return false;
-		}
-
-		for (ParcelUuid uuid : dev.getUuids()) {
-			if (BluetoothConstants.MY_UUID.equals(uuid.getUuid())) {
-				if (Util.isDebugBuild()) {
-					Log.d(TAG, "checkUuids: match found for UUID " + BluetoothConstants.MY_UUID);
-				}
-
-				return true;
-			}
-		}
-
-		if (Util.isDebugBuild()) {
-			Log.d(TAG, "checkUuids: no match found for UUID " + BluetoothConstants.MY_UUID);
-		}
-
-		return false;
+		}, 1);
 	}
 }
 

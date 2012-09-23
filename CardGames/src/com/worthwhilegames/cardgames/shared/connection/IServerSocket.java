@@ -11,6 +11,11 @@ import java.io.IOException;
 public interface IServerSocket {
 
 	/**
+	 * Perform any necessary setup
+	 */
+	void setup();
+
+	/**
 	 * Accept a connection
 	 * 
 	 * @return an ISocket that contains the actual Socket

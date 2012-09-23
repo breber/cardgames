@@ -129,8 +129,9 @@ public class ConnectionService {
 	 * Connect to the device with the given address
 	 * 
 	 * @param device the address of the device to connect to
+	 * @param portNumber the port number to use
 	 */
-	public void connect(final String device) {
+	public void connect(final String device, int portNumber) {
 		if (Util.isDebugBuild()) {
 			Log.d(TAG, "connect to: " + device);
 		}
@@ -150,7 +151,7 @@ public class ConnectionService {
 		}
 
 		// Start the thread to connect with the given device
-		mConnectThread = new ConnectThread(mContext, device);
+		mConnectThread = new ConnectThread(mContext, device, portNumber);
 		mConnectThread.start();
 
 		setState(ConnectionConstants.STATE_CONNECTING);
@@ -258,13 +259,20 @@ public class ConnectionService {
 		private Context mmContext;
 
 		/**
+		 * The port number to use
+		 */
+		private int mmPortNumber;
+
+		/**
 		 * Create a new ConnectThread with the given device
 		 * 
 		 * @param device the device to try and connect to
+		 * @param portNumber the port to connect on
 		 */
-		public ConnectThread(Context ctx, String device) {
+		public ConnectThread(Context ctx, String device, int portNumber) {
 			mmDevice = device;
 			mmContext = ctx;
+			mmPortNumber = portNumber;
 		}
 
 		/* (non-Javadoc)
@@ -280,7 +288,7 @@ public class ConnectionService {
 			setName("ConnectThread-" + mmSocket);
 
 			// Get a Socket for a connection with the given Device
-			mmSocket = ConnectionFactory.getSocket(mmContext, mmDevice);
+			mmSocket = ConnectionFactory.getSocket(mmContext, mmDevice, mmPortNumber);
 
 			while (timesTried != -1 && timesTried < 5) {
 				// Make a connection to the BluetoothSocket

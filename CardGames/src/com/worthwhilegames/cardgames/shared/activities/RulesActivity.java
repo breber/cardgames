@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.worthwhilegames.cardgames.R;
-import com.worthwhilegames.cardgames.shared.CardGame;
 import com.worthwhilegames.cardgames.shared.GameFactory;
 
 /**
@@ -28,9 +27,7 @@ public class RulesActivity extends Activity {
 		// Update the body text to the Rules
 		TextView body = (TextView) findViewById(R.id.informationBody);
 
-		// Set the rules for the Crazy Eight game type
-		if (GameFactory.getGameType(this) == CardGame.CRAZY_EIGHTS) {
-			body.setText(R.string.crazy_eight_game_rules_text);
-		}
+		// Set the rules based on the Game type
+		body.setText(GameFactory.getGameRulesText(this));
 	}
 }

@@ -11,17 +11,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.TextView;
 import com.worthwhilegames.cardgames.shared.activities.DeviceListActivity;
-import com.worthwhilegames.cardgames.shared.activities.WifiConnectActivity;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionFactory;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionType;
 
 /**
  * The Activity that initiates the device list, and then
@@ -65,9 +62,6 @@ public class ConnectActivity extends Activity {
 			if (currentState == ConnectionConstants.STATE_CONNECTED) {
 				readyToStart = true;
 
-				TextView tv = (TextView) findViewById(R.id.progressDialogText);
-				tv.setText(getResources().getString(R.string.waitingForGame));
-
 				Intent getName = new Intent(ConnectActivity.this, EnterNameActivty.class);
 				startActivityForResult(getName, GET_PLAYER_NAME);
 
@@ -78,20 +72,15 @@ public class ConnectActivity extends Activity {
 				// because we are no longer connected like we used to be
 				readyToStart = false;
 
-				ConnectionType type = ConnectionFactory.getConnectionType(ConnectActivity.this);
+				// Clear the previously stored GameType
+				GameFactory.clearGameType();
 
-				if (type == ConnectionType.Bluetooth) {
-					// Show the device list
-					Intent showDeviceList = new Intent(ConnectActivity.this, DeviceListActivity.class);
-					startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
-				} else if (type == ConnectionType.WiFi) {
-					WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-					manager.setWifiEnabled(true);
+				// Finish the get player name activity if it has been started
+				finishActivity(GET_PLAYER_NAME);
 
-					// Show popup telling the user to enter the IP address of the tablet to connect to
-					Intent showDeviceList = new Intent(ConnectActivity.this, WifiConnectActivity.class);
-					startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
-				}
+				// Show the device list
+				Intent showDeviceList = new Intent(ConnectActivity.this, DeviceListActivity.class);
+				startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
 			}
 		}
 	};
@@ -130,20 +119,9 @@ public class ConnectActivity extends Activity {
 		TextView tv = (TextView) findViewById(R.id.progressDialogText);
 		tv.setText(R.string.connecting);
 
-		ConnectionType type = ConnectionFactory.getConnectionType(this);
-
-		if (type == ConnectionType.Bluetooth) {
-			// Show the device list
-			Intent showDeviceList = new Intent(this, DeviceListActivity.class);
-			startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
-		} else if (type == ConnectionType.WiFi) {
-			WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-			manager.setWifiEnabled(true);
-
-			// Show popup telling the user to enter the IP address of the tablet to connect to
-			Intent showDeviceList = new Intent(this, WifiConnectActivity.class);
-			startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
-		}
+		// Show the device list
+		Intent showDeviceList = new Intent(this, DeviceListActivity.class);
+		startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
 
 		returnIntent = new Intent();
 	}
@@ -179,11 +157,23 @@ public class ConnectActivity extends Activity {
 			// We are coming back from the device list, and it wasn't cancelled, so
 			// grab the MAC address from the result intent, and start connection
 			String address = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-			client.connect(address);
+			int portNum = data.getIntExtra(DeviceListActivity.EXTRA_PORT_NUMBER, -1);
+
+			if (portNum > 0) {
+				client.connect(address, portNum);
+
+				// Update the GameType based on the port the server is running on
+				GameFactory.setGameTypeBasedOnPort(portNum);
+			} else {
+				client.connect(address);
+			}
 
 			// Start listening for connection state changes
 			registerReceiver(receiver, new IntentFilter(ConnectionConstants.STATE_CHANGE_INTENT));
 		} else if (requestCode == GET_PLAYER_NAME && resultCode == RESULT_OK) {
+			TextView tv = (TextView) findViewById(R.id.progressDialogText);
+			tv.setText(getResources().getString(R.string.waitingForGame));
+
 			String playerName = data.getStringExtra(PLAYER_NAME);
 			returnIntent.putExtra(PLAYER_NAME, playerName);
 			JSONObject obj = new JSONObject();

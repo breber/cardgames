@@ -3,7 +3,7 @@ package com.worthwhilegames.cardgames.shared.connection;
 import java.io.IOException;
 import java.util.HashMap;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Handler;
 import android.util.Log;
 
@@ -48,7 +48,7 @@ public class AcceptThread extends Thread {
 	/**
 	 * The context of this thread
 	 */
-	private Context mContext;
+	private Activity mContext;
 
 	/**
 	 * When this turns false, don't try to find another connection
@@ -63,7 +63,7 @@ public class AcceptThread extends Thread {
 	 * @param services A map of MAC addresses to WifiConnectionService
 	 * @param maxConnections the maximum number of connections to open
 	 */
-	public AcceptThread(Context ctx, Handler handler, HashMap<String, ConnectionService> services, ConnectionServer server) {
+	public AcceptThread(Activity ctx, Handler handler, HashMap<String, ConnectionService> services, ConnectionServer server) {
 		mConnections = services;
 		mContext = ctx;
 		mHandler = handler;
@@ -78,6 +78,9 @@ public class AcceptThread extends Thread {
 	 */
 	@Override
 	public void run() {
+		// Perform any initial setup
+		mmServerSocket.setup();
+
 		// Try and get a reference to the game so that we can figure
 		// out how many human players there were so that we allow up
 		// to that many active connections

@@ -138,7 +138,7 @@ public class CrazyEightsGameController implements GameController {
 				Log.d(TAG, "handleMessage: about to play a card");
 			}
 
-			if (!isPaused) {
+			if (!isPaused && isComputerPlaying) {
 				isComputerPlaying = false;
 				playComputerTurn();
 				advanceTurn();
@@ -269,6 +269,7 @@ public class CrazyEightsGameController implements GameController {
 				String playerId = data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
 				game.dropPlayer(playerId);
 				refreshPlayers();
+				unpause();
 			} else if (resultCode == Activity.RESULT_OK) {
 				// We chose to add a new player, so start the ConnectActivity
 				// with the deviceId and isReconnect parameters
@@ -296,7 +297,7 @@ public class CrazyEightsGameController implements GameController {
 			// sure everyone has the latest information
 			refreshPlayers();
 
-			// Pause the players
+			// Unpause the players
 			unpause();
 
 			// Re-register the broadcast receivers
@@ -466,7 +467,7 @@ public class CrazyEightsGameController implements GameController {
 		} else {
 			// there are no cards to draw so make it no longer that players turn
 			// and refresh the players
-			advanceTurn(); // TODO test this when all cards are drawn
+			advanceTurn();
 			refreshPlayers();
 		}
 	}
@@ -516,6 +517,9 @@ public class CrazyEightsGameController implements GameController {
 			}
 
 			try {
+				// TODO: this should be a JSONObject with the turn, the player name,
+				// and a JSONArray of cards.  A JSONArray with specific indicies probably isn't
+				// the best option
 				JSONArray arr = new JSONArray();
 
 				// Create the base refresh info object
