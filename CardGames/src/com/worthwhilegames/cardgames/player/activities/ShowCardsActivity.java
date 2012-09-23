@@ -13,7 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -100,6 +100,10 @@ public class ShowCardsActivity extends Activity {
 				ShowCardsActivity.this.setResult(RESULT_OK);
 				finish();
 			} else {
+				if (playerController == null) {
+					setupGame();
+				}
+
 				// Give it up to the player controller to deal with
 				playerController.handleBroadcastReceive(context, intent);
 			}
@@ -129,14 +133,6 @@ public class ShowCardsActivity extends Activity {
 
 		// Set up the Layout for the cards
 		playerHandLayout = (LinearLayout) findViewById(R.id.playerCardContainer);
-
-		// Get the play and draw buttons so that the playerController can
-		// do stuff with them
-		Button play = (Button) findViewById(R.id.btPlayCard);
-		Button draw = (Button) findViewById(R.id.btDrawCard);
-
-		// Get the player controller instance
-		playerController = GameFactory.getPlayerControllerInstance(this, play, draw, connection, cardHand);
 
 		// Start the connection screen from here so that we can register the message receive
 		// broadcast receiver so that we don't miss any messages
@@ -189,6 +185,7 @@ public class ShowCardsActivity extends Activity {
 		if (requestCode == QUIT_GAME && resultCode == RESULT_OK) {
 			// Finish this activity - if everything goes right, we
 			// should be back at the main menu
+			this.unregisterReceiver();
 			setResult(RESULT_OK);
 			finish();
 		} else if (requestCode == DISCONNECTED) {
@@ -202,8 +199,11 @@ public class ShowCardsActivity extends Activity {
 				setResult(RESULT_CANCELED);
 				finish();
 			} else {
+				setupGame();
+
 				String playerName = data.getStringExtra(Constants.PLAYER_NAME);
 				playerController.setPlayerName(playerName);
+
 				// Register the state change receiver
 				registerReceiver(receiver, new IntentFilter(ConnectionConstants.STATE_CHANGE_INTENT));
 			}
@@ -215,10 +215,28 @@ public class ShowCardsActivity extends Activity {
 		} else {
 			// If it isn't anything we know how to handle, pass it on to the
 			// playerController to try and handle it
+			// Quit game and replay will be handled here
 			playerController.handleActivityResult(requestCode, resultCode, data);
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	/**
+	 * Setup the game information
+	 */
+	private void setupGame() {
+		synchronized (this) {
+			if (playerController == null) {
+				// Initialize the buttons
+				ViewStub buttonLayout = (ViewStub) findViewById(R.id.playerHandButtonView);
+				buttonLayout.setLayoutResource(GameFactory.getPlayerButtonViewLayout(this));
+				buttonLayout.inflate();
+
+				// Get the player controller instance
+				playerController = GameFactory.getPlayerControllerInstance(this, cardHand);
+			}
+		}
 	}
 
 	/**

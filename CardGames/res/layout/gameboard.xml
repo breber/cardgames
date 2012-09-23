@@ -22,7 +22,6 @@
             android:paddingBottom="10sp"
             android:text="@string/player_1"
             android:textColor="@android:color/black"
-            android:textStyle="bold"
             android:visibility="invisible" />
 
         <RelativeLayout
@@ -69,7 +68,6 @@
             android:paddingBottom="10sp"
             android:text="@string/player_2"
             android:textColor="@android:color/black"
-            android:textStyle="bold"
             android:visibility="invisible" />
 
         <RelativeLayout
@@ -115,7 +113,6 @@
             android:paddingBottom="10sp"
             android:text="@string/player_3"
             android:textColor="@android:color/black"
-            android:textStyle="bold"
             android:visibility="invisible" />
 
         <RelativeLayout
@@ -162,7 +159,6 @@
             android:paddingBottom="10sp"
             android:text="@string/player_4"
             android:textColor="@android:color/black"
-            android:textStyle="bold"
             android:visibility="invisible" />
 
         <RelativeLayout
@@ -198,22 +194,60 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/centerCardsOneThree"
         android:gravity="center_vertical|center_horizontal"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
         <ImageView
-            android:id="@+id/drawpile"
+            android:id="@+id/cardPosition4"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:adjustViewBounds="true"
-            android:paddingRight="100dip"
+            android:paddingRight="10dip"
+            android:src="@drawable/back_blue_1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/centerCardsOneThree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/cardPosition3"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:adjustViewBounds="true"
             android:src="@drawable/back_blue_1" />
 
         <ImageView
-            android:id="@+id/discardpile"
+            android:id="@+id/cardPosition1"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:adjustViewBounds="true" />
+            android:adjustViewBounds="true"
+            android:paddingTop="10dip"
+            android:src="@drawable/back_blue_1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/centerCardsOneThree"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/cardPosition2"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:adjustViewBounds="true"
+            android:paddingLeft="10dip"
+            android:src="@drawable/back_blue_1" />
     </LinearLayout>
 
     <ImageView

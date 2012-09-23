@@ -5,7 +5,6 @@ package com.worthwhilegames.cardgames.shared.connection;
  */
 public enum ConnectionType {
 
-	Bluetooth,
 	WiFi
 
 }

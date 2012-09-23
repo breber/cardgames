@@ -1,6 +1,10 @@
 package com.worthwhilegames.cardgames.gameboard.activities;
 
 import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
+import static com.worthwhilegames.cardgames.shared.Constants.fourthCard;
+import static com.worthwhilegames.cardgames.shared.Constants.fullCard;
+import static com.worthwhilegames.cardgames.shared.Constants.halfCard;
+import static com.worthwhilegames.cardgames.shared.Constants.halfCardVertCut;
 
 import java.util.List;
 
@@ -13,6 +17,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -135,14 +140,13 @@ public class GameboardActivity extends Activity {
 	private TextView[] playerRemainingCards = new TextView[4];
 
 	/**
-	 * The discard pile ImageView
+	 * The ImageViews for the cards in the center of the screen
+	 * 
+	 * For games that don't use 4 cards in the middle:
+	 * Position 2 = discard pile
+	 * Position 4 = draw pile
 	 */
-	private ImageView discard;
-
-	/**
-	 * The draw pile ImageView
-	 */
-	private ImageView draw;
+	private ImageView[] centerCards = new ImageView[4];
 
 	/**
 	 * The current suit ImageView
@@ -180,7 +184,9 @@ public class GameboardActivity extends Activity {
 							p.setDisconnected(true);
 						}
 					}
+
 					Intent i = new Intent(GameboardActivity.this, ConnectionFailActivity.class);
+					i.putExtra(ConnectionConstants.KEY_DEVICE_ID, deviceId);
 					startActivityForResult(i, DISCONNECTED);
 
 					// Pause the players
@@ -222,8 +228,13 @@ public class GameboardActivity extends Activity {
 		// Setup the rest of the Computer players based on the preferences
 		int currentNumPlayers = mGame.getNumPlayers();
 		int numComputers = sharedPreferences.getInt(Constants.NUMBER_OF_COMPUTERS, 3);
+		int requiredNumPlayers = GameFactory.getRequiredNumPlayers(this);
 		String computerDifficulty = sharedPreferences.getString(Constants.DIFFICULTY_OF_COMPUTERS, Constants.EASY);
-		for (int j = currentNumPlayers; j < 4 && (j - currentNumPlayers < numComputers); j++) {
+
+		// Add a new computer as long as we have less than 4 players AND
+		//   -we have less than the required number of players for the game OR
+		//   -we have less than the number of computers specified in the preferences
+		for (int j = currentNumPlayers; j < 4 && ((j < requiredNumPlayers) || (j - currentNumPlayers < numComputers)); j++) {
 			Player p = new Player();
 			p.setName("Computer " + (j - currentNumPlayers + 1));
 			p.setId("Computer" + (j - currentNumPlayers + 1));
@@ -262,8 +273,11 @@ public class GameboardActivity extends Activity {
 		playerRemainingCards[2] = (TextView) findViewById(R.id.player3RemainingCount);
 		playerRemainingCards[3] = (TextView) findViewById(R.id.player4RemainingCount);
 
-		discard = (ImageView) findViewById(R.id.discardpile);
-		draw = (ImageView) findViewById(R.id.drawpile);
+		centerCards[0] = (ImageView) findViewById(R.id.cardPosition1);
+		centerCards[1] = (ImageView) findViewById(R.id.cardPosition2);
+		centerCards[2] = (ImageView) findViewById(R.id.cardPosition3);
+		centerCards[3] = (ImageView) findViewById(R.id.cardPosition4);
+
 		suitView = (ImageView) findViewById(R.id.gameboard_suit);
 
 		// Set up the scale factors for the card images
@@ -277,7 +291,7 @@ public class GameboardActivity extends Activity {
 		}
 
 		// Set up the layout params for the cards
-		cardParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight);
+		cardParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight / 2);
 
 		// Create the scaled suit images
 		scaledSuitImages[0] = scaleButton(R.drawable.clubsuitimage);
@@ -470,7 +484,7 @@ public class GameboardActivity extends Activity {
 				}
 
 				// Scale card
-				Bitmap scaledCard = scaleCard(resId, j < (cardsToDisplay - 1));
+				Bitmap scaledCard = scaleCard(resId, (j < (cardsToDisplay - 1)) ? fourthCard : halfCard);
 				image.setImageBitmap(scaledCard);
 
 				// Check for max displayed
@@ -488,29 +502,42 @@ public class GameboardActivity extends Activity {
 			i++;
 		}
 
-		// Place Discard Image
-		Bitmap discardImage = scaleCard(game.getDiscardPileTop().getResourceId(), false);
-		discard.setImageBitmap(discardImage);
+		// Set all the cards in the center of the screen
+		for (int j = 0; j < 4; j++) {
+			Card c = game.getCardAtPosition(j + 1);
+			if (c != null) {
+				Bitmap scaledCard = scaleCard(c.getResourceId(), fullCard);
 
-		// Place Draw Image
-		Bitmap drawImage = scaleCard(CARD_BACK, false);
-		draw.setImageBitmap(drawImage);
+				centerCards[j].setImageBitmap(scaledCard);
+				centerCards[j].setVisibility(View.VISIBLE);
+			} else {
+				centerCards[j].setVisibility(View.INVISIBLE);
+			}
+		}
 	}
 
 	/**
 	 * Scale a card image with the given resource
 	 * 
 	 * @param resId the resource id of the card to scale
+	 * @param cardPortion the amount of the card to show
+	 * 
 	 * @return a scaled card image
 	 */
-	private Bitmap scaleCard(int resId, boolean halfCard) {
+	private Bitmap scaleCard(int resId, int cardPortion) {
 		Bitmap fullCard = BitmapFactory.decodeResource(getResources(), resId);
 		float scaleFactor = (cardHeight + 0.0f) / fullCard.getHeight();
 		Matrix tempMatrix = new Matrix();
 		tempMatrix.setScale(scaleFactor, scaleFactor);
 
-		// Draw half card
-		if (halfCard) {
+		// Draw fourth card
+		if (cardPortion == fourthCard) {
+			return Bitmap.createBitmap(fullCard, 0, 0,
+					fullCard.getWidth() / 2, fullCard.getHeight() / 2, tempMatrix, true);
+		} else if (cardPortion == halfCard) {
+			return Bitmap.createBitmap(fullCard, 0, 0,
+					fullCard.getWidth(), fullCard.getHeight() / 2, tempMatrix, true);
+		} else if (cardPortion == halfCardVertCut) {
 			return Bitmap.createBitmap(fullCard, 0, 0,
 					fullCard.getWidth() / 2, fullCard.getHeight(), tempMatrix, true);
 		} else {
@@ -549,4 +576,22 @@ public class GameboardActivity extends Activity {
 			}
 		}
 	}
+
+	/**
+	 * Bold the specified player text
+	 * @param playerNumber player whose name will be bolded
+	 */
+	public void boldPlayerText(int playerNumber){
+		playerTextViews[playerNumber].setTypeface(null, Typeface.BOLD);
+	}
+
+	/**
+	 * Sets all the players text to normal
+	 */
+	public void unboldAllPlayerText(){
+		for (int i = 0; i < 4; i++) {
+			playerTextViews[i].setTypeface(null, Typeface.NORMAL);
+		}
+	}
+
 }

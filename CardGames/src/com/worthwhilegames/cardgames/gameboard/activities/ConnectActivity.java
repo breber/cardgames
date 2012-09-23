@@ -76,6 +76,11 @@ public class ConnectActivity extends Activity {
 	private Game mGame = null;
 
 	/**
+	 * Represents that we are starting
+	 */
+	private boolean isStarting = false;
+
+	/**
 	 * Are we reconnecting or just connecting?
 	 */
 	private boolean isReconnect = false;
@@ -252,7 +257,7 @@ public class ConnectActivity extends Activity {
 		updateName();
 
 		// Set up the start button
-		Button startButton = (Button) findViewById(R.id.startButton);
+		final Button startButton = (Button) findViewById(R.id.startButton);
 		startButton.setEnabled(false);
 		startButton.setOnClickListener(new OnClickListener() {
 			/* (non-Javadoc)
@@ -261,32 +266,36 @@ public class ConnectActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (canStartGame()) {
-					mConnectionServer.stopListening();
+					if (!isStarting) {
+						isStarting = true;
+						startButton.setEnabled(false);
+						mConnectionServer.stopListening();
 
-					// Send a message to all connected devices saying that the game is beginning
-					mConnectionServer.write(ConnectionConstants.MSG_TYPE_INIT, null);
+						// Send a message to all connected devices saying that the game is beginning
+						mConnectionServer.write(ConnectionConstants.MSG_TYPE_INIT, null);
 
-					// Update the position of each player
-					int i = 1;
-					for (Player p : mGame.getPlayers()) {
-						p.setPosition(i);
+						// Update the position of each player
+						int i = 1;
+						for (Player p : mGame.getPlayers()) {
+							p.setPosition(i);
 
-						// If we have a disconnected player at this point,
-						// just mark them as a computer
-						if (p.isDisconnected()) {
-							p.setIsComputer(true);
+							// If we have a disconnected player at this point,
+							// just mark them as a computer
+							if (p.isDisconnected()) {
+								p.setIsComputer(true);
+							}
+
+							i++;
 						}
 
-						i++;
-					}
+						// If we aren't reconnecting, start the gameboard
+						if (!isReconnect) {
+							startActivity(new Intent(ConnectActivity.this, GameboardActivity.class));
+						}
 
-					// If we aren't reconnecting, start the gameboard
-					if (!isReconnect) {
-						startActivity(new Intent(ConnectActivity.this, GameboardActivity.class));
+						setResult(RESULT_OK);
+						finish();
 					}
-
-					setResult(RESULT_OK);
-					finish();
 				}
 			}
 		});
@@ -367,16 +376,7 @@ public class ConnectActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// If we are coming back from the Bluetooth Enable request, and
 		// it was successful, start listening for device connections
-		if (resultCode != RESULT_CANCELED && requestCode == ConnectionFactory.REQUEST_ENABLE_BT) {
-			updateName();
-			startListeningForDevices();
-		} else if (resultCode == RESULT_CANCELED && requestCode == ConnectionFactory.REQUEST_ENABLE_BT) {
-			// The user didn't enable bluetooth - send them back to main menu
-			setResult(RESULT_CANCELED);
-			finish();
-		} else {
-			super.onActivityResult(requestCode, resultCode, data);
-		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	/**

@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.Util;
 
 /**
@@ -107,9 +108,22 @@ public class ConnectionClient extends ConnectionCommon {
 	 * @param macAddress
 	 */
 	public void connect(String macAddress) {
+		connect(macAddress, GameFactory.getPortNumber(mContext));
+	}
+
+	/**
+	 * Connect to the device given by the macAddress
+	 * 
+	 * This method only starts trying to connect. It would be beneficial
+	 * to create a BroadcastReceiver that listens on the ConnectionConstants.STATE_CHANGE_INTENT
+	 * in order to figure out whether the connection was actually made.
+	 * 
+	 * @param macAddress
+	 */
+	public void connect(String macAddress, int portNumber) {
 		setAddress(macAddress);
 
-		mService.connect(macAddress);
+		mService.connect(macAddress, portNumber);
 	}
 
 	/**

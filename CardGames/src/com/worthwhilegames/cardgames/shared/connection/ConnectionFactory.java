@@ -3,7 +3,6 @@ package com.worthwhilegames.cardgames.shared.connection;
 import java.net.InetAddress;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +14,8 @@ import android.net.wifi.WifiManager;
 
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.Constants;
+import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.Util;
-import com.worthwhilegames.cardgames.shared.bluetooth.BluetoothServerSocket;
-import com.worthwhilegames.cardgames.shared.bluetooth.BluetoothSocket;
 import com.worthwhilegames.cardgames.shared.wifi.WifiServerSocket;
 import com.worthwhilegames.cardgames.shared.wifi.WifiSocket;
 
@@ -30,11 +28,6 @@ public class ConnectionFactory {
 	public static final String CONNECTION_ENABLED = "com.worthwhilegames.cardgames.shared.connection.ConnectionFactory.CONNECTION_ENABLED";
 
 	/**
-	 * The request code to keep track of the Bluetooth request enable intent
-	 */
-	public static final int REQUEST_ENABLE_BT = Math.abs("REQUEST_BLUETOOTH".hashCode());
-
-	/**
 	 * Get the type of connection that is currently in use
 	 * 
 	 * @return the type of connection in use
@@ -45,8 +38,6 @@ public class ConnectionFactory {
 
 		if (ConnectionType.WiFi.toString().equals(connectionType)) {
 			return ConnectionType.WiFi;
-		} else if (ConnectionType.Bluetooth.toString().equals(connectionType)) {
-			return ConnectionType.Bluetooth;
 		}
 
 		return ConnectionType.WiFi;
@@ -66,11 +57,8 @@ public class ConnectionFactory {
 			if (currentAddress == null) {
 				sb.append("Unknown");
 			} else {
-				sb.append(currentAddress.getHostAddress());
+				sb.append(android.os.Build.MODEL);
 			}
-		} else if (ConnectionType.Bluetooth.equals(getConnectionType(ctx))) {
-			BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
-			sb.append(btAdapter.getName());
 		}
 
 		return sb.toString();
@@ -102,21 +90,6 @@ public class ConnectionFactory {
 			ctx.registerReceiver(rx, new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
 			ctx.registerReceiver(rx, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 			wifiManager.setWifiEnabled(true);
-		} else if (ConnectionType.Bluetooth.equals(getConnectionType(ctx))) {
-			// If we are the gameboard, just request discoverable mode
-			if (Util.isGameboard()) {
-				BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
-
-				if (btAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-					Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-					discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3600);
-					ctx.startActivityForResult(discoverableIntent, REQUEST_ENABLE_BT);
-				}
-			} else {
-				// Otherwise request bluetooth enabled
-				Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-				ctx.startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-			}
 		}
 	}
 
@@ -129,11 +102,9 @@ public class ConnectionFactory {
 		ConnectionType currentType = getConnectionType(ctx);
 
 		switch (currentType) {
-		case Bluetooth:
-			return new BluetoothServerSocket();
 		case WiFi:
 		default:
-			return new WifiServerSocket();
+			return new WifiServerSocket(ctx);
 		}
 	}
 
@@ -143,24 +114,21 @@ public class ConnectionFactory {
 	 * @return a ServerSocket
 	 */
 	public static ISocket getSocket(Context ctx, String address) {
-		ConnectionType currentType = getConnectionType(ctx);
-
-		switch (currentType) {
-		case Bluetooth:
-			return new BluetoothSocket(address);
-		case WiFi:
-		default:
-			return new WifiSocket(address);
-		}
+		return getSocket(ctx, address, GameFactory.getPortNumber(ctx));
 	}
 
 	/**
-	 * Checks to see if we have bluetooth capabilities
-	 * @return
+	 * Get a new Socket based on the current connection type
+	 * 
+	 * @return a ServerSocket
 	 */
-	public static boolean hasBluetoothCapabilities() {
-		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+	public static ISocket getSocket(Context ctx, String address, int portNumber) {
+		ConnectionType currentType = getConnectionType(ctx);
 
-		return adapter != null;
+		switch (currentType) {
+		case WiFi:
+		default:
+			return new WifiSocket(address, portNumber);
+		}
 	}
 }

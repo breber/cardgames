@@ -73,6 +73,17 @@ public class SoundManager {
 	 * Strings to be spoken when it is a player's turn
 	 */
 	private static String[] playerTurnPrompt;
+	
+	/**
+	 * Strings to be spoken when it is a player's turn
+	 */
+	private static String[] playerBetPrompt;
+	
+	/**
+	 * Strings to be spoken when the player should pick up 
+	 * the card and discard a card
+	 */
+	private static String[] playerPickItUpPrompt;
 
 	/**
 	 * array to store the SoundPool IDs for the draw card sounds
@@ -116,7 +127,13 @@ public class SoundManager {
 
 		// Initialize the strings to speak when it is a users turn
 		playerTurnPrompt = context.getResources().getStringArray(R.array.phrases);
-
+		
+		// Initialize the strings to speak when it is a users turn to bet
+		playerBetPrompt = context.getResources().getStringArray(R.array.betPhrases);
+		
+		// Initialize the strings to speak when the player should pick up the card
+		playerPickItUpPrompt = context.getResources().getStringArray(R.array.pickItUpPhrases);
+		
 		// draw card sounds
 		TypedArray drawSounds = context.getResources().obtainTypedArray(R.array.drawCard);
 		drawCardSounds = new int[drawSounds.length()];
@@ -221,7 +238,7 @@ public class SoundManager {
 	}
 
 	/**
-	 * This function will tell a player it is their turn using various strings
+	 * This function will tell a player to pick it up
 	 * 
 	 * @param name the name of the player
 	 */
@@ -229,6 +246,29 @@ public class SoundManager {
 		Random rand = new Random();
 		int i = Math.abs(rand.nextInt() % playerTurnPrompt.length);
 		speak(playerTurnPrompt[i].replace("%s", name) );
+	}
+	
+	/**
+	 * This function will tell a dealer if they are going to pick it up
+	 * 
+	 * @param name the name of the player
+	 */
+	public void sayPickItUp(String name) {
+		Random rand = new Random();
+		int i = Math.abs(rand.nextInt() % playerPickItUpPrompt.length);
+		speak(playerPickItUpPrompt[i].replace("%s", name) );
+	}
+	
+	
+	/**
+	 * This function will tell a player it is their turn to bet
+	 * 
+	 * @param name the name of the player
+	 */
+	public void sayBet(String name) {
+		Random rand = new Random();
+		int i = Math.abs(rand.nextInt() % playerBetPrompt.length);
+		speak(playerBetPrompt[i].replace("%s", name) );
 	}
 
 	/**

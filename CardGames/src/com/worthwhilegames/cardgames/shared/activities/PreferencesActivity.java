@@ -1,7 +1,6 @@
 package com.worthwhilegames.cardgames.shared.activities;
 
 import static com.worthwhilegames.cardgames.shared.Constants.CONNECTION_TYPE;
-import static com.worthwhilegames.cardgames.shared.Constants.CRAZY_EIGHTS;
 import static com.worthwhilegames.cardgames.shared.Constants.DIFFICULTY_OF_COMPUTERS;
 import static com.worthwhilegames.cardgames.shared.Constants.EASY;
 import static com.worthwhilegames.cardgames.shared.Constants.GAME_TYPE;
@@ -28,8 +27,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.CardGame;
 import com.worthwhilegames.cardgames.shared.Language;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionFactory;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionType;
 
 /**
@@ -218,17 +217,22 @@ public class PreferencesActivity extends Activity {
 
 		// Game type spinner
 		gameSpinner = (Spinner) findViewById(R.id.gameOption);
+		ArrayAdapter<CardGame> gameAdapter = new ArrayAdapter<CardGame>(this, android.R.layout.simple_spinner_item, CardGame.values());
+		gameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		gameSpinner.setAdapter(gameAdapter);
 
 		if (gameSpinner != null) {
 			// value of the game type based upon the shared preferences
-			String game_type = sharedPref.getString(GAME_TYPE, CRAZY_EIGHTS);
+			CardGame gameType = null;
 
-			// make an array adapter of all options specified in the xml
-			@SuppressWarnings("unchecked")
-			ArrayAdapter<String> gameAdapter = (ArrayAdapter<String>) gameSpinner.getAdapter(); // cast to an ArrayAdapter
+			try {
+				gameType = CardGame.valueOf(sharedPref.getString(GAME_TYPE, CardGame.CrazyEights.toString()));
+			} catch (IllegalArgumentException ex) {
+				gameType = CardGame.CrazyEights;
+			}
 
 			// get the current position of the selected item
-			int gamePosition = gameAdapter.getPosition(game_type);
+			int gamePosition = gameAdapter.getPosition(gameType);
 
 			// set the option checked based on the preferences
 			gameSpinner.setSelection(gamePosition);
@@ -239,18 +243,19 @@ public class PreferencesActivity extends Activity {
 		ConnectionType[] connectionTypes = ConnectionType.values();
 		List<ConnectionType> modifiedConnectionTypes = new ArrayList<ConnectionType>(Arrays.asList(connectionTypes));
 
-		// If we don't have Bluetooth capabilities, remove that option
-		if (!ConnectionFactory.hasBluetoothCapabilities()) {
-			modifiedConnectionTypes.remove(ConnectionType.Bluetooth);
-		}
-
 		ArrayAdapter<ConnectionType> connectionAdapter = new ArrayAdapter<ConnectionType>(this, android.R.layout.simple_spinner_item, modifiedConnectionTypes);
 		connectionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		connectionSpinner.setAdapter(connectionAdapter);
 
 		if (connectionSpinner != null) {
 			// value of the game type based upon the shared preferences
-			ConnectionType connectionType = ConnectionType.valueOf(sharedPref.getString(CONNECTION_TYPE, ConnectionType.WiFi.toString()));
+			ConnectionType connectionType = null;
+
+			try {
+				connectionType = ConnectionType.valueOf(sharedPref.getString(CONNECTION_TYPE, ConnectionType.WiFi.toString()));
+			} catch (IllegalArgumentException ex) {
+				connectionType = ConnectionType.WiFi;
+			}
 
 			// get the current position of the selected item
 			int connectionPosition = connectionAdapter.getPosition(connectionType);
@@ -300,7 +305,7 @@ public class PreferencesActivity extends Activity {
 
 		// set game type
 		if (gameSpinner != null) {
-			prefsEditor.putString(GAME_TYPE, (String) gameSpinner.getSelectedItem());
+			prefsEditor.putString(GAME_TYPE, gameSpinner.getSelectedItem().toString());
 		}
 
 		// set connection type

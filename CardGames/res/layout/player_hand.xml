@@ -8,12 +8,13 @@
     android:keepScreenOn="true"
     android:orientation="vertical" >
 
-    <include
+    <!-- TODO: don't hardcode a height -->
+
+    <ViewStub
         android:id="@+id/playerHandButtonView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        layout="@layout/genericbuttons" />
+        android:layout_height="75dip"
+        android:layout_alignParentTop="true" />
 
     <HorizontalScrollView
         android:id="@+id/cardScroll"

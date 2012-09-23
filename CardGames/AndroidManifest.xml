@@ -8,21 +8,15 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="16" />
 
-    <!-- For Bluetooth Mode -->
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
     <!-- For Wifi Mode -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.bluetooth"
         android:required="false" />
 
     <application
@@ -128,15 +122,15 @@
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.CardGames" />
         <activity
-            android:name=".shared.activities.WifiConnectActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.CardGames.Dialog" />
-        <activity
             android:name=".shared.activities.PreferencesActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.CardGames" />
+        <activity
+            android:name=".shared.activities.RoundScoresActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.CardGames.Dialog" />
 
         <!-- Ad Activities -->
         <activity

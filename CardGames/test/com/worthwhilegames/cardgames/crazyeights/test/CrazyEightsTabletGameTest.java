@@ -26,7 +26,7 @@ public class CrazyEightsTabletGameTest {
 	 * This method will be performed before every test
 	 */
 	@Before
-	public void setup(){
+	public void setup() {
 		Player p1 = new Player();
 		Player p2 = new Player();
 
@@ -39,7 +39,7 @@ public class CrazyEightsTabletGameTest {
 	/**
 	 * Method to set up the initial game
 	 */
-	public void setupGame(){
+	public void setupGame() {
 		game.setup();
 		iter = game.getShuffledDeck().iterator();
 	}
@@ -48,7 +48,7 @@ public class CrazyEightsTabletGameTest {
 	 * Test the number of players in the game
 	 */
 	@Test
-	public void testNumberOfPlayersTwo(){
+	public void testNumberOfPlayersTwo() {
 		setupGame();
 		assertEquals("Testing number of players.", 2, game.getPlayers().size());
 	}
@@ -57,7 +57,7 @@ public class CrazyEightsTabletGameTest {
 	 * Test the number of players in the game
 	 */
 	@Test
-	public void testNumberOfPlayersThree(){
+	public void testNumberOfPlayersThree() {
 		Player player3 = new Player();
 		game.addPlayer(player3);
 		setupGame();
@@ -68,7 +68,7 @@ public class CrazyEightsTabletGameTest {
 	 * Test the number of players in the game
 	 */
 	@Test
-	public void testNumberOfPlayersFour(){
+	public void testNumberOfPlayersFour() {
 		Player player3 = new Player();
 		Player player4 = new Player();
 		game.addPlayer(player3);
@@ -81,7 +81,7 @@ public class CrazyEightsTabletGameTest {
 	 * Test the number of cards in the discard pile after the deal
 	 */
 	@Test
-	public void testSizeOfDiscardPile(){
+	public void testSizeOfDiscardPile() {
 		setupGame();
 		assertEquals("Testing size of the discard pile.", 1,game.getDiscardPile().size());
 	}
@@ -90,7 +90,7 @@ public class CrazyEightsTabletGameTest {
 	 * Test the size of the shuffled deck after the deal with two players
 	 */
 	@Test
-	public void testShuffleDeckSizeTwoPlayers(){
+	public void testShuffleDeckSizeTwoPlayers() {
 		setupGame();
 		assertEquals("Testing size of the shuffled deck.", 43, game.getShuffledDeck().size());
 	}
@@ -99,7 +99,7 @@ public class CrazyEightsTabletGameTest {
 	 * Test the size of the shuffled deck after the deal with three players
 	 */
 	@Test
-	public void testShuffleDeckSizeThreePlayers(){
+	public void testShuffleDeckSizeThreePlayers() {
 		Player player3 = new Player();
 		game.addPlayer(player3);
 		setupGame();
@@ -110,7 +110,7 @@ public class CrazyEightsTabletGameTest {
 	 * Test the size of the shuffled deck after the deal with four players
 	 */
 	@Test
-	public void testShuffleDeckSizeFourPlayers(){
+	public void testShuffleDeckSizeFourPlayers() {
 		Player player3 = new Player();
 		Player player4 = new Player();
 		game.addPlayer(player3);
@@ -123,7 +123,7 @@ public class CrazyEightsTabletGameTest {
 	 * Test the size of player 1's hand after the deal
 	 */
 	@Test
-	public void testPlayer1NumberOfCard(){
+	public void testPlayer1NumberOfCard() {
 		setupGame();
 		assertEquals("Testing size of Player 1's hand.", C8Constants.NUMBER_OF_CARDS_PER_HAND, game.getPlayers().get(0).getCards().size());
 	}
@@ -132,7 +132,7 @@ public class CrazyEightsTabletGameTest {
 	 * Test the size of player 2's hand after the deal
 	 */
 	@Test
-	public void testPlayer2NumberOfCard(){
+	public void testPlayer2NumberOfCard() {
 		setupGame();
 		assertEquals("Testing size of Player 2's hand.", C8Constants.NUMBER_OF_CARDS_PER_HAND, game.getPlayers().get(1).getCards().size());
 	}
@@ -141,7 +141,7 @@ public class CrazyEightsTabletGameTest {
 	 * Test the iterator of the shuffled deck
 	 */
 	@Test
-	public void testIterNextAndRemove(){
+	public void testIterNextAndRemove() {
 		setupGame();
 		iter.next();
 		iter.remove();
@@ -153,7 +153,7 @@ public class CrazyEightsTabletGameTest {
 	 * Test the discard method
 	 */
 	@Test
-	public void testDiscard(){
+	public void testDiscard() {
 		setupGame();
 		Player p = game.getPlayers().get(0);
 		Card toDiscard = p.getCards().get(0);
@@ -164,18 +164,16 @@ public class CrazyEightsTabletGameTest {
 
 		game.discard(p, toDiscard);
 
-
 		assertEquals("Testing size of players hand", 4, p.getNumCards());
 		assertEquals("Testing size of players hand", 4, p.getCards().size());
 		assertEquals("Testing size of the discard pile", 2, game.getDiscardPile().size());
-
 	}
 
 	/**
 	 * Test the draw method
 	 */
 	@Test
-	public void testDraw(){
+	public void testDraw() {
 		setupGame();
 		Player p = game.getPlayers().get(0);
 
@@ -197,7 +195,7 @@ public class CrazyEightsTabletGameTest {
 	 * Test to see if the game is over based on a players hand
 	 */
 	@Test
-	public void testIsGameOver(){
+	public void testIsGameOver() {
 		setupGame();
 		Player p = game.getPlayers().get(0);
 		List<Card> cards = p.getCards();
@@ -221,17 +219,14 @@ public class CrazyEightsTabletGameTest {
 		assertEquals("Testing size of players hand", 0, p.getCards().size());
 		assertEquals("Testing size of players hand", 0, p.getNumCards());
 
-		boolean isGameOver = game.isGameOver(p);
-
-		assertEquals("Testing if the game is over", true, isGameOver);
-
+		assertEquals("Testing if the game is over", true, game.isGameOver(p));
 	}
 
 	/**
 	 * Test the deal method of the game with two players
 	 */
 	@Test
-	public void testDealTwoPlayers(){
+	public void testDealTwoPlayers() {
 		setupGame();
 		Player p = game.getPlayers().get(0);
 		Player p2 = game.getPlayers().get(1);
@@ -242,15 +237,13 @@ public class CrazyEightsTabletGameTest {
 		assertEquals("Testing size of player 2's hand", 5, p2.getNumCards());
 		assertEquals("Testing size of the discard pile", 1, game.getDiscardPile().size());
 		assertEquals("Testing size of the shuffled deck", 43, game.getShuffledDeck().size());
-
 	}
 
 	/**
 	 * Test the deal method of the game with three players
 	 */
 	@Test
-	public void testDealThreePlayers(){
-
+	public void testDealThreePlayers() {
 		Player player3 = new Player();
 		game.addPlayer(player3);
 
@@ -268,14 +261,13 @@ public class CrazyEightsTabletGameTest {
 		assertEquals("Testing size of player 3's hand", 5, p3.getNumCards());
 		assertEquals("Testing size of the discard pile", 1, game.getDiscardPile().size());
 		assertEquals("Testing size of the shuffled deck", 38, game.getShuffledDeck().size());
-
 	}
 
 	/**
 	 * Test the deal method of the game with four players
 	 */
 	@Test
-	public void testDealFourPlayers(){
+	public void testDealFourPlayers() {
 		Player player3 = new Player();
 		Player player4 = new Player();
 		game.addPlayer(player3);
@@ -298,14 +290,13 @@ public class CrazyEightsTabletGameTest {
 		assertEquals("Testing size of player 4's hand", 5, p4.getNumCards());
 		assertEquals("Testing size of the discard pile", 1, game.getDiscardPile().size());
 		assertEquals("Testing size of the shuffled deck", 33, game.getShuffledDeck().size());
-
 	}
 
 	/**
 	 * Test the shuffle of the discard pile
 	 */
 	@Test
-	public void testShuffleDiscardPile(){
+	public void testShuffleDiscardPile() {
 		setupGame();
 		Player p = game.getPlayers().get(0);
 
@@ -344,14 +335,13 @@ public class CrazyEightsTabletGameTest {
 		game.shuffleDiscardPile();
 		assertEquals("Testing size of the discard pile", 1, game.getDiscardPile().size());
 		assertEquals("Testing size of the shuffled deck", 43, game.getShuffledDeck().size());
-
 	}
 
 	/**
 	 * Test the shuffling of the deck
 	 */
 	@Test
-	public void testShuffleDeck(){
+	public void testShuffleDeck() {
 		assertEquals("Testing size of the discard pile", 0, game.getDiscardPile().size());
 		assertEquals("Testing size of the shuffled deck", 54, game.getShuffledDeck().size());
 
@@ -365,7 +355,7 @@ public class CrazyEightsTabletGameTest {
 	 * Test the setup method
 	 */
 	@Test
-	public void testSetup(){
+	public void testSetup() {
 		setupGame();
 		assertEquals("Testing number of players.", 2, game.getPlayers().size());
 		assertEquals("Testing size of the discard pile.", 1,game.getDiscardPile().size());
@@ -376,7 +366,7 @@ public class CrazyEightsTabletGameTest {
 	 * Test the drop player method
 	 */
 	@Test
-	public void testDropPlayer(){
+	public void testDropPlayer() {
 		setupGame();
 		Player p = game.getPlayers().get(0);
 		game.getPlayers().get(0).setId("Mac Address");
@@ -396,7 +386,7 @@ public class CrazyEightsTabletGameTest {
 	}
 
 	@Test
-	public void getTopOfDiscardPile(){
+	public void getTopOfDiscardPile() {
 		setupGame();
 		Player p = game.getPlayers().get(0);
 
@@ -405,18 +395,17 @@ public class CrazyEightsTabletGameTest {
 		game.discard(p, c);
 
 		assertEquals("Testing discard pile top", c, game.getDiscardPileTop());
-
 	}
 
 	@Test
-	public void getNumPlayersTest(){
+	public void getNumPlayersTest() {
 		setupGame();
 
 		assertEquals("Testing number of players", 2, game.getNumPlayers());
 	}
 
 	@Test
-	public void testDropGetNumPlayers(){
+	public void testDropGetNumPlayers() {
 		setupGame();
 
 		game.getPlayers().get(0).setId("Mac Address");
@@ -430,7 +419,7 @@ public class CrazyEightsTabletGameTest {
 	 * Tear down
 	 */
 	@After
-	public void tearDown(){
+	public void tearDown() {
 		CrazyEightsTabletGame.clearInstance();
 	}
 }

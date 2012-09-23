@@ -29,6 +29,26 @@ public class Constants {
 	 */
 	public static final String FONT_NAME = "hammersmithone.ttf";
 
+	/**
+	 * A constant to scale a card to the full card size
+	 */
+	public static final int fullCard = 1;
+
+	/**
+	 * A constant to scale a card to half the card size horizontally cut
+	 */
+	public static final int halfCard = 2;
+
+	/**
+	 * A constant to scale a card to half of the card size vertically cut
+	 */
+	public static final int halfCardVertCut = 3;
+
+	/**
+	 * A constant to scale a card to a fourth of the size
+	 */
+	public static final int fourthCard = 4;
+
 
 	/* Game Constants */
 	/**
@@ -47,19 +67,94 @@ public class Constants {
 	public static final int SUIT_DIAMONDS = 1;
 
 	/**
-	 * A constant to represent the Hearts suit
-	 */
-	public static final int SUIT_HEARTS = 2;
-
-	/**
 	 * A constant to represent the Spades suit
 	 */
 	public static final int SUIT_SPADES = 3;
 
 	/**
+	 * A constant to represent the Hearts suit
+	 */
+	public static final int SUIT_HEARTS = 2;
+
+	/**
 	 * A constant to represent the jokers
 	 */
 	public static final int SUIT_JOKER = 4;
+
+	/**
+	 * A constant for the ace card value
+	 */
+	public static final int ACE_VALUE = 0;
+
+	/**
+	 * A constant for the two card value
+	 */
+	public static final int TWO_VALUE = 1;
+
+	/**
+	 * A constant for the three card value
+	 */
+	public static final int THREE_VALUE = 2;
+
+	/**
+	 * A constant for the four card value
+	 */
+	public static final int FOUR_VALUE = 3;
+
+	/**
+	 * A constant for the five card value
+	 */
+	public static final int FIVE_VALUE = 4;
+
+	/**
+	 * A constant for the six card value
+	 */
+	public static final int SIX_VALUE = 5;
+
+	/**
+	 * A constant for the seven card value
+	 */
+	public static final int SEVEN_VALUE = 6;
+
+	/**
+	 * A constant for the eight card value
+	 */
+	public static final int EIGHT_VALUE = 7;
+
+	/**
+	 * A constant for the nine card value
+	 */
+	public static final int NINE_VALUE = 8;
+
+	/**
+	 * A constant for the ten card value
+	 */
+	public static final int TEN_VALUE = 9;
+
+	/**
+	 * A constant for the jack card value
+	 */
+	public static final int JACK_VALUE = 10;
+
+	/**
+	 * A constant for the queen card value
+	 */
+	public static final int QUEEN_VALUE = 11;
+
+	/**
+	 * A constant for the king card value
+	 */
+	public static final int KING_VALUE = 12;
+
+	/**
+	 * A constant for the king card value
+	 */
+	public static final int BLACK_JOKER_VALUE = 0;
+
+	/**
+	 * A constant for the king card value
+	 */
+	public static final int RED_JOKER_VALUE = 1;
 
 	/**
 	 * This is used by the connections screen to pass the player 1 name that
@@ -123,6 +218,11 @@ public class Constants {
 	public static final String PLAYER_NAME = "playername";
 
 	/**
+	 * This is a JSON key for telling the player what state the game is in
+	 */
+	public static final String CURRENT_STATE = "currentstate";
+
+	/**
 	 * this is a request code for the get EnterNameActivity
 	 */
 	public static final int GET_PLAYER_NAME = Math.abs("GET_PLAYER_NAME".hashCode());
@@ -184,6 +284,11 @@ public class Constants {
 	 */
 	public static final int DRAW_CARD = 10;
 
+	/**
+	 * message type that a player sends when requesting to draw a card
+	 */
+	public static final int PLAY_AGAIN = 11;
+
 	/* Preferences Options */
 	/**
 	 * The name of the shared preferences to be used when getting the object
@@ -244,12 +349,6 @@ public class Constants {
 	 * A constant to represent a key in the shared preferences for the game type
 	 */
 	public static final String GAME_TYPE = "GAME TYPE";
-
-	/**
-	 * A constant to represent a key in the shared preferences for the game type
-	 * crazy eights
-	 */
-	public static final String CRAZY_EIGHTS = "Crazy Eights";
 
 	/**
 	 * A constant to represent a key in the shared preferences for the image

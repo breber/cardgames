@@ -15,8 +15,7 @@
         android:background="@drawable/statebutton"
         android:text="@string/Draw"
         android:textColor="@color/buttontextcolor"
-        android:textSize="45sp"
-        android:textStyle="bold" />
+        android:textSize="35sp" />
 
     <View
         android:layout_width="0dip"
@@ -33,7 +32,6 @@
         android:background="@drawable/statebutton"
         android:text="@string/Play"
         android:textColor="@color/buttontextcolor"
-        android:textSize="45sp"
-        android:textStyle="bold" />
+        android:textSize="35sp" />
 
 </LinearLayout>
