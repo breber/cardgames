@@ -56,3 +56,7 @@ the Google AdMob Ads SDK section, and the Android MobFox SDK from the Ad Network
 section. Unzip both of the zip files. Then place the 2 jars from the MobFox zip, and the 1
 jar from the AdMob zip into CardGames/libs. Refresh the Eclipse project, and run the app
 and make sure nothing broke.
+
+## External Libraries Used ##
+
+* [JmDNS](http://jmdns.sourceforge.net/) for the Android Multicast support
