@@ -142,8 +142,8 @@ public class CrazyEightsPlayerController implements PlayerController {
 		// do stuff with them
 		play = (Button) context.findViewById(R.id.btPlayCard);
 		draw = (Button) context.findViewById(R.id.btDrawCard);
-		play.setOnClickListener(getPlayOnClickListener());
-		draw.setOnClickListener(getDrawOnClickListener());
+		play.setOnClickListener(playClickListener);
+		draw.setOnClickListener(drawClickListener);
 		setButtonsEnabled(false);
 		mySM = SoundManager.getInstance(context);
 		cardHand = cardHandGiven;
@@ -261,50 +261,44 @@ public class CrazyEightsPlayerController implements PlayerController {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see cs309.a1.shared.PlayerController#getPlayOnClickListener()
+	/**
+	 * The OnClickListener for the play button
 	 */
-	@Override
-	public View.OnClickListener getPlayOnClickListener() {
-		return new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (isTurn && gameRules.checkCard(cardSelected, cardOnDiscard) && cardHand.size() != 0) {
-					// play card
-					if (cardSelected.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
-						Intent selectSuit = new Intent(playerContext, SelectSuitActivity.class);
-						playerContext.startActivityForResult(selectSuit, CHOOSE_SUIT);
-						// go to the onActivityResult to finish this turn
-					} else {
-						connection.write(Constants.PLAY_CARD, cardSelected);
+	private OnClickListener playClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			if (isTurn && gameRules.checkCard(cardSelected, cardOnDiscard) && cardHand.size() != 0) {
+				// play card
+				if (cardSelected.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
+					Intent selectSuit = new Intent(playerContext, SelectSuitActivity.class);
+					playerContext.startActivityForResult(selectSuit, CHOOSE_SUIT);
+					// go to the onActivityResult to finish this turn
+				} else {
+					connection.write(Constants.PLAY_CARD, cardSelected);
 
-						playerContext.removeFromHand(cardSelected.getIdNum());
+					playerContext.removeFromHand(cardSelected.getIdNum());
 
-						cardSelected = null;
-						setButtonsEnabled(false);
-						isTurn = false;
-					}
-				}
-			}
-		};
-	}
-
-	/* (non-Javadoc)
-	 * @see cs309.a1.shared.PlayerController#getDrawOnClickListener()
-	 */
-	@Override
-	public View.OnClickListener getDrawOnClickListener() {
-		return new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (isTurn) {
-					connection.write(Constants.DRAW_CARD, null);
+					cardSelected = null;
 					setButtonsEnabled(false);
 					isTurn = false;
 				}
 			}
-		};
-	}
+		}
+	};
+
+	/**
+	 * The OnClickListener for the draw button
+	 */
+	private OnClickListener drawClickListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			if (isTurn) {
+				connection.write(Constants.DRAW_CARD, null);
+				setButtonsEnabled(false);
+				isTurn = false;
+			}
+		}
+	};
 
 	/* (non-Javadoc)
 	 * @see cs309.a1.shared.PlayerController#getCardClickListener()

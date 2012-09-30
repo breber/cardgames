@@ -2,7 +2,6 @@ package com.worthwhilegames.cardgames.shared;
 
 import android.content.Context;
 import android.content.Intent;
-import android.view.View;
 import android.view.View.OnClickListener;
 
 /**
@@ -31,20 +30,6 @@ public interface PlayerController {
 	 * @param data the intent which may contain data from the activity that has finished
 	 */
 	public void handleActivityResult(int requestCode, int resultCode, Intent data);
-
-	/**
-	 * This will return the onClickListener for the play button.
-	 * 
-	 * @return the onClickListener for the play button
-	 */
-	public View.OnClickListener getPlayOnClickListener();
-
-	/**
-	 * This will return the onClickListener for the Draw button
-	 * 
-	 * @return the onClickListener for the draw button
-	 */
-	public View.OnClickListener getDrawOnClickListener();
 
 	/**
 	 * This will return the ClickListener for selecting cards

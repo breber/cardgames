@@ -169,10 +169,10 @@ public class EuchrePlayerController implements PlayerController {
 		goAlone = (Button) context.findViewById(R.id.goAloneOption);
 		chooseSuit = (ImageView) context.findViewById(R.id.betTrumpSuit);
 
-		play.setOnClickListener(getPlayOnClickListener());
-		bet.setOnClickListener(getBetOnClickListener());
-		goAlone.setOnClickListener(getGoAloneOnClickListener());
-		chooseSuit.setOnClickListener(getChooseSuitOnClickListener());
+		play.setOnClickListener(playClickListener);
+		bet.setOnClickListener(betClickListener);
+		goAlone.setOnClickListener(goAloneClickListener);
+		chooseSuit.setOnClickListener(chooseSuitClickListener);
 		setButtonsEnabled(false);
 		mySM = SoundManager.getInstance(context);
 		cardHand = cardHandGiven;
@@ -345,135 +345,138 @@ public class EuchrePlayerController implements PlayerController {
 	}
 
 	@Override
-	public void handleActivityResult(int requestCode, int resultCode,
-			Intent data) {
+	public void handleActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CHOOSE_SUIT) {
 			trumpSuit = resultCode;
 			updateTrumpSuit();
 		}
 	}
 
-	@Override
-	public OnClickListener getPlayOnClickListener() {
-		return new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if ( (isTurn && cardSelected != null) &&
-						currentState != FIRST_ROUND_BETTING && currentState != SECOND_ROUND_BETTING &&
-						( currentState == PICK_IT_UP || currentState == PLAY_LEAD_CARD ||
-						gameRules.checkCard(cardSelected, trumpSuit, cardLead, cardHand) ) && cardHand.size() != 0) {
-					// play card or discard if it is pick_it_up mode
+	/**
+	 * The OnClickListener for the play button
+	 */
+	private OnClickListener playClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			if ( (isTurn && cardSelected != null) &&
+					currentState != FIRST_ROUND_BETTING && currentState != SECOND_ROUND_BETTING &&
+					( currentState == PICK_IT_UP || currentState == PLAY_LEAD_CARD ||
+					gameRules.checkCard(cardSelected, trumpSuit, cardLead, cardHand) ) && cardHand.size() != 0) {
+				// play card or discard if it is pick_it_up mode
 
-					connection.write(currentState, cardSelected);
+				connection.write(currentState, cardSelected);
 
-					playerContext.removeFromHand(cardSelected.getIdNum());
+				playerContext.removeFromHand(cardSelected.getIdNum());
 
-					cardSelected = null;
-					if( currentState == PICK_IT_UP ){
-						play.setText(R.string.Play);
-						playingView();
-					}
-
-					setButtonsEnabled(false);
-					isTurn = false;
-				} else if (currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING){
-					EuchreBet bet = new EuchreBet(trumpSuit, false, false);
-
-					connection.write(currentState, bet.toString());
-
-					isBettingNow = false;
-
+				cardSelected = null;
+				if (currentState == PICK_IT_UP) {
+					play.setText(R.string.Play);
 					playingView();
-					setButtonsEnabled(false);
-					isTurn = false;
 				}
 
+				setButtonsEnabled(false);
+				isTurn = false;
+			} else if (currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING) {
+				EuchreBet bet = new EuchreBet(trumpSuit, false, false);
+
+				connection.write(currentState, bet.toString());
+
+				isBettingNow = false;
+
+				playingView();
+				setButtonsEnabled(false);
+				isTurn = false;
 			}
-		};
-	}
+
+		}
+	};
 
 
-	public OnClickListener getBetOnClickListener() {
-		return new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if( currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING ) {
-					if(currentState == SECOND_ROUND_BETTING &&  trumpSuit == cardLead.getSuit() ){
-						trumpSuit = -1;
-						updateTrumpSuit();
-						//TODO tell player they can't choose the suit that was offered to bet on in the first round
-					}
-					if(trumpSuit == -1){
-						ScaleAnimation scale = new ScaleAnimation((float) 1.1, (float) 1.1,	(float) 1.2, (float) 1.2);
-						scale.scaleCurrentDuration(5);
-						chooseSuit.startAnimation(scale);
-						return;
-					}
-					EuchreBet bet = new EuchreBet(trumpSuit, true, false);
-
-					connection.write(currentState, bet.toString());
-
-					isBettingNow = false;
-
-					playingView();
-					setButtonsEnabled(false);
-					isTurn = false;
+	/**
+	 * The OnClickListener for the bet button
+	 */
+	private OnClickListener betClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			if (currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING) {
+				if (currentState == SECOND_ROUND_BETTING && trumpSuit == cardLead.getSuit()) {
+					trumpSuit = -1;
+					updateTrumpSuit();
+					//TODO tell player they can't choose the suit that was offered to bet on in the first round
 				}
-			}
-		};
-	}
 
-	public OnClickListener getGoAloneOnClickListener() {
-		return new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if( currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING ) {
-					if(currentState == SECOND_ROUND_BETTING &&  trumpSuit == cardLead.getSuit() ){
-						trumpSuit = -1;
-						updateTrumpSuit();
-						//TODO tell player they can't choose the suit that was offered to bet on in the first round
-					}
-					if(trumpSuit == -1){
-						ScaleAnimation scale = new ScaleAnimation((float) 1.1, (float) 1.1,	(float) 1.2, (float) 1.2);
-						scale.scaleCurrentDuration(5);
-						chooseSuit.startAnimation(scale);
-						return;
-					}
-					EuchreBet bet = new EuchreBet(trumpSuit, true, true);
-
-					connection.write(currentState, bet.toString());
-
-					isBettingNow = false;
-
-					playingView();
-					setButtonsEnabled(false);
-					isTurn = false;
+				if (trumpSuit == -1) {
+					ScaleAnimation scale = new ScaleAnimation((float) 1.1, (float) 1.1,	(float) 1.2, (float) 1.2);
+					scale.scaleCurrentDuration(5);
+					chooseSuit.startAnimation(scale);
+					return;
 				}
-			}
-		};
-	}
 
-	public OnClickListener getChooseSuitOnClickListener() {
-		return new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if( currentState == FIRST_ROUND_BETTING ){
-					//do nothing
-				} else if ( currentState == SECOND_ROUND_BETTING){
-					v.setEnabled(false);
-					Intent selectSuit = new Intent(playerContext, SelectSuitActivity.class);
-					playerContext.startActivityForResult(selectSuit, CHOOSE_SUIT);
-					v.setEnabled(true);
+				EuchreBet bet = new EuchreBet(trumpSuit, true, false);
+
+				connection.write(currentState, bet.toString());
+
+				isBettingNow = false;
+
+				playingView();
+				setButtonsEnabled(false);
+				isTurn = false;
+			}
+		}
+	};
+
+	/**
+	 * The OnClickListener for the go alone button
+	 */
+	private OnClickListener goAloneClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			if (currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING) {
+				if (currentState == SECOND_ROUND_BETTING && trumpSuit == cardLead.getSuit()) {
+					trumpSuit = -1;
+					updateTrumpSuit();
+					//TODO tell player they can't choose the suit that was offered to bet on in the first round
 				}
+				if (trumpSuit == -1) {
+					ScaleAnimation scale = new ScaleAnimation((float) 1.1, (float) 1.1,	(float) 1.2, (float) 1.2);
+					scale.scaleCurrentDuration(5);
+					chooseSuit.startAnimation(scale);
+					return;
+				}
+				EuchreBet bet = new EuchreBet(trumpSuit, true, true);
+
+				connection.write(currentState, bet.toString());
+
+				isBettingNow = false;
+
+				playingView();
+				setButtonsEnabled(false);
+				isTurn = false;
 			}
-		};
-	}
+		}
+	};
 
-	@Override
-	public OnClickListener getDrawOnClickListener() {
-		return null;
-	}
+	/**
+	 * The OnClickListener for the choose suit button
+	 */
+	private OnClickListener chooseSuitClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			if (currentState == FIRST_ROUND_BETTING) {
+				//do nothing
+			} else if (currentState == SECOND_ROUND_BETTING) {
+				v.setEnabled(false);
+				Intent selectSuit = new Intent(playerContext, SelectSuitActivity.class);
+				playerContext.startActivityForResult(selectSuit, CHOOSE_SUIT);
+				v.setEnabled(true);
+			}
+		}
+	};
 
+
+	/* (non-Javadoc)
+	 * @see com.worthwhilegames.cardgames.shared.PlayerController#getCardClickListener()
+	 */
 	@Override
 	public OnClickListener getCardClickListener() {
 		return new CardSelectionClickListener();
@@ -559,7 +562,7 @@ public class EuchrePlayerController implements PlayerController {
 	 * takes the JSON object and sets that as the CardLead for the round
 	 * @param object the card lead
 	 */
-	private void setCardLead(String object){
+	private void setCardLead(String object) {
 		try {
 			JSONObject obj = new JSONObject(object);
 			int suit = obj.getInt(SUIT);
@@ -572,11 +575,10 @@ public class EuchrePlayerController implements PlayerController {
 	}
 
 	/**
-	 * 
+	 * Update the displayed Trump suit
 	 */
-	private void updateTrumpSuit(){
-		switch(trumpSuit){
-
+	private void updateTrumpSuit() {
+		switch (trumpSuit) {
 		case SUIT_CLUBS:
 			chooseSuit.setBackgroundResource(R.drawable.clubsuitimage);
 			break;
