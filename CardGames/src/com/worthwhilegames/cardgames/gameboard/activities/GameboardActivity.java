@@ -246,7 +246,7 @@ public class GameboardActivity extends Activity {
 		}
 
 		// the GameController now handles the setup of the game.
-		gameController = GameFactory.getGameControllerInstance(this, connection, refresh);
+		gameController = GameFactory.getGameControllerInstance(this, connection);
 		mGame.setComputerDifficulty(computerDifficulty);
 
 		// Draw the names from the Game on the gameboard

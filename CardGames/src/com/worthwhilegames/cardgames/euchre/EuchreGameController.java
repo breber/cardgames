@@ -46,7 +46,7 @@ import com.worthwhilegames.cardgames.shared.activities.RoundScoresActivity;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
 
-public class EuchreGameController implements GameController{
+public class EuchreGameController implements GameController {
 
 	/**
 	 * The Logcat Debug tag
@@ -90,7 +90,6 @@ public class EuchreGameController implements GameController{
 	 */
 	private int whoseTurn = 0;
 
-
 	/**
 	 * This is the current state of the game
 	 * Corresponds to the first round of betting second round of betting
@@ -125,6 +124,9 @@ public class EuchreGameController implements GameController{
 	 */
 	private boolean isComputerPlaying = false;
 
+	/**
+	 * TODO: comment
+	 */
 	private boolean isWaitingToClearCards = false;
 
 	/**
@@ -147,7 +149,7 @@ public class EuchreGameController implements GameController{
 				Log.d(TAG, "handleMessage: about to play a card");
 			}
 
-			if (!isPaused && players.get(whoseTurn).getIsComputer() == true && isComputerPlaying) {
+			if (!isPaused && players.get(whoseTurn).getIsComputer() && isComputerPlaying) {
 				isComputerPlaying = false;
 				playComputerTurn();
 			} else {
@@ -185,10 +187,10 @@ public class EuchreGameController implements GameController{
 	 * @param playersGiven
 	 * @param refreshGiven
 	 */
-	public EuchreGameController(GameboardActivity context,	ConnectionServer connectionGiven, ImageView refreshGiven) {
+	public EuchreGameController(GameboardActivity context, ConnectionServer connectionGiven) {
 		gameContext = context;
 		server = connectionGiven;
-		refreshButton = refreshGiven;
+		refreshButton = (ImageView) context.findViewById(R.id.gameboard_refresh);
 		mySM = SoundManager.getInstance(context);
 
 		SharedPreferences sharedPreferences = gameContext.getSharedPreferences(PREFERENCES, 0);
@@ -214,7 +216,7 @@ public class EuchreGameController implements GameController{
 		startRound();
 	}
 
-	private void startRound(){
+	private void startRound() {
 		game.startRound();
 		whoseTurn = game.getTrickLeader();
 
@@ -234,7 +236,7 @@ public class EuchreGameController implements GameController{
 		// If this is a computer, start having the computer play
 		currentState = FIRST_ROUND_BETTING;
 
-		//tell first person to bet
+		// tell first person to bet
 		sendNextTurn(currentState, game.getCardLead());
 	}
 
@@ -587,16 +589,15 @@ public class EuchreGameController implements GameController{
 		// playing,
 		// have the computer initiate a move
 		if (players.get(whoseTurn).getIsComputer()) {
-			if(isComputerPlaying) {
+			if (isComputerPlaying) {
 				// If a computer was playing before the game was refreshed
 				// let them know that they can play now
 				computerHandler.sendEmptyMessage(0);
-			}else{
+			} else {
 				//the computer turn has not even begun
 				startComputerTurn();
 			}
 		}
-
 	}
 
 

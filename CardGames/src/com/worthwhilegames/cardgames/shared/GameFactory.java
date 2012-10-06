@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.ImageView;
 
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.crazyeights.C8Constants;
@@ -64,11 +63,11 @@ public class GameFactory {
 	 * @return the GameController instance as specified by the currently specified game type
 	 */
 	public static GameController getGameControllerInstance(GameboardActivity activity,
-			ConnectionServer connectionServer, ImageView refreshButton) {
+			ConnectionServer connectionServer) {
 		if (CardGame.CrazyEights.equals(getGameType(activity))) {
-			return new CrazyEightsGameController(activity, connectionServer, refreshButton);
+			return new CrazyEightsGameController(activity, connectionServer);
 		} else if (CardGame.Euchre.equals(getGameType(activity))) {
-			return new EuchreGameController(activity, connectionServer, refreshButton);
+			return new EuchreGameController(activity, connectionServer);
 		}
 
 		return null;

@@ -157,14 +157,11 @@ public class CrazyEightsGameController implements GameController {
 	 *            Context of the GameBoardActivity
 	 * @param connectionGiven
 	 *            The ConnectionServer that will be used
-	 * @param refreshGiven
-	 *            The refresh button which will be handled by this
-	 *            GameController
 	 */
-	public CrazyEightsGameController(GameboardActivity context,	ConnectionServer connectionGiven, ImageView refreshGiven) {
+	public CrazyEightsGameController(GameboardActivity context,	ConnectionServer connectionGiven) {
 		gameContext = context;
 		server = connectionGiven;
-		refreshButton = refreshGiven;
+		refreshButton = (ImageView) context.findViewById(R.id.gameboard_refresh);
 		mySM = SoundManager.getInstance(context);
 
 		refreshButton.setOnClickListener(new OnClickListener() {
