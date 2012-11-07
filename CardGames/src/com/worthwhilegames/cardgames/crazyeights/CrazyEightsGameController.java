@@ -171,7 +171,7 @@ public class CrazyEightsGameController implements GameController {
 			@Override
 			public void onClick(View v) {
 				v.setEnabled(false);
-				refreshPlayers();
+				baseRefresh();
 				v.setEnabled(true);
 			}
 		});
@@ -249,7 +249,7 @@ public class CrazyEightsGameController implements GameController {
 				advanceTurn();
 				break;
 			case Constants.REFRESH:
-				refreshPlayers();
+				baseRefresh();
 				break;
 			}
 		}
@@ -265,7 +265,7 @@ public class CrazyEightsGameController implements GameController {
 				// We chose to drop the player, so let the Game know to do that
 				String playerId = data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
 				game.dropPlayer(playerId);
-				refreshPlayers();
+				baseRefresh();
 				unpause();
 			} else if (resultCode == Activity.RESULT_OK) {
 				// We chose to add a new player, so start the ConnectActivity
@@ -292,7 +292,7 @@ public class CrazyEightsGameController implements GameController {
 
 			// Send the refresh signal to all players just to make
 			// sure everyone has the latest information
-			refreshPlayers();
+			baseRefresh();
 
 			// Unpause the players
 			unpause();
@@ -305,7 +305,7 @@ public class CrazyEightsGameController implements GameController {
 
 			// Send the refresh signal (again) to all players just to make
 			// sure everyone has the latest information
-			refreshPlayers();
+			baseRefresh();
 		}
 
 		return false;
@@ -465,7 +465,7 @@ public class CrazyEightsGameController implements GameController {
 			// there are no cards to draw so make it no longer that players turn
 			// and refresh the players
 			advanceTurn();
-			refreshPlayers();
+			baseRefresh();
 		}
 	}
 
@@ -493,14 +493,28 @@ public class CrazyEightsGameController implements GameController {
 		mySM.playCardSound();
 	}
 
+	private void baseRefresh() {
+		// Unpause the game
+		unpause();
+
+		// Call both old refresh, and new refresh
+		refreshPlayers();
+		refreshPlayersV2();
+		// TODO: this should be changed to just V2 at some point in the future
+
+		// If the next player is a computer, and the computer isn't currently
+		// playing, have the computer initiate a move
+		if (players.get(whoseTurn).getIsComputer() && !isComputerPlaying) {
+			startComputerTurn();
+		}
+	}
+
 	/**
 	 * This will refresh the state of all the players by sending them their
 	 * cards and if it is their turn
 	 */
+	@Deprecated
 	private void refreshPlayers() {
-		// Unpause the game
-		unpause();
-
 		// Send users information
 		Player pTurn = players.get(whoseTurn);
 
@@ -514,9 +528,6 @@ public class CrazyEightsGameController implements GameController {
 			}
 
 			try {
-				// TODO: this should be a JSONObject with the turn, the player name,
-				// and a JSONArray of cards.  A JSONArray with specific indicies probably isn't
-				// the best option
 				JSONArray arr = new JSONArray();
 
 				// Create the base refresh info object
@@ -538,11 +549,47 @@ public class CrazyEightsGameController implements GameController {
 				e.printStackTrace();
 			}
 		}
+	}
 
-		// If the next player is a computer, and the computer isn't currently
-		// playing, have the computer initiate a move
-		if (players.get(whoseTurn).getIsComputer() && !isComputerPlaying) {
-			startComputerTurn();
+	/**
+	 * This will refresh the state of all the players by sending them their
+	 * cards and if it is their turn
+	 */
+	private void refreshPlayersV2() {
+		// Send users information
+		Player pTurn = players.get(whoseTurn);
+
+		// send the card on the discard pile
+		Card discard = game.getDiscardPileTop();
+		JSONObject discardObj = discard.toJSONObject();
+
+		for (Player p : players) {
+			if (Util.isDebugBuild()) {
+				Log.d(TAG, p.getName() + " refreshed : " + p);
+			}
+
+			try {
+				// Create the base refresh info object
+				JSONObject refreshInfo = new JSONObject();
+				refreshInfo.put(Constants.TURN, pTurn.equals(p));
+				refreshInfo.put(Constants.PLAYER_NAME, p.getName());
+
+				// send the card on the discard pile
+				refreshInfo.put(Constants.DISCARD_CARD, discardObj);
+
+				// send all the cards in the players hand
+				JSONArray arr = new JSONArray();
+				for (Card c : p.getCards()) {
+					arr.put(c.toJSONObject());
+				}
+
+				// send the card in their hand
+				refreshInfo.put(Constants.CURRENT_HAND, arr);
+
+				server.write(Constants.REFRESHV2, refreshInfo.toString(), p.getId());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

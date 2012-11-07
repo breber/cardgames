@@ -223,6 +223,16 @@ public class Constants {
 	public static final String CURRENT_STATE = "currentstate";
 
 	/**
+	 * This is a JSON key for telling the player what cards are in their hand
+	 */
+	public static final String CURRENT_HAND = "currenthand";
+
+	/**
+	 * This is a JSON key for telling the player the current discard card
+	 */
+	public static final String DISCARD_CARD = "discardCard";
+
+	/**
 	 * this is a request code for the get EnterNameActivity
 	 */
 	public static final int GET_PLAYER_NAME = Math.abs("GET_PLAYER_NAME".hashCode());
@@ -288,6 +298,12 @@ public class Constants {
 	 * message type that a player sends when requesting to draw a card
 	 */
 	public static final int PLAY_AGAIN = 11;
+
+	/**
+	 * message type for refreshing the game state by re-sending cards and whose
+	 * turn it is to all players
+	 */
+	public static final int REFRESHV2 = 12;
 
 	/* Preferences Options */
 	/**
