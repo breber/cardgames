@@ -303,7 +303,7 @@ public class Constants {
 	 * message type for refreshing the game state by re-sending cards and whose
 	 * turn it is to all players
 	 */
-	public static final int REFRESHV2 = 12;
+	public static final int REFRESHV2 = 5000;
 
 	/* Preferences Options */
 	/**
