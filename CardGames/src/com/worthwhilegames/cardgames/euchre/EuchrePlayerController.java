@@ -6,19 +6,19 @@ import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PLAY_LEAD_CAR
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ROUND_OVER;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.SECOND_ROUND_BETTING;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP;
-import static com.worthwhilegames.cardgames.shared.Constants.CURRENT_STATE;
-import static com.worthwhilegames.cardgames.shared.Constants.ID;
-import static com.worthwhilegames.cardgames.shared.Constants.LOSER;
-import static com.worthwhilegames.cardgames.shared.Constants.PLAY_CARD;
-import static com.worthwhilegames.cardgames.shared.Constants.REFRESH;
-import static com.worthwhilegames.cardgames.shared.Constants.SETUP;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_CURRENT_STATE;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_CARD_ID;
+import static com.worthwhilegames.cardgames.shared.Constants.MSG_LOSER;
+import static com.worthwhilegames.cardgames.shared.Constants.MSG_PLAY_CARD;
+import static com.worthwhilegames.cardgames.shared.Constants.MSG_REFRESH;
+import static com.worthwhilegames.cardgames.shared.Constants.MSG_SETUP;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_SUIT;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
-import static com.worthwhilegames.cardgames.shared.Constants.VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.WINNER;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_VALUE;
+import static com.worthwhilegames.cardgames.shared.Constants.MSG_WINNER;
 
 import java.util.List;
 
@@ -200,7 +200,7 @@ public class EuchrePlayerController implements PlayerController {
 			}
 
 			switch (messageType) {
-			case SETUP:
+			case MSG_SETUP:
 				// Parse the Message if it was to start the game over
 				cardHand.removeAll(cardHand);
 				playerContext.removeAllCards();
@@ -208,9 +208,9 @@ public class EuchrePlayerController implements PlayerController {
 					JSONArray arr = new JSONArray(object);
 					for (int i = 0; i < arr.length(); i++) {
 						JSONObject obj = arr.getJSONObject(i);
-						int suit = obj.getInt(SUIT);
-						int value = obj.getInt(VALUE);
-						int id = obj.getInt(ID);
+						int suit = obj.getInt(KEY_SUIT);
+						int value = obj.getInt(KEY_VALUE);
+						int id = obj.getInt(KEY_CARD_ID);
 						playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
 					}
 				} catch (JSONException ex) {
@@ -250,9 +250,9 @@ public class EuchrePlayerController implements PlayerController {
 				mySM.sayPickItUp(playerName);
 				try {
 					JSONObject obj = new JSONObject(object);
-					int suit = obj.getInt(SUIT);
-					int value = obj.getInt(VALUE);
-					int id = obj.getInt(ID);
+					int suit = obj.getInt(KEY_SUIT);
+					int value = obj.getInt(KEY_VALUE);
+					int id = obj.getInt(KEY_CARD_ID);
 					playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
 				} catch (JSONException ex) {
 					ex.printStackTrace();
@@ -261,40 +261,40 @@ public class EuchrePlayerController implements PlayerController {
 				dealerDiscardView();
 				break;
 
-			case PLAY_CARD:
+			case MSG_PLAY_CARD:
 				playingView();
 				mySM.sayTurn(playerName);
 				this.setCardLead(object);
-				currentState = PLAY_CARD;
+				currentState = MSG_PLAY_CARD;
 
 				setButtonsEnabled(true);
 				isTurn = true;
 				break;
-			case REFRESH:
+			case MSG_REFRESH:
 				// Parse the refresh Message
 				try {
 					JSONArray arr = new JSONArray(object);
 					JSONObject refreshInfo = arr.getJSONObject(0);
-					isTurn = refreshInfo.getBoolean(Constants.TURN);
-					currentState = refreshInfo.getInt(CURRENT_STATE);
-					playerName = refreshInfo.getString(Constants.PLAYER_NAME);
+					isTurn = refreshInfo.getBoolean(Constants.KEY_TURN);
+					currentState = refreshInfo.getInt(KEY_CURRENT_STATE);
+					playerName = refreshInfo.getString(Constants.KEY_PLAYER_NAME);
 					trumpSuit = refreshInfo.getInt(TRUMP);
 					// add more refresh info here
 
 					playerContext.removeAllCards();
 
 					JSONObject obj = arr.getJSONObject(1);
-					int suit = obj.getInt(SUIT);
-					int value = obj.getInt(VALUE);
-					int id = obj.getInt(ID);
+					int suit = obj.getInt(KEY_SUIT);
+					int value = obj.getInt(KEY_VALUE);
+					int id = obj.getInt(KEY_CARD_ID);
 					cardLead = new Card(suit, value, ct.getResourceForCardWithId(id), id);
 
 					//the 2nd through however many are the cards of the player
 					for (int i = 2; i < arr.length(); i++) {
 						obj = arr.getJSONObject(i);
-						suit = obj.getInt(SUIT);
-						value = obj.getInt(VALUE);
-						id = obj.getInt(ID);
+						suit = obj.getInt(KEY_SUIT);
+						value = obj.getInt(KEY_VALUE);
+						id = obj.getInt(KEY_CARD_ID);
 						playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
 					}
 				} catch (JSONException ex) {
@@ -327,13 +327,13 @@ public class EuchrePlayerController implements PlayerController {
 			case ROUND_OVER:
 				currentState = ROUND_OVER;
 				break;
-			case WINNER:
+			case MSG_WINNER:
 				playerContext.unregisterReceiver();
 				Intent winner = new Intent(playerContext, GameResultsActivity.class);
 				winner.putExtra(GameResultsActivity.IS_WINNER, true);
 				playerContext.startActivityForResult(winner, QUIT_GAME);
 				break;
-			case LOSER:
+			case MSG_LOSER:
 				playerContext.unregisterReceiver();
 				Intent loser = new Intent(playerContext, GameResultsActivity.class);
 				loser.putExtra(GameResultsActivity.IS_WINNER, false);
@@ -494,7 +494,7 @@ public class EuchrePlayerController implements PlayerController {
 		play.setEnabled(isEnabled);
 		bet.setEnabled(isEnabled);
 		goAlone.setEnabled(isEnabled);
-		if (isEnabled && currentState == PLAY_CARD) {
+		if (isEnabled && currentState == MSG_PLAY_CARD) {
 			// it is your turn grey out cards
 			for (Card c : cardHand) {
 				boolean isPlayable = gameRules.checkCard(c, trumpSuit, cardLead, cardHand) ;
@@ -565,9 +565,9 @@ public class EuchrePlayerController implements PlayerController {
 	private void setCardLead(String object) {
 		try {
 			JSONObject obj = new JSONObject(object);
-			int suit = obj.getInt(SUIT);
-			int value = obj.getInt(VALUE);
-			int id = obj.getInt(ID);
+			int suit = obj.getInt(KEY_SUIT);
+			int value = obj.getInt(KEY_VALUE);
+			int id = obj.getInt(KEY_CARD_ID);
 			cardLead = new Card(suit, value, ct.getResourceForCardWithId(id), id);
 		} catch (JSONException ex) {
 			ex.printStackTrace();

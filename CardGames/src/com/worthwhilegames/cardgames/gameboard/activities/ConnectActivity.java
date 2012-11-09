@@ -1,6 +1,6 @@
 package com.worthwhilegames.cardgames.gameboard.activities;
 
-import static com.worthwhilegames.cardgames.shared.Constants.PLAYER_NAME;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_PLAYER_NAME;
 import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
 
 import org.json.JSONException;
@@ -97,10 +97,10 @@ public class ConnectActivity extends Activity {
 
 			String action = intent.getAction();
 			if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
-				if (messageType == Constants.GET_PLAYER_NAME) {
+				if (messageType == Constants.MSG_PLAYER_NAME) {
 					try {
 						JSONObject obj = new JSONObject(object);
-						String playerName = obj.getString(PLAYER_NAME);
+						String playerName = obj.getString(KEY_PLAYER_NAME);
 
 						if (Util.isDebugBuild()) {
 							Log.d(TAG, "onReceive: deviceAddress: " + deviceAddress);
@@ -348,7 +348,7 @@ public class ConnectActivity extends Activity {
 	 */
 	private boolean canStartGame() {
 		SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, 0);
-		int maxComputers = sharedPreferences.getInt(Constants.NUMBER_OF_COMPUTERS, 3);
+		int maxComputers = sharedPreferences.getInt(Constants.PREF_NUMBER_OF_COMPUTERS, 3);
 		boolean namesEntered = mGame.getPlayers().size() > 0;
 
 		for (Player p : mGame.getPlayers()) {

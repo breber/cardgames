@@ -161,15 +161,15 @@ public class CrazyEightsPlayerController implements PlayerController {
 			}
 
 			switch (messageType) {
-			case Constants.SETUP:
+			case Constants.MSG_SETUP:
 				// Parse the Message if it was the original setup
 				try {
 					JSONArray arr = new JSONArray(object);
 					for (int i = 0; i < arr.length(); i++) {
 						JSONObject obj = arr.getJSONObject(i);
-						int suit = obj.getInt(Constants.SUIT);
-						int value = obj.getInt(Constants.VALUE);
-						int id = obj.getInt(Constants.ID);
+						int suit = obj.getInt(Constants.KEY_SUIT);
+						int value = obj.getInt(Constants.KEY_VALUE);
+						int id = obj.getInt(Constants.KEY_CARD_ID);
 						playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
 					}
 				} catch (JSONException ex) {
@@ -178,13 +178,13 @@ public class CrazyEightsPlayerController implements PlayerController {
 				setButtonsEnabled(false);
 				isTurn = false;
 				break;
-			case Constants.IS_TURN:
+			case Constants.MSG_IS_TURN:
 				mySM.sayTurn(playerName);
 				try {
 					JSONObject obj = new JSONObject(object);
-					int suit = obj.getInt(Constants.SUIT);
-					int value = obj.getInt(Constants.VALUE);
-					int id = obj.getInt(Constants.ID);
+					int suit = obj.getInt(Constants.KEY_SUIT);
+					int value = obj.getInt(Constants.KEY_VALUE);
+					int id = obj.getInt(Constants.KEY_CARD_ID);
 					cardOnDiscard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
 				} catch (JSONException ex) {
 					ex.printStackTrace();
@@ -192,39 +192,39 @@ public class CrazyEightsPlayerController implements PlayerController {
 				setButtonsEnabled(true);
 				isTurn = true;
 				break;
-			case Constants.CARD_DRAWN:
+			case Constants.MSG_CARD_DRAWN:
 				try {
 					JSONObject obj = new JSONObject(object);
-					int suit = obj.getInt(Constants.SUIT);
-					int value = obj.getInt(Constants.VALUE);
-					int id = obj.getInt(Constants.ID);
+					int suit = obj.getInt(Constants.KEY_SUIT);
+					int value = obj.getInt(Constants.KEY_VALUE);
+					int id = obj.getInt(Constants.KEY_CARD_ID);
 					playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
 				} catch (JSONException ex) {
 					ex.printStackTrace();
 				}
 				break;
-			case Constants.REFRESHV2:
+			case Constants.MSG_REFRESH:
 				// Parse the refresh Message
 				try {
 					JSONObject refreshInfo = new JSONObject(object);
-					isTurn = refreshInfo.getBoolean(Constants.TURN);
-					playerName = refreshInfo.getString(Constants.PLAYER_NAME);
+					isTurn = refreshInfo.getBoolean(Constants.KEY_TURN);
+					playerName = refreshInfo.getString(Constants.KEY_PLAYER_NAME);
 
 					playerContext.removeAllCards();
 
-					JSONObject discardObj = refreshInfo.getJSONObject(Constants.DISCARD_CARD);
-					int suit = discardObj.getInt(Constants.SUIT);
-					int value = discardObj.getInt(Constants.VALUE);
-					int id = discardObj.getInt(Constants.ID);
+					JSONObject discardObj = refreshInfo.getJSONObject(Constants.KEY_DISCARD_CARD);
+					int suit = discardObj.getInt(Constants.KEY_SUIT);
+					int value = discardObj.getInt(Constants.KEY_VALUE);
+					int id = discardObj.getInt(Constants.KEY_CARD_ID);
 					cardOnDiscard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
 
 					// Get the player's hand
-					JSONArray arr = refreshInfo.getJSONArray(Constants.CURRENT_HAND);
+					JSONArray arr = refreshInfo.getJSONArray(Constants.KEY_CURRENT_HAND);
 					for (int i = 0; i < arr.length(); i++) {
 						JSONObject card = arr.getJSONObject(i);
-						suit = card.getInt(Constants.SUIT);
-						value = card.getInt(Constants.VALUE);
-						id = card.getInt(Constants.ID);
+						suit = card.getInt(Constants.KEY_SUIT);
+						value = card.getInt(Constants.KEY_VALUE);
+						id = card.getInt(Constants.KEY_CARD_ID);
 						playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
 					}
 				} catch (JSONException ex) {
@@ -233,13 +233,13 @@ public class CrazyEightsPlayerController implements PlayerController {
 				setButtonsEnabled(isTurn);
 				cardSelected = null;
 				break;
-			case Constants.WINNER:
+			case Constants.MSG_WINNER:
 				playerContext.unregisterReceiver();
 				Intent winner = new Intent(playerContext, GameResultsActivity.class);
 				winner.putExtra(GameResultsActivity.IS_WINNER, true);
 				playerContext.startActivityForResult(winner, QUIT_GAME);
 				break;
-			case Constants.LOSER:
+			case Constants.MSG_LOSER:
 				playerContext.unregisterReceiver();
 				Intent loser = new Intent(playerContext, GameResultsActivity.class);
 				loser.putExtra(GameResultsActivity.IS_WINNER, false);
@@ -263,7 +263,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 					playerContext.startActivityForResult(selectSuit, CHOOSE_SUIT);
 					// go to the onActivityResult to finish this turn
 				} else {
-					connection.write(Constants.PLAY_CARD, cardSelected);
+					connection.write(Constants.MSG_PLAY_CARD, cardSelected);
 
 					playerContext.removeFromHand(cardSelected.getIdNum());
 
@@ -282,7 +282,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 		@Override
 		public void onClick(View v) {
 			if (isTurn) {
-				connection.write(Constants.DRAW_CARD, null);
+				connection.write(Constants.MSG_DRAW_CARD, null);
 				setButtonsEnabled(false);
 				isTurn = false;
 			}

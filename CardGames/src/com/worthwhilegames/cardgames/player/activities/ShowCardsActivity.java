@@ -92,10 +92,10 @@ public class ShowCardsActivity extends Activity {
 					Intent i = new Intent(ShowCardsActivity.this, ConnectionFailActivity.class);
 					startActivityForResult(i, DISCONNECTED);
 				}
-			} else if (messageType == Constants.PAUSE) {
+			} else if (messageType == Constants.MSG_PAUSE) {
 				Intent pause = new Intent(ShowCardsActivity.this, PauseMenuActivity.class);
 				ShowCardsActivity.this.startActivityForResult(pause, PAUSE_GAME);
-			} else if (messageType == Constants.END_GAME) {
+			} else if (messageType == Constants.MSG_END_GAME) {
 				unregisterReceiver();
 				ShowCardsActivity.this.setResult(RESULT_OK);
 				finish();
@@ -201,7 +201,7 @@ public class ShowCardsActivity extends Activity {
 			} else {
 				setupGame();
 
-				String playerName = data.getStringExtra(Constants.PLAYER_NAME);
+				String playerName = data.getStringExtra(Constants.KEY_PLAYER_NAME);
 				playerController.setPlayerName(playerName);
 
 				// Register the state change receiver

@@ -8,11 +8,11 @@ import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PLAY_LEAD_CAR
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ROUND_OVER;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.SECOND_ROUND_BETTING;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP;
-import static com.worthwhilegames.cardgames.shared.Constants.ID;
-import static com.worthwhilegames.cardgames.shared.Constants.PLAY_CARD;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_CARD_ID;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_SUIT;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_VALUE;
+import static com.worthwhilegames.cardgames.shared.Constants.MSG_PLAY_CARD;
 import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
-import static com.worthwhilegames.cardgames.shared.Constants.VALUE;
 
 import java.util.List;
 
@@ -194,7 +194,7 @@ public class EuchreGameController implements GameController {
 		mySM = SoundManager.getInstance(context);
 
 		SharedPreferences sharedPreferences = gameContext.getSharedPreferences(PREFERENCES, 0);
-		String difficulty = sharedPreferences.getString(Constants.DIFFICULTY_OF_COMPUTERS, Constants.EASY);
+		String difficulty = sharedPreferences.getString(Constants.PREF_DIFFICULTY, Constants.EASY);
 		computerPlayer = new EuchreComputerPlayer(difficulty);
 
 		refreshButton.setOnClickListener(new OnClickListener() {
@@ -225,7 +225,7 @@ public class EuchreGameController implements GameController {
 				Log.d(TAG, p.getName() + ": " + p);
 			}
 
-			server.write(Constants.SETUP, p, p.getId());
+			server.write(Constants.MSG_SETUP, p, p.getId());
 		}
 
 		placeInitialCards();
@@ -287,11 +287,11 @@ public class EuchreGameController implements GameController {
 				refreshPlayers();
 				sendNextTurn(currentState, game.getCardLead());
 				break;
-			case PLAY_CARD:
+			case MSG_PLAY_CARD:
 				playReceivedCard(object);
 				advanceTurn();
 				break;
-			case Constants.REFRESH:
+			case Constants.MSG_REFRESH:
 				refreshPlayers();
 				break;
 			}
@@ -305,6 +305,7 @@ public class EuchreGameController implements GameController {
 	 * @return
 	 * index of the player that sent the message
 	 */
+	@SuppressWarnings("unused")
 	private int getWhoSentMessage(Context context, Intent intent){
 		//TODO this whole method
 		return whoseTurn;
@@ -374,7 +375,7 @@ public class EuchreGameController implements GameController {
 		isPaused = true;
 
 		for (int i = 0; i < game.getNumPlayers(); i++) {
-			server.write(Constants.PAUSE, null, players.get(i).getId());
+			server.write(Constants.MSG_PAUSE, null, players.get(i).getId());
 		}
 	}
 
@@ -384,7 +385,7 @@ public class EuchreGameController implements GameController {
 	@Override
 	public void unpause() {//TODO make in abstract class
 		for (int i = 0; i < game.getNumPlayers(); i++) {
-			server.write(Constants.UNPAUSE, null, players.get(i).getId());
+			server.write(Constants.MSG_UNPAUSE, null, players.get(i).getId());
 		}
 
 		isPaused = false;
@@ -408,7 +409,7 @@ public class EuchreGameController implements GameController {
 	@Override
 	public void sendGameEnd() {//TODO make in abstract class
 		for (int i = 0; i < game.getNumPlayers(); i++) {
-			server.write(Constants.END_GAME, null, players.get(i).getId());
+			server.write(Constants.MSG_END_GAME, null, players.get(i).getId());
 		}
 	}
 
@@ -426,7 +427,7 @@ public class EuchreGameController implements GameController {
 			return;
 		}
 
-		currentState = PLAY_CARD;
+		currentState = MSG_PLAY_CARD;
 
 		//tell the next person to play
 		sendNextTurn(currentState, game.getCardLead());
@@ -490,9 +491,9 @@ public class EuchreGameController implements GameController {
 		// Let each player know whether they won or lost
 		for (int i = 0; i < game.getNumPlayers(); i++) {
 			if (i % 2 == teamWhoWon) {
-				server.write(Constants.WINNER, null, players.get(i).getId());
+				server.write(Constants.MSG_WINNER, null, players.get(i).getId());
 			} else {
-				server.write(Constants.LOSER, null, players.get(i).getId());
+				server.write(Constants.MSG_LOSER, null, players.get(i).getId());
 			}
 		}
 
@@ -525,9 +526,9 @@ public class EuchreGameController implements GameController {
 		Card tmpCard = new Card(0, 0, 0, 0);
 		try {
 			JSONObject obj = new JSONObject(object);
-			int suit = obj.getInt(SUIT);
-			int value = obj.getInt(VALUE);
-			int id = obj.getInt(ID);
+			int suit = obj.getInt(KEY_SUIT);
+			int value = obj.getInt(KEY_VALUE);
+			int id = obj.getInt(KEY_CARD_ID);
 			tmpCard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
 
 			//tell the game what was played
@@ -564,9 +565,9 @@ public class EuchreGameController implements GameController {
 
 				// Create the base refresh info object
 				JSONObject refreshInfo = new JSONObject();
-				refreshInfo.put(Constants.TURN, pTurn.equals(p));
-				refreshInfo.put(Constants.CURRENT_STATE, currentState);
-				refreshInfo.put(Constants.PLAYER_NAME, p.getName());
+				refreshInfo.put(Constants.KEY_TURN, pTurn.equals(p));
+				refreshInfo.put(Constants.KEY_CURRENT_STATE, currentState);
+				refreshInfo.put(Constants.KEY_PLAYER_NAME, p.getName());
 				refreshInfo.put(TRUMP, game.getTrump());
 				arr.put(refreshInfo);
 
@@ -578,7 +579,7 @@ public class EuchreGameController implements GameController {
 					arr.put(c.toJSONObject());
 				}
 
-				server.write(Constants.REFRESH, arr.toString(), p.getId());
+				server.write(Constants.MSG_REFRESH, arr.toString(), p.getId());
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -673,7 +674,7 @@ public class EuchreGameController implements GameController {
 			case PLAY_LEAD_CARD:
 				cardSelected = computerPlayer.getLeadCard(whoseTurn);
 				break;
-			case PLAY_CARD:
+			case MSG_PLAY_CARD:
 				cardSelected = computerPlayer.getCardOnTurn(whoseTurn);
 				break;
 			default:

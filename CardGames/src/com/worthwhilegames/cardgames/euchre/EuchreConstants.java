@@ -5,6 +5,8 @@ package com.worthwhilegames.cardgames.euchre;
  */
 public class EuchreConstants {
 
+	// TODO: update message type constants to start at 2000
+
 	/**
 	 * The maximum number of players allowed
 	 */

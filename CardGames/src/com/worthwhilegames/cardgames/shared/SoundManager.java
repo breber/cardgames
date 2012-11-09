@@ -1,6 +1,6 @@
 package com.worthwhilegames.cardgames.shared;
 
-import static com.worthwhilegames.cardgames.shared.Constants.LANGUAGE;
+import static com.worthwhilegames.cardgames.shared.Constants.PREF_LANGUAGE;
 
 import java.util.Locale;
 import java.util.Random;
@@ -122,8 +122,8 @@ public class SoundManager {
 	 */
 	private SoundManager(Context context) {
 		sharedPreferences = context.getSharedPreferences(Constants.PREFERENCES, 0);
-		isSoundFXOn = sharedPreferences.getBoolean(Constants.SOUND_EFFECTS, true);
-		isTTSOn = sharedPreferences.getBoolean(Constants.SPEECH_VOLUME, true);
+		isSoundFXOn = sharedPreferences.getBoolean(Constants.PREF_SOUND_EFFECTS, true);
+		isTTSOn = sharedPreferences.getBoolean(Constants.PREF_SPEECH_VOLUME, true);
 
 		// Initialize the strings to speak when it is a users turn
 		playerTurnPrompt = context.getResources().getStringArray(R.array.phrases);
@@ -160,7 +160,7 @@ public class SoundManager {
 			public void onInit(int status) {
 				if (status == TextToSpeech.SUCCESS) {
 					// get the user preference
-					String lang = sharedPreferences.getString(LANGUAGE, Language.US.toString());
+					String lang = sharedPreferences.getString(PREF_LANGUAGE, Language.US.toString());
 					int langResult = TextToSpeech.LANG_MISSING_DATA;
 
 					if (tts == null) {
