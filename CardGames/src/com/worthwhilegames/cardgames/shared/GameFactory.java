@@ -99,7 +99,7 @@ public class GameFactory {
 		}
 
 		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, 0);
-		String gameType = prefs.getString(Constants.GAME_TYPE, CardGame.CrazyEights.toString());
+		String gameType = prefs.getString(Constants.PREF_GAME_TYPE, CardGame.CrazyEights.toString());
 
 		if (CardGame.CrazyEights.toString().equals(gameType)) {
 			return CardGame.CrazyEights;

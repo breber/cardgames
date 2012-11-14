@@ -1,6 +1,6 @@
 package com.worthwhilegames.cardgames.player.activities;
 
-import static com.worthwhilegames.cardgames.shared.Constants.PLAYER_NAME;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_PLAYER_NAME;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -87,7 +87,7 @@ public class EnterNameActivty extends Activity implements OnEditorActionListener
 
 		// Return the name the player chose with the result of this Activity
 		Intent nameToSend = new Intent();
-		nameToSend.putExtra(PLAYER_NAME, playerName);
+		nameToSend.putExtra(KEY_PLAYER_NAME, playerName);
 		setResult(RESULT_OK, nameToSend);
 		finish();
 	}

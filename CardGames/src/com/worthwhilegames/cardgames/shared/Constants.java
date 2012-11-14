@@ -184,43 +184,48 @@ public class Constants {
 	/**
 	 * this is a JSON key for the suit of a card
 	 */
-	public static final String SUIT = "suit";
+	public static final String KEY_SUIT = "suit";
 
 	/**
 	 * this is a JSON key for the value of a card
 	 */
-	public static final String VALUE = "value";
-
-	/**
-	 * this is a JSON key for the resource id of a card
-	 */
-	public static final String RESOURCE_ID = "resourceid";
+	public static final String KEY_VALUE = "value";
 
 	/**
 	 * this is a JSON key for a card id
 	 */
-	public static final String ID = "id";
+	public static final String KEY_CARD_ID = "id";
 
 	/**
 	 * this is the key for message type this is used to obtain the message type
 	 * information from the message sent over wireless
 	 */
-	public static final String MESSAGE_TYPE = "messagetype";
+	public static final String KEY_MESSAGE_TYPE = "messagetype";
 
 	/**
 	 * this is a JSON key for getting the isTurn boolean
 	 */
-	public static final String TURN = "isturn";
+	public static final String KEY_TURN = "isturn";
 
 	/**
 	 * this is a JSON key for getting the player name
 	 */
-	public static final String PLAYER_NAME = "playername";
+	public static final String KEY_PLAYER_NAME = "playername";
 
 	/**
 	 * This is a JSON key for telling the player what state the game is in
 	 */
-	public static final String CURRENT_STATE = "currentstate";
+	public static final String KEY_CURRENT_STATE = "currentstate";
+
+	/**
+	 * This is a JSON key for telling the player what cards are in their hand
+	 */
+	public static final String KEY_CURRENT_HAND = "currenthand";
+
+	/**
+	 * This is a JSON key for telling the player the current discard card
+	 */
+	public static final String KEY_DISCARD_CARD = "discardCard";
 
 	/**
 	 * this is a request code for the get EnterNameActivity
@@ -231,63 +236,68 @@ public class Constants {
 	/**
 	 * message type for setting up a game
 	 */
-	public static final int SETUP = 0;
+	public static final int MSG_SETUP = 0;
 
 	/**
 	 * message type for telling a player it is their turn
 	 */
-	public static final int IS_TURN = 1;
+	public static final int MSG_IS_TURN = 1;
 
 	/**
 	 * message type for sending the card that was drawn
 	 */
-	public static final int CARD_DRAWN = 2;
+	public static final int MSG_CARD_DRAWN = 2;
 
 	/**
 	 * message type telling the player they won
 	 */
-	public static final int WINNER = 3;
+	public static final int MSG_WINNER = 3;
 
 	/**
 	 * message type telling the player they lost
 	 */
-	public static final int LOSER = 4;
+	public static final int MSG_LOSER = 4;
 
 	/**
 	 * message type for refreshing the game state by re-sending cards and whose
 	 * turn it is to all players
 	 */
-	public static final int REFRESH = 5;
+	public static final int MSG_REFRESH = 5;
 
 	/**
 	 * message type for pausing the game
 	 */
-	public static final int PAUSE = 6;
+	public static final int MSG_PAUSE = 6;
 
 	/**
 	 * message type for unpausing the game
 	 */
-	public static final int UNPAUSE = 7;
+	public static final int MSG_UNPAUSE = 7;
 
 	/**
 	 * message type for telling the players to end their game
 	 */
-	public static final int END_GAME = 8;
+	public static final int MSG_END_GAME = 8;
 
 	/**
 	 * message types that a player sends when playing a card
 	 */
-	public static final int PLAY_CARD = 9;
+	public static final int MSG_PLAY_CARD = 9;
 
 	/**
 	 * message type that a player sends when requesting to draw a card
 	 */
-	public static final int DRAW_CARD = 10;
+	public static final int MSG_DRAW_CARD = 10;
 
 	/**
 	 * message type that a player sends when requesting to draw a card
 	 */
-	public static final int PLAY_AGAIN = 11;
+	public static final int MSG_PLAY_AGAIN = 11;
+
+	/**
+	 * message type for the player name
+	 */
+	public static final int MSG_PLAYER_NAME = 12;
 
 	/* Preferences Options */
 	/**
@@ -299,7 +309,7 @@ public class Constants {
 	 * A constant representing the difficulty of the AI players in the game for
 	 * the preferences
 	 */
-	public static final String DIFFICULTY_OF_COMPUTERS = "DIFFICULTY OF COMPUTERS";
+	public static final String PREF_DIFFICULTY = "DIFFICULTY OF COMPUTERS";
 
 	/**
 	 * A constant representing the computer difficulty easy
@@ -319,42 +329,42 @@ public class Constants {
 	/**
 	 * A constant representing the connection type for the shared preferences
 	 */
-	public static final String CONNECTION_TYPE = "CONNECTION TYPE";
+	public static final String PREF_CONNECTION_TYPE = "CONNECTION TYPE";
 
 	/**
 	 * A constant to represent a key in the shared preferences for the sound
 	 * effects option
 	 */
-	public static final String SOUND_EFFECTS = "SOUND EFFECTS";
+	public static final String PREF_SOUND_EFFECTS = "SOUND EFFECTS";
 
 	/**
 	 * A constant to represent a key in the shared preferences for the speech
 	 * volume option
 	 */
-	public static final String SPEECH_VOLUME = "SPEECH VOLUME";
+	public static final String PREF_SPEECH_VOLUME = "SPEECH VOLUME";
 
 	/**
 	 * A constant to represent a key in the shared preferences for the
 	 * language/locale option
 	 */
-	public static final String LANGUAGE = "LANGUAGE";
+	public static final String PREF_LANGUAGE = "LANGUAGE";
 
 	/**
 	 * A constant to represent a key in the shared preferences for the number of
 	 * computers in the game option
 	 */
-	public static final String NUMBER_OF_COMPUTERS = "NUMBER OF COMPUTERS";
+	public static final String PREF_NUMBER_OF_COMPUTERS = "NUMBER OF COMPUTERS";
 
 	/**
 	 * A constant to represent a key in the shared preferences for the game type
 	 */
-	public static final String GAME_TYPE = "GAME TYPE";
+	public static final String PREF_GAME_TYPE = "GAME TYPE";
 
 	/**
 	 * A constant to represent a key in the shared preferences for the image
 	 * resource to use as the back of the card
 	 */
-	public static final String CARD_BACK = "BACKOFCARD";
+	public static final String PREF_CARD_BACK = "BACKOFCARD";
 
 	/* AI Constants */
 	/**

@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="16" />
+        android:targetSdkVersion="17" />
 
     <!-- For Wifi Mode -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

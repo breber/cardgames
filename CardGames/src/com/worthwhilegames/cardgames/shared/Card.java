@@ -1,9 +1,8 @@
 package com.worthwhilegames.cardgames.shared;
 
-import static com.worthwhilegames.cardgames.shared.Constants.ID;
-import static com.worthwhilegames.cardgames.shared.Constants.RESOURCE_ID;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
-import static com.worthwhilegames.cardgames.shared.Constants.VALUE;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_CARD_ID;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_SUIT;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_VALUE;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -132,10 +131,9 @@ public class Card implements Comparable<Card> {
 		// Encode the cards into a JSONArray
 		try {
 			JSONObject obj = new JSONObject();
-			obj.put(SUIT, getSuit());
-			obj.put(VALUE, getValue());
-			obj.put(RESOURCE_ID, getResourceId());
-			obj.put(ID, getIdNum());
+			obj.put(KEY_SUIT, getSuit());
+			obj.put(KEY_VALUE, getValue());
+			obj.put(KEY_CARD_ID, getIdNum());
 
 			return obj;
 		} catch (JSONException ex) {

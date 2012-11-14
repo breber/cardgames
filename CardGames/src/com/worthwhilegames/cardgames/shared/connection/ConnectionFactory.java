@@ -34,7 +34,7 @@ public class ConnectionFactory {
 	 */
 	public static ConnectionType getConnectionType(Context ctx) {
 		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, 0);
-		String connectionType = prefs.getString(Constants.CONNECTION_TYPE, ConnectionType.WiFi.toString());
+		String connectionType = prefs.getString(Constants.PREF_CONNECTION_TYPE, ConnectionType.WiFi.toString());
 
 		if (ConnectionType.WiFi.toString().equals(connectionType)) {
 			return ConnectionType.WiFi;

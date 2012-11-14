@@ -1,7 +1,7 @@
 package com.worthwhilegames.cardgames.player.activities;
 
 import static com.worthwhilegames.cardgames.shared.Constants.GET_PLAYER_NAME;
-import static com.worthwhilegames.cardgames.shared.Constants.PLAYER_NAME;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_PLAYER_NAME;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +14,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.TextView;
 import com.worthwhilegames.cardgames.shared.activities.DeviceListActivity;
@@ -174,12 +175,12 @@ public class ConnectActivity extends Activity {
 			TextView tv = (TextView) findViewById(R.id.progressDialogText);
 			tv.setText(getResources().getString(R.string.waitingForGame));
 
-			String playerName = data.getStringExtra(PLAYER_NAME);
-			returnIntent.putExtra(PLAYER_NAME, playerName);
+			String playerName = data.getStringExtra(KEY_PLAYER_NAME);
+			returnIntent.putExtra(KEY_PLAYER_NAME, playerName);
 			JSONObject obj = new JSONObject();
 			try {
-				obj.put(PLAYER_NAME, playerName);
-				client.write(GET_PLAYER_NAME, obj);
+				obj.put(KEY_PLAYER_NAME, playerName);
+				client.write(Constants.MSG_PLAYER_NAME, obj);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
