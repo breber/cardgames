@@ -1,14 +1,14 @@
 package com.worthwhilegames.cardgames.shared.activities;
 
-import static com.worthwhilegames.cardgames.shared.Constants.CONNECTION_TYPE;
-import static com.worthwhilegames.cardgames.shared.Constants.DIFFICULTY_OF_COMPUTERS;
+import static com.worthwhilegames.cardgames.shared.Constants.PREF_CONNECTION_TYPE;
+import static com.worthwhilegames.cardgames.shared.Constants.PREF_DIFFICULTY;
 import static com.worthwhilegames.cardgames.shared.Constants.EASY;
-import static com.worthwhilegames.cardgames.shared.Constants.GAME_TYPE;
-import static com.worthwhilegames.cardgames.shared.Constants.LANGUAGE;
-import static com.worthwhilegames.cardgames.shared.Constants.NUMBER_OF_COMPUTERS;
+import static com.worthwhilegames.cardgames.shared.Constants.PREF_GAME_TYPE;
+import static com.worthwhilegames.cardgames.shared.Constants.PREF_LANGUAGE;
+import static com.worthwhilegames.cardgames.shared.Constants.PREF_NUMBER_OF_COMPUTERS;
 import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
-import static com.worthwhilegames.cardgames.shared.Constants.SOUND_EFFECTS;
-import static com.worthwhilegames.cardgames.shared.Constants.SPEECH_VOLUME;
+import static com.worthwhilegames.cardgames.shared.Constants.PREF_SOUND_EFFECTS;
+import static com.worthwhilegames.cardgames.shared.Constants.PREF_SPEECH_VOLUME;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -143,7 +143,7 @@ public class PreferencesActivity extends Activity {
 
 		if (soundEffects != null) {
 			// set the check box to it's preference
-			soundEffects.setChecked(sharedPref.getBoolean(SOUND_EFFECTS, true));
+			soundEffects.setChecked(sharedPref.getBoolean(PREF_SOUND_EFFECTS, true));
 		}
 
 		// speech check box
@@ -151,7 +151,7 @@ public class PreferencesActivity extends Activity {
 
 		if (speechVolume != null) {
 			// set the check box to it's preference
-			speechVolume.setChecked(sharedPref.getBoolean(SPEECH_VOLUME, true));
+			speechVolume.setChecked(sharedPref.getBoolean(PREF_SPEECH_VOLUME, true));
 		}
 
 		// Number of Computers from the shared preferences
@@ -159,7 +159,7 @@ public class PreferencesActivity extends Activity {
 
 		if (numComputerSpinner != null) {
 			// get the value from shared preferences
-			Integer numberOfComputers = sharedPref.getInt(NUMBER_OF_COMPUTERS, 3);
+			Integer numberOfComputers = sharedPref.getInt(PREF_NUMBER_OF_COMPUTERS, 3);
 
 			// make an array adapter of all options specified in the xml
 			@SuppressWarnings("unchecked")
@@ -178,7 +178,7 @@ public class PreferencesActivity extends Activity {
 		// set the correct radio button based on the shared preferences
 		if (difficultySpinner != null) {
 			// get the value from shared preferences
-			String difficulty = sharedPref.getString(DIFFICULTY_OF_COMPUTERS, EASY);
+			String difficulty = sharedPref.getString(PREF_DIFFICULTY, EASY);
 
 			// make an array adapter of all options specified in the xml
 			@SuppressWarnings("unchecked")
@@ -203,7 +203,7 @@ public class PreferencesActivity extends Activity {
 			Language language = null;
 
 			try {
-				language = Language.valueOf(sharedPref.getString(LANGUAGE, Language.US.toString()));
+				language = Language.valueOf(sharedPref.getString(PREF_LANGUAGE, Language.US.toString()));
 			} catch (IllegalArgumentException ex) {
 				language = Language.US;
 			}
@@ -226,7 +226,7 @@ public class PreferencesActivity extends Activity {
 			CardGame gameType = null;
 
 			try {
-				gameType = CardGame.valueOf(sharedPref.getString(GAME_TYPE, CardGame.CrazyEights.toString()));
+				gameType = CardGame.valueOf(sharedPref.getString(PREF_GAME_TYPE, CardGame.CrazyEights.toString()));
 			} catch (IllegalArgumentException ex) {
 				gameType = CardGame.CrazyEights;
 			}
@@ -252,7 +252,7 @@ public class PreferencesActivity extends Activity {
 			ConnectionType connectionType = null;
 
 			try {
-				connectionType = ConnectionType.valueOf(sharedPref.getString(CONNECTION_TYPE, ConnectionType.WiFi.toString()));
+				connectionType = ConnectionType.valueOf(sharedPref.getString(PREF_CONNECTION_TYPE, ConnectionType.WiFi.toString()));
 			} catch (IllegalArgumentException ex) {
 				connectionType = ConnectionType.WiFi;
 			}
@@ -280,37 +280,37 @@ public class PreferencesActivity extends Activity {
 		// put the new preferences in the shared preferences
 		// add the sound effects preference
 		if (soundEffects != null) {
-			prefsEditor.putBoolean(SOUND_EFFECTS, soundEffects.isChecked());
+			prefsEditor.putBoolean(PREF_SOUND_EFFECTS, soundEffects.isChecked());
 		}
 
 		// add the speech volume preference
 		if (speechVolume != null) {
-			prefsEditor.putBoolean(SPEECH_VOLUME, speechVolume.isChecked());
+			prefsEditor.putBoolean(PREF_SPEECH_VOLUME, speechVolume.isChecked());
 		}
 
 		// set number of computers
 		if (numComputerSpinner != null) {
-			prefsEditor.putInt(NUMBER_OF_COMPUTERS, Integer.parseInt((String) numComputerSpinner.getSelectedItem()));
+			prefsEditor.putInt(PREF_NUMBER_OF_COMPUTERS, Integer.parseInt((String) numComputerSpinner.getSelectedItem()));
 		}
 
 		// set difficulty of computers to preferences
 		if (difficultySpinner != null) {
-			prefsEditor.putString(DIFFICULTY_OF_COMPUTERS, (String) difficultySpinner.getSelectedItem());
+			prefsEditor.putString(PREF_DIFFICULTY, (String) difficultySpinner.getSelectedItem());
 		}
 
 		// set language to preferences
 		if (localeSpinner != null) {
-			prefsEditor.putString(LANGUAGE,	localeSpinner.getSelectedItem().toString());
+			prefsEditor.putString(PREF_LANGUAGE,	localeSpinner.getSelectedItem().toString());
 		}
 
 		// set game type
 		if (gameSpinner != null) {
-			prefsEditor.putString(GAME_TYPE, gameSpinner.getSelectedItem().toString());
+			prefsEditor.putString(PREF_GAME_TYPE, gameSpinner.getSelectedItem().toString());
 		}
 
 		// set connection type
 		if (gameSpinner != null) {
-			prefsEditor.putString(CONNECTION_TYPE, connectionSpinner.getSelectedItem().toString());
+			prefsEditor.putString(PREF_CONNECTION_TYPE, connectionSpinner.getSelectedItem().toString());
 		}
 
 		// commit the changes to the shared preferences

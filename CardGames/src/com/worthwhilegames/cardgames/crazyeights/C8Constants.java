@@ -18,22 +18,22 @@ public class C8Constants {
 	/**
 	 * A constant to represent an eight of clubs
 	 */
-	public static final int PLAY_EIGHT_C = 31;
+	public static final int PLAY_EIGHT_C = 1000;
 
 	/**
 	 * A constant to represent an eight of diamonds
 	 */
-	public static final int PLAY_EIGHT_D = 32;
+	public static final int PLAY_EIGHT_D = 1001;
 
 	/**
 	 * A constant to represent an eight of hearts
 	 */
-	public static final int PLAY_EIGHT_H = 34;
+	public static final int PLAY_EIGHT_H = 1002;
 
 	/**
 	 * A constant to represent an eight of spades
 	 */
-	public static final int PLAY_EIGHT_S = 35;
+	public static final int PLAY_EIGHT_S = 1003;
 
 	/**
 	 * The card number associated with an 8

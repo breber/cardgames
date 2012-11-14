@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
+    <issue id="HandlerLeak">
+        <ignore path="src/com/worthwhilegames/cardgames/crazyeights/CrazyEightsGameController.java" />
+    </issue>
     <issue id="Overdraw">
         <ignore path="res/layout/title_bar.xml" />
     </issue>

@@ -1,8 +1,8 @@
 package com.worthwhilegames.cardgames.crazyeights;
 
-import static com.worthwhilegames.cardgames.shared.Constants.ID;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT;
-import static com.worthwhilegames.cardgames.shared.Constants.VALUE;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_CARD_ID;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_SUIT;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_VALUE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -131,6 +132,7 @@ public class CrazyEightsGameController implements GameController {
 	/**
 	 * Handler to handle a computer's turn
 	 */
+	@SuppressLint("HandlerLeak")
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -188,12 +190,12 @@ public class CrazyEightsGameController implements GameController {
 				Log.d(TAG, p.getName() + ": " + p);
 			}
 
-			server.write(Constants.SETUP, p, p.getId());
+			server.write(Constants.MSG_SETUP, p, p.getId());
 		}
 
 		placeInitialCards();
 		Card onDiscard = game.getDiscardPileTop();
-		server.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn).getId());
+		server.write(Constants.MSG_IS_TURN, onDiscard, players.get(whoseTurn).getId());
 	}
 
 	/**
@@ -220,7 +222,7 @@ public class CrazyEightsGameController implements GameController {
 			int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
 
 			switch (messageType) {
-			case Constants.PLAY_CARD:
+			case Constants.MSG_PLAY_CARD:
 				discardReceivedCard(object);
 				advanceTurn();
 				break;
@@ -244,11 +246,11 @@ public class CrazyEightsGameController implements GameController {
 				discardReceivedCard(object);
 				advanceTurn();
 				break;
-			case Constants.DRAW_CARD:
+			case Constants.MSG_DRAW_CARD:
 				drawCard();
 				advanceTurn();
 				break;
-			case Constants.REFRESH:
+			case Constants.MSG_REFRESH:
 				refreshPlayers();
 				break;
 			}
@@ -319,7 +321,7 @@ public class CrazyEightsGameController implements GameController {
 		isPaused = true;
 
 		for (int i = 0; i < game.getNumPlayers(); i++) {
-			server.write(Constants.PAUSE, null, players.get(i).getId());
+			server.write(Constants.MSG_PAUSE, null, players.get(i).getId());
 		}
 	}
 
@@ -329,7 +331,7 @@ public class CrazyEightsGameController implements GameController {
 	@Override
 	public void unpause() {
 		for (int i = 0; i < game.getNumPlayers(); i++) {
-			server.write(Constants.UNPAUSE, null, players.get(i).getId());
+			server.write(Constants.MSG_UNPAUSE, null, players.get(i).getId());
 		}
 
 		isPaused = false;
@@ -347,7 +349,7 @@ public class CrazyEightsGameController implements GameController {
 	@Override
 	public void sendGameEnd() {
 		for (int i = 0; i < game.getNumPlayers(); i++) {
-			server.write(Constants.END_GAME, null, players.get(i).getId());
+			server.write(Constants.MSG_END_GAME, null, players.get(i).getId());
 		}
 	}
 
@@ -405,7 +407,7 @@ public class CrazyEightsGameController implements GameController {
 			}
 		} else {
 			// tell the player it is their turn
-			server.write(Constants.IS_TURN, onDiscard, players.get(whoseTurn).getId());
+			server.write(Constants.MSG_IS_TURN, onDiscard, players.get(whoseTurn).getId());
 		}
 
 		// Update the UI
@@ -427,9 +429,9 @@ public class CrazyEightsGameController implements GameController {
 		// Let each player know whether they won or lost
 		for (int i = 0; i < game.getNumPlayers(); i++) {
 			if (i == whoWon) {
-				server.write(Constants.WINNER, null, players.get(i).getId());
+				server.write(Constants.MSG_WINNER, null, players.get(i).getId());
 			} else {
-				server.write(Constants.LOSER, null, players.get(i).getId());
+				server.write(Constants.MSG_LOSER, null, players.get(i).getId());
 			}
 		}
 
@@ -460,7 +462,7 @@ public class CrazyEightsGameController implements GameController {
 
 		if (tmpCard != null) {
 			// And send the card to the player
-			server.write(Constants.CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
+			server.write(Constants.MSG_CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
 		} else {
 			// there are no cards to draw so make it no longer that players turn
 			// and refresh the players
@@ -480,9 +482,9 @@ public class CrazyEightsGameController implements GameController {
 		Card tmpCard = new Card(0, 0, 0, 0);
 		try {
 			JSONObject obj = new JSONObject(object);
-			int suit = obj.getInt(SUIT);
-			int value = obj.getInt(VALUE);
-			int id = obj.getInt(ID);
+			int suit = obj.getInt(KEY_SUIT);
+			int value = obj.getInt(KEY_VALUE);
+			int id = obj.getInt(KEY_CARD_ID);
 			tmpCard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
 
 			game.discard(players.get(whoseTurn), tmpCard);
@@ -514,26 +516,24 @@ public class CrazyEightsGameController implements GameController {
 			}
 
 			try {
-				// TODO: this should be a JSONObject with the turn, the player name,
-				// and a JSONArray of cards.  A JSONArray with specific indicies probably isn't
-				// the best option
-				JSONArray arr = new JSONArray();
-
 				// Create the base refresh info object
 				JSONObject refreshInfo = new JSONObject();
-				refreshInfo.put(Constants.TURN, pTurn.equals(p));
-				refreshInfo.put(Constants.PLAYER_NAME, p.getName());
-				arr.put(refreshInfo);
+				refreshInfo.put(Constants.KEY_TURN, pTurn.equals(p));
+				refreshInfo.put(Constants.KEY_PLAYER_NAME, p.getName());
 
 				// send the card on the discard pile
-				arr.put(discardObj);
+				refreshInfo.put(Constants.KEY_DISCARD_CARD, discardObj);
 
 				// send all the cards in the players hand
+				JSONArray arr = new JSONArray();
 				for (Card c : p.getCards()) {
 					arr.put(c.toJSONObject());
 				}
 
-				server.write(Constants.REFRESH, arr.toString(), p.getId());
+				// send the card in their hand
+				refreshInfo.put(Constants.KEY_CURRENT_HAND, arr);
+
+				server.write(Constants.MSG_REFRESH, refreshInfo.toString(), p.getId());
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

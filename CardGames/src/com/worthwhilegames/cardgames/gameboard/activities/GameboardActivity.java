@@ -212,7 +212,7 @@ public class GameboardActivity extends Activity {
 		sharedPreferences = getSharedPreferences(PREFERENCES, 0);
 
 		// Get the image to use for the back of a card
-		CARD_BACK = sharedPreferences.getInt(Constants.CARD_BACK, R.drawable.back_blue_1);
+		CARD_BACK = sharedPreferences.getInt(Constants.PREF_CARD_BACK, R.drawable.back_blue_1);
 
 		// Update the refresh button image
 		ImageView refresh = (ImageView) findViewById(R.id.gameboard_refresh);
@@ -227,9 +227,9 @@ public class GameboardActivity extends Activity {
 
 		// Setup the rest of the Computer players based on the preferences
 		int currentNumPlayers = mGame.getNumPlayers();
-		int numComputers = sharedPreferences.getInt(Constants.NUMBER_OF_COMPUTERS, 3);
+		int numComputers = sharedPreferences.getInt(Constants.PREF_NUMBER_OF_COMPUTERS, 3);
 		int requiredNumPlayers = GameFactory.getRequiredNumPlayers(this);
-		String computerDifficulty = sharedPreferences.getString(Constants.DIFFICULTY_OF_COMPUTERS, Constants.EASY);
+		String computerDifficulty = sharedPreferences.getString(Constants.PREF_DIFFICULTY, Constants.EASY);
 
 		// Add a new computer as long as we have less than 4 players AND
 		//   -we have less than the required number of players for the game OR
