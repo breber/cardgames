@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -131,6 +132,7 @@ public class CrazyEightsGameController implements GameController {
 	/**
 	 * Handler to handle a computer's turn
 	 */
+	@SuppressLint("HandlerLeak")
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -171,7 +173,7 @@ public class CrazyEightsGameController implements GameController {
 			@Override
 			public void onClick(View v) {
 				v.setEnabled(false);
-				baseRefresh();
+				refreshPlayers();
 				v.setEnabled(true);
 			}
 		});
@@ -249,7 +251,7 @@ public class CrazyEightsGameController implements GameController {
 				advanceTurn();
 				break;
 			case Constants.MSG_REFRESH:
-				baseRefresh();
+				refreshPlayers();
 				break;
 			}
 		}
@@ -265,7 +267,7 @@ public class CrazyEightsGameController implements GameController {
 				// We chose to drop the player, so let the Game know to do that
 				String playerId = data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
 				game.dropPlayer(playerId);
-				baseRefresh();
+				refreshPlayers();
 				unpause();
 			} else if (resultCode == Activity.RESULT_OK) {
 				// We chose to add a new player, so start the ConnectActivity
@@ -292,7 +294,7 @@ public class CrazyEightsGameController implements GameController {
 
 			// Send the refresh signal to all players just to make
 			// sure everyone has the latest information
-			baseRefresh();
+			refreshPlayers();
 
 			// Unpause the players
 			unpause();
@@ -305,7 +307,7 @@ public class CrazyEightsGameController implements GameController {
 
 			// Send the refresh signal (again) to all players just to make
 			// sure everyone has the latest information
-			baseRefresh();
+			refreshPlayers();
 		}
 
 		return false;
@@ -465,7 +467,7 @@ public class CrazyEightsGameController implements GameController {
 			// there are no cards to draw so make it no longer that players turn
 			// and refresh the players
 			advanceTurn();
-			baseRefresh();
+			refreshPlayers();
 		}
 	}
 
@@ -493,25 +495,14 @@ public class CrazyEightsGameController implements GameController {
 		mySM.playCardSound();
 	}
 
-	private void baseRefresh() {
-		// Unpause the game
-		unpause();
-
-		// Refresh Players
-		refreshPlayersV2();
-
-		// If the next player is a computer, and the computer isn't currently
-		// playing, have the computer initiate a move
-		if (players.get(whoseTurn).getIsComputer() && !isComputerPlaying) {
-			startComputerTurn();
-		}
-	}
-
 	/**
 	 * This will refresh the state of all the players by sending them their
 	 * cards and if it is their turn
 	 */
-	private void refreshPlayersV2() {
+	private void refreshPlayers() {
+		// Unpause the game
+		unpause();
+
 		// Send users information
 		Player pTurn = players.get(whoseTurn);
 
@@ -546,6 +537,12 @@ public class CrazyEightsGameController implements GameController {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+		}
+
+		// If the next player is a computer, and the computer isn't currently
+		// playing, have the computer initiate a move
+		if (players.get(whoseTurn).getIsComputer() && !isComputerPlaying) {
+			startComputerTurn();
 		}
 	}
 
