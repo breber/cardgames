@@ -141,9 +141,17 @@ public class ConnectionServer extends ConnectionCommon {
 	 * Start listening for Connections
 	 */
 	public void startListening() {
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "mAcceptThread: " + mAcceptThread);
+		}
+
 		// Start the AcceptThread which listens for incoming connection requests
 		if (mAcceptThread == null) {
 			mAcceptThread = new AcceptThread(mContext, mHandler, services, this);
+		}
+
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "mAcceptThread.isAlive(): " + mAcceptThread.isAlive());
 		}
 
 		if (!mAcceptThread.isAlive()) {

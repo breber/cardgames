@@ -65,14 +65,6 @@ public class CrazyEightsTabletGame implements Game {
 	private List<Card> discardPile;
 
 	/**
-	 * The maximum number of players to allow in the game
-	 * 
-	 * Start out at 4, and then when the game begins, update it
-	 * with the currently connected number of players
-	 */
-	private int maxNumberOfPlayers = 4;
-
-	/**
 	 * Represents whether the game is currently active
 	 */
 	private boolean gameActive = false;
@@ -208,8 +200,6 @@ public class CrazyEightsTabletGame implements Game {
 	@Override
 	public void deal() {
 		gameActive = true;
-		int numHumanPlayers = 0;
-
 		if (Util.isDebugBuild()) {
 			Log.d(TAG, "deal: numberOfPlayers: " + players.size());
 
@@ -222,12 +212,8 @@ public class CrazyEightsTabletGame implements Game {
 		// Count the number of human players
 		for (Player p : players) {
 			if (!p.getIsComputer()) {
-				numHumanPlayers++;
 			}
 		}
-
-		// Set the max number of players equal to the number of human players
-		maxNumberOfPlayers = numHumanPlayers;
 
 		// Deal the given number of cards to each player
 		for (int i = 0; i < NUMBER_OF_CARDS_PER_HAND; i++) {
@@ -333,8 +319,6 @@ public class CrazyEightsTabletGame implements Game {
 			if (p != null) {
 				p.setIsComputer(true);
 				p.setComputerDifficulty(computerDifficulty);
-
-				maxNumberOfPlayers--;
 			} else {
 				if (Util.isDebugBuild()) {
 					Log.d(TAG, "dropPlayer: couldn't find player with id: " + playerMacAddress);
@@ -367,7 +351,18 @@ public class CrazyEightsTabletGame implements Game {
 	 */
 	@Override
 	public int getMaxNumPlayers() {
-		return maxNumberOfPlayers;
+		if (players.isEmpty()) {
+			return C8Constants.MAX_NUM_PLAYERS;
+		} else {
+			int count = 0;
+			for (Player p : players) {
+				if (p.isDisconnected()) {
+					count++;
+				}
+			}
+
+			return players.size() - count;
+		}
 	}
 
 	/* (non-Javadoc)

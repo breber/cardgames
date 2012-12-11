@@ -273,7 +273,6 @@ public class CrazyEightsGameController implements GameController {
 				// We chose to add a new player, so start the ConnectActivity
 				// with the deviceId and isReconnect parameters
 				Intent i = new Intent(gameContext, ConnectActivity.class);
-				i.putExtra(ConnectionConstants.KEY_DEVICE_ID, data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID));
 				gameContext.startActivityForResult(i, CHOOSE_PLAYER);
 
 				// We will initially drop the player, to handle the case where

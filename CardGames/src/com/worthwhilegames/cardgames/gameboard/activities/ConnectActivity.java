@@ -246,15 +246,16 @@ public class ConnectActivity extends Activity {
 			v.setEnabled(false);
 		}
 
-
 		mConnectionServer = ConnectionServer.getInstance(this);
 		mGame = GameFactory.getGameInstance(this);
 		isReconnect = mGame.getNumPlayers() > 0;
 
-		// Make sure that all connections are enabled
-		ConnectionFactory.ensureConnectionEnabled(this);
-
+		// Start listening for devices
+		startListeningForDevices();
 		updateName();
+
+		// Update the UI to indicate how many players are connected
+		updatePlayersConnected();
 
 		// Set up the start button
 		final Button startButton = (Button) findViewById(R.id.startButton);

@@ -315,9 +315,6 @@ public class EuchreTabletGame implements Game{
 			if (p != null) {
 				p.setIsComputer(true);
 				p.setComputerDifficulty(computerDifficulty);
-
-				// TODO
-				//				maxNumberOfPlayers--;
 			} else {
 				if (Util.isDebugBuild()) {
 					Log.d(TAG, "dropPlayer: couldn't find player with id: " + playerMacAddress);
@@ -328,8 +325,6 @@ public class EuchreTabletGame implements Game{
 			players.remove(p);
 		}
 	}
-
-
 
 	@Override
 	public Card getDiscardPileTop() {
@@ -606,7 +601,18 @@ public class EuchreTabletGame implements Game{
 
 	@Override
 	public int getMaxNumPlayers() {
-		return 4;
+		if (players.isEmpty()) {
+			return EuchreConstants.MAX_NUM_PLAYERS;
+		} else {
+			int count = 0;
+			for (Player p : players) {
+				if (p.isDisconnected()) {
+					count++;
+				}
+			}
+
+			return players.size() - count;
+		}
 	}
 
 	@Override
