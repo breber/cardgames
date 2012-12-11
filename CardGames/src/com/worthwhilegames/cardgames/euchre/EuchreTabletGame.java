@@ -546,7 +546,7 @@ public class EuchreTabletGame implements Game{
 		if(this.dealer > 3){
 			this.dealer = 0;
 		}
-		setTrickLeader(dealer + 1);
+		setTrickLeader(this.dealer + 1);
 	}
 
 	public int getTrickLeader() {
