@@ -634,7 +634,7 @@ public class CrazyEightsGameController implements GameController {
 
 				//this gets the number of cards of each suit
 				suits[c.getSuit()]++;
-				if (suits[c.getSuit()] > suits[maxSuitIndex]) {
+				if (suits[c.getSuit()] > suits[maxSuitIndex] && c.getSuit() != Constants.SUIT_JOKER) {
 					maxSuitIndex = c.getSuit();
 				}
 
@@ -653,14 +653,24 @@ public class CrazyEightsGameController implements GameController {
 			for (Card c : sameNum) {
 				if (suits[c.getSuit()] > suits[onDiscard.getSuit()]){
 					moreOfOtherSuit = true;
+					break;
 				}
 			}
 
 
 			if (onDiscard.getSuit() == Constants.SUIT_JOKER){ //for a joker
 				for (Card c : cards){
-					if (c.getSuit() == maxSuitIndex){
+					if (c.getSuit() == maxSuitIndex && c.getValue() != Constants.EIGHT_VALUE){
 						cardSelected = c;
+						break;
+					}
+				}
+				if(cardSelected == null){
+					for (Card c : cards){
+						if (c.getSuit() == maxSuitIndex){
+							cardSelected = c;
+							break;
+						}
 					}
 				}
 			} else if (moreOfOtherSuit && sameNum.size() > 0 ) { //choose a card of the same number that we can change the suit with
@@ -675,7 +685,7 @@ public class CrazyEightsGameController implements GameController {
 				boolean hasAnotherCardWithIndex = false;
 				for (Card c : sameSuit) {
 					for (Card c1 : cards) {
-						if (c.getValue() == c1.getValue() && suits[c.getSuit()] <= suits[c1.getSuit()] ){
+						if (!c.equals(c1) && c.getValue() == c1.getValue() && suits[c.getSuit()] <= suits[c1.getSuit()] ){
 							cardSelected = c;
 							hasAnotherCardWithIndex = true;
 							break;
