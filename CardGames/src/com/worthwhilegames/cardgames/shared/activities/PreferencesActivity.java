@@ -1,12 +1,13 @@
 package com.worthwhilegames.cardgames.shared.activities;
 
+import static com.worthwhilegames.cardgames.shared.Constants.EASY;
+import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
+import static com.worthwhilegames.cardgames.shared.Constants.PREF_CHEATER_MODE;
 import static com.worthwhilegames.cardgames.shared.Constants.PREF_CONNECTION_TYPE;
 import static com.worthwhilegames.cardgames.shared.Constants.PREF_DIFFICULTY;
-import static com.worthwhilegames.cardgames.shared.Constants.EASY;
 import static com.worthwhilegames.cardgames.shared.Constants.PREF_GAME_TYPE;
 import static com.worthwhilegames.cardgames.shared.Constants.PREF_LANGUAGE;
 import static com.worthwhilegames.cardgames.shared.Constants.PREF_NUMBER_OF_COMPUTERS;
-import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
 import static com.worthwhilegames.cardgames.shared.Constants.PREF_SOUND_EFFECTS;
 import static com.worthwhilegames.cardgames.shared.Constants.PREF_SPEECH_VOLUME;
 
@@ -263,6 +264,14 @@ public class PreferencesActivity extends Activity {
 			// set the option checked based on the preferences
 			connectionSpinner.setSelection(connectionPosition);
 		}
+
+		// cheater mode checkbox
+		CheckBox cheaterMode = (CheckBox) findViewById(R.id.cheaterMode);
+
+		if (cheaterMode != null) {
+			// set the check box to it's preference
+			cheaterMode.setChecked(sharedPref.getBoolean(PREF_CHEATER_MODE, false));
+		}
 	}
 
 	/* (non-Javadoc)
@@ -273,6 +282,7 @@ public class PreferencesActivity extends Activity {
 		// get the values for the sound options from the preferences
 		CheckBox soundEffects = (CheckBox) findViewById(R.id.checkBoxSoundEffects);
 		CheckBox speechVolume = (CheckBox) findViewById(R.id.checkBoxSpeechVolume);
+		CheckBox cheaterMode = (CheckBox) findViewById(R.id.cheaterMode);
 
 		// set the result of the activity
 		setResult(RESULT_OK);
@@ -311,6 +321,10 @@ public class PreferencesActivity extends Activity {
 		// set connection type
 		if (gameSpinner != null) {
 			prefsEditor.putString(PREF_CONNECTION_TYPE, connectionSpinner.getSelectedItem().toString());
+		}
+
+		if (cheaterMode != null) {
+			prefsEditor.putBoolean(PREF_CHEATER_MODE, cheaterMode.isChecked());
 		}
 
 		// commit the changes to the shared preferences

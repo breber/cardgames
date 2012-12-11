@@ -8,6 +8,7 @@ import static com.worthwhilegames.cardgames.shared.Constants.halfCardVertCut;
 
 import java.util.List;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -45,6 +47,7 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
  * is where the Game logic happens, and each player will be able to
  * play a turn.
  */
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class GameboardActivity extends Activity {
 
 	/**
@@ -474,7 +477,7 @@ public class GameboardActivity extends Activity {
 
 				// If we are in debug mode, show the face
 				// Otherwise stick with the back of the card
-				if (Util.isDebugBuild()) {
+				if (Util.isCheaterMode(this)) {
 					resId = c.getResourceId();
 				}
 

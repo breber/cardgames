@@ -1,5 +1,7 @@
 package com.worthwhilegames.cardgames.shared;
 
+import static com.worthwhilegames.cardgames.shared.Constants.PREF_CHEATER_MODE;
+
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -8,6 +10,7 @@ import java.util.Enumeration;
 import org.apache.http.conn.util.InetAddressUtils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.worthwhilegames.cardgames.BuildConfig;
@@ -43,6 +46,19 @@ public class Util {
 	 */
 	public static boolean isGameboard() {
 		return Util.isGameboard;
+	}
+
+	/**
+	 * Checks whether cheater mode is enabled
+	 *
+	 * This displays all player hands
+	 *
+	 * @return whether cheater mode is enabled
+	 */
+	public static boolean isCheaterMode(Context ctx) {
+		SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, 0);
+
+		return prefs.getBoolean(PREF_CHEATER_MODE, false);
 	}
 
 	/**

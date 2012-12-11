@@ -366,6 +366,11 @@ public class Constants {
 	 */
 	public static final String PREF_CARD_BACK = "BACKOFCARD";
 
+	/**
+	 * A constant to represent cheater mode
+	 */
+	public static final String PREF_CHEATER_MODE = "CHEATERMODE";
+
 	/* AI Constants */
 	/**
 	 * The time you wait in between computer turns, about 1 and a half seconds
