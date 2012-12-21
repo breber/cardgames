@@ -360,6 +360,7 @@ public class EuchreGameController extends GameController {
 				}
 
 				server.write(Constants.MSG_REFRESH, arr.toString(), p.getId());
+				sendCardSuggestion();
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -379,6 +380,42 @@ public class EuchreGameController extends GameController {
 				startComputerTurn();
 			}
 		}
+	}
+
+	/**
+	 * This will asynchronously figure out which card a player should play
+	 * and send it to them as a suggestion
+	 */
+	protected void sendCardSuggestion() {
+		final int currentTurn = whoseTurn;
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Card cardSelected = null;
+
+				switch(currentState){
+				case PICK_IT_UP:
+					cardSelected = computerPlayer.pickItUp(currentTurn);
+					break;
+				case PLAY_LEAD_CARD:
+					cardSelected = computerPlayer.getLeadCard(currentTurn);
+					break;
+				case MSG_PLAY_CARD:
+					cardSelected = computerPlayer.getCardOnTurn(currentTurn);
+					break;
+				default:
+					// basically no card is suggested
+					cardSelected = new Card(-1, -1, -1, -1);
+					break;
+				}
+
+				server.write(Constants.MSG_SUGGESTED_CARD, cardSelected, players.get(currentTurn).getId());
+				if (Util.isDebugBuild()) {
+					Log.d(TAG, "Sent suggestion to player");
+				}
+			}
+		}).start();
 	}
 
 
@@ -565,6 +602,7 @@ public class EuchreGameController extends GameController {
 			}
 		} else {
 			server.write(state, card, players.get(whoseTurn).getId());
+			sendCardSuggestion();
 		}
 
 		// Highlight the name of the current player

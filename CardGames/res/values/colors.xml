@@ -2,6 +2,8 @@
 <resources>
 
     <color name="gold">#ffffc90e</color>
+    <color name="suggested_card_color">#55FFFF0E</color>
+    <color name="suggested_selected_card_color">#ffFFFF0E</color>
     <color name="transparent_grey">#77888888</color>
     <color name="disabled_device">#ff454545</color>
     <color name="enabled_device">#ffc3c3c3</color>

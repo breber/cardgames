@@ -293,14 +293,35 @@ public class ShowCardsActivity extends Activity {
 	 *
 	 * @param cardId - the currently selected card
 	 */
-	public void setSelected(int cardId) {
+	public void setSelected(int cardId, int suggestedId) {
+		for (Card c : cardHand) {
+			if (c.getIdNum() == cardId && c.getIdNum() == suggestedId) {
+				ImageView iv = (ImageView) findViewById(c.getIdNum());
+				iv.setBackgroundColor(getResources().getColor(R.color.suggested_selected_card_color));
+			} else if (c.getIdNum() == cardId) {
+				ImageView iv = (ImageView) findViewById(c.getIdNum());
+				iv.setBackgroundColor(getResources().getColor(R.color.gold));
+			} else if(c.getIdNum() == suggestedId){
+				ImageView iv = (ImageView) findViewById(c.getIdNum());
+				iv.setBackgroundColor(getResources().getColor(R.color.suggested_card_color));
+			} else {
+				ImageView iv = (ImageView) findViewById(c.getIdNum());
+				iv.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+			}
+		}
+	}
+
+	/**
+	 * Set the selected card. This will highlight the selected
+	 * card, and clear the highlight from any other cards.
+	 *
+	 * @param cardId - the currently selected card
+	 */
+	public void setSuggested(int cardId) {
 		for (Card c : cardHand) {
 			if (c.getIdNum() == cardId) {
 				ImageView iv = (ImageView) findViewById(c.getIdNum());
 				iv.setBackgroundColor(getResources().getColor(R.color.gold));
-			} else {
-				ImageView iv = (ImageView) findViewById(c.getIdNum());
-				iv.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 			}
 		}
 	}

@@ -165,7 +165,7 @@ public class EuchreComputerPlayer {
 			//Easy, randomly take the first card.
 		}else { //Hard and Medium
 			for(Card c: players.get(whoseTurn).getCards()){
-				if(this.computeCardScore(c, game.getTrump()) < this.computeCardScore(c, game.getTrump())){
+				if(this.computeCardScore(c, game.getTrump()) < this.computeCardScore(cardSelected, game.getTrump())){
 					cardSelected = c;
 				}
 			}

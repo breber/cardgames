@@ -69,6 +69,11 @@ public class CrazyEightsPlayerController implements PlayerController {
 	private Card cardSelected;
 
 	/**
+	 * The id of the suggested Card
+	 */
+	private int cardSuggestedId = -1;
+
+	/**
 	 * The card that is on the discard pile
 	 */
 	private Card cardOnDiscard;
@@ -177,6 +182,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 				}
 				setButtonsEnabled(false);
 				isTurn = false;
+				cardSuggestedId = -1;
 				break;
 			case Constants.MSG_IS_TURN:
 				mySM.sayTurn(playerName);
@@ -191,6 +197,24 @@ public class CrazyEightsPlayerController implements PlayerController {
 				}
 				setButtonsEnabled(true);
 				isTurn = true;
+				break;
+			case Constants.MSG_SUGGESTED_CARD:
+				if(isTurn && object != null && true /* TODO add preference here */){
+					try {
+						JSONObject obj = new JSONObject(object);
+						int id = obj.getInt(Constants.KEY_CARD_ID);
+						cardSuggestedId = id;
+
+						// Let the UI know which card was suggested
+						int selectedId = -1;
+						if(cardSelected != null){
+							selectedId = cardSelected.getIdNum();
+						}
+						playerContext.setSelected(selectedId, cardSuggestedId);
+					} catch (JSONException ex) {
+						ex.printStackTrace();
+					}
+				}
 				break;
 			case Constants.MSG_CARD_DRAWN:
 				try {
@@ -270,6 +294,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 					cardSelected = null;
 					setButtonsEnabled(false);
 					isTurn = false;
+					cardSuggestedId = -1;
 				}
 			}
 		}
@@ -285,6 +310,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 				connection.write(Constants.MSG_DRAW_CARD, null);
 				setButtonsEnabled(false);
 				isTurn = false;
+				cardSuggestedId = -1;
 			}
 		}
 	};
@@ -327,6 +353,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 				cardSelected = null;
 				setButtonsEnabled(false);
 				isTurn = false;
+				cardSuggestedId = -1;
 			}
 		}
 	}
@@ -382,7 +409,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 			v.startAnimation(scale);
 
 			// Let the UI know which card was selected
-			playerContext.setSelected(v.getId());
+			playerContext.setSelected(v.getId(), cardSuggestedId);
 
 			for (int i = 0; i < cardHand.size(); i++) {
 				if (cardHand.get(i).getIdNum() == v.getId()) {
