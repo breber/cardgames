@@ -84,41 +84,48 @@ public class CrazyEightsGameController extends GameController {
 		String action = intent.getAction();
 
 		if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
+			int messageSender = getWhoSentMessage(context, intent);
 			String object = intent.getStringExtra(ConnectionConstants.KEY_MESSAGE_RX);
 			int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
 
-			switch (messageType) {
-			case Constants.MSG_PLAY_CARD:
-				playReceivedCard(object);
-				advanceTurn();
-				break;
-			case C8Constants.PLAY_EIGHT_C:
-				suitChosen = Constants.SUIT_CLUBS;
-				playReceivedCard(object);
-				advanceTurn();
-				break;
-			case C8Constants.PLAY_EIGHT_D:
-				suitChosen = Constants.SUIT_DIAMONDS;
-				playReceivedCard(object);
-				advanceTurn();
-				break;
-			case C8Constants.PLAY_EIGHT_H:
-				suitChosen = Constants.SUIT_HEARTS;
-				playReceivedCard(object);
-				advanceTurn();
-				break;
-			case C8Constants.PLAY_EIGHT_S:
-				suitChosen = Constants.SUIT_SPADES;
-				playReceivedCard(object);
-				advanceTurn();
-				break;
-			case Constants.MSG_DRAW_CARD:
-				drawCard();
-				advanceTurn();
-				break;
-			case Constants.MSG_REFRESH:
-				refreshPlayers();
-				break;
+			// Only perform actions if it is the sender's turn
+			if (messageSender == whoseTurn) {
+				switch (messageType) {
+				case Constants.MSG_PLAY_CARD:
+					playReceivedCard(object);
+					advanceTurn();
+					break;
+				case C8Constants.PLAY_EIGHT_C:
+					suitChosen = Constants.SUIT_CLUBS;
+					playReceivedCard(object);
+					advanceTurn();
+					break;
+				case C8Constants.PLAY_EIGHT_D:
+					suitChosen = Constants.SUIT_DIAMONDS;
+					playReceivedCard(object);
+					advanceTurn();
+					break;
+				case C8Constants.PLAY_EIGHT_H:
+					suitChosen = Constants.SUIT_HEARTS;
+					playReceivedCard(object);
+					advanceTurn();
+					break;
+				case C8Constants.PLAY_EIGHT_S:
+					suitChosen = Constants.SUIT_SPADES;
+					playReceivedCard(object);
+					advanceTurn();
+					break;
+				case Constants.MSG_DRAW_CARD:
+					drawCard();
+					advanceTurn();
+					break;
+				case Constants.MSG_REFRESH:
+					refreshPlayers();
+					break;
+				}
+			} else {
+				Log.d(TAG, "It isn't " + messageSender + "'s turn - ignoring message");
+				Log.w(TAG, "messageSender: " + messageSender + " whoseTurn: " + whoseTurn);
 			}
 		}
 	}

@@ -175,13 +175,28 @@ public abstract class GameController {
 	 * not allow players to play out of turn.
 	 * @param context
 	 * @param intent
-	 * @return - index of the player that sent the message
+	 * @return - index of the player that sent the message (whoseTurn if we don't know)
 	 */
-	protected int getWhoSentMessage(Context context, Intent intent){
-		// TODO: this whole method
-		// Brian: do you know of a way to do this?
-		//			if yes, please implement here at your convenience,
-		//			if no, please delete this method.
+	protected int getWhoSentMessage(Context context, Intent intent) {
+		String sender = intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
+
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "Sender: " + sender);
+		}
+
+		if (sender != null) {
+			for (int i = 0; i < players.size(); i++) {
+				Player p = players.get(i);
+				if (sender.equalsIgnoreCase(p.getId())) {
+					return i;
+				}
+			}
+		}
+
+		if (Util.isDebugBuild()) {
+			Log.w(TAG, "Can't figure out sender...: " + sender);
+		}
+
 		return whoseTurn;
 	}
 

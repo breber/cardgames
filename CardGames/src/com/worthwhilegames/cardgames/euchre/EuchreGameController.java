@@ -146,40 +146,47 @@ public class EuchreGameController extends GameController {
 		String action = intent.getAction();
 
 		if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
+			int messageSender = getWhoSentMessage(context, intent);
 			String object = intent.getStringExtra(ConnectionConstants.KEY_MESSAGE_RX);
 			int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
 
-			switch (messageType) {
-			case FIRST_ROUND_BETTING:
-				handleBetting(FIRST_ROUND_BETTING, object);
-				break;
-			case SECOND_ROUND_BETTING:
-				handleBetting(SECOND_ROUND_BETTING, object);
-				break;
-			case PLAY_LEAD_CARD:
-				Card tmpCard = playReceivedCard(object);
-				euchreGame.setCardLead(tmpCard);
-				advanceTurn();
-				break;
-			case PICK_IT_UP:
-				//Get which card they discarded and discard it.
-				currentState = PLAY_LEAD_CARD;
-				playReceivedCard(object);
-				euchreGame.clearCardsPlayed();
+			// Only perform actions if it is the sender's turn
+			if (messageSender == whoseTurn) {
+				switch (messageType) {
+				case FIRST_ROUND_BETTING:
+					handleBetting(FIRST_ROUND_BETTING, object);
+					break;
+				case SECOND_ROUND_BETTING:
+					handleBetting(SECOND_ROUND_BETTING, object);
+					break;
+				case PLAY_LEAD_CARD:
+					Card tmpCard = playReceivedCard(object);
+					euchreGame.setCardLead(tmpCard);
+					advanceTurn();
+					break;
+				case PICK_IT_UP:
+					//Get which card they discarded and discard it.
+					currentState = PLAY_LEAD_CARD;
+					playReceivedCard(object);
+					euchreGame.clearCardsPlayed();
 
-				//start the first turn of the round by going one person the the right of the dealer.
-				whoseTurn = euchreGame.getTrickLeader();
+					//start the first turn of the round by going one person the the right of the dealer.
+					whoseTurn = euchreGame.getTrickLeader();
 
-				refreshPlayers();
-				sendNextTurn(currentState, euchreGame.getCardLead());
-				break;
-			case MSG_PLAY_CARD:
-				playReceivedCard(object);
-				advanceTurn();
-				break;
-			case Constants.MSG_REFRESH:
-				refreshPlayers();
-				break;
+					refreshPlayers();
+					sendNextTurn(currentState, euchreGame.getCardLead());
+					break;
+				case MSG_PLAY_CARD:
+					playReceivedCard(object);
+					advanceTurn();
+					break;
+				case Constants.MSG_REFRESH:
+					refreshPlayers();
+					break;
+				}
+			} else {
+				Log.d(TAG, "It isn't " + messageSender + "'s turn - ignoring message");
+				Log.w(TAG, "messageSender: " + messageSender + " whoseTurn: " + whoseTurn);
 			}
 		}
 	}
