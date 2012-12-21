@@ -601,7 +601,7 @@ public class EuchreTabletGame implements Game{
 
 	@Override
 	public int getMaxNumPlayers() {
-		if (players.isEmpty()) {
+		if (players.isEmpty() || !gameActive) {
 			return EuchreConstants.MAX_NUM_PLAYERS;
 		} else {
 			int count = 0;

@@ -351,7 +351,7 @@ public class CrazyEightsTabletGame implements Game {
 	 */
 	@Override
 	public int getMaxNumPlayers() {
-		if (players.isEmpty()) {
+		if (players.isEmpty() || !gameActive) {
 			return C8Constants.MAX_NUM_PLAYERS;
 		} else {
 			int count = 0;
