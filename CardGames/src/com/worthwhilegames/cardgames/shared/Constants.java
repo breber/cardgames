@@ -299,6 +299,11 @@ public class Constants {
 	 */
 	public static final int MSG_PLAYER_NAME = 12;
 
+	/**
+	 * message type for suggested card
+	 */
+	public static final int MSG_SUGGESTED_CARD = 13;
+
 	/* Preferences Options */
 	/**
 	 * The name of the shared preferences to be used when getting the object

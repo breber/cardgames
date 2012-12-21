@@ -1,9 +1,5 @@
 package com.worthwhilegames.cardgames.crazyeights;
 
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_CARD_ID;
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_SUIT;
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_VALUE;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,28 +7,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
 
-import com.worthwhilegames.cardgames.R;
-import com.worthwhilegames.cardgames.gameboard.activities.ConnectActivity;
-import com.worthwhilegames.cardgames.gameboard.activities.GameResultsActivity;
 import com.worthwhilegames.cardgames.gameboard.activities.GameboardActivity;
 import com.worthwhilegames.cardgames.shared.Card;
-import com.worthwhilegames.cardgames.shared.CardTranslator;
 import com.worthwhilegames.cardgames.shared.Constants;
-import com.worthwhilegames.cardgames.shared.Game;
 import com.worthwhilegames.cardgames.shared.GameController;
 import com.worthwhilegames.cardgames.shared.Player;
-import com.worthwhilegames.cardgames.shared.SoundManager;
 import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
@@ -43,43 +26,7 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
  * Responsible for communicating game info, advancing turns, and handling game
  * state
  */
-public class CrazyEightsGameController implements GameController {
-
-	/**
-	 * The Logcat Debug tag
-	 */
-	private static final String TAG = CrazyEightsGameController.class.getName();
-
-	/**
-	 * The request code to keep track of the "Player N Won!" activity
-	 */
-	private static final int DECLARE_WINNER = Math.abs("DECLARE_WINNER".hashCode());
-
-	/**
-	 * request code to allow the gameboard to choose which player to connect
-	 */
-	private static final int CHOOSE_PLAYER = Math.abs("CHOOSE_PLAYER".hashCode());
-
-	/**
-	 * The ConnectionServer that sends and receives messages from other devices
-	 */
-	private ConnectionServer server;
-
-	/**
-	 * the list of current active players
-	 */
-	private List<Player> players;
-
-	/**
-	 * This game object will keep track of the current state of the game and be
-	 * used to manage player hands and draw and discard piles
-	 */
-	private static Game game = null;
-
-	/**
-	 * This allows the resource ids of cards to be correct
-	 */
-	private CardTranslator ct = new CrazyEightsCardTranslator();
+public class CrazyEightsGameController extends GameController {
 
 	/**
 	 * This represents the suit chosen when an 8 is played
@@ -87,70 +34,9 @@ public class CrazyEightsGameController implements GameController {
 	private int suitChosen = -1;
 
 	/**
-	 * This is the context of the GameBoardActivity this allows this class to
-	 * call methods and activities as if it were in the GameBoardActivity
-	 */
-	private GameboardActivity gameContext;
-
-	/**
-	 * This will be 0 to 3 to indicate the spot in the players array for the
-	 * player currently taking their turn
-	 */
-	private int whoseTurn = 0;
-
-	/**
-	 * This is the refresh button that is on the GameBoard The GameController
-	 * will handle any button presses
-	 */
-	private ImageView refreshButton;
-
-	/**
-	 * The implementation of the Game Rules
-	 */
-	private CrazyEightGameRules gameRules = new CrazyEightGameRules();
-
-	/**
-	 * The sound manager
-	 */
-	private SoundManager mySM;
-
-	/**
-	 * This is how to tell if a play computer turn activity is currently running
-	 */
-	private boolean isComputerPlaying = false;
-
-	/**
-	 * Represents whether the game is paused or not
-	 */
-	private boolean isPaused = false;
-
-	/**
 	 * Calculates card scores for the computer
 	 */
 	private CardScoreCalculator csc;
-
-	/**
-	 * Handler to handle a computer's turn
-	 */
-	@SuppressLint("HandlerLeak")
-	private Handler handler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			if (Util.isDebugBuild()) {
-				Log.d(TAG, "handleMessage: about to play a card");
-			}
-
-			if (!isPaused && isComputerPlaying) {
-				isComputerPlaying = false;
-				playComputerTurn();
-				advanceTurn();
-			} else {
-				if (Util.isDebugBuild()) {
-					Log.d(TAG, "handleMessage: game paused. not going to play now");
-				}
-			}
-		}
-	};
 
 	/**
 	 * This will initialize a CrazyEightsGameController
@@ -161,28 +47,15 @@ public class CrazyEightsGameController implements GameController {
 	 *            The ConnectionServer that will be used
 	 */
 	public CrazyEightsGameController(GameboardActivity context,	ConnectionServer connectionGiven) {
-		gameContext = context;
-		server = connectionGiven;
-		refreshButton = (ImageView) context.findViewById(R.id.gameboard_refresh);
-		mySM = SoundManager.getInstance(context);
+		super.initGameController(context, connectionGiven);
 
-		refreshButton.setOnClickListener(new OnClickListener() {
-			/* (non-Javadoc)
-			 * @see android.view.View.OnClickListener#onClick(android.view.View)
-			 */
-			@Override
-			public void onClick(View v) {
-				v.setEnabled(false);
-				refreshPlayers();
-				v.setEnabled(true);
-			}
-		});
+		// Crazy Eights specific setup
+		ct = new CrazyEightsCardTranslator();
+		gameRules = new CrazyEightGameRules();
 
 		game = CrazyEightsTabletGame.getInstance();
 		game.setup();
-
 		players = game.getPlayers();
-
 		gameContext.highlightPlayer(1);
 
 		for (Player p : players) {
@@ -193,21 +66,14 @@ public class CrazyEightsGameController implements GameController {
 			server.write(Constants.MSG_SETUP, p, p.getId());
 		}
 
-		placeInitialCards();
 		Card onDiscard = game.getDiscardPileTop();
-		server.write(Constants.MSG_IS_TURN, onDiscard, players.get(whoseTurn).getId());
-	}
 
-	/**
-	 * This will place the initial cards of each player
-	 */
-	private void placeInitialCards() {
 		mySM.shuffleCardsSound();
-
 		gameContext.updateUi();
-
 		// Update the indicator on the gameboard with the current suit
-		gameContext.updateSuit(game.getDiscardPileTop().getSuit());
+		gameContext.updateSuit(onDiscard.getSuit());
+
+		server.write(Constants.MSG_IS_TURN, onDiscard, players.get(whoseTurn).getId());
 	}
 
 	/* (non-Javadoc)
@@ -223,27 +89,27 @@ public class CrazyEightsGameController implements GameController {
 
 			switch (messageType) {
 			case Constants.MSG_PLAY_CARD:
-				discardReceivedCard(object);
+				playReceivedCard(object);
 				advanceTurn();
 				break;
 			case C8Constants.PLAY_EIGHT_C:
 				suitChosen = Constants.SUIT_CLUBS;
-				discardReceivedCard(object);
+				playReceivedCard(object);
 				advanceTurn();
 				break;
 			case C8Constants.PLAY_EIGHT_D:
 				suitChosen = Constants.SUIT_DIAMONDS;
-				discardReceivedCard(object);
+				playReceivedCard(object);
 				advanceTurn();
 				break;
 			case C8Constants.PLAY_EIGHT_H:
 				suitChosen = Constants.SUIT_HEARTS;
-				discardReceivedCard(object);
+				playReceivedCard(object);
 				advanceTurn();
 				break;
 			case C8Constants.PLAY_EIGHT_S:
 				suitChosen = Constants.SUIT_SPADES;
-				discardReceivedCard(object);
+				playReceivedCard(object);
 				advanceTurn();
 				break;
 			case Constants.MSG_DRAW_CARD:
@@ -254,101 +120,6 @@ public class CrazyEightsGameController implements GameController {
 				refreshPlayers();
 				break;
 			}
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see cs309.a1.shared.GameController#handleActivityResult(int, int, android.content.Intent)
-	 */
-	@Override
-	public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == GameboardActivity.DISCONNECTED) {
-			if (resultCode == Activity.RESULT_CANCELED) {
-				// We chose to drop the player, so let the Game know to do that
-				String playerId = data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
-				game.dropPlayer(playerId);
-				refreshPlayers();
-				unpause();
-			} else if (resultCode == Activity.RESULT_OK) {
-				// We chose to add a new player, so start the ConnectActivity
-				// with the deviceId and isReconnect parameters
-				Intent i = new Intent(gameContext, ConnectActivity.class);
-				gameContext.startActivityForResult(i, CHOOSE_PLAYER);
-
-				// We will initially drop the player, to handle the case where
-				// they don't actually reconnect a player in the Connect Screen.
-				game.dropPlayer(data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID));
-
-				// Unregister the receiver so that we don't get an annoying
-				// popup when we are on the activity
-				gameContext.unregisterReceiver();
-			}
-
-			return true;
-		} else if (requestCode == CHOOSE_PLAYER) {
-			// We are coming back from the reconnect player screen
-			if (Util.isDebugBuild()) {
-				Log.d(TAG, "onActivityResult: CHOOSE_PLAYER");
-			}
-
-			// Send the refresh signal to all players just to make
-			// sure everyone has the latest information
-			refreshPlayers();
-
-			// Unpause the players
-			unpause();
-
-			// Re-register the broadcast receivers
-			gameContext.registerReceiver();
-
-			// Update the gameboard with the correct player names
-			gameContext.updateNamesOnGameboard();
-
-			// Send the refresh signal (again) to all players just to make
-			// sure everyone has the latest information
-			refreshPlayers();
-		}
-
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see cs309.a1.shared.GameController#pause()
-	 */
-	@Override
-	public void pause() {
-		isPaused = true;
-
-		for (int i = 0; i < game.getNumPlayers(); i++) {
-			server.write(Constants.MSG_PAUSE, null, players.get(i).getId());
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see cs309.a1.shared.GameController#unpause()
-	 */
-	@Override
-	public void unpause() {
-		for (int i = 0; i < game.getNumPlayers(); i++) {
-			server.write(Constants.MSG_UNPAUSE, null, players.get(i).getId());
-		}
-
-		isPaused = false;
-
-		// If a computer was playing before the game was paused
-		// let them know that they can play now
-		if (isComputerPlaying) {
-			handler.sendEmptyMessage(0);
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see cs309.a1.shared.GameController#sendGameEnd()
-	 */
-	@Override
-	public void sendGameEnd() {
-		for (int i = 0; i < game.getNumPlayers(); i++) {
-			server.write(Constants.MSG_END_GAME, null, players.get(i).getId());
 		}
 	}
 
@@ -436,17 +207,7 @@ public class CrazyEightsGameController implements GameController {
 
 		String winnerName = players.get(whoWon).getName();
 
-		// Have the tablet verbally congratulate the winner
-		mySM.speak(gameContext.getResources().getString(R.string.congratulationMessage).replace("%s", winnerName));
-
-		// Start the GameResultsActivity
-		Intent gameResults = new Intent(gameContext, GameResultsActivity.class);
-		gameResults.putExtra(GameResultsActivity.WINNER_NAME, winnerName);
-		gameContext.startActivityForResult(gameResults, DECLARE_WINNER);
-
-		// Unregister the BroadcastReceiver so that we ignore disconnection
-		// messages from users
-		gameContext.unregisterReceiver();
+		super.declareWinner(winnerName);
 	}
 
 	/**
@@ -470,35 +231,12 @@ public class CrazyEightsGameController implements GameController {
 		}
 	}
 
-	/**
-	 * This will take in the received card and discard it
-	 * 
-	 * @param object
-	 *            This object is a JSON object that has been received as a
-	 *            discarded card
+
+	/* (non-Javadoc)
+	 * @see com.worthwhilegames.cardgames.shared.GameController#refreshPlayers()
 	 */
-	private void discardReceivedCard(String object) {
-		Card tmpCard = new Card(0, 0, 0, 0);
-		try {
-			JSONObject obj = new JSONObject(object);
-			int suit = obj.getInt(KEY_SUIT);
-			int value = obj.getInt(KEY_VALUE);
-			int id = obj.getInt(KEY_CARD_ID);
-			tmpCard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
-
-			game.discard(players.get(whoseTurn), tmpCard);
-		} catch (JSONException ex) {
-			ex.printStackTrace();
-		}
-
-		mySM.playCardSound();
-	}
-
-	/**
-	 * This will refresh the state of all the players by sending them their
-	 * cards and if it is their turn
-	 */
-	private void refreshPlayers() {
+	@Override
+	protected void refreshPlayers() {
 		// Unpause the game
 		unpause();
 
@@ -546,33 +284,6 @@ public class CrazyEightsGameController implements GameController {
 	}
 
 	/**
-	 * Start a computer's turn.
-	 * 
-	 * Starts another thread that waits, and then posts a message to the
-	 * mHandler letting it know it can play.
-	 */
-	private void startComputerTurn() {
-		isComputerPlaying = true;
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(Constants.COMPUTER_WAIT_TIME);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
-				if (Util.isDebugBuild()) {
-					Log.d(TAG, "startComputerTurn: letting computer know it can play");
-				}
-
-				handler.sendEmptyMessage(0);
-			}
-		}).start();
-	}
-
-	/**
 	 * This will play for a computer player based on the difficulty level. either play or draw a card.
 	 * This will be called after the PlayComputerTurnActivity has waited for the appropriate amount of time.
 	 * level 0 	should just loop through the cards to find one that it is allowed to play
@@ -582,7 +293,8 @@ public class CrazyEightsGameController implements GameController {
 	 *
 	 * level 2 	nothing yet
 	 */
-	private void playComputerTurn() {
+	@Override
+	protected void playComputerTurn() {
 		Card onDiscard = game.getDiscardPileTop();
 		if (onDiscard.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
 			onDiscard = new Card(suitChosen, onDiscard.getValue(), onDiscard.getResourceId(), onDiscard.getIdNum());
@@ -803,6 +515,8 @@ public class CrazyEightsGameController implements GameController {
 				mySM.drawCardSound();
 			}
 		}
+		//the computer has finished, advance the turn
+		advanceTurn();
 	}
 
 	/**
