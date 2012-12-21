@@ -187,6 +187,8 @@ public class EuchreGameController extends GameController {
 			} else {
 				Log.d(TAG, "It isn't " + messageSender + "'s turn - ignoring message");
 				Log.w(TAG, "messageSender: " + messageSender + " whoseTurn: " + whoseTurn);
+				// refresh players to get everyone to the same state.
+				refreshPlayers();
 			}
 		}
 	}
@@ -523,14 +525,14 @@ public class EuchreGameController extends GameController {
 				this.boldBettingTeam();
 				gameContext.updateSuit(euchreGame.getTrump());
 
-				//set the turn to the first player to play and go
-				whoseTurn = euchreGame.getTrickLeader();
-
-
 				euchreGame.setPlayerGoingAlone(bet.getGoAlone());
 				if(euchreGame.isPlayerGoingAlone() && euchreGame.getTrickLeader() == euchreGame.getPlayerBeingSkipped() ){
 					euchreGame.setTrickLeader(euchreGame.getTrickLeader() + 1);
 				}
+
+				//set the turn to the first player to play and go
+				whoseTurn = euchreGame.getTrickLeader();
+
 				euchreGame.clearCardsPlayed();
 
 				currentState = PLAY_LEAD_CARD;

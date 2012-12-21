@@ -126,6 +126,8 @@ public class CrazyEightsGameController extends GameController {
 			} else {
 				Log.d(TAG, "It isn't " + messageSender + "'s turn - ignoring message");
 				Log.w(TAG, "messageSender: " + messageSender + " whoseTurn: " + whoseTurn);
+				// refresh players to get everyone to the same state.
+				refreshPlayers();
 			}
 		}
 	}

@@ -340,9 +340,7 @@ public class EuchreTabletGame implements Game{
 	@Override
 	public boolean isGameOver(Player player) {
 		//TODO make the match score limit a setting?
-
-		//TODO TODO undo this
-		return matchScores[0] >= 3/*EUCHRE_SCORE_LIMIT*/ || matchScores[1] >= EUCHRE_SCORE_LIMIT;
+		return matchScores[0] >= EUCHRE_SCORE_LIMIT || matchScores[1] >= EUCHRE_SCORE_LIMIT;
 	}
 
 	public int getWinningTeam(){
