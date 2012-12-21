@@ -340,7 +340,9 @@ public class EuchreTabletGame implements Game{
 	@Override
 	public boolean isGameOver(Player player) {
 		//TODO make the match score limit a setting?
-		return matchScores[0] >= EUCHRE_SCORE_LIMIT || matchScores[1] >= EUCHRE_SCORE_LIMIT;
+
+		//TODO TODO undo this
+		return matchScores[0] >= 3/*EUCHRE_SCORE_LIMIT*/ || matchScores[1] >= EUCHRE_SCORE_LIMIT;
 	}
 
 	public int getWinningTeam(){
@@ -601,7 +603,7 @@ public class EuchreTabletGame implements Game{
 
 	@Override
 	public int getMaxNumPlayers() {
-		if (players.isEmpty()) {
+		if (players.isEmpty() || !gameActive) {
 			return EuchreConstants.MAX_NUM_PLAYERS;
 		} else {
 			int count = 0;
