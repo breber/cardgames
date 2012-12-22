@@ -189,7 +189,7 @@ public class EuchrePlayerController implements PlayerController {
 		mySM = SoundManager.getInstance(context);
 		cardHand = cardHandGiven;
 		playerName = "";
-		playerHandLayout = (LinearLayout)  playerContext.findViewById(R.id.playerCardContainer);
+		playerHandLayout = (LinearLayout) playerContext.findViewById(R.id.playerCardContainer);
 
 		// set up play assist mode
 		SharedPreferences sharedPreferences = playerContext.getSharedPreferences(PREFERENCES, 0);
@@ -242,7 +242,7 @@ public class EuchrePlayerController implements PlayerController {
 				isTurn = true;
 				this.setCardLead(object);
 				currentState = messageType;
-				if(currentState == SECOND_ROUND_BETTING){
+				if(currentState == SECOND_ROUND_BETTING) {
 					trumpSuit = -1;
 				} else {
 					trumpSuit = cardLead.getSuit();
@@ -288,7 +288,7 @@ public class EuchrePlayerController implements PlayerController {
 				isTurn = true;
 				break;
 			case Constants.MSG_SUGGESTED_CARD:
-				if(isTurn && object != null && isPlayAssistMode){
+				if (isTurn && object != null && isPlayAssistMode) {
 					try {
 						JSONObject obj = new JSONObject(object);
 						int id = obj.getInt(Constants.KEY_CARD_ID);
@@ -296,7 +296,7 @@ public class EuchrePlayerController implements PlayerController {
 
 						// Let the UI know which card was suggested
 						int selectedId = -1;
-						if(cardSelected != null){
+						if (cardSelected != null) {
 							selectedId = cardSelected.getIdNum();
 						}
 						playerContext.setSelected(selectedId, cardSuggestedId);
@@ -336,11 +336,11 @@ public class EuchrePlayerController implements PlayerController {
 				}
 
 
-				if((currentState == FIRST_ROUND_BETTING ||  currentState == SECOND_ROUND_BETTING)){
-					if(isTurn && isBettingNow){
-						//don't want to open 2 betting windows
+				if ((currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING)) {
+					if (isTurn && isBettingNow) {
+						// don't want to open 2 betting windows
 						break;
-					} else if( isTurn && !isBettingNow){
+					} else if (isTurn && !isBettingNow) {
 						bettingView();
 						setButtonsEnabled(true);
 					} else {
@@ -351,7 +351,7 @@ public class EuchrePlayerController implements PlayerController {
 						isBettingNow = true;
 					}
 					break;
-				} else if(isTurn && currentState == PICK_IT_UP){
+				} else if (isTurn && currentState == PICK_IT_UP) {
 					dealerDiscardView();
 				} else {
 					playingView();
@@ -376,7 +376,6 @@ public class EuchrePlayerController implements PlayerController {
 				break;
 			}
 		}
-
 	}
 
 	@Override
@@ -393,10 +392,12 @@ public class EuchrePlayerController implements PlayerController {
 	private OnClickListener playClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			if ( (isTurn && cardSelected != null) &&
-					currentState != FIRST_ROUND_BETTING && currentState != SECOND_ROUND_BETTING &&
-					( currentState == PICK_IT_UP || currentState == PLAY_LEAD_CARD ||
-					gameRules.checkCard(cardSelected, trumpSuit, cardLead, cardHand) ) && cardHand.size() != 0) {
+			if ((isTurn && cardSelected != null)
+					&& currentState != FIRST_ROUND_BETTING
+					&& currentState != SECOND_ROUND_BETTING
+					&& (currentState == PICK_IT_UP
+					|| currentState == PLAY_LEAD_CARD || gameRules.checkCard(cardSelected, trumpSuit, cardLead,
+							cardHand)) && cardHand.size() != 0) {
 				// play card or discard if it is pick_it_up mode
 
 				connection.write(currentState, cardSelected);
@@ -426,7 +427,6 @@ public class EuchrePlayerController implements PlayerController {
 				cardSuggestedId = -1;
 				playerContext.setSelected(-1, cardSuggestedId);
 			}
-
 		}
 	};
 

@@ -218,8 +218,6 @@ public class EuchreGameController extends GameController {
 		return false;
 	}
 
-
-
 	/* (non-Javadoc)
 	 * @see cs309.a1.shared.GameController#unpause()
 	 */
@@ -230,7 +228,7 @@ public class EuchreGameController extends GameController {
 
 		// If the game is paused while the cards were waiting to
 		// be removed then we should remove them now
-		if(isWaitingToClearCards){
+		if (isWaitingToClearCards) {
 			cardPlayingHandler.sendEmptyMessage(0);
 		}
 	}
@@ -243,7 +241,7 @@ public class EuchreGameController extends GameController {
 	private void advanceTurn() {
 		incrementWhoseTurn();
 
-		if(whoseTurn == euchreGame.getTrickLeader()){
+		if (whoseTurn == euchreGame.getTrickLeader()) {
 			gameContext.updateUi();
 			startTrickEndWait();
 			return;
@@ -267,7 +265,7 @@ public class EuchreGameController extends GameController {
 		euchreGame.determineTrickWinner();
 
 		// Round is over if a player from both teams is out of cards
-		if(players.get(0).getCards().size() == 0 && players.get(1).getCards().size() == 0){
+		if (players.get(0).getCards().size() == 0 && players.get(1).getCards().size() == 0) {
 			euchreGame.endRound();
 			if(euchreGame.isGameOver(players.get(0))){
 				declareWinner(euchreGame.getWinningTeam());
@@ -322,7 +320,7 @@ public class EuchreGameController extends GameController {
 		}
 
 		String winner1Name = players.get(teamWhoWon).getName();
-		String winner2Name = players.get(teamWhoWon+2).getName();
+		String winner2Name = players.get(teamWhoWon + 2).getName();
 
 		String winningTeam = winner1Name + " and " + winner2Name;
 
@@ -371,7 +369,6 @@ public class EuchreGameController extends GameController {
 				e.printStackTrace();
 			}
 		}
-
 
 		// If the next player is a computer, and the computer isn't currently
 		// playing, have the computer initiate a move
@@ -456,7 +453,7 @@ public class EuchreGameController extends GameController {
 	 */
 	@Override
 	protected void playComputerTurn() {
-		if( currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING){
+		if (currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING) {
 			EuchreBet compBet = computerPlayer.getComputerBet(whoseTurn, currentState, euchreGame.getCardLead().getSuit());
 			this.handleBetting(currentState, compBet.toString());
 		} else {
@@ -477,20 +474,20 @@ public class EuchreGameController extends GameController {
 				break;
 			}
 
-			if( currentState == PICK_IT_UP ) {
-				//Get which card they discarded and discard it.
+			if (currentState == PICK_IT_UP) {
+				// Get which card they discarded and discard it.
 				currentState = PLAY_LEAD_CARD;
 				euchreGame.discard(players.get(whoseTurn), cardSelected);
 				euchreGame.clearCardsPlayed();
 
-				//start the first turn of the round
+				// start the first turn of the round
 				whoseTurn = euchreGame.getTrickLeader();
 				sendNextTurn(currentState, euchreGame.getCardLead());
 				return;
 			}
 
-			if( currentState == PLAY_LEAD_CARD ) {
-				//set card lead
+			if (currentState == PLAY_LEAD_CARD) {
+				// set card lead
 				euchreGame.setCardLead(cardSelected);
 			}
 			mySM.playCardSound();
@@ -498,8 +495,6 @@ public class EuchreGameController extends GameController {
 			advanceTurn();
 		}
 	}
-
-
 
 	/**
 	 * This will handle the betting that is done by the players
@@ -520,9 +515,9 @@ public class EuchreGameController extends GameController {
 		}
 
 		//first round of betting
-		if(round == FIRST_ROUND_BETTING){
-			if(bet.getPlaceBet()){
-				if(bet.getTrumpSuit() == euchreGame.getCardLead().getSuit()){
+		if (round == FIRST_ROUND_BETTING) {
+			if (bet.getPlaceBet()) {
+				if (bet.getTrumpSuit() == euchreGame.getCardLead().getSuit()) {
 					//set trump and trump caller
 					euchreGame.setTrump(bet.getTrumpSuit());
 					euchreGame.setPlayerCalledTrump(whoseTurn);
@@ -532,10 +527,10 @@ public class EuchreGameController extends GameController {
 					gameContext.updateSuit(euchreGame.getTrump());
 
 					euchreGame.setPlayerGoingAlone(bet.getGoAlone());
-					if(euchreGame.isPlayerGoingAlone() && euchreGame.getTrickLeader() == euchreGame.getPlayerBeingSkipped() ){
+					if (euchreGame.isPlayerGoingAlone() && euchreGame.getTrickLeader() == euchreGame.getPlayerBeingSkipped()) {
 						euchreGame.setTrickLeader(euchreGame.getTrickLeader() + 1);
 					}
-					if( !euchreGame.isPlayerGoingAlone() || euchreGame.getDealer() != euchreGame.getPlayerBeingSkipped()){
+					if (!euchreGame.isPlayerGoingAlone() || euchreGame.getDealer() != euchreGame.getPlayerBeingSkipped()) {
 						whoseTurn = euchreGame.getDealer();
 						currentState = PICK_IT_UP;
 						players.get(euchreGame.getDealer()).addCard(euchreGame.getCardLead());
@@ -553,23 +548,23 @@ public class EuchreGameController extends GameController {
 					return;
 				}
 			} else {
-				if(whoseTurn == euchreGame.getDealer()){
-					//start betting round 2
+				if (whoseTurn == euchreGame.getDealer()) {
+					// start betting round 2
 					currentState = SECOND_ROUND_BETTING;
 				}
 				incrementWhoseTurn();
 			}
 
 			//second round of betting
-		} else if(round == SECOND_ROUND_BETTING) {
-			if(bet.getPlaceBet()){
+		} else if (round == SECOND_ROUND_BETTING) {
+			if (bet.getPlaceBet()) {
 				euchreGame.setTrump(bet.getTrumpSuit());
 				euchreGame.setPlayerCalledTrump(whoseTurn);
 				this.boldBettingTeam();
 				gameContext.updateSuit(euchreGame.getTrump());
 
 				euchreGame.setPlayerGoingAlone(bet.getGoAlone());
-				if(euchreGame.isPlayerGoingAlone() && euchreGame.getTrickLeader() == euchreGame.getPlayerBeingSkipped() ){
+				if (euchreGame.isPlayerGoingAlone() && euchreGame.getTrickLeader() == euchreGame.getPlayerBeingSkipped()) {
 					euchreGame.setTrickLeader(euchreGame.getTrickLeader() + 1);
 				}
 
@@ -581,7 +576,7 @@ public class EuchreGameController extends GameController {
 				currentState = PLAY_LEAD_CARD;
 				refreshPlayers();
 			} else {
-				if(whoseTurn != euchreGame.getDealer()){
+				if (whoseTurn != euchreGame.getDealer()) {
 					incrementWhoseTurn();
 				}
 				//if it is the second round and the dealer
@@ -594,13 +589,12 @@ public class EuchreGameController extends GameController {
 		sendNextTurn(currentState, euchreGame.getCardLead());
 	}
 
-
 	/**
 	 * Sends the next turn information to either the computer or player.
 	 * @param state the message type to send to the player or computer
 	 * @param card the card to give the player or computer
 	 */
-	private void sendNextTurn(int state, Card card){
+	private void sendNextTurn(int state, Card card) {
 		currentState = state;
 		if (players.get(whoseTurn).getIsComputer()) {
 			if (!isComputerPlaying) {
@@ -612,7 +606,7 @@ public class EuchreGameController extends GameController {
 		}
 
 		// Highlight the name of the current player
-		gameContext.highlightPlayer(whoseTurn+1);
+		gameContext.highlightPlayer(whoseTurn + 1);
 
 		gameContext.updateUi();
 	}
@@ -620,14 +614,14 @@ public class EuchreGameController extends GameController {
 	/**
 	 * This function will change whose turn it is to the next player.
 	 */
-	private void incrementWhoseTurn(){
+	private void incrementWhoseTurn() {
 		if (whoseTurn < game.getNumPlayers() - 1) {
 			whoseTurn++;
 		} else {
 			whoseTurn = 0;
 		}
 
-		if( euchreGame.isPlayerGoingAlone() && whoseTurn == euchreGame.getPlayerBeingSkipped() ){
+		if (euchreGame.isPlayerGoingAlone()	&& whoseTurn == euchreGame.getPlayerBeingSkipped()) {
 			incrementWhoseTurn();
 		}
 	}
@@ -635,14 +629,12 @@ public class EuchreGameController extends GameController {
 	/**
 	 * Bolds the betting team's names
 	 */
-	private void boldBettingTeam(){
+	private void boldBettingTeam() {
 		gameContext.unboldAllPlayerText();
-		for(int i = 0; i < 4; i++){
-			if(euchreGame.getPlayerCalledTrump() % 2 == i %2){
+		for (int i = 0; i < 4; i++) {
+			if (euchreGame.getPlayerCalledTrump() % 2 == i % 2) {
 				gameContext.boldPlayerText(i);
 			}
 		}
 	}
-
-
 }

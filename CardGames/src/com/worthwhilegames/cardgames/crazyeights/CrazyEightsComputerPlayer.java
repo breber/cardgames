@@ -84,7 +84,7 @@ public class CrazyEightsComputerPlayer {
 			}
 
 			//computer difficulty Medium
-		} else if (difficulty.equals(Constants.MEDIUM) ) {
+		} else if (difficulty.equals(Constants.MEDIUM)) {
 
 			List<Card> sameSuit = new ArrayList<Card>();
 			List<Card> sameNum = new ArrayList<Card>();
@@ -95,7 +95,8 @@ public class CrazyEightsComputerPlayer {
 
 			for (Card c : cards) {
 				//checks for 8s and jokers
-				if( (c.getValue() == C8Constants.EIGHT_CARD_NUMBER || c.getSuit() == Constants.SUIT_JOKER) && gameRules.checkCard(c, onDiscard) ){
+				if ((c.getValue() == C8Constants.EIGHT_CARD_NUMBER || c.getSuit() == Constants.SUIT_JOKER) &&
+						gameRules.checkCard(c, onDiscard)) {
 					special.add(c);
 					continue;
 				}
@@ -107,44 +108,41 @@ public class CrazyEightsComputerPlayer {
 				}
 
 				//checks for cards of the same suit then cards of the same index
-				if (c.getSuit() == onDiscard.getSuit() && gameRules.checkCard(c, onDiscard) ) {
+				if (c.getSuit() == onDiscard.getSuit() && gameRules.checkCard(c, onDiscard)) {
 					sameSuit.add(c);
-				} else if (c.getValue() == onDiscard.getValue() && gameRules.checkCard(c, onDiscard) ) {
+				} else if (c.getValue() == onDiscard.getValue() && gameRules.checkCard(c, onDiscard)) {
 					sameNum.add(c);
 				}
 			}
 
-
-
 			//see if there is more of another suit that the computer can change it to.
 			boolean moreOfOtherSuit = false;
 			for (Card c : sameNum) {
-				if (suits[c.getSuit()] > suits[onDiscard.getSuit()]){
+				if (suits[c.getSuit()] > suits[onDiscard.getSuit()]) {
 					moreOfOtherSuit = true;
 					break;
 				}
 			}
 
-
-			if (onDiscard.getSuit() == Constants.SUIT_JOKER){ //for a joker
+			if (onDiscard.getSuit() == Constants.SUIT_JOKER) { //for a joker
 				for (Card c : cards){
-					if (c.getSuit() == maxSuitIndex && c.getValue() != Constants.EIGHT_VALUE){
+					if (c.getSuit() == maxSuitIndex && c.getValue() != Constants.EIGHT_VALUE) {
 						cardSelected = c;
 						break;
 					}
 				}
-				if(cardSelected == null){
-					for (Card c : cards){
-						if (c.getSuit() == maxSuitIndex){
+				if (cardSelected == null) {
+					for (Card c : cards) {
+						if (c.getSuit() == maxSuitIndex) {
 							cardSelected = c;
 							break;
 						}
 					}
 				}
-			} else if (moreOfOtherSuit && sameNum.size() > 0 ) { //choose a card of the same number that we can change the suit with
+			} else if (moreOfOtherSuit && sameNum.size() > 0) { //choose a card of the same number that we can change the suit with
 				cardSelected = sameNum.get(0);
 				for (Card c : sameNum) {
-					if (suits[c.getSuit()] > suits[cardSelected.getSuit()]){
+					if (suits[c.getSuit()] > suits[cardSelected.getSuit()]) {
 						cardSelected = c;
 					}
 				}
@@ -153,7 +151,7 @@ public class CrazyEightsComputerPlayer {
 				boolean hasAnotherCardWithIndex = false;
 				for (Card c : sameSuit) {
 					for (Card c1 : cards) {
-						if (!c.equals(c1) && c.getValue() == c1.getValue() && suits[c.getSuit()] <= suits[c1.getSuit()] ){
+						if (!c.equals(c1) && c.getValue() == c1.getValue() && suits[c.getSuit()] <= suits[c1.getSuit()]) {
 							cardSelected = c;
 							hasAnotherCardWithIndex = true;
 							break;
@@ -163,7 +161,7 @@ public class CrazyEightsComputerPlayer {
 						break;
 					}
 				}
-			} else if (special.size() > 0){ //play a special card as last resort
+			} else if (special.size() > 0) { //play a special card as last resort
 				cardSelected = special.get(0);
 			} // else { no card selected }
 
@@ -173,12 +171,12 @@ public class CrazyEightsComputerPlayer {
 
 			//get game state, clone it, send to recursive function
 			List<List<Card>> cardsClone = new ArrayList<List<Card>>();
-			for(Player p : players){
+			for (Player p : players) {
 				cardsClone.add(new ArrayList<Card>(p.getCards()));
 			}
 			csc = new CardScoreCalculator(whoseTurn, cardsClone);
 			Card firstOnDiscard = game.getDiscardPileTop();
-			if(firstOnDiscard.getValue() == C8Constants.EIGHT_CARD_NUMBER){
+			if (firstOnDiscard.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
 				firstOnDiscard = new Card(suitChosen, firstOnDiscard.getValue(), firstOnDiscard.getResourceId(), firstOnDiscard.getIdNum());
 			}
 			Card curOnDiscard = game.getDiscardPileTop();
@@ -195,32 +193,32 @@ public class CrazyEightsComputerPlayer {
 			List<Card> drawPile = new ArrayList<Card>(game.getShuffledDeck());
 			double tmpScore = 0;
 			Card cardDrawn = null;
-			int movesArraySize = cardsClone.get(whoseTurn).size() +1;
+			int movesArraySize = cardsClone.get(whoseTurn).size() + 1;
 			double moves[] = new double[movesArraySize];
 
 			//TODO: make this a constant
 			int recDepth = 6 + players.size();
 
-			int minIndex=0;
+			int minIndex = 0;
 
 			//recursive call
-			for(int i = 0; i<cardsClone.get(whoseTurn).size(); i++){
+			for (int i = 0; i < cardsClone.get(whoseTurn).size(); i++) {
 				curOnDiscard = firstOnDiscard;
 				Card tmpCard = cardsClone.get(whoseTurn).get(0);
 				cardsClone.get(whoseTurn).remove(0);
-				if(gameRules.checkCard(tmpCard, curOnDiscard)){
+				if (gameRules.checkCard(tmpCard, curOnDiscard)) {
 					tmpScore = csc.calculateScorePlayed(tmpCard, curOnDiscard, whoseTurn);
 					curOnDiscard = tmpCard;
-					if(curOnDiscard.getValue() == C8Constants.EIGHT_CARD_NUMBER){
+					if (curOnDiscard.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
 						curOnDiscard = new Card(suitToChoose, curOnDiscard.getValue(), curOnDiscard.getResourceId(), curOnDiscard.getIdNum());
 						//TODO: make the suitToChoose be calculated using the future recursion stuff.
 						//		Check suit chosen for all four suits to see which brings the best result.
 						double suitChoosingScores[] = new double[4];
 						int bestSuitIndex = 0;
-						for(int k = 0; k < 4; k++){
+						for (int k = 0; k < 4; k++) {
 							curOnDiscard = new Card(k, curOnDiscard.getValue(), curOnDiscard.getResourceId(), curOnDiscard.getIdNum());
 							suitChoosingScores[k] = findBestMove(whoseTurn, nextTurnIndex, cardsClone, curOnDiscard, drawPile, recDepth);
-							if(suitChoosingScores[k] < suitChoosingScores[bestSuitIndex]){
+							if (suitChoosingScores[k] < suitChoosingScores[bestSuitIndex]) {
 								bestSuitIndex = k;
 							}
 						}
@@ -230,7 +228,7 @@ public class CrazyEightsComputerPlayer {
 						tmpScore += findBestMove(whoseTurn, nextTurnIndex, cardsClone, curOnDiscard, drawPile, recDepth);
 					}
 					moves[i] = tmpScore;
-					if(moves[i] < moves[minIndex]){
+					if (moves[i] < moves[minIndex]) {
 						minIndex = i;
 					}
 				} else {
@@ -241,7 +239,7 @@ public class CrazyEightsComputerPlayer {
 			}
 
 			//see how we do if we draw
-			if(!drawPile.isEmpty() && moves[minIndex]>= 30000){
+			if (!drawPile.isEmpty() && moves[minIndex]>= 30000) {
 				cardDrawn = drawPile.get(0);
 				cardsClone.get(whoseTurn).add(cardDrawn);
 				drawPile.remove(0);
@@ -251,23 +249,22 @@ public class CrazyEightsComputerPlayer {
 				cardsClone.get(whoseTurn).remove(cardDrawn);
 				moves[movesArraySize-1] = tmpScore;
 				//if there is no card to play then draw.
-				if(moves[movesArraySize-1] < moves[minIndex]){
+				if (moves[movesArraySize-1] < moves[minIndex]) {
 					minIndex = movesArraySize-1;
 				}
 			}
 
-			if(minIndex < movesArraySize-1){
+			if (minIndex < movesArraySize - 1) {
 				cardSelected = players.get(whoseTurn).getCards().get(minIndex);
 
-				if(!gameRules.checkCard(cardSelected, onDiscard)){
-					//should never get here, this would be an error.
+				if (!gameRules.checkCard(cardSelected, onDiscard)) {
+					// should never get here, this would be an error.
 
 					cardSelected = null;
 				}
 			} else {
 				cardSelected = null;
 			}
-
 		}
 
 		return cardSelected;
@@ -281,7 +278,7 @@ public class CrazyEightsComputerPlayer {
 	 */
 	public int getSuitChosen(int whoseTurn, List<Card> cards) {
 		// Hard
-		if(difficulty.equals(Constants.HARD) && suitChosenHard !=-1) {
+		if (difficulty.equals(Constants.HARD) && suitChosenHard != -1) {
 			return suitChosenHard;
 		}
 
@@ -332,7 +329,7 @@ public class CrazyEightsComputerPlayer {
 		Card firstOnDiscard = curOnDiscard;
 		double tmpScore = 0;
 		Card cardDrawn = null;
-		int movesArraySize = cardsClone.get(playerIndex).size() +1;
+		int movesArraySize = cardsClone.get(playerIndex).size() + 1;
 		double[] moves = new double[movesArraySize];
 
 		int nextTurnIndex = playerIndex;
@@ -351,7 +348,7 @@ public class CrazyEightsComputerPlayer {
 			cardsClone.get(playerIndex).remove(0);
 			if (gameRules.checkCard(tmpCard, curOnDiscard)) {
 				tmpScore = csc.calculateScorePlayed(tmpCard, curOnDiscard, playerIndex);
-				if (tmpScore >= 10000 || ((whoseTurn == playerIndex) && tmpScore <= -10000)){
+				if (tmpScore >= 10000 || ((whoseTurn == playerIndex) && tmpScore <= -10000)) {
 					//we can win with this player so game over.
 					cardsClone.get(playerIndex).add(tmpCard);
 					return tmpScore;
@@ -366,7 +363,7 @@ public class CrazyEightsComputerPlayer {
 					maxIndex = i;
 				}
 			} else {
-				if(whoseTurn == playerIndex){
+				if(whoseTurn == playerIndex) {
 					//very high number so it is never chosen by current player
 					moves[i] = 30000;
 				} else {
@@ -378,7 +375,7 @@ public class CrazyEightsComputerPlayer {
 		}
 
 		// try drawing a card, only if there is a draw pile and there is not another card that can be played
-		if (!drawPile.isEmpty() && (moves[maxIndex] >=30000 || moves[maxIndex] <= -30000)){
+		if (!drawPile.isEmpty() && (moves[maxIndex] >= 30000 || moves[maxIndex] <= -30000)) {
 			cardDrawn = drawPile.get(0);
 			cardsClone.get(playerIndex).add(cardDrawn);
 			drawPile.remove(0);
@@ -414,7 +411,4 @@ public class CrazyEightsComputerPlayer {
 
 		return moves[maxIndex];
 	}
-
-
-
 }

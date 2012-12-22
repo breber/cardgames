@@ -151,7 +151,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 		mySM = SoundManager.getInstance(context);
 		cardHand = cardHandGiven;
 		playerName = "";
-		playerHandLayout = (LinearLayout)  playerContext.findViewById(R.id.playerCardContainer);
+		playerHandLayout = (LinearLayout) playerContext.findViewById(R.id.playerCardContainer);
 
 		// set up play assist mode
 		SharedPreferences sharedPreferences = playerContext.getSharedPreferences(PREFERENCES, 0);

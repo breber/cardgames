@@ -341,12 +341,11 @@ public class CrazyEightsGameController extends GameController {
 	 */
 	@Override
 	protected void playComputerTurn() {
-
 		Card cardSelected = null;
 
 		cardSelected = computerPlayer.getCardOnTurn(whoseTurn, suitChosen);
 
-		if(cardSelected != null && cardSelected.getValue() == C8Constants.EIGHT_CARD_NUMBER){
+		if (cardSelected != null && cardSelected.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
 			suitChosen = computerPlayer.getSuitChosen(whoseTurn, players.get(whoseTurn).getCards());
 		}
 
