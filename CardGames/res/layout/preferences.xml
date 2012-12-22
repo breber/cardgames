@@ -117,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:prompt="@string/connectionType" />
             </TableRow>
-            
+
             <TableRow>
 
                 <com.worthwhilegames.cardgames.shared.TextView

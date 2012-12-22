@@ -41,20 +41,21 @@
         <item>@raw/shuffling_cards_2</item>
         <item>@raw/shuffling_cards_3</item>
     </array>
+
     <string-array name="betPhrases">
-        <item >%s what do you bet?</item>
-        <item >%s I know you want to go alone.</item>
-        <item >They don\'t stand a chance against you %s go for it.</item>
-        <item >Go ahead %s, bet the farm!</item>
-        <item >%s, please bet. Or not?</item>
-        <item >%s, I know this is a tough decision. Take your time........,,,,... choose now!</item>
+        <item>%s what do you bet?</item>
+        <item>%s I know you want to go alone.</item>
+        <item>They don\'t stand a chance against you %s go for it.</item>
+        <item>Go ahead %s, bet the farm!</item>
+        <item>%s, please bet. Or not?</item>
+        <item>%s, I know this is a tough decision. Take your time........,,,,... choose now!</item>
     </string-array>
     <string-array name="pickItUpPhrases">
-        <item >Pick it up %s.</item>
-        <item >Choose a card to discard %s.</item>
-        <item >%s, pick it up</item>
-        <item >Beam me up %s!</item>
-        <item >%s, ... ... ... push the button.</item>
+        <item>Pick it up %s.</item>
+        <item>Choose a card to discard %s.</item>
+        <item>%s, pick it up</item>
+        <item>Beam me up %s!</item>
+        <item>%s, ... ... ... push the button.</item>
     </string-array>
 
 </resources>
