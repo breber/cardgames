@@ -3,7 +3,7 @@ package com.worthwhilegames.cardgames.euchre;
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.CardTranslator;
 
-public class EuchreCardTranslator implements CardTranslator{
+public class EuchreCardTranslator implements CardTranslator {
 
 	@Override
 	public int getResourceForCardWithId(int cardId) {
@@ -55,7 +55,7 @@ public class EuchreCardTranslator implements CardTranslator{
 			return R.drawable.spades_q;
 		} else if (cardId == 51) {
 			return R.drawable.spades_k;
-		} 
+		}
 
 		return 0;
 	}

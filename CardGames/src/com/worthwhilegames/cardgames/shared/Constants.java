@@ -299,6 +299,11 @@ public class Constants {
 	 */
 	public static final int MSG_PLAYER_NAME = 12;
 
+	/**
+	 * message type for suggested card
+	 */
+	public static final int MSG_SUGGESTED_CARD = 13;
+
 	/* Preferences Options */
 	/**
 	 * The name of the shared preferences to be used when getting the object
@@ -370,6 +375,12 @@ public class Constants {
 	 * A constant to represent cheater mode
 	 */
 	public static final String PREF_CHEATER_MODE = "CHEATERMODE";
+
+	/**
+	 * A constant to represent a key in the shared preferences for the speech
+	 * volume option
+	 */
+	public static final String PREF_PLAY_ASSIST_MODE = "PLAY ASSIST MODE";
 
 	/* AI Constants */
 	/**

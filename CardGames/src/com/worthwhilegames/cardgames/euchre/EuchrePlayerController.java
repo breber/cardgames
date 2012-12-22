@@ -6,19 +6,20 @@ import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PLAY_LEAD_CAR
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ROUND_OVER;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.SECOND_ROUND_BETTING;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP;
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_CURRENT_STATE;
 import static com.worthwhilegames.cardgames.shared.Constants.KEY_CARD_ID;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_CURRENT_STATE;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_SUIT;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_LOSER;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_PLAY_CARD;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_REFRESH;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_SETUP;
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_SUIT;
+import static com.worthwhilegames.cardgames.shared.Constants.MSG_WINNER;
+import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.MSG_WINNER;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -127,6 +129,16 @@ public class EuchrePlayerController implements PlayerController {
 	private Card cardSelected;
 
 	/**
+	 * The id of the suggested Card
+	 */
+	private int cardSuggestedId = -1;
+
+	/**
+	 * This is the setting if the player would like to see card suggestions
+	 */
+	boolean isPlayAssistMode = false;
+
+	/**
 	 * The client that is used to send messages to the GameBoard
 	 */
 	private ConnectionClient connection;
@@ -177,7 +189,11 @@ public class EuchrePlayerController implements PlayerController {
 		mySM = SoundManager.getInstance(context);
 		cardHand = cardHandGiven;
 		playerName = "";
-		playerHandLayout = (LinearLayout)  playerContext.findViewById(R.id.playerCardContainer);
+		playerHandLayout = (LinearLayout) playerContext.findViewById(R.id.playerCardContainer);
+
+		// set up play assist mode
+		SharedPreferences sharedPreferences = playerContext.getSharedPreferences(PREFERENCES, 0);
+		isPlayAssistMode = sharedPreferences.getBoolean(Constants.PREF_PLAY_ASSIST_MODE, false);
 
 		gameRules = new EuchreGameRules();
 		ct = new EuchreCardTranslator();
@@ -218,6 +234,7 @@ public class EuchrePlayerController implements PlayerController {
 				}
 				setButtonsEnabled(false);
 				isTurn = false;
+				cardSuggestedId = -1;
 				break;
 			case FIRST_ROUND_BETTING: /* purposely have both here */
 			case SECOND_ROUND_BETTING:
@@ -225,7 +242,7 @@ public class EuchrePlayerController implements PlayerController {
 				isTurn = true;
 				this.setCardLead(object);
 				currentState = messageType;
-				if(currentState == SECOND_ROUND_BETTING){
+				if(currentState == SECOND_ROUND_BETTING) {
 					trumpSuit = -1;
 				} else {
 					trumpSuit = cardLead.getSuit();
@@ -270,6 +287,23 @@ public class EuchrePlayerController implements PlayerController {
 				setButtonsEnabled(true);
 				isTurn = true;
 				break;
+			case Constants.MSG_SUGGESTED_CARD:
+				if (isTurn && object != null && isPlayAssistMode) {
+					try {
+						JSONObject obj = new JSONObject(object);
+						int id = obj.getInt(Constants.KEY_CARD_ID);
+						cardSuggestedId = id;
+
+						// Let the UI know which card was suggested
+						int selectedId = -1;
+						if (cardSelected != null) {
+							selectedId = cardSelected.getIdNum();
+						}
+						playerContext.setSelected(selectedId, cardSuggestedId);
+					} catch (JSONException ex) {
+						ex.printStackTrace();
+					}
+				}
 			case MSG_REFRESH:
 				// Parse the refresh Message
 				try {
@@ -302,21 +336,22 @@ public class EuchrePlayerController implements PlayerController {
 				}
 
 
-				if((currentState == FIRST_ROUND_BETTING ||  currentState == SECOND_ROUND_BETTING)){
-					if(isTurn && isBettingNow){
-						//don't want to open 2 betting windows
+				if ((currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING)) {
+					if (isTurn && isBettingNow) {
+						// don't want to open 2 betting windows
 						break;
-					} else if( isTurn && !isBettingNow){
+					} else if (isTurn && !isBettingNow) {
 						bettingView();
 						setButtonsEnabled(true);
 					} else {
 						playingView();
 						isTurn = false;
+						cardSuggestedId = -1;
 						setButtonsEnabled(isTurn);
 						isBettingNow = true;
 					}
 					break;
-				} else if(isTurn && currentState == PICK_IT_UP){
+				} else if (isTurn && currentState == PICK_IT_UP) {
 					dealerDiscardView();
 				} else {
 					playingView();
@@ -341,7 +376,6 @@ public class EuchrePlayerController implements PlayerController {
 				break;
 			}
 		}
-
 	}
 
 	@Override
@@ -358,10 +392,12 @@ public class EuchrePlayerController implements PlayerController {
 	private OnClickListener playClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			if ( (isTurn && cardSelected != null) &&
-					currentState != FIRST_ROUND_BETTING && currentState != SECOND_ROUND_BETTING &&
-					( currentState == PICK_IT_UP || currentState == PLAY_LEAD_CARD ||
-					gameRules.checkCard(cardSelected, trumpSuit, cardLead, cardHand) ) && cardHand.size() != 0) {
+			if ((isTurn && cardSelected != null)
+					&& currentState != FIRST_ROUND_BETTING
+					&& currentState != SECOND_ROUND_BETTING
+					&& (currentState == PICK_IT_UP
+					|| currentState == PLAY_LEAD_CARD || gameRules.checkCard(cardSelected, trumpSuit, cardLead,
+							cardHand)) && cardHand.size() != 0) {
 				// play card or discard if it is pick_it_up mode
 
 				connection.write(currentState, cardSelected);
@@ -376,6 +412,8 @@ public class EuchrePlayerController implements PlayerController {
 
 				setButtonsEnabled(false);
 				isTurn = false;
+				cardSuggestedId = -1;
+				playerContext.setSelected(-1, cardSuggestedId);
 			} else if (currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING) {
 				EuchreBet bet = new EuchreBet(trumpSuit, false, false);
 
@@ -386,8 +424,9 @@ public class EuchrePlayerController implements PlayerController {
 				playingView();
 				setButtonsEnabled(false);
 				isTurn = false;
+				cardSuggestedId = -1;
+				playerContext.setSelected(-1, cardSuggestedId);
 			}
-
 		}
 	};
 
@@ -421,6 +460,7 @@ public class EuchrePlayerController implements PlayerController {
 				playingView();
 				setButtonsEnabled(false);
 				isTurn = false;
+				cardSuggestedId = -1;
 			}
 		}
 	};
@@ -452,6 +492,7 @@ public class EuchrePlayerController implements PlayerController {
 				playingView();
 				setButtonsEnabled(false);
 				isTurn = false;
+				cardSuggestedId = -1;
 			}
 		}
 	};
@@ -612,7 +653,7 @@ public class EuchrePlayerController implements PlayerController {
 			v.startAnimation(scale);
 
 			// Let the UI know which card was selected
-			playerContext.setSelected(v.getId());
+			playerContext.setSelected(v.getId(), cardSuggestedId);
 
 			for (int i = 0; i < cardHand.size(); i++) {
 				if (cardHand.get(i).getIdNum() == v.getId()) {
