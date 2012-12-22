@@ -123,5 +123,7 @@ The game will start with player 1 and continue in a counterclockwise fashion aro
     <string name="bet_round_two_title">Pass, or choose a suit and bet</string>
     <string name="Discard">Discard</string>
     <string name="play_again">Play Again</string>
+    <string name="playAssistMode">Play Assist Mode</string>
+    <string name="playAssistModeLong">Play Assist Mode (see a suggested card)</string>
 
 </resources>

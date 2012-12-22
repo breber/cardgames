@@ -15,6 +15,7 @@ import static com.worthwhilegames.cardgames.shared.Constants.MSG_PLAY_CARD;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_REFRESH;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_SETUP;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_WINNER;
+import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
@@ -29,6 +30,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -132,6 +134,11 @@ public class EuchrePlayerController implements PlayerController {
 	private int cardSuggestedId = -1;
 
 	/**
+	 * This is the setting if the player would like to see card suggestions
+	 */
+	boolean isPlayAssistMode = false;
+
+	/**
 	 * The client that is used to send messages to the GameBoard
 	 */
 	private ConnectionClient connection;
@@ -183,6 +190,10 @@ public class EuchrePlayerController implements PlayerController {
 		cardHand = cardHandGiven;
 		playerName = "";
 		playerHandLayout = (LinearLayout)  playerContext.findViewById(R.id.playerCardContainer);
+
+		// set up play assist mode
+		SharedPreferences sharedPreferences = playerContext.getSharedPreferences(PREFERENCES, 0);
+		isPlayAssistMode = sharedPreferences.getBoolean(Constants.PREF_PLAY_ASSIST_MODE, false);
 
 		gameRules = new EuchreGameRules();
 		ct = new EuchreCardTranslator();
@@ -277,7 +288,7 @@ public class EuchrePlayerController implements PlayerController {
 				isTurn = true;
 				break;
 			case Constants.MSG_SUGGESTED_CARD:
-				if(isTurn && object != null && true /*  add preference here */){
+				if(isTurn && object != null && isPlayAssistMode){
 					try {
 						JSONObject obj = new JSONObject(object);
 						int id = obj.getInt(Constants.KEY_CARD_ID);
@@ -401,6 +412,7 @@ public class EuchrePlayerController implements PlayerController {
 				setButtonsEnabled(false);
 				isTurn = false;
 				cardSuggestedId = -1;
+				playerContext.setSelected(-1, cardSuggestedId);
 			} else if (currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING) {
 				EuchreBet bet = new EuchreBet(trumpSuit, false, false);
 
@@ -412,6 +424,7 @@ public class EuchrePlayerController implements PlayerController {
 				setButtonsEnabled(false);
 				isTurn = false;
 				cardSuggestedId = -1;
+				playerContext.setSelected(-1, cardSuggestedId);
 			}
 
 		}

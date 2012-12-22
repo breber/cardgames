@@ -1,5 +1,7 @@
 package com.worthwhilegames.cardgames.crazyeights;
 
+import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
+
 import java.util.List;
 
 import org.json.JSONArray;
@@ -9,6 +11,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -72,6 +75,11 @@ public class CrazyEightsPlayerController implements PlayerController {
 	 * The id of the suggested Card
 	 */
 	private int cardSuggestedId = -1;
+
+	/**
+	 * This is the setting if the player would like to see card suggestions
+	 */
+	boolean isPlayAssistMode = false;
 
 	/**
 	 * The card that is on the discard pile
@@ -145,6 +153,10 @@ public class CrazyEightsPlayerController implements PlayerController {
 		playerName = "";
 		playerHandLayout = (LinearLayout)  playerContext.findViewById(R.id.playerCardContainer);
 
+		// set up play assist mode
+		SharedPreferences sharedPreferences = playerContext.getSharedPreferences(PREFERENCES, 0);
+		isPlayAssistMode = sharedPreferences.getBoolean(Constants.PREF_PLAY_ASSIST_MODE, false);
+
 		gameRules = new CrazyEightGameRules();
 		ct = new CrazyEightsCardTranslator();
 		connection = ConnectionClient.getInstance(context);
@@ -199,7 +211,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 				isTurn = true;
 				break;
 			case Constants.MSG_SUGGESTED_CARD:
-				if(isTurn && object != null && true /* TODO add preference here */){
+				if(isTurn && object != null && isPlayAssistMode){
 					try {
 						JSONObject obj = new JSONObject(object);
 						int id = obj.getInt(Constants.KEY_CARD_ID);
@@ -295,6 +307,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 					setButtonsEnabled(false);
 					isTurn = false;
 					cardSuggestedId = -1;
+					playerContext.setSelected(-1, cardSuggestedId);
 				}
 			}
 		}

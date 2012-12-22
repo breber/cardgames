@@ -67,6 +67,11 @@ public class EuchreGameController extends GameController {
 	private EuchreComputerPlayer computerPlayer;
 
 	/**
+	 * Computer player that suggests moves for the human players
+	 */
+	private EuchreComputerPlayer cardSuggestor;
+
+	/**
 	 * Handler to handle showing all 4 cards played
 	 */
 	@SuppressLint("HandlerLeak")
@@ -102,6 +107,7 @@ public class EuchreGameController extends GameController {
 		SharedPreferences sharedPreferences = gameContext.getSharedPreferences(PREFERENCES, 0);
 		String difficulty = sharedPreferences.getString(Constants.PREF_DIFFICULTY, Constants.EASY);
 		computerPlayer = new EuchreComputerPlayer(difficulty);
+		cardSuggestor = new EuchreComputerPlayer(Constants.MEDIUM);
 
 		euchreGame = EuchreTabletGame.getInstance();
 		game = euchreGame;
@@ -396,13 +402,13 @@ public class EuchreGameController extends GameController {
 
 				switch(currentState){
 				case PICK_IT_UP:
-					cardSelected = computerPlayer.pickItUp(currentTurn);
+					cardSelected = cardSuggestor.pickItUp(currentTurn);
 					break;
 				case PLAY_LEAD_CARD:
-					cardSelected = computerPlayer.getLeadCard(currentTurn);
+					cardSelected = cardSuggestor.getLeadCard(currentTurn);
 					break;
 				case MSG_PLAY_CARD:
-					cardSelected = computerPlayer.getCardOnTurn(currentTurn);
+					cardSelected = cardSuggestor.getCardOnTurn(currentTurn);
 					break;
 				default:
 					// basically no card is suggested

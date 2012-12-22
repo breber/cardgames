@@ -8,6 +8,7 @@ import static com.worthwhilegames.cardgames.shared.Constants.PREF_DIFFICULTY;
 import static com.worthwhilegames.cardgames.shared.Constants.PREF_GAME_TYPE;
 import static com.worthwhilegames.cardgames.shared.Constants.PREF_LANGUAGE;
 import static com.worthwhilegames.cardgames.shared.Constants.PREF_NUMBER_OF_COMPUTERS;
+import static com.worthwhilegames.cardgames.shared.Constants.PREF_PLAY_ASSIST_MODE;
 import static com.worthwhilegames.cardgames.shared.Constants.PREF_SOUND_EFFECTS;
 import static com.worthwhilegames.cardgames.shared.Constants.PREF_SPEECH_VOLUME;
 
@@ -272,6 +273,14 @@ public class PreferencesActivity extends Activity {
 			// set the check box to it's preference
 			cheaterMode.setChecked(sharedPref.getBoolean(PREF_CHEATER_MODE, false));
 		}
+
+		// Card Assist Mode checkbox
+		CheckBox playAssistMode = (CheckBox) findViewById(R.id.checkBoxPlayAssistMode);
+
+		if (playAssistMode != null) {
+			// set the check box to it's preference
+			playAssistMode.setChecked(sharedPref.getBoolean(PREF_PLAY_ASSIST_MODE, false));
+		}
 	}
 
 	/* (non-Javadoc)
@@ -283,6 +292,7 @@ public class PreferencesActivity extends Activity {
 		CheckBox soundEffects = (CheckBox) findViewById(R.id.checkBoxSoundEffects);
 		CheckBox speechVolume = (CheckBox) findViewById(R.id.checkBoxSpeechVolume);
 		CheckBox cheaterMode = (CheckBox) findViewById(R.id.cheaterMode);
+		CheckBox playAssistMode = (CheckBox) findViewById(R.id.checkBoxPlayAssistMode);
 
 		// set the result of the activity
 		setResult(RESULT_OK);
@@ -325,6 +335,11 @@ public class PreferencesActivity extends Activity {
 
 		if (cheaterMode != null) {
 			prefsEditor.putBoolean(PREF_CHEATER_MODE, cheaterMode.isChecked());
+		}
+
+		// set
+		if (playAssistMode != null) {
+			prefsEditor.putBoolean(PREF_PLAY_ASSIST_MODE, playAssistMode.isChecked());
 		}
 
 		// commit the changes to the shared preferences
