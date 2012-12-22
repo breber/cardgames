@@ -99,23 +99,6 @@
                     android:prompt="@string/Game"
                     android:spinnerMode="dialog" />
             </TableRow>
-            
-            <TableRow>
-
-                <com.worthwhilegames.cardgames.shared.TextView
-                    android:id="@+id/textViewCardSuggestion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="10dip"
-                    android:text="@string/playAssistMode"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@android:color/black" />
-
-                <CheckBox
-                    android:id="@+id/checkBoxPlayAssistMode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </TableRow>
 
             <TableRow>
 
@@ -133,6 +116,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:prompt="@string/connectionType" />
+            </TableRow>
+            
+            <TableRow>
+
+                <com.worthwhilegames.cardgames.shared.TextView
+                    android:id="@+id/textViewCardSuggestion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="10dip"
+                    android:text="@string/playAssistMode"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@android:color/black" />
+
+                <CheckBox
+                    android:id="@+id/checkBoxPlayAssistMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
             </TableRow>
         </TableLayout>
     </ScrollView>
