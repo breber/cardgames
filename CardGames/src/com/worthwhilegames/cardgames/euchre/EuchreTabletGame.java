@@ -166,16 +166,16 @@ public class EuchreTabletGame implements Game{
 	@Override
 	public void deal() {
 		gameActive = true;
-		for(int i = 0; i < 2; i++){
+		for (int i = 0; i < 2; i++) {
 			for (Player p : players) {
-				if(i == 0){
+				if (i == 0) {
 					p.addCard(iter.next());
 					iter.remove();
 					p.addCard(iter.next());
 					iter.remove();
 					p.addCard(iter.next());
 					iter.remove();
-				}else{
+				} else {
 					p.addCard(iter.next());
 					iter.remove();
 					p.addCard(iter.next());
@@ -225,7 +225,6 @@ public class EuchreTabletGame implements Game{
 
 		//set the iterator to go through the shuffled deck
 		iter = shuffledDeck.iterator();
-
 	}
 
 	/**
@@ -238,40 +237,38 @@ public class EuchreTabletGame implements Game{
 	 * Betting team go alone gets 3-4 tricks +1 point for betting team
 	 * Betting team go alone gets 5   tricks +4 points for betting team
 	 */
-	public void endRound(){
+	public void endRound() {
 
 		int bettingTeam = playerCalledTrump % 2;
-		if( roundScores[bettingTeam] >= 3){
-			if( roundScores[bettingTeam] > 4 ){
+		if (roundScores[bettingTeam] >= 3) {
+			if (roundScores[bettingTeam] > 4) {
 				matchScores[bettingTeam] += 2;
-				if( this.isPlayerGoingAlone ){
+				if (this.isPlayerGoingAlone) {
 					matchScores[bettingTeam] += 2;
 				}
 			} else {
-				matchScores[bettingTeam] ++;
+				matchScores[bettingTeam]++;
 			}
 		} else {
-			//betting team has been "Euchred" 2 points for defending team
-			matchScores[(bettingTeam +1) % 2] += 2;
+			// betting team has been "Euchred" 2 points for defending team
+			matchScores[(bettingTeam + 1) % 2] += 2;
 		}
 
 		//reset values
 		this.setPlayerGoingAlone(false);
 		this.clearCardsPlayed();
-
 	}
 
 	/**
 	 * This will start the next round by dealing new cards and setting up the card to bet on
 	 */
-	public void startRound(){
+	public void startRound() {
 		//reset scores
 		roundScores[0] = 0;
 		roundScores[1] = 0;
 
 		//make the dealer the next player this also resets the trick leader
 		this.setDealer(getDealer() + 1);
-
 
 		//redeal
 
@@ -286,7 +283,7 @@ public class EuchreTabletGame implements Game{
 	 * 
 	 * @param player the player who called trump
 	 */
-	public void pickItUp(Player player){
+	public void pickItUp(Player player) {
 		playerCalledTrump = player.getPosition();
 	}
 
@@ -343,8 +340,8 @@ public class EuchreTabletGame implements Game{
 		return matchScores[0] >= EUCHRE_SCORE_LIMIT || matchScores[1] >= EUCHRE_SCORE_LIMIT;
 	}
 
-	public int getWinningTeam(){
-		if(matchScores[0] >= matchScores[1]){
+	public int getWinningTeam() {
+		if (matchScores[0] >= matchScores[1]) {
 			return 0;
 		}
 		return 1;
@@ -383,11 +380,11 @@ public class EuchreTabletGame implements Game{
 		adjustCards(cardLead);
 		int winningPlayer = 0;
 
-		for(int i = 1; i < cardsPlayed.length; i++){
+		for (int i = 1; i < cardsPlayed.length; i++) {
 			Card card = cardsPlayed[i];
 			adjustCards(card);
 			winningCard = compareCards(winningCard, card, cardLead.getSuit());
-			if(winningCard.equals(card)){
+			if (winningCard.equals(card)) {
 				winningPlayer = i;
 			}
 		}
@@ -412,28 +409,27 @@ public class EuchreTabletGame implements Game{
 	 */
 	public Card compareCards(Card card, Card card2, int suitLed){
 		//null check for if someone is going alone then one player will never play
-		if(card == null){
+		if (card == null) {
 			return card2;
-		}else if(card2 == null){
+		} else if (card2 == null) {
 			return card;
 		}
 
-		if(card.getSuit() == trump && card2.getSuit() != trump){
+		if (card.getSuit() == trump && card2.getSuit() != trump) {
 			return card;
-		}else if(card.getSuit() != trump && card2.getSuit() == trump){
+		} else if (card.getSuit() != trump && card2.getSuit() == trump) {
 			return card2;
-		}else if(card.getSuit() == suitLed && card2.getSuit() != suitLed){
+		} else if (card.getSuit() == suitLed && card2.getSuit() != suitLed) {
 			return card;
-		}else if(card.getSuit() != suitLed && card2.getSuit() == suitLed){
+		} else if (card.getSuit() != suitLed && card2.getSuit() == suitLed) {
 			return card2;
-		}else{
-			if(card.getValue() >= card2.getValue()){
+		} else {
+			if (card.getValue() >= card2.getValue()) {
 				return card;
-			}else{
+			} else {
 				return card2;
 			}
 		}
-
 	}
 
 
@@ -448,48 +444,47 @@ public class EuchreTabletGame implements Game{
 			return;
 		}
 
-		switch(trump){
+		switch (trump) {
 		case SUIT_CLUBS:
-			if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_SPADES){
+			if (card.getValue() == JACK_VALUE && card.getSuit() == SUIT_SPADES) {
 				card.setSuit(SUIT_CLUBS);
 				card.setValue(ADJUSTED_L_VALUE);
-			}else if(card.getValue() == JACK_VALUE&& card.getSuit() == SUIT_CLUBS){
+			} else if (card.getValue() == JACK_VALUE && card.getSuit() == SUIT_CLUBS) {
 				card.setValue(ADJUSTED_R_VALUE);
 			}
 			break;
 
 		case SUIT_DIAMONDS:
-			if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_HEARTS){
+			if (card.getValue() == JACK_VALUE && card.getSuit() == SUIT_HEARTS) {
 				card.setSuit(SUIT_DIAMONDS);
 				card.setValue(ADJUSTED_L_VALUE);
-			}else if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_DIAMONDS){
+			} else if (card.getValue() == JACK_VALUE && card.getSuit() == SUIT_DIAMONDS) {
 				card.setValue(ADJUSTED_R_VALUE);
 			}
 			break;
 
 		case SUIT_HEARTS:
-			if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_DIAMONDS){
+			if (card.getValue() == JACK_VALUE && card.getSuit() == SUIT_DIAMONDS) {
 				card.setSuit(SUIT_HEARTS);
 				card.setValue(ADJUSTED_L_VALUE);
-			}else if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_HEARTS){
+			} else if (card.getValue() == JACK_VALUE && card.getSuit() == SUIT_HEARTS) {
 				card.setValue(ADJUSTED_R_VALUE);
 			}
 			break;
 
 		case SUIT_SPADES:
-			if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_CLUBS){
+			if (card.getValue() == JACK_VALUE && card.getSuit() == SUIT_CLUBS) {
 				card.setSuit(SUIT_SPADES);
 				card.setValue(ADJUSTED_L_VALUE);
-			}else if(card.getValue() == JACK_VALUE && card.getSuit() == SUIT_SPADES){
+			} else if (card.getValue() == JACK_VALUE && card.getSuit() == SUIT_SPADES) {
 				card.setValue(ADJUSTED_R_VALUE);
 			}
 			break;
 		}
 
-		if(card.getValue() == ACE_VALUE){
+		if (card.getValue() == ACE_VALUE) {
 			card.setValue(ADJUSTED_ACE_VALUE);
 		}
-
 	}
 
 	public Deck getGameDeck() {
@@ -538,7 +533,7 @@ public class EuchreTabletGame implements Game{
 
 	public void setDealer(int dealer) {
 		this.dealer = dealer;
-		if(this.dealer > 3){
+		if (this.dealer > 3) {
 			this.dealer = 0;
 		}
 		setTrickLeader(this.dealer + 1);
@@ -550,7 +545,7 @@ public class EuchreTabletGame implements Game{
 
 	public void setTrickLeader(int trickLeader) {
 		this.trickLeader = trickLeader;
-		if(this.trickLeader > 3){
+		if (this.trickLeader > 3) {
 			this.trickLeader = 0;
 		}
 	}
@@ -629,18 +624,17 @@ public class EuchreTabletGame implements Game{
 
 	public void setPlayerGoingAlone(boolean isPlayerGoingAlone) {
 		this.isPlayerGoingAlone = isPlayerGoingAlone;
-		if(isPlayerGoingAlone){
+		if (isPlayerGoingAlone) {
 			List<Card> tempCards = players.get(getPlayerBeingSkipped()).getCards();
 			tempCards.removeAll(tempCards);
 		}
 	}
 
-	public int getPlayerBeingSkipped(){
-		if( this.playerCalledTrump > 1 ){
+	public int getPlayerBeingSkipped() {
+		if (this.playerCalledTrump > 1) {
 			return playerCalledTrump - 2;
 		} else {
 			return playerCalledTrump + 2;
 		}
 	}
-
 }

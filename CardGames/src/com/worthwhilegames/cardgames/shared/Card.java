@@ -51,6 +51,18 @@ public class Card implements Comparable<Card> {
 	}
 
 	/**
+	 * Copy Constructor
+	 * 
+	 * @param c
+	 */
+	public Card(Card c) {
+		this.suit = c.suit;
+		this.value = c.value;
+		this.resourceId = c.resourceId;
+		this.idNum = c.idNum;
+	}
+
+	/**
 	 * This method will return the suit of a card object
 	 * 
 	 * @return and integer representing the suit of the card

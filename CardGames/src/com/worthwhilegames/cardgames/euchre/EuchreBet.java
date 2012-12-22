@@ -24,33 +24,33 @@ public class EuchreBet {
 	 */
 	private boolean goAlone;
 
-
 	/**
 	 * Initializes a bet
-	 * @param givenTrump the suit of the trump to be bet
-	 * @param givenPlaceBet whether or not the player wants to place a bet
-	 * @param givenGoAlone whether or not the player wants to go alone
+	 * 
+	 * @param givenTrump
+	 *            the suit of the trump to be bet
+	 * @param givenPlaceBet
+	 *            whether or not the player wants to place a bet
+	 * @param givenGoAlone
+	 *            whether or not the player wants to go alone
 	 */
-	public EuchreBet(int givenTrump, boolean givenPlaceBet, boolean givenGoAlone){
+	public EuchreBet(int givenTrump, boolean givenPlaceBet, boolean givenGoAlone) {
 		trumpSuit = givenTrump;
 		placeBet = givenPlaceBet;
 		goAlone = givenGoAlone;
 	}
 
-
-	public int getTrumpSuit(){
+	public int getTrumpSuit() {
 		return trumpSuit;
 	}
 
-	public boolean getPlaceBet(){
+	public boolean getPlaceBet() {
 		return placeBet;
 	}
 
-	public boolean getGoAlone(){
+	public boolean getGoAlone() {
 		return goAlone;
 	}
-
-
 
 	/**
 	 * Generate a JSONObject based on the necessary fields of this class.
@@ -76,7 +76,7 @@ public class EuchreBet {
 	 * This is a custom toString method for the transferring of bet data
 	 * 
 	 * @return a JSON string representation of the card including trump suit,
-	 * whether a bet was placed and whether they want to go alone
+	 *         whether a bet was placed and whether they want to go alone
 	 */
 	@Override
 	public String toString() {
