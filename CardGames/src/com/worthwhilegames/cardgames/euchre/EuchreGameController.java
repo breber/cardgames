@@ -102,7 +102,6 @@ public class EuchreGameController extends GameController {
 		super.initGameController(context, connectionGiven);
 
 		// Euchre specific setup
-		ct = new EuchreCardTranslator();
 		gameRules = new EuchreGameRules();
 		SharedPreferences sharedPreferences = gameContext.getSharedPreferences(PREFERENCES, 0);
 		String difficulty = sharedPreferences.getString(Constants.PREF_DIFFICULTY, Constants.EASY);

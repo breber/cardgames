@@ -24,8 +24,6 @@ import static com.worthwhilegames.cardgames.shared.Constants.TWO_VALUE;
 import java.util.ArrayList;
 
 import com.worthwhilegames.cardgames.R;
-import com.worthwhilegames.cardgames.crazyeights.CrazyEightsCardTranslator;
-import com.worthwhilegames.cardgames.euchre.EuchreCardTranslator;
 
 /**
  * Represents a deck of cards
@@ -182,24 +180,6 @@ public class Deck {
 			cardImages.add(new Card(SUIT_SPADES, QUEEN_VALUE, R.drawable.spades_q, 50));
 			cardImages.add(new Card(SUIT_SPADES, KING_VALUE, R.drawable.spades_k, 51));
 			break;
-		}
-	}
-
-	/**
-	 * Get the CardTranslator for the given game.
-	 *
-	 * @param game the game to get the translator for
-	 * @return the CardTranslator that will properly return the
-	 * resource id for the right cards.
-	 */
-	public static CardTranslator getCardTranslatorForGame(CardGame game) {
-		switch(game) {
-		case CrazyEights:
-			return new CrazyEightsCardTranslator();
-		case Euchre:
-			return new EuchreCardTranslator();
-		default:
-			return null;
 		}
 	}
 }

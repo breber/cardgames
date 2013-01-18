@@ -1,9 +1,5 @@
 package com.worthwhilegames.cardgames.shared;
 
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_CARD_ID;
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_SUIT;
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_VALUE;
-
 import java.util.List;
 
 import org.json.JSONException;
@@ -78,12 +74,6 @@ public abstract class GameController {
 	 * player currently taking their turn
 	 */
 	protected int whoseTurn = 0;
-
-	/**
-	 * This allows the resource ids of cards to be correct
-	 * needs to be initialized in constructor.
-	 */
-	protected CardTranslator ct;
 
 	/**
 	 * This is the context of the GameBoardActivity this allows this class to
@@ -273,10 +263,7 @@ public abstract class GameController {
 		Card tmpCard = new Card(0, 0, 0, 0);
 		try {
 			JSONObject obj = new JSONObject(object);
-			int suit = obj.getInt(KEY_SUIT);
-			int value = obj.getInt(KEY_VALUE);
-			int id = obj.getInt(KEY_CARD_ID);
-			tmpCard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
+			tmpCard = Card.createCardFromJSON(obj);
 
 			//tell the game what was played
 			game.discard(players.get(whoseTurn), tmpCard);

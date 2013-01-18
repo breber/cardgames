@@ -1,6 +1,7 @@
 package com.worthwhilegames.cardgames.shared;
 
 import static com.worthwhilegames.cardgames.shared.Constants.KEY_CARD_ID;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_SUIT;
 import static com.worthwhilegames.cardgames.shared.Constants.KEY_VALUE;
 
 import org.json.JSONException;
@@ -143,6 +144,7 @@ public class Card implements Comparable<Card> {
 		try {
 			JSONObject obj = new JSONObject();
 
+			obj.put(KEY_SUIT, getSuit());
 			obj.put(KEY_VALUE, getValue());
 			obj.put(KEY_CARD_ID, getIdNum());
 
@@ -150,6 +152,25 @@ public class Card implements Comparable<Card> {
 		} catch (JSONException ex) {
 			ex.printStackTrace();
 			return new JSONObject();
+		}
+	}
+
+	/**
+	 * Generate a Card based on the JSON object input
+	 * 
+	 * @return a Card representation of this JSON object
+	 */
+	public static Card createCardFromJSON(JSONObject jsonIn) {
+		// Decode the JSON object into a Card
+		try {
+			int suit = jsonIn.getInt(Constants.KEY_SUIT);
+			int value = jsonIn.getInt(Constants.KEY_VALUE);
+			int id = jsonIn.getInt(Constants.KEY_CARD_ID);
+			return new Card(suit, value, CardTranslator.getResourceForCardWithId(id), id);
+		} catch (JSONException ex) {
+			ex.printStackTrace();
+			// TODO: this is a major error what should we do here?
+			return null;
 		}
 	}
 

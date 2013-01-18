@@ -6,10 +6,7 @@ import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PLAY_LEAD_CAR
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ROUND_OVER;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.SECOND_ROUND_BETTING;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP;
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_CARD_ID;
 import static com.worthwhilegames.cardgames.shared.Constants.KEY_CURRENT_STATE;
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_SUIT;
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_VALUE;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_LOSER;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_PLAY_CARD;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_REFRESH;
@@ -44,7 +41,6 @@ import com.worthwhilegames.cardgames.player.activities.GameResultsActivity;
 import com.worthwhilegames.cardgames.player.activities.SelectSuitActivity;
 import com.worthwhilegames.cardgames.player.activities.ShowCardsActivity;
 import com.worthwhilegames.cardgames.shared.Card;
-import com.worthwhilegames.cardgames.shared.CardTranslator;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.PlayerController;
 import com.worthwhilegames.cardgames.shared.SoundManager;
@@ -144,11 +140,6 @@ public class EuchrePlayerController implements PlayerController {
 	private ConnectionClient connection;
 
 	/**
-	 * This is how we can make sure that the card resource IDs are correct
-	 */
-	private CardTranslator ct;
-
-	/**
 	 * This is a SoundManager instance that can do text to speech and other
 	 * sounds.
 	 */
@@ -196,7 +187,6 @@ public class EuchrePlayerController implements PlayerController {
 		isPlayAssistMode = sharedPreferences.getBoolean(Constants.PREF_PLAY_ASSIST_MODE, false);
 
 		gameRules = new EuchreGameRules();
-		ct = new EuchreCardTranslator();
 		connection = ConnectionClient.getInstance(context);
 	}
 
@@ -224,10 +214,7 @@ public class EuchrePlayerController implements PlayerController {
 					JSONArray arr = new JSONArray(object);
 					for (int i = 0; i < arr.length(); i++) {
 						JSONObject obj = arr.getJSONObject(i);
-						int suit = obj.getInt(KEY_SUIT);
-						int value = obj.getInt(KEY_VALUE);
-						int id = obj.getInt(KEY_CARD_ID);
-						playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+						playerContext.addCard(Card.createCardFromJSON(obj));
 					}
 				} catch (JSONException ex) {
 					ex.printStackTrace();
@@ -267,10 +254,7 @@ public class EuchrePlayerController implements PlayerController {
 				mySM.sayPickItUp(playerName);
 				try {
 					JSONObject obj = new JSONObject(object);
-					int suit = obj.getInt(KEY_SUIT);
-					int value = obj.getInt(KEY_VALUE);
-					int id = obj.getInt(KEY_CARD_ID);
-					playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+					playerContext.addCard(Card.createCardFromJSON(obj));
 				} catch (JSONException ex) {
 					ex.printStackTrace();
 				}
@@ -318,18 +302,12 @@ public class EuchrePlayerController implements PlayerController {
 					playerContext.removeAllCards();
 
 					JSONObject obj = arr.getJSONObject(1);
-					int suit = obj.getInt(KEY_SUIT);
-					int value = obj.getInt(KEY_VALUE);
-					int id = obj.getInt(KEY_CARD_ID);
-					cardLead = new Card(suit, value, ct.getResourceForCardWithId(id), id);
+					cardLead = Card.createCardFromJSON(obj);
 
 					//the 2nd through however many are the cards of the player
 					for (int i = 2; i < arr.length(); i++) {
 						obj = arr.getJSONObject(i);
-						suit = obj.getInt(KEY_SUIT);
-						value = obj.getInt(KEY_VALUE);
-						id = obj.getInt(KEY_CARD_ID);
-						playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+						playerContext.addCard(Card.createCardFromJSON(obj));
 					}
 				} catch (JSONException ex) {
 					ex.printStackTrace();
@@ -606,10 +584,7 @@ public class EuchrePlayerController implements PlayerController {
 	private void setCardLead(String object) {
 		try {
 			JSONObject obj = new JSONObject(object);
-			int suit = obj.getInt(KEY_SUIT);
-			int value = obj.getInt(KEY_VALUE);
-			int id = obj.getInt(KEY_CARD_ID);
-			cardLead = new Card(suit, value, ct.getResourceForCardWithId(id), id);
+			cardLead = Card.createCardFromJSON(obj);
 		} catch (JSONException ex) {
 			ex.printStackTrace();
 		}

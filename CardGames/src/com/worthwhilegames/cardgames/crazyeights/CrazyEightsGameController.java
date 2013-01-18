@@ -55,7 +55,6 @@ public class CrazyEightsGameController extends GameController {
 		super.initGameController(context, connectionGiven);
 
 		// Crazy Eights specific setup
-		ct = new CrazyEightsCardTranslator();
 		gameRules = new CrazyEightGameRules();
 		SharedPreferences sharedPreferences = gameContext.getSharedPreferences(PREFERENCES, 0);
 		String difficulty = sharedPreferences.getString(Constants.PREF_DIFFICULTY, Constants.EASY);
