@@ -213,6 +213,26 @@ public class Constants {
 	public static final String KEY_PLAYER_NAME = "playername";
 
 	/**
+	 * this is a JSON key for getting array of the player names
+	 */
+	public static final String KEY_PLAYER_NAMES = "playernames";
+
+	/**
+	 * this is a JSON key for getting the player index (where he is on the table)
+	 */
+	public static final String KEY_PLAYER_INDEX = "playerindex";
+
+	/**
+	 * This is a JSON key for getting the number of cards array for all the players
+	 */
+	public static final String KEY_NUM_CARDS_ARRAY = "numcardsarray";
+
+	/**
+	 * This is a JSON key for getting the number of cards a player has
+	 */
+	public static final String KEY_NUM_CARDS = "numcards";
+
+	/**
 	 * This is a JSON key for telling the player what state the game is in
 	 */
 	public static final String KEY_CURRENT_STATE = "currentstate";
@@ -226,6 +246,16 @@ public class Constants {
 	 * This is a JSON key for telling the player the current discard card
 	 */
 	public static final String KEY_DISCARD_CARD = "discardCard";
+
+	/**
+	 * This is a JSON key for getting extra information 1
+	 */
+	public static final String KEY_EXTRA_INFO_1 = "extrainformation1";
+
+	/**
+	 * This is a JSON key for getting extra information 1
+	 */
+	public static final String KEY_EXTRA_INFO_2 = "extrainformation2";
 
 	/**
 	 * this is a request code for the get EnterNameActivity
