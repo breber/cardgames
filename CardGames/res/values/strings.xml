@@ -138,11 +138,11 @@ The game will start with player 1 and continue in a counterclockwise fashion aro
         \nIf a player bets then his or her team is known as the &quot;makers&quot; and the other team is known as the &quot;defenders&quot; for the remainder of the round. It is also an option that the betting player can choose to &quot;go alone&quot;, this means that they will play without his or her partner and try to win at least 3 tricks.
         \n
         \nScoring:
-        \n\tBetting team wins 3-4 tricks:\t\t\t\t\t\t\t\t\t\t+1
-        \n\tBetting team wins 5 tricks:\t\t\t\t\t\t\t\t\t\t\t\t+2
-        \n\tBidder goes alone and wins 3-4 tricks:\t\t\t+1
-        \n\tBidder goes alone and wins 5 tricks:\t\t\t\t\t+4
-        \n\tDefenders win 3-5 tricks:\t\t\t\t\t\t\t\t\t\t\t\t\t+2
+        \n\tBetting team wins 3-4 tricks:          +1
+        \n\tBetting team wins 5 tricks:            +2
+        \n\tBidder goes alone and wins 3-4 tricks: +1
+        \n\tBidder goes alone and wins 5 tricks:   +4
+        \n\tDefenders win 3-5 tricks:              +2
         \n
         \nPlaying the rest of the round:
         \nAfter betting is done and the &quot;makers&quot; and &quot;defenders&quot; are determined then the player to the right of the dealer will start the first trick by playing a card from his or her hand. After each player has played a card the trick is over and the winner of the trick will play a card to start the next trick. This continues until all 5 tricks in the round are done then the scores will be assessed based on who won the tricks.
