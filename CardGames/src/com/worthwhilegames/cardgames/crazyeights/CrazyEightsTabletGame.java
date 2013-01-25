@@ -335,7 +335,11 @@ public class CrazyEightsTabletGame implements Game {
 	 */
 	@Override
 	public Card getDiscardPileTop() {
-		return discardPile.get(discardPile.size() - 1);
+		if (!discardPile.isEmpty()) {
+			return discardPile.get(discardPile.size() - 1);
+		} else {
+			return null;
+		}
 	}
 
 	/* (non-Javadoc)
