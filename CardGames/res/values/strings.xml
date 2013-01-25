@@ -125,5 +125,32 @@ The game will start with player 1 and continue in a counterclockwise fashion aro
     <string name="play_again">Play Again</string>
     <string name="playAssistMode">Play Assist Mode</string>
     <string name="playAssistModeLong">Play Assist Mode (see a suggested card)</string>
+    <string name="euchre_game_rules_text">The goal of Euchre is to win the most tricks in a round and to score points by doing so. Each player is on the same team as the player across from them. In Euchre only 9, 10, Jack, Queen, King, and Ace are dealt.
+        \n
+        \nHere are a few terms:
+        \nTrick - each player has played one card, to win a trick you must play the highest card.
+        \nRound - consists of 5 tricks, scores will be determined after each round.
+        \nTrump Suit - it is the suit with the highest value, the lowest card of the trump suit is better than the highest card of any other suit.
+        \n
+        \nStart a Round by Betting:\nAt the start of each round, each player receives 5 cards then 1 card is flipped up in front of the dealer called the &quot;top card&quot;. Then each player gets a chance to bet that his or her team can score 3 or more tricks with the trump suit as the same suit as the top card. If anyone chooses to bet on the suit of the top card, then the dealer will pick up the top card, known as &quot;pick it up&quot;, and then chooses to discard any 1 of his cards (potentially choosing to discard the top card). If no one chooses to bet on the trump suit of the top card then the second round of betting begins. In the second round each player gets a chance to bet on their choice of any suit, except the suit of the top card. If no one bets and it is the dealer’s turn to choose a suit to bet on then the dealer will be forced to bet and choose a suit; this rule is known as &quot;stick the dealer.&quot;
+        \n
+        \nBetting Variations and Scoring:
+        \nIf a player bets then his or her team is known as the &quot;makers&quot; and the other team is known as the &quot;defenders&quot; for the remainder of the round. It is also an option that the betting player can choose to &quot;go alone&quot;, this means that they will play without his or her partner and try to win at least 3 tricks.
+        \n
+        \nScoring:
+        \n\tBetting team wins 3-4 tricks:\t\t\t\t\t\t\t\t\t\t+1
+        \n\tBetting team wins 5 tricks:\t\t\t\t\t\t\t\t\t\t\t\t+2
+        \n\tBidder goes alone and wins 3-4 tricks:\t\t\t+1
+        \n\tBidder goes alone and wins 5 tricks:\t\t\t\t\t+4
+        \n\tDefenders win 3-5 tricks:\t\t\t\t\t\t\t\t\t\t\t\t\t+2
+        \n
+        \nPlaying the rest of the round:
+        \nAfter betting is done and the &quot;makers&quot; and &quot;defenders&quot; are determined then the player to the right of the dealer will start the first trick by playing a card from his or her hand. After each player has played a card the trick is over and the winner of the trick will play a card to start the next trick. This continues until all 5 tricks in the round are done then the scores will be assessed based on who won the tricks.
+        \n
+        \nWhich card wins a trick?
+        \nWhen a suit is named trump, any card of that suit outranks any card of a non-trump suit. The highest-ranking card in euchre is the Jack of the trump suit (called \'The Right Bower\' or \'Right\') then the other Jack of the same color (the &quot;next&quot; suit), (called \'The Left Bower\' or \'Left\'). The cards are ranked, in descending order, J (of trump suit) J (same color as trump suit) A, K, Q, 10, and 9 of the trump suit. The remaining cards rank in the usual order (the jacks are not &quot;special&quot;) and the cards of those suits rank from high to low as A, K, Q, J, 10, and 9.
+        \n
+        \nSummary:
+        \nAfter a round is over, you keep playing another round until one team reaches the score limit, which is defaulted to 10. If you still don’t quite understand try passing when it is your turn to bet and play using &quot;play assist mode&quot; found in the settings page. Enjoy playing Euchre.</string>
 
 </resources>

@@ -179,8 +179,7 @@ public class GameFactory {
 		if (CardGame.CrazyEights.equals(getGameType(ctx))) {
 			return R.string.crazy_eight_game_rules_text;
 		} else if (CardGame.Euchre.equals(getGameType(ctx))) {
-			// TODO: get some text for Euchre rules
-			throw new IllegalStateException("No rules text available for this game...");
+			return R.string.euchre_game_rules_text;
 		}
 
 		return R.string.crazy_eight_game_rules_text;
