@@ -70,6 +70,11 @@ public abstract class GameController {
 	protected static Game game = null;
 
 	/**
+	 * This player state object will be used to update each player on their state completely
+	 */
+	protected PlayerStateFull pStateFull = new PlayerStateFull();
+
+	/**
 	 * This will be 0 to 3 to indicate the spot in the players array for the
 	 * player currently taking their turn
 	 */

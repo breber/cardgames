@@ -128,10 +128,13 @@ public class EuchreGameController extends GameController {
 			server.write(Constants.MSG_SETUP, p, p.getId());
 		}
 
+
 		mySM.shuffleCardsSound();
 		gameContext.updateUi();
 		// Update the indicator on the gameboard with the current suit
 		gameContext.updateSuit(game.getDiscardPileTop().getSuit());
+
+		updateGameStateFull();
 
 		//unbold the players names
 		gameContext.unboldAllPlayerText();
@@ -187,6 +190,7 @@ public class EuchreGameController extends GameController {
 					break;
 				case Constants.MSG_REFRESH:
 					refreshPlayers();
+					updateGameStateFull();
 					break;
 				}
 			} else {
@@ -229,6 +233,37 @@ public class EuchreGameController extends GameController {
 		// be removed then we should remove them now
 		if (isWaitingToClearCards) {
 			cardPlayingHandler.sendEmptyMessage(0);
+		}
+	}
+
+	/**
+	 * This will update the Game State completely for all players
+	 */
+	private void updateGameStateFull(){
+		pStateFull.currentState = currentState;
+		pStateFull.onDiscard = euchreGame.getCardLead();
+
+		// update Trump
+		pStateFull.extraInfo1 = euchreGame.getTrump();
+
+		int i = 0;
+		for(Player p : players){
+			pStateFull.numCards[i] = p.getNumCards();
+			pStateFull.playerNames[i] = p.getName();
+			pStateFull.cardsPlayed[i] = euchreGame.getCardAtPosition(i+1);
+			i++;
+		}
+
+
+		Player pTurn = players.get(whoseTurn);
+		i=0;
+		for(Player p : players){
+			pStateFull.isTurn = pTurn.equals(p);
+			pStateFull.playerIndex = i;
+			pStateFull.cards = p.getCards();
+			i++;
+
+			server.write(Constants.MSG_PLAYER_STATE_FULL, pStateFull.toJSONObject(), players.get(i).getId());
 		}
 	}
 
@@ -601,6 +636,7 @@ public class EuchreGameController extends GameController {
 			}
 		} else {
 			server.write(state, card, players.get(whoseTurn).getId());
+			updateGameStateFull();
 			sendCardSuggestion();
 		}
 

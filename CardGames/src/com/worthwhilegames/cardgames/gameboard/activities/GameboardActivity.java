@@ -47,7 +47,6 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
  * is where the Game logic happens, and each player will be able to
  * play a turn.
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class GameboardActivity extends Activity {
 
 	/**
@@ -316,6 +315,12 @@ public class GameboardActivity extends Activity {
 				startActivityForResult(pauseButtonClick, PAUSE_GAME);
 			}
 		});
+
+		setupGoogleTV();
+	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void setupGoogleTV(){
 
 		// If this is a Google TV, rotate the text of player 3 so that it isn't upside down
 		if (Util.isGoogleTv(this)) {

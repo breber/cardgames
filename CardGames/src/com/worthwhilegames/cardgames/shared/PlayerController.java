@@ -45,4 +45,11 @@ public interface PlayerController {
 	 */
 	public void setPlayerName(String name);
 
+	/**
+	 * This will get the full state of the player
+
+	 * @return full player state
+	 */
+	public PlayerStateFull getPlayerState();
+
 }

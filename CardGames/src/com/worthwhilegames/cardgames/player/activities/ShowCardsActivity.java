@@ -1,27 +1,46 @@
 package com.worthwhilegames.cardgames.player.activities;
 
+import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
+import static com.worthwhilegames.cardgames.shared.Constants.fourthCard;
+import static com.worthwhilegames.cardgames.shared.Constants.fullCard;
+import static com.worthwhilegames.cardgames.shared.Constants.halfCard;
+import static com.worthwhilegames.cardgames.shared.Constants.halfCardVertCut;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewStub;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.gameboard.activities.PauseMenuActivity;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.Constants;
+import com.worthwhilegames.cardgames.shared.Game;
 import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.PlayerController;
+import com.worthwhilegames.cardgames.shared.PlayerStateFull;
+import com.worthwhilegames.cardgames.shared.TextView;
+import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.activities.QuitGameActivity;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
@@ -51,9 +70,37 @@ public class ShowCardsActivity extends Activity {
 	private static final int PAUSE_GAME = Math.abs("PAUSE_GAME".hashCode());
 
 	/**
+	 * LayoutParams for adding a card to a player on the long edge of the screen
+	 * 
+	 * width  = WRAP_CONTENT
+	 * height = cardHeight
+	 */
+	private static LinearLayout.LayoutParams cardParams;
+
+	/**
 	 * The height of each card
 	 */
 	private static int cardHeight;
+
+	/**
+	 * The height of each button
+	 */
+	private static int buttonHeight;
+
+	/**
+	 * Represents the resource id to use for the back of the cards
+	 */
+	private static int CARD_BACK;
+
+	/**
+	 * The maximum number of cards displayed for each player
+	 */
+	private static int[] maxDisplayed = new int[] { Constants.MAX_DISPLAYED, Constants.MAX_DIS_SIDES, Constants.MAX_DISPLAYED, Constants.MAX_DIS_SIDES };
+
+	/**
+	 * Holds the scaled Bitmaps of the suit images
+	 */
+	private static Bitmap[] scaledSuitImages = new Bitmap[4];
 
 	/**
 	 * List of cards in player's hand
@@ -71,9 +118,48 @@ public class ShowCardsActivity extends Activity {
 	private PlayerController playerController;
 
 	/**
+	 * The game instance
+	 */
+	private Game mGame;
+
+	/**
+	 * These are the TextViews for all the player names
+	 */
+	private TextView[] playerTextViews = new TextView[4];
+
+	/**
+	 * These are the LinearLayouts for all the player cards
+	 */
+	private LinearLayout[] playerLinearLayouts = new LinearLayout[4];
+
+	/**
+	 * These are the TextViews for the count of remaining cards not being displayed
+	 */
+	private TextView[] playerRemainingCards = new TextView[4];
+
+	/**
 	 * The LinearLayout holding all card images
 	 */
 	private LinearLayout playerHandLayout;
+
+	/**
+	 * The ImageViews for the cards in the center of the screen
+	 * 
+	 * For games that don't use 4 cards in the middle:
+	 * Position 2 = discard pile
+	 * Position 4 = draw pile
+	 */
+	private ImageView[] centerCards = new ImageView[4];
+
+	/**
+	 * The current suit ImageView
+	 */
+	private ImageView suitView;
+
+	/**
+	 * The SharedPreferences used to store preferences for the game
+	 */
+	private SharedPreferences sharedPreferences;
 
 	/**
 	 * The BroadcastReceiver for handling messages from the connection module
@@ -116,10 +202,15 @@ public class ShowCardsActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.player_hand);
+		setContentView(R.layout.gameboardplayer);
+		initUIElements();
 
-		int screenHeight = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
-		cardHeight = screenHeight * 3 / 5;
+		sharedPreferences = getSharedPreferences(PREFERENCES, 0);
+
+		// Update the refresh button image
+		ImageView refresh = (ImageView) findViewById(R.id.gameboard_refresh);
+		refresh.setImageBitmap(scaleButton(R.drawable.refresh_button));
+
 
 		// Create a new, empty hand
 		cardHand = new ArrayList<Card>();
@@ -138,6 +229,81 @@ public class ShowCardsActivity extends Activity {
 		// broadcast receiver so that we don't miss any messages
 		Intent i = new Intent(this, ConnectActivity.class);
 		startActivityForResult(i, CONNECT_DEVICE);
+	}
+
+	/**
+	 * Set up all the references to UI elements
+	 */
+	private void initUIElements() {
+		// Get references to commonly used UI elements
+		playerTextViews[0] = (TextView) findViewById(R.id.player1text);
+		playerTextViews[1] = (TextView) findViewById(R.id.player2text);
+		playerTextViews[2] = (TextView) findViewById(R.id.player3text);
+		playerTextViews[3] = (TextView) findViewById(R.id.player4text);
+
+		playerLinearLayouts[0] = (LinearLayout) findViewById(R.id.playerCardContainer);
+		playerLinearLayouts[1] = (LinearLayout) findViewById(R.id.player2ll);
+		playerLinearLayouts[2] = (LinearLayout) findViewById(R.id.player3ll);
+		playerLinearLayouts[3] = (LinearLayout) findViewById(R.id.player4ll);
+
+		playerRemainingCards[0] = (TextView) findViewById(R.id.player1RemainingCount);
+		playerRemainingCards[1] = (TextView) findViewById(R.id.player2RemainingCount);
+		playerRemainingCards[2] = (TextView) findViewById(R.id.player3RemainingCount);
+		playerRemainingCards[3] = (TextView) findViewById(R.id.player4RemainingCount);
+
+		centerCards[0] = (ImageView) findViewById(R.id.cardPosition1);
+		centerCards[1] = (ImageView) findViewById(R.id.cardPosition2);
+		centerCards[2] = (ImageView) findViewById(R.id.cardPosition3);
+		centerCards[3] = (ImageView) findViewById(R.id.cardPosition4);
+
+		suitView = (ImageView) findViewById(R.id.gameboard_suit);
+
+		// Set up the scale factors for the card images
+		int screenHeight = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
+		cardHeight = screenHeight / 4;
+		buttonHeight = screenHeight / 6;
+
+		// Update the size of the text in the name TextViews
+		for (TextView tv : playerTextViews) {
+			tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenHeight / 15);
+		}
+
+		// Set up the layout params for the cards
+		cardParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight / 2);
+
+		// Create the scaled suit images
+		scaledSuitImages[0] = scaleButton(R.drawable.clubsuitimage);
+		scaledSuitImages[1] = scaleButton(R.drawable.diamondsuitimage);
+		scaledSuitImages[2] = scaleButton(R.drawable.heartsuitimage);
+		scaledSuitImages[3] = scaleButton(R.drawable.spadesuitimage);
+
+		// Add the handler for the pause button
+		ImageView pause = (ImageView) findViewById(R.id.gameboard_pause);
+		pause.setImageBitmap(scaleButton(R.drawable.pause_button));
+		pause.setOnClickListener(new OnClickListener() {
+			/* (non-Javadoc)
+			 * @see android.view.View.OnClickListener#onClick(android.view.View)
+			 */
+			@Override
+			public void onClick(View v) {
+				//TODO what do we do when the player pauses it?
+				/*playerController.pause();
+				Intent pauseButtonClick = new Intent(GameboardActivity.this, PauseMenuActivity.class);
+				startActivityForResult(pauseButtonClick, PAUSE_GAME);*/
+			}
+		});
+
+		setupGoogleTv();
+	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void setupGoogleTv(){
+		// If this is a Google TV, rotate the text of player 3 so that it isn't upside down
+		if (Util.isGoogleTv(this)) {
+			if (null != playerTextViews[2]) {
+				playerTextViews[2].setRotation(180);
+			}
+		}
 	}
 
 	/* (non-Javadoc)
@@ -369,6 +535,192 @@ public class ShowCardsActivity extends Activity {
 				cardHand.remove(i);
 				return;
 			}
+		}
+	}
+
+	/**
+	 * This method will update the suit on the gameboard message center to show the player
+	 * the current suit of the last card played
+	 * 
+	 * @param suit the suit of the card in which to change the picture to
+	 */
+	public void updateSuit(int suit) {
+		if (suit >= 0 && suit < 4) {
+			suitView.setImageBitmap(scaledSuitImages[suit]);
+			suitView.setVisibility(View.VISIBLE);
+		} else {
+			suitView.setVisibility(View.INVISIBLE);
+		}
+	}
+
+	/**
+	 * Updates the User Interface
+	 * 
+	 * Places all cards in the users' hands
+	 * Updates the discard image
+	 * Updates the draw card image
+	 */
+	public void updateUi() {
+		GameFactory.getGameInstance(this);
+		PlayerStateFull pStateFull = playerController.getPlayerState();
+
+		// Place images for all player's cards
+		for (int i = 0; i<4; i++) {
+
+			playerLinearLayouts[i].removeAllViews();
+
+			if(i > 0){
+				// Display for other players
+				for (int j = 0; j < pStateFull.cards.size(); j++) {
+					ImageView image = new ImageView(this);
+					image.setId(CARD_BACK);
+					image.setScaleType(ScaleType.FIT_CENTER);
+					int resId = CARD_BACK;
+
+					int cardsToDisplay = pStateFull.cards.size();
+					if (cardsToDisplay > maxDisplayed[i]) {
+						cardsToDisplay = maxDisplayed[i];
+					}
+
+					// Scale card
+					Bitmap scaledCard = scaleCard(resId, (j < (cardsToDisplay - 1)) ? fourthCard : halfCard);
+					image.setImageBitmap(scaledCard);
+
+					// Check for max displayed
+					if (j < maxDisplayed[i]) {
+						playerLinearLayouts[i].addView(image, cardParams);
+						playerRemainingCards[i].setVisibility(View.INVISIBLE);
+					} else {
+						// Display how many cards are remaining that aren't displayed
+						playerRemainingCards[i].setText("+" + Math.abs(maxDisplayed[i] - pStateFull.cards.size()));
+						playerRemainingCards[i].setVisibility(View.VISIBLE);
+						break;
+					}
+				}
+			} else {
+				// Display for this player
+				for (int j = 0; j < pStateFull.cards.size(); j++) {
+					Card c = pStateFull.cards.get(i);
+					ImageView image = new ImageView(this);
+					image.setId(c.getIdNum());
+					image.setScaleType(ScaleType.FIT_CENTER);
+
+					int resId = c.getResourceId();
+
+					int cardsToDisplay = pStateFull.cards.size();
+					if (cardsToDisplay > maxDisplayed[i]) {
+						cardsToDisplay = maxDisplayed[i];
+					}
+
+					// Scale card
+					Bitmap scaledCard = scaleCard(resId, (j < (cardsToDisplay - 1)) ? fourthCard : halfCard);
+					image.setImageBitmap(scaledCard);
+
+					// Check for max displayed
+					if (j < maxDisplayed[i]) {
+						playerLinearLayouts[i].addView(image, cardParams);
+						playerRemainingCards[i].setVisibility(View.INVISIBLE);
+					} else {
+						// Display how many cards are remaining that aren't displayed
+						playerRemainingCards[i].setText("+" + Math.abs(maxDisplayed[i] - pStateFull.cards.size()));
+						playerRemainingCards[i].setVisibility(View.VISIBLE);
+						break;
+					}
+				}
+			}
+		}
+
+		// Set all the cards in the center of the screen
+		for (int j = 0; j < 4; j++) {
+			Card c = pStateFull.cardsPlayed[j];
+			if (c != null) {
+				Bitmap scaledCard = scaleCard(c.getResourceId(), fullCard);
+
+				centerCards[j].setImageBitmap(scaledCard);
+				centerCards[j].setVisibility(View.VISIBLE);
+			} else {
+				centerCards[j].setVisibility(View.INVISIBLE);
+			}
+		}
+
+		// TODO Set up buttons enabled or not
+	}
+
+	/**
+	 * Scale a card image with the given resource
+	 * 
+	 * @param resId the resource id of the card to scale
+	 * @param cardPortion the amount of the card to show
+	 * 
+	 * @return a scaled card image
+	 */
+	private Bitmap scaleCard(int resId, int cardPortion) {
+		Bitmap fullCard = BitmapFactory.decodeResource(getResources(), resId);
+		float scaleFactor = (cardHeight + 0.0f) / fullCard.getHeight();
+		Matrix tempMatrix = new Matrix();
+		tempMatrix.setScale(scaleFactor, scaleFactor);
+
+		// Draw fourth card
+		if (cardPortion == fourthCard) {
+			return Bitmap.createBitmap(fullCard, 0, 0,
+					fullCard.getWidth() / 2, fullCard.getHeight() / 2, tempMatrix, true);
+		} else if (cardPortion == halfCard) {
+			return Bitmap.createBitmap(fullCard, 0, 0,
+					fullCard.getWidth(), fullCard.getHeight() / 2, tempMatrix, true);
+		} else if (cardPortion == halfCardVertCut) {
+			return Bitmap.createBitmap(fullCard, 0, 0,
+					fullCard.getWidth() / 2, fullCard.getHeight(), tempMatrix, true);
+		} else {
+			return Bitmap.createBitmap(fullCard, 0, 0,
+					fullCard.getWidth(), fullCard.getHeight(), tempMatrix, true);
+		}
+	}
+
+	/**
+	 * Scale a button image with the given resource
+	 * 
+	 * @param resId the resource id of the card to scale
+	 * @return a scaled button image
+	 */
+	private Bitmap scaleButton(int resId) {
+		Bitmap fullImage = BitmapFactory.decodeResource(getResources(), resId);
+		float scaleFactor = (buttonHeight + 0.0f) / fullImage.getHeight();
+		Matrix tempMatrix = new Matrix();
+		tempMatrix.setScale(scaleFactor, scaleFactor);
+
+		return Bitmap.createBitmap(fullImage, 0, 0,
+				fullImage.getWidth(), fullImage.getHeight(), tempMatrix, true);
+	}
+
+	/**
+	 * Highlight the name of the person whose turn it is
+	 *
+	 * @param playerNumber the player whose turn it is
+	 */
+	public void highlightPlayer(int playerNumber) {
+		for (int i = 0; i < 4; i++) {
+			if ((i + 1) == playerNumber) {
+				playerTextViews[i].setTextColor(getResources().getColor(R.color.gold));
+			} else {
+				playerTextViews[i].setTextColor(getResources().getColor(android.R.color.black));
+			}
+		}
+	}
+
+	/**
+	 * Bold the specified player text
+	 * @param playerNumber player whose name will be bolded
+	 */
+	public void boldPlayerText(int playerNumber){
+		playerTextViews[playerNumber].setTypeface(null, Typeface.BOLD);
+	}
+
+	/**
+	 * Sets all the players text to normal
+	 */
+	public void unboldAllPlayerText(){
+		for (int i = 0; i < 4; i++) {
+			playerTextViews[i].setTypeface(null, Typeface.NORMAL);
 		}
 	}
 }

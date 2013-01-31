@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/wooden_top"
+    android:keepScreenOn="true"
+    android:orientation="horizontal" >
+    
+    <!-- TODO: don't hardcode a height -->
+    <ViewStub
+        android:id="@+id/playerHandButtonView"
+        android:layout_width="fill_parent"
+        android:layout_height="75dip"
+        android:layout_alignParentTop="true" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="bottom|center_horizontal" >
+
+        <com.worthwhilegames.cardgames.shared.TextView
+            android:id="@+id/player1text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="10sp"
+            android:text="@string/player_1"
+            android:textColor="@android:color/black"
+            android:visibility="invisible" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/player1text"
+            android:layout_centerHorizontal="true" >
+
+
+            <HorizontalScrollView
+                android:id="@+id/cardScroll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip" >
+
+                <LinearLayout
+                    android:id="@+id/playerCardContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <com.worthwhilegames.cardgames.shared.TextView
+                android:id="@+id/player1RemainingCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/cardScroll"
+                android:layout_alignTop="@+id/cardScroll"
+                android:layout_margin="10dip"
+                android:background="@drawable/extrabg"
+                android:padding="5dip"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <com.worthwhilegames.cardgames.shared.VerticalRelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        rotation="270"
+        android:background="@android:color/transparent" >
+
+        <com.worthwhilegames.cardgames.shared.TextView
+            android:id="@+id/player2text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="10sp"
+            android:text="@string/player_2"
+            android:textColor="@android:color/black"
+            android:visibility="invisible" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/player2text"
+            android:layout_centerHorizontal="true" >
+
+            <LinearLayout
+                android:id="@+id/player2ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+
+            <com.worthwhilegames.cardgames.shared.TextView
+                android:id="@+id/player2RemainingCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/player2ll"
+                android:layout_alignTop="@+id/player2ll"
+                android:layout_margin="10dip"
+                android:background="@drawable/extrabg"
+                android:padding="5dip"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+        </RelativeLayout>
+    </com.worthwhilegames.cardgames.shared.VerticalRelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:rotation="180" >
+
+        <com.worthwhilegames.cardgames.shared.TextView
+            android:id="@+id/player3text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="10sp"
+            android:text="@string/player_3"
+            android:textColor="@android:color/black"
+            android:visibility="invisible" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/player3text"
+            android:layout_centerHorizontal="true" >
+
+            <LinearLayout
+                android:id="@+id/player3ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+
+            <com.worthwhilegames.cardgames.shared.TextView
+                android:id="@+id/player3RemainingCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/player3ll"
+                android:layout_alignTop="@+id/player3ll"
+                android:layout_margin="10dip"
+                android:background="@drawable/extrabg"
+                android:padding="5dip"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <com.worthwhilegames.cardgames.shared.VerticalRelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        rotation="90"
+        android:background="@android:color/transparent" >
+
+        <com.worthwhilegames.cardgames.shared.TextView
+            android:id="@+id/player4text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="10sp"
+            android:text="@string/player_4"
+            android:textColor="@android:color/black"
+            android:visibility="invisible" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/player4text"
+            android:layout_centerHorizontal="true" >
+
+            <LinearLayout
+                android:id="@+id/player4ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+
+            <com.worthwhilegames.cardgames.shared.TextView
+                android:id="@+id/player4RemainingCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/player4ll"
+                android:layout_alignTop="@+id/player4ll"
+                android:layout_margin="10dip"
+                android:background="@drawable/extrabg"
+                android:padding="5dip"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+        </RelativeLayout>
+    </com.worthwhilegames.cardgames.shared.VerticalRelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/centerCardsOneThree"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/cardPosition4"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:adjustViewBounds="true"
+            android:paddingRight="10dip" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/centerCardsOneThree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/cardPosition3"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:adjustViewBounds="true" />
+
+        <ImageView
+            android:id="@+id/cardPosition1"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:adjustViewBounds="true"
+            android:paddingTop="10dip" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/centerCardsOneThree"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/cardPosition2"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:adjustViewBounds="true"
+            android:paddingLeft="10dip" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/gameboard_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:padding="5dip"
+        android:src="@drawable/pause_button" />
+
+    <ImageView
+        android:id="@+id/gameboard_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:padding="5dip"
+        android:src="@drawable/refresh_button" />
+
+    <ImageView
+        android:id="@+id/gameboard_suit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:padding="5dip" />
+    
+<!--  TODO add ads -->
+    <!-- <com.google.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="320dip"
+        android:layout_height="50dip"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="8bc25cd8acbc490a"
+        ads:loadAdOnCreate="true" /> -->
+
+</RelativeLayout>

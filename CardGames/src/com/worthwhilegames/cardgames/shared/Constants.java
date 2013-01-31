@@ -245,7 +245,12 @@ public class Constants {
 	/**
 	 * This is a JSON key for telling the player the current discard card
 	 */
-	public static final String KEY_DISCARD_CARD = "discardCard";
+	public static final String KEY_DISCARD_CARD = "discardcard";
+
+	/**
+	 * This is a JSON key for telling the player array of Cards played
+	 */
+	public static final String KEY_CARDS_PLAYED = "cardsplayed";
 
 	/**
 	 * This is a JSON key for getting extra information 1
@@ -333,6 +338,16 @@ public class Constants {
 	 * message type for suggested card
 	 */
 	public static final int MSG_SUGGESTED_CARD = 13;
+
+	/**
+	 * message type for sending a full player state update
+	 */
+	public static final int MSG_PLAYER_STATE_FULL = 14;
+
+	/**
+	 * message for
+	 */
+	public static final int MSG_PLAYER_STATE_PARTIAL = 15;
 
 	/* Preferences Options */
 	/**

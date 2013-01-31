@@ -5,9 +5,9 @@ import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PICK_IT_UP;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.PLAY_LEAD_CARD;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.ROUND_OVER;
 import static com.worthwhilegames.cardgames.euchre.EuchreConstants.SECOND_ROUND_BETTING;
-import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP;
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_CURRENT_STATE;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_LOSER;
+import static com.worthwhilegames.cardgames.shared.Constants.MSG_PLAYER_STATE_FULL;
+import static com.worthwhilegames.cardgames.shared.Constants.MSG_PLAYER_STATE_PARTIAL;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_PLAY_CARD;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_REFRESH;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_SETUP;
@@ -20,7 +20,6 @@ import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
 
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,6 +42,7 @@ import com.worthwhilegames.cardgames.player.activities.ShowCardsActivity;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.PlayerController;
+import com.worthwhilegames.cardgames.shared.PlayerStateFull;
 import com.worthwhilegames.cardgames.shared.SoundManager;
 import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
@@ -160,6 +160,8 @@ public class EuchrePlayerController implements PlayerController {
 	 */
 	private int currentState;
 
+	private PlayerStateFull playerState = new PlayerStateFull();
+
 	/**
 	 * The LinearLayout holding all card images
 	 */
@@ -204,21 +206,22 @@ public class EuchrePlayerController implements PlayerController {
 			if (Util.isDebugBuild()) {
 				Log.d(TAG, "message: " + object);
 			}
+			switch(messageType){
+			case MSG_PLAYER_STATE_FULL:
+				playerState = PlayerStateFull.createStateFromJSON(object);
+				playerContext.updateUi();
+				messageType = playerState.currentState;
+				break;
+			case MSG_PLAYER_STATE_PARTIAL:
+				playerState.updateFromPartialState(object);
+				playerContext.updateUi();
+				messageType = playerState.currentState;
+				break;
+			}
 
 			switch (messageType) {
 			case MSG_SETUP:
-				// Parse the Message if it was to start the game over
-				cardHand.removeAll(cardHand);
-				playerContext.removeAllCards();
-				try {
-					JSONArray arr = new JSONArray(object);
-					for (int i = 0; i < arr.length(); i++) {
-						JSONObject obj = arr.getJSONObject(i);
-						playerContext.addCard(Card.createCardFromJSON(obj));
-					}
-				} catch (JSONException ex) {
-					ex.printStackTrace();
-				}
+
 				setButtonsEnabled(false);
 				isTurn = false;
 				cardSuggestedId = -1;
@@ -226,16 +229,13 @@ public class EuchrePlayerController implements PlayerController {
 			case FIRST_ROUND_BETTING: /* purposely have both here */
 			case SECOND_ROUND_BETTING:
 				mySM.sayBet(playerName);
-				isTurn = true;
-				this.setCardLead(object);
-				currentState = messageType;
 				if(currentState == SECOND_ROUND_BETTING) {
 					trumpSuit = -1;
 				} else {
-					trumpSuit = cardLead.getSuit();
+					trumpSuit = playerState.extraInfo1;
 				}
 
-				//start select bet activity for round 1
+				// start select bet activity for round 1
 				// start select bet activity to let the player bet
 				isBettingNow = true;
 				bettingView();
@@ -247,17 +247,10 @@ public class EuchrePlayerController implements PlayerController {
 				mySM.sayTurn(playerName);
 				currentState = PLAY_LEAD_CARD;
 				setButtonsEnabled(true);
-				isTurn = true;
 				break;
 			case PICK_IT_UP:
 				currentState = PICK_IT_UP;
 				mySM.sayPickItUp(playerName);
-				try {
-					JSONObject obj = new JSONObject(object);
-					playerContext.addCard(Card.createCardFromJSON(obj));
-				} catch (JSONException ex) {
-					ex.printStackTrace();
-				}
 				isTurn = true;
 				dealerDiscardView();
 				break;
@@ -265,7 +258,6 @@ public class EuchrePlayerController implements PlayerController {
 			case MSG_PLAY_CARD:
 				playingView();
 				mySM.sayTurn(playerName);
-				this.setCardLead(object);
 				currentState = MSG_PLAY_CARD;
 
 				setButtonsEnabled(true);
@@ -290,28 +282,6 @@ public class EuchrePlayerController implements PlayerController {
 				}
 			case MSG_REFRESH:
 				// Parse the refresh Message
-				try {
-					JSONArray arr = new JSONArray(object);
-					JSONObject refreshInfo = arr.getJSONObject(0);
-					isTurn = refreshInfo.getBoolean(Constants.KEY_TURN);
-					currentState = refreshInfo.getInt(KEY_CURRENT_STATE);
-					playerName = refreshInfo.getString(Constants.KEY_PLAYER_NAME);
-					trumpSuit = refreshInfo.getInt(TRUMP);
-					// add more refresh info here
-
-					playerContext.removeAllCards();
-
-					JSONObject obj = arr.getJSONObject(1);
-					cardLead = Card.createCardFromJSON(obj);
-
-					//the 2nd through however many are the cards of the player
-					for (int i = 2; i < arr.length(); i++) {
-						obj = arr.getJSONObject(i);
-						playerContext.addCard(Card.createCardFromJSON(obj));
-					}
-				} catch (JSONException ex) {
-					ex.printStackTrace();
-				}
 
 
 				if ((currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING)) {
@@ -328,7 +298,6 @@ public class EuchrePlayerController implements PlayerController {
 						setButtonsEnabled(isTurn);
 						isBettingNow = true;
 					}
-					break;
 				} else if (isTurn && currentState == PICK_IT_UP) {
 					dealerDiscardView();
 				} else {
@@ -354,6 +323,14 @@ public class EuchrePlayerController implements PlayerController {
 				break;
 			}
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.worthwhilegames.cardgames.shared.PlayerController#getPlayerState()
+	 */
+	@Override
+	public PlayerStateFull getPlayerState() {
+		return playerState;
 	}
 
 	@Override

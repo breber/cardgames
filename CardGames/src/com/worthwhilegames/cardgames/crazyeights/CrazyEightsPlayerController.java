@@ -27,6 +27,7 @@ import com.worthwhilegames.cardgames.player.activities.ShowCardsActivity;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.PlayerController;
+import com.worthwhilegames.cardgames.shared.PlayerStateFull;
 import com.worthwhilegames.cardgames.shared.Rules;
 import com.worthwhilegames.cardgames.shared.SoundManager;
 import com.worthwhilegames.cardgames.shared.Util;
@@ -58,6 +59,8 @@ public class CrazyEightsPlayerController implements PlayerController {
 	 * The cards of this player
 	 */
 	private List<Card> cardHand;
+
+	private PlayerStateFull playerState;
 
 	/**
 	 * An instance of the ShowCardsActivity that can be used to display cards
@@ -409,5 +412,10 @@ public class CrazyEightsPlayerController implements PlayerController {
 				}
 			}
 		}
+	}
+
+	@Override
+	public PlayerStateFull getPlayerState() {
+		return playerState;
 	}
 }

@@ -2,6 +2,7 @@ package com.worthwhilegames.cardgames.shared;
 
 import static com.worthwhilegames.cardgames.shared.Constants.KEY_CURRENT_STATE;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -12,11 +13,6 @@ import org.json.JSONObject;
  * This is the complete information for a player's state
  */
 public class PlayerStateFull {
-
-	/**
-	 * This must be set up for the specific game being played
-	 */
-	public static CardTranslator ct;
 
 	/**
 	 * Number of cards that each player has
@@ -50,9 +46,14 @@ public class PlayerStateFull {
 	public Card onDiscard;
 
 	/**
+	 * This is the card that the player must play on
+	 */
+	public Card[] cardsPlayed;
+
+	/**
 	 * A list of card objects to represent the cards a player has
 	 */
-	private List<Card> cards;
+	public List<Card> cards;
 
 	/*
 	 * These are extra information slots for specific games
@@ -69,6 +70,72 @@ public class PlayerStateFull {
 	 * 		Euchre - none
 	 */
 	public int extraInfo2 = 0;
+
+	/**
+	 * 
+	 */
+	public PlayerStateFull(){
+		this.cards = new ArrayList<Card>();
+		this.cardsPlayed = new Card[Constants.DEFAULT_MAX_PLAYERS];
+		this.numCards = new int[Constants.DEFAULT_MAX_PLAYERS];
+		this.playerNames = new String[Constants.DEFAULT_MAX_PLAYERS];
+	}
+
+	/**
+	 * Converts the input JSON string to a new PlayerState object
+	 * @param jsonIn
+	 * @return new object that represents the JSON object PlayerState
+	 */
+	public void updateFromPartialState(String jsonIn){
+		PlayerStateFull newState = this;
+
+		try {
+			JSONObject refreshInfo = new JSONObject(jsonIn);
+
+			JSONArray arrCardCount = refreshInfo.getJSONArray(Constants.KEY_NUM_CARDS_ARRAY);
+			newState.numCards = new int[arrCardCount.length()];
+			for (int i = 0; i < arrCardCount.length(); i++) {
+				JSONObject count = arrCardCount.getJSONObject(i);
+				newState.numCards[i] = count.getInt(Constants.KEY_NUM_CARDS);
+			}
+
+			newState.playerIndex = refreshInfo.getInt(Constants.KEY_PLAYER_INDEX);
+			newState.isTurn = refreshInfo.getBoolean(Constants.KEY_TURN);
+			newState.currentState = refreshInfo.getInt(KEY_CURRENT_STATE);
+
+			// Player Names to be displayed
+			JSONArray arrPlayerNames = refreshInfo.getJSONArray(Constants.KEY_PLAYER_NAMES);
+			newState.playerNames = new String[arrPlayerNames.length()];
+			for (int i = 0; i < arrPlayerNames.length(); i++) {
+				JSONObject pName = arrPlayerNames.getJSONObject(i);
+				newState.playerNames[0] = pName.getString(Constants.KEY_PLAYER_NAME);
+			}
+
+			// Extra information that a game may need
+			newState.extraInfo1 = refreshInfo.getInt(Constants.KEY_EXTRA_INFO_1);
+			newState.extraInfo2 = refreshInfo.getInt(Constants.KEY_EXTRA_INFO_2);
+
+			JSONObject discardObj = refreshInfo.getJSONObject(Constants.KEY_DISCARD_CARD);
+			newState.onDiscard = Card.createCardFromJSON(discardObj);
+
+			// Get the cards Played
+			JSONArray cPlayedArr = refreshInfo.getJSONArray(Constants.KEY_CARDS_PLAYED);
+			for (int i = 0; i < cPlayedArr.length(); i++) {
+				JSONObject card = cPlayedArr.getJSONObject(i);
+				newState.cardsPlayed[i] = Card.createCardFromJSON(card);
+			}
+
+
+			// Get the player's hand
+			JSONArray arr = refreshInfo.getJSONArray(Constants.KEY_CURRENT_HAND);
+			for (int i = 0; i < arr.length(); i++) {
+				JSONObject card = arr.getJSONObject(i);
+				newState.cards.add(Card.createCardFromJSON(card));
+			}
+		} catch (JSONException ex) {
+			ex.printStackTrace();
+		}
+	}
 
 	/**
 	 * Takes the current PlayerState object and converts it into a JSON string
@@ -112,6 +179,13 @@ public class PlayerStateFull {
 			// send the card on the discard pile
 			JSONObject discardObj = this.onDiscard.toJSONObject();
 			refreshInfo.put(Constants.KEY_DISCARD_CARD, discardObj);
+
+			JSONArray arrPlayedCards = new JSONArray();
+			for (Card cPlayed: this.cardsPlayed) {
+				arrPlayedCards.put(cPlayed.toJSONObject());
+			}
+			refreshInfo.put(Constants.KEY_CARDS_PLAYED, arrPlayedCards);
+
 
 			// send all the cards in the players hand
 			JSONArray arr = new JSONArray();
@@ -164,19 +238,21 @@ public class PlayerStateFull {
 			newState.extraInfo2 = refreshInfo.getInt(Constants.KEY_EXTRA_INFO_2);
 
 			JSONObject discardObj = refreshInfo.getJSONObject(Constants.KEY_DISCARD_CARD);
-			int suit = discardObj.getInt(Constants.KEY_SUIT);
-			int value = discardObj.getInt(Constants.KEY_VALUE);
-			int id = discardObj.getInt(Constants.KEY_CARD_ID);
-			newState.onDiscard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
+			newState.onDiscard = Card.createCardFromJSON(discardObj);
+
+			// Get the cards Played
+			JSONArray cPlayedArr = refreshInfo.getJSONArray(Constants.KEY_CARDS_PLAYED);
+			for (int i = 0; i < cPlayedArr.length(); i++) {
+				JSONObject card = cPlayedArr.getJSONObject(i);
+				newState.cardsPlayed[i] = Card.createCardFromJSON(card);
+			}
+
 
 			// Get the player's hand
 			JSONArray arr = refreshInfo.getJSONArray(Constants.KEY_CURRENT_HAND);
 			for (int i = 0; i < arr.length(); i++) {
 				JSONObject card = arr.getJSONObject(i);
-				suit = card.getInt(Constants.KEY_SUIT);
-				value = card.getInt(Constants.KEY_VALUE);
-				id = card.getInt(Constants.KEY_CARD_ID);
-				newState.cards.add(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+				newState.cards.add(Card.createCardFromJSON(card));
 			}
 		} catch (JSONException ex) {
 			ex.printStackTrace();
