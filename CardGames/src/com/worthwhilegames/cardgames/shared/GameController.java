@@ -80,12 +80,6 @@ public abstract class GameController {
 	protected int whoseTurn = 0;
 
 	/**
-	 * This allows the resource ids of cards to be correct
-	 * needs to be initialized in constructor.
-	 */
-	protected CardTranslator ct;
-
-	/**
 	 * This is the context of the GameBoardActivity this allows this class to
 	 * call methods and activities as if it were in the GameBoardActivity
 	 */
@@ -270,13 +264,13 @@ public abstract class GameController {
 	 *            played card
 	 */
 	protected Card playReceivedCard(String object) {
-		Card tmpCard = new Card(0, 0, 0, 0);
+		Card tmpCard = new Card(0, 0, 0);
 		try {
 			JSONObject obj = new JSONObject(object);
 			int suit = obj.getInt(KEY_SUIT);
 			int value = obj.getInt(KEY_VALUE);
 			int id = obj.getInt(KEY_CARD_ID);
-			tmpCard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
+			tmpCard = new Card(suit, value, id);
 
 			//tell the game what was played
 			game.discard(players.get(whoseTurn), tmpCard);

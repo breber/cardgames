@@ -44,7 +44,6 @@ import com.worthwhilegames.cardgames.player.activities.GameResultsActivity;
 import com.worthwhilegames.cardgames.player.activities.SelectSuitActivity;
 import com.worthwhilegames.cardgames.player.activities.ShowCardsActivity;
 import com.worthwhilegames.cardgames.shared.Card;
-import com.worthwhilegames.cardgames.shared.CardTranslator;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.PlayerController;
 import com.worthwhilegames.cardgames.shared.SoundManager;
@@ -144,11 +143,6 @@ public class EuchrePlayerController implements PlayerController {
 	private ConnectionClient connection;
 
 	/**
-	 * This is how we can make sure that the card resource IDs are correct
-	 */
-	private CardTranslator ct;
-
-	/**
 	 * This is a SoundManager instance that can do text to speech and other
 	 * sounds.
 	 */
@@ -196,7 +190,6 @@ public class EuchrePlayerController implements PlayerController {
 		isPlayAssistMode = sharedPreferences.getBoolean(Constants.PREF_PLAY_ASSIST_MODE, false);
 
 		gameRules = new EuchreGameRules();
-		ct = new EuchreCardTranslator();
 		connection = ConnectionClient.getInstance(context);
 	}
 
@@ -227,7 +220,7 @@ public class EuchrePlayerController implements PlayerController {
 						int suit = obj.getInt(KEY_SUIT);
 						int value = obj.getInt(KEY_VALUE);
 						int id = obj.getInt(KEY_CARD_ID);
-						playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+						playerContext.addCard(new Card(suit, value, id));
 					}
 				} catch (JSONException ex) {
 					ex.printStackTrace();
@@ -270,7 +263,7 @@ public class EuchrePlayerController implements PlayerController {
 					int suit = obj.getInt(KEY_SUIT);
 					int value = obj.getInt(KEY_VALUE);
 					int id = obj.getInt(KEY_CARD_ID);
-					playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+					playerContext.addCard(new Card(suit, value, id));
 				} catch (JSONException ex) {
 					ex.printStackTrace();
 				}
@@ -321,7 +314,7 @@ public class EuchrePlayerController implements PlayerController {
 					int suit = obj.getInt(KEY_SUIT);
 					int value = obj.getInt(KEY_VALUE);
 					int id = obj.getInt(KEY_CARD_ID);
-					cardLead = new Card(suit, value, ct.getResourceForCardWithId(id), id);
+					cardLead = new Card(suit, value, id);
 
 					//the 2nd through however many are the cards of the player
 					for (int i = 2; i < arr.length(); i++) {
@@ -329,7 +322,7 @@ public class EuchrePlayerController implements PlayerController {
 						suit = obj.getInt(KEY_SUIT);
 						value = obj.getInt(KEY_VALUE);
 						id = obj.getInt(KEY_CARD_ID);
-						playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+						playerContext.addCard(new Card(suit, value, id));
 					}
 				} catch (JSONException ex) {
 					ex.printStackTrace();
@@ -609,7 +602,7 @@ public class EuchrePlayerController implements PlayerController {
 			int suit = obj.getInt(KEY_SUIT);
 			int value = obj.getInt(KEY_VALUE);
 			int id = obj.getInt(KEY_CARD_ID);
-			cardLead = new Card(suit, value, ct.getResourceForCardWithId(id), id);
+			cardLead = new Card(suit, value, id);
 		} catch (JSONException ex) {
 			ex.printStackTrace();
 		}
