@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
+import javax.jmdns.impl.JmDNSImpl;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
@@ -68,7 +69,7 @@ public class WifiServerSocket implements IServerSocket {
 	@Override
 	public void setup() {
 		try {
-			jmdns = JmDNS.create(Util.getLocalIpAddress());
+			jmdns = new JmDNSImpl(Util.getLocalIpAddress(), "CardGames");
 			serviceInfo = ServiceInfo.create(WifiConstants.SERVICE_TYPE, GameFactory.getGameType(mContext) + ": " + android.os.Build.MODEL, GameFactory.getPortNumber(mContext), "Card Games for Android");
 			jmdns.registerService(serviceInfo);
 		} catch (IOException e) {
