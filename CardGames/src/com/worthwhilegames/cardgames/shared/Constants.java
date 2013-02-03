@@ -157,6 +157,12 @@ public class Constants {
 	public static final int RED_JOKER_VALUE = 1;
 
 	/**
+	 * A constant for the null card value
+	 *  - This is because null cards can't be sent through JSON
+	 */
+	public static final int NULL_CARD_VALUE = -1;
+
+	/**
 	 * This is used by the connections screen to pass the player 1 name that
 	 * have been entered
 	 */
@@ -255,12 +261,12 @@ public class Constants {
 	/**
 	 * This is a JSON key for getting extra information 1
 	 */
-	public static final String KEY_EXTRA_INFO_1 = "extrainformation1";
+	public static final String KEY_SUIT_DISPLAY = "suitdisplay";
 
 	/**
 	 * This is a JSON key for getting extra information 1
 	 */
-	public static final String KEY_EXTRA_INFO_2 = "extrainformation2";
+	public static final String KEY_EXTRA_INFO_1 = "extrainformation1";
 
 	/**
 	 * this is a request code for the get EnterNameActivity

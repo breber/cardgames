@@ -59,17 +59,18 @@ public class PlayerStateFull {
 	 * These are extra information slots for specific games
 	 */
 
+	/**
+	 * The suit to display in the lower left corner
+	 * 		C8 - suit on deck or suit chosen for 8 played
+	 * 		Euchre - trump suit
+	 */
+	public int suitDisplay = 0;
+
 	/** extraInfo1:
 	 * 		C8 - none
 	 * 		Euchre - trump suit
 	 */
 	public int extraInfo1 = 0;
-
-	/** extraInfo2:
-	 * 		C8 - none
-	 * 		Euchre - none
-	 */
-	public int extraInfo2 = 0;
 
 	/**
 	 * 
@@ -79,6 +80,16 @@ public class PlayerStateFull {
 		this.cardsPlayed = new Card[Constants.DEFAULT_MAX_PLAYERS];
 		this.numCards = new int[Constants.DEFAULT_MAX_PLAYERS];
 		this.playerNames = new String[Constants.DEFAULT_MAX_PLAYERS];
+		for(int i = 0; i < Constants.DEFAULT_MAX_PLAYERS; i++){
+			this.cardsPlayed[i] = Card.getNullCard();
+			this.numCards[i] = 0;
+			this.playerNames[i] = "";
+		}
+		this.currentState = 0;
+		this.isTurn = false;
+		this.onDiscard = Card.getNullCard();
+		this.playerIndex = 0;
+
 	}
 
 	/**
@@ -111,9 +122,10 @@ public class PlayerStateFull {
 				newState.playerNames[0] = pName.getString(Constants.KEY_PLAYER_NAME);
 			}
 
+			newState.suitDisplay = refreshInfo.getInt(Constants.KEY_SUIT_DISPLAY);
+
 			// Extra information that a game may need
 			newState.extraInfo1 = refreshInfo.getInt(Constants.KEY_EXTRA_INFO_1);
-			newState.extraInfo2 = refreshInfo.getInt(Constants.KEY_EXTRA_INFO_2);
 
 			JSONObject discardObj = refreshInfo.getJSONObject(Constants.KEY_DISCARD_CARD);
 			newState.onDiscard = Card.createCardFromJSON(discardObj);
@@ -171,10 +183,10 @@ public class PlayerStateFull {
 			}
 			refreshInfo.put(Constants.KEY_PLAYER_NAMES, arrPlayerNames);
 
+			refreshInfo.put(Constants.KEY_SUIT_DISPLAY, this.suitDisplay);
 
 			// Extra information that a game may need
 			refreshInfo.put(Constants.KEY_EXTRA_INFO_1, this.extraInfo1);
-			refreshInfo.put(Constants.KEY_EXTRA_INFO_2, this.extraInfo2);
 
 			// send the card on the discard pile
 			JSONObject discardObj = this.onDiscard.toJSONObject();
@@ -182,7 +194,11 @@ public class PlayerStateFull {
 
 			JSONArray arrPlayedCards = new JSONArray();
 			for (Card cPlayed: this.cardsPlayed) {
-				arrPlayedCards.put(cPlayed.toJSONObject());
+				if(cPlayed == null){
+					arrPlayedCards.put(Card.getNullCard().toJSONObject());
+				} else {
+					arrPlayedCards.put(cPlayed.toJSONObject());
+				}
 			}
 			refreshInfo.put(Constants.KEY_CARDS_PLAYED, arrPlayedCards);
 
@@ -194,6 +210,7 @@ public class PlayerStateFull {
 			}
 			refreshInfo.put(Constants.KEY_CURRENT_HAND, arr);
 
+			jsonOut = refreshInfo.toString();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -230,12 +247,13 @@ public class PlayerStateFull {
 			newState.playerNames = new String[arrPlayerNames.length()];
 			for (int i = 0; i < arrPlayerNames.length(); i++) {
 				JSONObject pName = arrPlayerNames.getJSONObject(i);
-				newState.playerNames[0] = pName.getString(Constants.KEY_PLAYER_NAME);
+				newState.playerNames[i] = pName.getString(Constants.KEY_PLAYER_NAME);
 			}
+
+			newState.suitDisplay = refreshInfo.getInt(Constants.KEY_SUIT_DISPLAY);
 
 			// Extra information that a game may need
 			newState.extraInfo1 = refreshInfo.getInt(Constants.KEY_EXTRA_INFO_1);
-			newState.extraInfo2 = refreshInfo.getInt(Constants.KEY_EXTRA_INFO_2);
 
 			JSONObject discardObj = refreshInfo.getJSONObject(Constants.KEY_DISCARD_CARD);
 			newState.onDiscard = Card.createCardFromJSON(discardObj);

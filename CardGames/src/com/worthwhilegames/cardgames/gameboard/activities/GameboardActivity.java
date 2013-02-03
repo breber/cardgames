@@ -8,7 +8,6 @@ import static com.worthwhilegames.cardgames.shared.Constants.halfCardVertCut;
 
 import java.util.List;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,7 +18,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -316,19 +314,20 @@ public class GameboardActivity extends Activity {
 			}
 		});
 
-		setupGoogleTV();
+		// TODO add this back in. tv.setrotation causing problems
+		//setupGoogleTV();
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	/*@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void setupGoogleTV(){
 
 		// If this is a Google TV, rotate the text of player 3 so that it isn't upside down
 		if (Util.isGoogleTv(this)) {
 			if (null != playerTextViews[2]) {
-				playerTextViews[2].setRotation(180);
+				playerTextViews[2].setRotation(180); //TODO says it can't find this method
 			}
 		}
-	}
+	}*/
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onBackPressed()
@@ -390,6 +389,7 @@ public class GameboardActivity extends Activity {
 			// Let the users know that the game is over
 			unregisterReceiver();
 			gameController.sendGameEnd();
+
 
 			// Finish this activity
 			setResult(RESULT_OK);

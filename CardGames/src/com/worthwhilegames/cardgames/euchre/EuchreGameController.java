@@ -11,7 +11,6 @@ import static com.worthwhilegames.cardgames.euchre.EuchreConstants.TRUMP;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_PLAY_CARD;
 import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -143,7 +142,7 @@ public class EuchreGameController extends GameController {
 		currentState = FIRST_ROUND_BETTING;
 
 		// tell first person to bet
-		sendNextTurn(currentState, euchreGame.getCardLead());
+		sendNextTurn(FIRST_ROUND_BETTING);
 	}
 
 	/* (non-Javadoc)
@@ -182,7 +181,7 @@ public class EuchreGameController extends GameController {
 					whoseTurn = euchreGame.getTrickLeader();
 
 					refreshPlayers();
-					sendNextTurn(currentState, euchreGame.getCardLead());
+					sendNextTurn(currentState);
 					break;
 				case MSG_PLAY_CARD:
 					playReceivedCard(object);
@@ -244,7 +243,7 @@ public class EuchreGameController extends GameController {
 		pStateFull.onDiscard = euchreGame.getCardLead();
 
 		// update Trump
-		pStateFull.extraInfo1 = euchreGame.getTrump();
+		pStateFull.suitDisplay = euchreGame.getTrump();
 
 		int i = 0;
 		for(Player p : players){
@@ -261,9 +260,9 @@ public class EuchreGameController extends GameController {
 			pStateFull.isTurn = pTurn.equals(p);
 			pStateFull.playerIndex = i;
 			pStateFull.cards = p.getCards();
-			i++;
 
 			server.write(Constants.MSG_PLAYER_STATE_FULL, pStateFull.toJSONObject(), players.get(i).getId());
+			i++;
 		}
 	}
 
@@ -274,9 +273,10 @@ public class EuchreGameController extends GameController {
 	 */
 	private void advanceTurn() {
 		incrementWhoseTurn();
+		gameContext.updateUi();
 
 		if (whoseTurn == euchreGame.getTrickLeader()) {
-			gameContext.updateUi();
+			updateGameStateFull();
 			startTrickEndWait();
 			return;
 		}
@@ -284,10 +284,8 @@ public class EuchreGameController extends GameController {
 		currentState = MSG_PLAY_CARD;
 
 		//tell the next person to play
-		sendNextTurn(currentState, euchreGame.getCardLead());
+		sendNextTurn(currentState);
 
-		// Update the UI
-		gameContext.updateUi();
 	}
 
 
@@ -316,7 +314,7 @@ public class EuchreGameController extends GameController {
 			whoseTurn = euchreGame.getTrickLeader();
 			currentState = PLAY_LEAD_CARD;
 
-			sendNextTurn(currentState, euchreGame.getCardLead());
+			sendNextTurn(currentState);
 		}
 	}
 
@@ -326,6 +324,8 @@ public class EuchreGameController extends GameController {
 	private void declareRoundScores() {
 		Intent intent = new Intent(gameContext, RoundScoresActivity.class);
 		gameContext.startActivityForResult(intent, DECLARE_ROUND_SCORES);
+
+		// TODO send score info
 
 		for (int i = 0; i < game.getNumPlayers(); i++) {
 			server.write(ROUND_OVER, null, players.get(i).getId());
@@ -367,42 +367,8 @@ public class EuchreGameController extends GameController {
 	 */
 	@Override
 	protected void refreshPlayers() {
-		Player pTurn = players.get(whoseTurn);
 
-		Card leadingCard = euchreGame.getCardLead();
-
-		JSONObject cardLeadObj = leadingCard.toJSONObject();
-
-		for (Player p : players) {
-			if (Util.isDebugBuild()) {
-				Log.d(TAG, p.getName() + " refreshed : " + p);
-			}
-
-			try {
-				JSONArray arr = new JSONArray();
-
-				// Create the base refresh info object
-				JSONObject refreshInfo = new JSONObject();
-				refreshInfo.put(Constants.KEY_TURN, pTurn.equals(p));
-				refreshInfo.put(Constants.KEY_CURRENT_STATE, currentState);
-				refreshInfo.put(Constants.KEY_PLAYER_NAME, p.getName());
-				refreshInfo.put(TRUMP, euchreGame.getTrump());
-				arr.put(refreshInfo);
-
-				// send the card on the discard pile
-				arr.put(cardLeadObj);
-
-				// send all the cards in the players hand
-				for (Card c : p.getCards()) {
-					arr.put(c.toJSONObject());
-				}
-
-				server.write(Constants.MSG_REFRESH, arr.toString(), p.getId());
-				sendCardSuggestion();
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
+		updateGameStateFull();
 
 		// If the next player is a computer, and the computer isn't currently
 		// playing, have the computer initiate a move
@@ -516,7 +482,7 @@ public class EuchreGameController extends GameController {
 
 				// start the first turn of the round
 				whoseTurn = euchreGame.getTrickLeader();
-				sendNextTurn(currentState, euchreGame.getCardLead());
+				sendNextTurn(currentState);
 				return;
 			}
 
@@ -620,7 +586,7 @@ public class EuchreGameController extends GameController {
 		}
 
 		//all of the cases above should come to this statement.
-		sendNextTurn(currentState, euchreGame.getCardLead());
+		sendNextTurn(currentState);
 	}
 
 	/**
@@ -628,15 +594,14 @@ public class EuchreGameController extends GameController {
 	 * @param state the message type to send to the player or computer
 	 * @param card the card to give the player or computer
 	 */
-	private void sendNextTurn(int state, Card card) {
+	private void sendNextTurn(int state) {
 		currentState = state;
+		updateGameStateFull();
 		if (players.get(whoseTurn).getIsComputer()) {
 			if (!isComputerPlaying) {
 				startComputerTurn();
 			}
 		} else {
-			server.write(state, card, players.get(whoseTurn).getId());
-			updateGameStateFull();
 			sendCardSuggestion();
 		}
 

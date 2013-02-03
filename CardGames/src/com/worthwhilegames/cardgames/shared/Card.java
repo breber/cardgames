@@ -3,9 +3,12 @@ package com.worthwhilegames.cardgames.shared;
 import static com.worthwhilegames.cardgames.shared.Constants.KEY_CARD_ID;
 import static com.worthwhilegames.cardgames.shared.Constants.KEY_SUIT;
 import static com.worthwhilegames.cardgames.shared.Constants.KEY_VALUE;
+import static com.worthwhilegames.cardgames.shared.Constants.NULL_CARD_VALUE;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.worthwhilegames.cardgames.R;
 
 /**
  * This class will be used to represent a card. Each card will have four different fields
@@ -13,6 +16,12 @@ import org.json.JSONObject;
  * it and also a suit, value and id number.
  */
 public class Card implements Comparable<Card> {
+
+	/**
+	 * This is a shared pointer to a null card
+	 */
+	private static Card nullCard = new Card(NULL_CARD_VALUE, NULL_CARD_VALUE, NULL_CARD_VALUE, NULL_CARD_VALUE);
+
 	/**
 	 * The suit of this card
 	 */
@@ -163,10 +172,10 @@ public class Card implements Comparable<Card> {
 	public static Card createCardFromJSON(JSONObject jsonIn) {
 		// Decode the JSON object into a Card
 		try {
-			int suit = jsonIn.getInt(Constants.KEY_SUIT);
-			int value = jsonIn.getInt(Constants.KEY_VALUE);
-			int id = jsonIn.getInt(Constants.KEY_CARD_ID);
-			return new Card(suit, value, CardTranslator.getResourceForCardWithId(id), id);
+			int suit = jsonIn.getInt(KEY_SUIT);
+			int value = jsonIn.getInt(KEY_VALUE);
+			int id = jsonIn.getInt(KEY_CARD_ID);
+			return new Card(suit, value, getResourceForCardWithId(id), id);
 		} catch (JSONException ex) {
 			ex.printStackTrace();
 			// TODO: this is a major error what should we do here?
@@ -191,4 +200,139 @@ public class Card implements Comparable<Card> {
 	public int compareTo(Card another) {
 		return this.idNum - another.idNum;
 	}
+
+	public static Card getNullCard(){
+		if(nullCard == null){
+			nullCard = new Card(NULL_CARD_VALUE, NULL_CARD_VALUE, NULL_CARD_VALUE, NULL_CARD_VALUE);
+		}
+		return nullCard;
+	}
+
+	public boolean isNullCard(){
+		return this.idNum == NULL_CARD_VALUE;
+	}
+
+	/**
+	 * Get the appropriate resource id for the card with the
+	 * given id.
+	 * 
+	 * @param id the id of the card
+	 * @return the resource id to display
+	 */
+	public static int getResourceForCardWithId(int cardId) {
+		if (cardId == 0) {
+			return R.drawable.clubs_a;
+		} else if (cardId == 1) {
+			return R.drawable.clubs_2;
+		} else if (cardId == 2) {
+			return R.drawable.clubs_3;
+		} else if (cardId == 3) {
+			return R.drawable.clubs_4;
+		} else if (cardId == 4) {
+			return R.drawable.clubs_5;
+		} else if (cardId == 5) {
+			return R.drawable.clubs_6;
+		} else if (cardId == 6) {
+			return R.drawable.clubs_7;
+		} else if (cardId == 7) {
+			return R.drawable.clubs_8;
+		} else if (cardId == 8) {
+			return R.drawable.clubs_9;
+		} else if (cardId == 9) {
+			return R.drawable.clubs_10;
+		} else if (cardId == 10) {
+			return R.drawable.clubs_j;
+		} else if (cardId == 11) {
+			return R.drawable.clubs_q;
+		} else if (cardId == 12) {
+			return R.drawable.clubs_k;
+		} else if (cardId == 13) {
+			return R.drawable.diamonds_a;
+		} else if (cardId == 14) {
+			return R.drawable.diamonds_2;
+		} else if (cardId == 15) {
+			return R.drawable.diamonds_3;
+		} else if (cardId == 16) {
+			return R.drawable.diamonds_4;
+		} else if (cardId == 17) {
+			return R.drawable.diamonds_5;
+		} else if (cardId == 18) {
+			return R.drawable.diamonds_6;
+		} else if (cardId == 19) {
+			return R.drawable.diamonds_7;
+		} else if (cardId == 20) {
+			return R.drawable.diamonds_8;
+		} else if (cardId == 21) {
+			return R.drawable.diamonds_9;
+		} else if (cardId == 22) {
+			return R.drawable.diamonds_10;
+		} else if (cardId == 23) {
+			return R.drawable.diamonds_j;
+		} else if (cardId == 24) {
+			return R.drawable.diamonds_q;
+		} else if (cardId == 25) {
+			return R.drawable.diamonds_k;
+		} else if (cardId == 26) {
+			return R.drawable.hearts_a;
+		} else if (cardId == 27) {
+			return R.drawable.hearts_2;
+		} else if (cardId == 28) {
+			return R.drawable.hearts_3;
+		} else if (cardId == 29) {
+			return R.drawable.hearts_4;
+		} else if (cardId == 30) {
+			return R.drawable.hearts_5;
+		} else if (cardId == 31) {
+			return R.drawable.hearts_6;
+		} else if (cardId == 32) {
+			return R.drawable.hearts_7;
+		} else if (cardId == 33) {
+			return R.drawable.hearts_8;
+		} else if (cardId == 34) {
+			return R.drawable.hearts_9;
+		} else if (cardId == 35) {
+			return R.drawable.hearts_10;
+		} else if (cardId == 36) {
+			return R.drawable.hearts_j;
+		} else if (cardId == 37) {
+			return R.drawable.hearts_q;
+		} else if (cardId == 38) {
+			return R.drawable.hearts_k;
+		} else if (cardId == 39) {
+			return R.drawable.spades_a;
+		} else if (cardId == 40) {
+			return R.drawable.spades_2;
+		} else if (cardId == 41) {
+			return R.drawable.spades_3;
+		} else if (cardId == 42) {
+			return R.drawable.spades_4;
+		} else if (cardId == 43) {
+			return R.drawable.spades_5;
+		} else if (cardId == 44) {
+			return R.drawable.spades_6;
+		} else if (cardId == 45) {
+			return R.drawable.spades_7;
+		} else if (cardId == 46) {
+			return R.drawable.spades_8;
+		} else if (cardId == 47) {
+			return R.drawable.spades_9;
+		} else if (cardId == 48) {
+			return R.drawable.spades_10;
+		} else if (cardId == 49) {
+			return R.drawable.spades_j;
+		} else if (cardId == 50) {
+			return R.drawable.spades_q;
+		} else if (cardId == 51) {
+			return R.drawable.spades_k;
+		} else if (cardId == 52) {
+			return R.drawable.joker_b;
+		} else if (cardId == 53) {
+			return R.drawable.joker_r;
+		} else if (cardId == NULL_CARD_VALUE){
+			return R.drawable.back_blue_1;
+		}
+
+		return 0;
+	}
+
 }

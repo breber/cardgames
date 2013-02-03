@@ -37,15 +37,12 @@
             android:layout_below="@+id/player1text"
             android:layout_centerHorizontal="true" >
 
-
             <HorizontalScrollView
                 android:id="@+id/cardScroll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip" >
+                android:layout_marginLeft="5dip"
+                android:layout_marginRight="5dip" >
 
                 <LinearLayout
                     android:id="@+id/playerCardContainer"

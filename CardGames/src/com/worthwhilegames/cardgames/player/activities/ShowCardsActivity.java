@@ -8,8 +8,8 @@ import static com.worthwhilegames.cardgames.shared.Constants.halfCardVertCut;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,7 +21,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
@@ -40,7 +39,6 @@ import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.PlayerController;
 import com.worthwhilegames.cardgames.shared.PlayerStateFull;
 import com.worthwhilegames.cardgames.shared.TextView;
-import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.activities.QuitGameActivity;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
@@ -101,11 +99,6 @@ public class ShowCardsActivity extends Activity {
 	 * Holds the scaled Bitmaps of the suit images
 	 */
 	private static Bitmap[] scaledSuitImages = new Bitmap[4];
-
-	/**
-	 * List of cards in player's hand
-	 */
-	private ArrayList<Card> cardHand;
 
 	/**
 	 * The ConnectionClient used to send messages to the server
@@ -211,9 +204,8 @@ public class ShowCardsActivity extends Activity {
 		ImageView refresh = (ImageView) findViewById(R.id.gameboard_refresh);
 		refresh.setImageBitmap(scaleButton(R.drawable.refresh_button));
 
-
-		// Create a new, empty hand
-		cardHand = new ArrayList<Card>();
+		// Get the image to use for the back of a card
+		CARD_BACK = sharedPreferences.getInt(Constants.PREF_CARD_BACK, R.drawable.back_blue_1);
 
 		// Register the receiver for message/state change intents
 		registerReceiver(receiver, new IntentFilter(ConnectionConstants.MESSAGE_RX_INTENT));
@@ -293,18 +285,17 @@ public class ShowCardsActivity extends Activity {
 			}
 		});
 
-		setupGoogleTv();
+		//TODO add this back, textview.setrotation is causing issues
+		//setupGoogleTv();
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public void setupGoogleTv(){
-		// If this is a Google TV, rotate the text of player 3 so that it isn't upside down
+	/*@TargetApi(Build.VERSION_CODES.HONEYCOMB)		// If this is a Google TV, rotate the text of player 3 so that it isn't upside down
 		if (Util.isGoogleTv(this)) {
 			if (null != playerTextViews[2]) {
-				playerTextViews[2].setRotation(180);
+				playerTextViews[2].setRotation(180);//TODO why is this not working?
 			}
 		}
-	}
+	}*/
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onBackPressed()
@@ -400,7 +391,7 @@ public class ShowCardsActivity extends Activity {
 				buttonLayout.inflate();
 
 				// Get the player controller instance
-				playerController = GameFactory.getPlayerControllerInstance(this, cardHand);
+				playerController = GameFactory.getPlayerControllerInstance(this, new ArrayList<Card>());
 			}
 		}
 	}
@@ -411,11 +402,10 @@ public class ShowCardsActivity extends Activity {
 	 * @param newCard Card to be added to the hand
 	 */
 	public void addCard(Card newCard) {
-		// Add the new card to our hand
-		cardHand.add(newCard);
+		List<Card> Cards = playerController.getPlayerState().cards;
 
 		// Make sure the hand is sorted
-		Collections.sort(cardHand);
+		Collections.sort(Cards);
 
 		// Remove all cards from the display
 		playerHandLayout.removeAllViews();
@@ -423,7 +413,7 @@ public class ShowCardsActivity extends Activity {
 		// edit layout attributes
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight);
 
-		for (Card c : cardHand) {
+		for (Card c : Cards) {
 			// create ImageView to hold Card
 			ImageView toAdd = new ImageView(this);
 			toAdd.setImageBitmap(scaleCard(c.getResourceId()));
@@ -440,6 +430,8 @@ public class ShowCardsActivity extends Activity {
 	/**
 	 * Scale a card image with the given resource
 	 * 
+	 * This is for cards in the players hand
+	 * 
 	 * @param resId the resource id of the card to scale
 	 * @return a scaled card image
 	 */
@@ -454,13 +446,33 @@ public class ShowCardsActivity extends Activity {
 	}
 
 	/**
+	 * Update the names that are displayed on the Gameboard.
+	 *
+	 * This data is pulled from the Game instance
+	 */
+	public void updateNamesOnGameboard() {
+		PlayerStateFull pStateFull = playerController.getPlayerState();
+
+		int curPlayerIndex = 0;
+		for (int i = 0; i < 4; i++) {
+			curPlayerIndex = (4 + i - pStateFull.playerIndex) % 4;
+			if (pStateFull.playerNames[curPlayerIndex] != null) {
+				playerTextViews[i].setVisibility(View.VISIBLE);
+				playerTextViews[i].setText(pStateFull.playerNames[curPlayerIndex]);
+			} else {
+				playerTextViews[i].setVisibility(View.INVISIBLE);
+			}
+		}
+	}
+
+	/**
 	 * Set the selected card. This will highlight the selected
 	 * card, and clear the highlight from any other cards.
 	 *
 	 * @param cardId - the currently selected card
 	 */
 	public void setSelected(int cardId, int suggestedId) {
-		for (Card c : cardHand) {
+		for (Card c : playerController.getPlayerState().cards) {
 			if (c.getIdNum() == cardId && c.getIdNum() == suggestedId) {
 				ImageView iv = (ImageView) findViewById(c.getIdNum());
 				iv.setBackgroundColor(getResources().getColor(R.color.suggested_selected_card_color));
@@ -484,7 +496,7 @@ public class ShowCardsActivity extends Activity {
 	 * @param cardId - the currently selected card
 	 */
 	public void setSuggested(int cardId) {
-		for (Card c : cardHand) {
+		for (Card c : playerController.getPlayerState().cards) {
 			if (c.getIdNum() == cardId) {
 				ImageView iv = (ImageView) findViewById(c.getIdNum());
 				iv.setBackgroundColor(getResources().getColor(R.color.gold));
@@ -510,12 +522,13 @@ public class ShowCardsActivity extends Activity {
 	}
 
 	/**
-	 * This will remove all cards from cardHand and from the screen
+	 * This will remove all cards from the players hand and from the screen
 	 * used for refreshing the player and syncing with game board
 	 */
+	// TODO why is this here? when do we use it?
 	public void removeAllCards() {
 		// Remove all cards from our hand
-		cardHand.clear();
+		playerController.getPlayerState().cards.clear();
 
 		// Remove all layouts from our view
 		playerHandLayout.removeAllViews();
@@ -529,10 +542,12 @@ public class ShowCardsActivity extends Activity {
 	public void removeFromHand(int idNum) {
 		playerHandLayout.removeView(findViewById(idNum));
 
+		List<Card> cards = playerController.getPlayerState().cards;
+
 		// remove card from list
-		for (int i = 0; i < cardHand.size(); i++) {
-			if (cardHand.get(i).getIdNum() == idNum) {
-				cardHand.remove(i);
+		for (int i = 0; i < cards.size(); i++) {
+			if (cards.get(i).getIdNum() == idNum) {
+				cards.remove(i);
 				return;
 			}
 		}
@@ -561,17 +576,22 @@ public class ShowCardsActivity extends Activity {
 	 * Updates the draw card image
 	 */
 	public void updateUi() {
-		GameFactory.getGameInstance(this);
 		PlayerStateFull pStateFull = playerController.getPlayerState();
 
 		// Place images for all player's cards
-		for (int i = 0; i<4; i++) {
+		for (int i = 0; i < Constants.DEFAULT_MAX_PLAYERS; i++) {
 
 			playerLinearLayouts[i].removeAllViews();
 
+			/*
+			 * curPlayerIndex is the index of the player in pStateFull based on this players perspective
+			 * i is the view that we are updating
+			 */
+			int curPlayerIndex = (i + 4 - pStateFull.playerIndex) % 4;
+
 			if(i > 0){
 				// Display for other players
-				for (int j = 0; j < pStateFull.cards.size(); j++) {
+				for (int j = 0; j < pStateFull.numCards[curPlayerIndex]; j++) {
 					ImageView image = new ImageView(this);
 					image.setId(CARD_BACK);
 					image.setScaleType(ScaleType.FIT_CENTER);
@@ -598,27 +618,32 @@ public class ShowCardsActivity extends Activity {
 					}
 				}
 			} else {
+				// Sort the cards
+				Collections.sort(pStateFull.cards);
+
+				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight);
+				int j = 0;
 				// Display for this player
-				for (int j = 0; j < pStateFull.cards.size(); j++) {
-					Card c = pStateFull.cards.get(i);
+				for (Card c : pStateFull.cards) {
 					ImageView image = new ImageView(this);
 					image.setId(c.getIdNum());
-					image.setScaleType(ScaleType.FIT_CENTER);
+					image.setImageBitmap(scaleCard(c.getResourceId()));
+					c.getResourceId();
 
-					int resId = c.getResourceId();
+					// Set the onClick Listener for selecting this card
+					image.setOnClickListener(playerController.getCardClickListener());
+
+					// Add a 5px border around the image
+					image.setPadding(5, 5, 5, 5);
 
 					int cardsToDisplay = pStateFull.cards.size();
 					if (cardsToDisplay > maxDisplayed[i]) {
 						cardsToDisplay = maxDisplayed[i];
 					}
 
-					// Scale card
-					Bitmap scaledCard = scaleCard(resId, (j < (cardsToDisplay - 1)) ? fourthCard : halfCard);
-					image.setImageBitmap(scaledCard);
-
 					// Check for max displayed
 					if (j < maxDisplayed[i]) {
-						playerLinearLayouts[i].addView(image, cardParams);
+						playerLinearLayouts[i].addView(image, params);
 						playerRemainingCards[i].setVisibility(View.INVISIBLE);
 					} else {
 						// Display how many cards are remaining that aren't displayed
@@ -626,14 +651,17 @@ public class ShowCardsActivity extends Activity {
 						playerRemainingCards[i].setVisibility(View.VISIBLE);
 						break;
 					}
+					j++;
 				}
 			}
 		}
 
 		// Set all the cards in the center of the screen
 		for (int j = 0; j < 4; j++) {
-			Card c = pStateFull.cardsPlayed[j];
-			if (c != null) {
+			int curPlayerIndex = (j + 4 - pStateFull.playerIndex) % 4;
+
+			Card c = pStateFull.cardsPlayed[curPlayerIndex];
+			if (!c.isNullCard()) {
 				Bitmap scaledCard = scaleCard(c.getResourceId(), fullCard);
 
 				centerCards[j].setImageBitmap(scaledCard);
@@ -642,6 +670,8 @@ public class ShowCardsActivity extends Activity {
 				centerCards[j].setVisibility(View.INVISIBLE);
 			}
 		}
+
+		updateSuit(pStateFull.suitDisplay);
 
 		// TODO Set up buttons enabled or not
 	}

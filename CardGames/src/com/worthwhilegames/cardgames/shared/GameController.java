@@ -316,6 +316,7 @@ public abstract class GameController {
 	 * Tell the players to end the game, since the gameboard is ending
 	 */
 	public void sendGameEnd() {
+		isComputerPlaying = true; // stop computer from playing
 		for (int i = 0; i < game.getNumPlayers(); i++) {
 			server.write(Constants.MSG_END_GAME, null, players.get(i).getId());
 		}
