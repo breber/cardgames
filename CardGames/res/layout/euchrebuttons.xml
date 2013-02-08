@@ -47,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="5dip"
         android:layout_weight=".25"
-        android:adjustViewBounds="true" />
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/trumpSuit" />
 
 </LinearLayout>

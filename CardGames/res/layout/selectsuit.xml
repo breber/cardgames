@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="5dip"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/hearts"
             android:src="@drawable/heartsuitimage" />
 
         <ImageView
@@ -37,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="5dip"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/clubs"
             android:src="@drawable/clubsuitimage" />
 
         <ImageView
@@ -45,6 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="5dip"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/diamonds"
             android:src="@drawable/diamondsuitimage" />
 
         <ImageView
@@ -52,6 +55,7 @@
             android:layout_width="@dimen/selectSuitImage"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/spades"
             android:src="@drawable/spadesuitimage" />
     </LinearLayout>
 

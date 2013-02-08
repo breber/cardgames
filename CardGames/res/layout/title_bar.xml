@@ -13,6 +13,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dip"
         android:background="@drawable/ic_tab_preferences_unselected"
+        android:contentDescription="@string/settings"
         android:visibility="invisible" />
 
     <com.worthwhilegames.cardgames.shared.TextView
@@ -43,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@drawable/ic_menu_refresh"
+            android:contentDescription="@string/refresh"
             android:text=""
             android:visibility="invisible" />
     </RelativeLayout>

@@ -8,6 +8,7 @@
     <string name="CreateGame">Create Game</string>
     <string name="Rules">Rules</string>
     <string name="About">About</string>
+    <string name="settings">Settings</string>
 
     <!-- Rules Activity -->
     <string name="rulesActivityTitle">Rules</string>
@@ -52,6 +53,10 @@ The game will start with player 1 and continue in a counterclockwise fashion aro
 
     <!-- Select Suit Activity -->
     <string name="selectsuit">Please select a suit</string>
+    <string name="hearts">Hearts</string>
+    <string name="spades">Spades</string>
+    <string name="clubs">Clubs</string>
+    <string name="diamonds">Diamonds</string>
 
     <!-- Pause Activity -->
     <string name="gamePaused">Paused</string>
@@ -79,6 +84,9 @@ The game will start with player 1 and continue in a counterclockwise fashion aro
     <string name="player_2">Player 2</string>
     <string name="player_3">Player 3</string>
     <string name="player_4">Player 4</string>
+    <string name="refresh">Refresh</string>
+    <string name="trumpSuit">Trump Suit</string>
+    <string name="currentSuit">Current Suit</string>
 
     <!-- Disconnected Player -->
     <string name="reconnect">Reconnect</string>
@@ -119,10 +127,7 @@ The game will start with player 1 and continue in a counterclockwise fashion aro
     <string name="pass_option">Pass</string>
     <string name="bet_option">Bet</string>
     <string name="go_alone_option">Go Alone</string>
-    <string name="bet_round_one_title">Tell the dealer to pick it up?</string>
-    <string name="bet_round_two_title">Pass, or choose a suit and bet</string>
     <string name="Discard">Discard</string>
-    <string name="play_again">Play Again</string>
     <string name="playAssistMode">Play Assist Mode</string>
     <string name="playAssistModeLong">Play Assist Mode (see a suggested card)</string>
     <string name="euchre_game_rules_text">The goal of Euchre is to win the most tricks in a round and to score points by doing so. Each player is on the same team as the player across from them. In Euchre only 9, 10, Jack, Queen, King, and Ace are dealt.

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/wooden_top"
@@ -204,7 +205,8 @@
             android:layout_height="fill_parent"
             android:adjustViewBounds="true"
             android:paddingRight="10dip"
-            android:src="@drawable/back_blue_1" />
+            android:src="@drawable/back_blue_1"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 
     <LinearLayout
@@ -221,7 +223,8 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:adjustViewBounds="true"
-            android:src="@drawable/back_blue_1" />
+            android:src="@drawable/back_blue_1"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/cardPosition1"
@@ -229,7 +232,8 @@
             android:layout_height="fill_parent"
             android:adjustViewBounds="true"
             android:paddingTop="10dip"
-            android:src="@drawable/back_blue_1" />
+            android:src="@drawable/back_blue_1"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 
     <LinearLayout
@@ -247,7 +251,8 @@
             android:layout_height="fill_parent"
             android:adjustViewBounds="true"
             android:paddingLeft="10dip"
-            android:src="@drawable/back_blue_1" />
+            android:src="@drawable/back_blue_1"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 
     <ImageView
@@ -256,6 +261,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:contentDescription="@string/pauseGameTitle"
         android:padding="5dip"
         android:src="@drawable/pause_button" />
 
@@ -265,6 +271,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:contentDescription="@string/refresh"
         android:padding="5dip"
         android:src="@drawable/refresh_button" />
 
@@ -274,6 +281,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:contentDescription="@string/currentSuit"
         android:padding="5dip" />
 
     <com.google.ads.AdView
