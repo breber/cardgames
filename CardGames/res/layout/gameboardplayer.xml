@@ -6,13 +6,17 @@
     android:background="@drawable/wooden_top"
     android:keepScreenOn="true"
     android:orientation="horizontal" >
-    
-    <!-- TODO: don't hardcode a height -->
-    <ViewStub
-        android:id="@+id/playerHandButtonView"
-        android:layout_width="fill_parent"
-        android:layout_height="75dip"
-        android:layout_alignParentTop="true" />
+
+    <!-- TODO finalize ads -->
+    <!-- <com.google.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="320dip"
+        android:layout_height="50dip"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="8bc25cd8acbc490a"
+        ads:loadAdOnCreate="true" /> -->
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -263,20 +267,11 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/gameboard_pause"
+        android:id="@+id/gameboard_refresh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:padding="5dip"
-        android:src="@drawable/pause_button" />
-
-    <ImageView
-        android:id="@+id/gameboard_refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:padding="5dip"
         android:src="@drawable/refresh_button" />
 
@@ -287,16 +282,14 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:padding="5dip" />
-    
-<!--  TODO add ads -->
-    <!-- <com.google.ads.AdView
-        android:id="@+id/adView"
-        android:layout_width="320dip"
-        android:layout_height="50dip"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        ads:adSize="BANNER"
-        ads:adUnitId="8bc25cd8acbc490a"
-        ads:loadAdOnCreate="true" /> -->
+
+
+    <!-- TODO: don't hardcode a height -->
+
+    <ViewStub
+        android:id="@+id/playerHandButtonView"
+        android:layout_width="fill_parent"
+        android:layout_height="75dip"
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>

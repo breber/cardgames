@@ -24,7 +24,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -252,7 +251,7 @@ public class ShowCardsActivity extends Activity {
 
 		// Set up the scale factors for the card images
 		int screenHeight = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
-		cardHeight = screenHeight / 4;
+		cardHeight = screenHeight / 5;
 		buttonHeight = screenHeight / 6;
 
 		// Update the size of the text in the name TextViews
@@ -269,21 +268,10 @@ public class ShowCardsActivity extends Activity {
 		scaledSuitImages[2] = scaleButton(R.drawable.heartsuitimage);
 		scaledSuitImages[3] = scaleButton(R.drawable.spadesuitimage);
 
+		//TODO do we want a pause button
 		// Add the handler for the pause button
-		ImageView pause = (ImageView) findViewById(R.id.gameboard_pause);
-		pause.setImageBitmap(scaleButton(R.drawable.pause_button));
-		pause.setOnClickListener(new OnClickListener() {
-			/* (non-Javadoc)
-			 * @see android.view.View.OnClickListener#onClick(android.view.View)
-			 */
-			@Override
-			public void onClick(View v) {
-				//TODO what do we do when the player pauses it?
-				/*playerController.pause();
-				Intent pauseButtonClick = new Intent(GameboardActivity.this, PauseMenuActivity.class);
-				startActivityForResult(pauseButtonClick, PAUSE_GAME);*/
-			}
-		});
+		//ImageView pause = (ImageView) findViewById(R.id.gameboard_pause);
+		//pause.setImageBitmap(scaleButton(R.drawable.pause_button));
 
 		//TODO add this back, textview.setrotation is causing issues
 		//setupGoogleTv();
@@ -357,9 +345,6 @@ public class ShowCardsActivity extends Activity {
 				finish();
 			} else {
 				setupGame();
-
-				String playerName = data.getStringExtra(Constants.KEY_PLAYER_NAME);
-				playerController.setPlayerName(playerName);
 
 				// Register the state change receiver
 				registerReceiver(receiver, new IntentFilter(ConnectionConstants.STATE_CHANGE_INTENT));
@@ -597,7 +582,7 @@ public class ShowCardsActivity extends Activity {
 					image.setScaleType(ScaleType.FIT_CENTER);
 					int resId = CARD_BACK;
 
-					int cardsToDisplay = pStateFull.cards.size();
+					int cardsToDisplay = pStateFull.numCards[curPlayerIndex];
 					if (cardsToDisplay > maxDisplayed[i]) {
 						cardsToDisplay = maxDisplayed[i];
 					}

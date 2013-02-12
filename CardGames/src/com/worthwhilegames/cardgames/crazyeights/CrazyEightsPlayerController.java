@@ -382,16 +382,6 @@ public class CrazyEightsPlayerController implements PlayerController {
 	}
 
 	/**
-	 * Sets the player's name
-	 * 
-	 * @param name - the player's name
-	 */
-	@Override
-	public void setPlayerName(String name) {
-		playerName = name;
-	}
-
-	/**
 	 * This will be used for each card ImageView and will allow the card to be
 	 * selected when it is Clicked
 	 */

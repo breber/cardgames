@@ -257,7 +257,7 @@ public class EuchreGameController extends GameController {
 		Player pTurn = players.get(whoseTurn);
 		i=0;
 		for(Player p : players){
-			pStateFull.isTurn = pTurn.equals(p);
+			pStateFull.isTurn = ( pTurn.equals(p) && !isWaitingToClearCards);
 			pStateFull.playerIndex = i;
 			pStateFull.cards = p.getCards();
 

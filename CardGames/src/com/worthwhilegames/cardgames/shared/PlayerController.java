@@ -39,13 +39,6 @@ public interface PlayerController {
 	public OnClickListener getCardClickListener();
 
 	/**
-	 * This will set the player name to the name given
-	 * 
-	 * @param name name of player
-	 */
-	public void setPlayerName(String name);
-
-	/**
 	 * This will get the full state of the player
 
 	 * @return full player state

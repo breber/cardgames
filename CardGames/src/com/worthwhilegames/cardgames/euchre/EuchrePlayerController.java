@@ -51,7 +51,6 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 
 public class EuchrePlayerController implements PlayerController {
 
-
 	/**
 	 * The Logcat Debug tag
 	 */
@@ -96,6 +95,11 @@ public class EuchrePlayerController implements PlayerController {
 	private Button goAlone;
 
 	/**
+	 * The refresh button in the lower right hand corner
+	 */
+	private ImageView refresh;
+
+	/**
 	 * The choose suit imageview that is used as a button
 	 */
 	private ImageView chooseSuit;
@@ -132,11 +136,6 @@ public class EuchrePlayerController implements PlayerController {
 	private SoundManager mySM;
 
 	/**
-	 * The player's name
-	 */
-	private String playerName;
-
-	/**
 	 * The suit that is currently Trump
 	 */
 	private int trumpSuit;
@@ -162,8 +161,19 @@ public class EuchrePlayerController implements PlayerController {
 		chooseSuit.setOnClickListener(chooseSuitClickListener);
 		setButtonsEnabled(false);
 		mySM = SoundManager.getInstance(context);
-		playerName = "";
 		playerHandLayout = (LinearLayout) playerContext.findViewById(R.id.playerCardContainer);
+
+		// Refresh button press will ask gameboard for updated state.
+		refresh = (ImageView) playerContext.findViewById(R.id.gameboard_refresh);
+		refresh.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				v.setEnabled(false);
+				connection.write(Constants.MSG_REFRESH, null);
+				v.setEnabled(true);
+			}
+		});
 
 		// set up play assist mode
 		SharedPreferences sharedPreferences = playerContext.getSharedPreferences(PREFERENCES, 0);
@@ -171,6 +181,7 @@ public class EuchrePlayerController implements PlayerController {
 
 		gameRules = new EuchreGameRules();
 		connection = ConnectionClient.getInstance(context);
+		noButtonView();
 	}
 
 	/* (non-Javadoc)
@@ -207,37 +218,44 @@ public class EuchrePlayerController implements PlayerController {
 			switch (messageType) {
 			case MSG_SETUP:
 				setButtonsEnabled(false);
-				cardSuggestedId = -1;
 				break;
 			case FIRST_ROUND_BETTING: /* purposely have both here */
 			case SECOND_ROUND_BETTING:
-				mySM.sayBet(playerState.playerNames[playerState.playerIndex]);
-				if(playerState.currentState == SECOND_ROUND_BETTING) {
-					// Not chosen yet
-					trumpSuit = -1;
-				} else {
-					trumpSuit = playerState.extraInfo1;
-				}
+				if(playerState.isTurn){
+					mySM.sayBet(playerState.playerNames[playerState.playerIndex]);
+					if(playerState.currentState == SECOND_ROUND_BETTING) {
+						// Not chosen yet
+						trumpSuit = -1;
+					} else {
+						trumpSuit = playerState.extraInfo1;
+					}
 
-				// start select bet activity for round 1
-				// start select bet activity to let the player bet
-				isBettingNow = true;
-				bettingView();
-				setButtonsEnabled(true);
+					// start select bet activity for round 1
+					// start select bet activity to let the player bet
+					isBettingNow = true;
+					bettingView();
+					setButtonsEnabled(true);
+				}
 				break;
 			case PLAY_LEAD_CARD:
-				playingView();
-				mySM.sayTurn(playerState.playerNames[playerState.playerIndex]);
-				setButtonsEnabled(playerState.isTurn);
+				if(playerState.isTurn){
+					playingView();
+					mySM.sayTurn(playerState.playerNames[playerState.playerIndex]);
+					setButtonsEnabled(playerState.isTurn);
+				}
 				break;
 			case PICK_IT_UP:
-				mySM.sayPickItUp(playerState.playerNames[playerState.playerIndex]);
-				dealerDiscardView();
+				if(playerState.isTurn){
+					mySM.sayPickItUp(playerState.playerNames[playerState.playerIndex]);
+					dealerDiscardView();
+				}
 				break;
 			case MSG_PLAY_CARD:
-				playingView();
-				mySM.sayTurn(playerState.playerNames[playerState.playerIndex]);
-				setButtonsEnabled(playerState.isTurn);
+				if(playerState.isTurn){
+					playingView();
+					mySM.sayTurn(playerState.playerNames[playerState.playerIndex]);
+					setButtonsEnabled(playerState.isTurn);
+				}
 				break;
 			case MSG_SUGGESTED_CARD:
 				if (playerState.isTurn && object != null && isPlayAssistMode) {
@@ -313,13 +331,16 @@ public class EuchrePlayerController implements PlayerController {
 
 				playerContext.removeFromHand(cardSelected.getIdNum());
 
-				cardSelected = null;
 				if (playerState.currentState == PICK_IT_UP) {
 					play.setText(R.string.Play);
-					playingView();
+				} else {
+					playerState.cardsPlayed[playerState.playerIndex] = cardSelected;
+					playerContext.updateUi();
 				}
 
+				cardSelected = null;
 				setButtonsEnabled(false);
+				noButtonView();
 				playerState.isTurn = false;
 				cardSuggestedId = -1;
 				playerContext.setSelected(-1, cardSuggestedId);
@@ -330,8 +351,8 @@ public class EuchrePlayerController implements PlayerController {
 
 				isBettingNow = false;
 
-				playingView();
 				setButtonsEnabled(false);
+				noButtonView();
 				playerState.isTurn = false;
 				cardSuggestedId = -1;
 				playerContext.setSelected(-1, cardSuggestedId);
@@ -366,8 +387,8 @@ public class EuchrePlayerController implements PlayerController {
 
 				isBettingNow = false;
 
-				playingView();
 				setButtonsEnabled(false);
+				noButtonView();
 				playerState.isTurn = false;
 				cardSuggestedId = -1;
 			}
@@ -398,8 +419,8 @@ public class EuchrePlayerController implements PlayerController {
 
 				isBettingNow = false;
 
-				playingView();
 				setButtonsEnabled(false);
+				noButtonView();
 				playerState.isTurn = false;
 				cardSuggestedId = -1;
 			}
@@ -461,16 +482,6 @@ public class EuchrePlayerController implements PlayerController {
 		}
 	}
 
-	/**
-	 * Sets the player's name
-	 * 
-	 * @param name - the player's name
-	 */
-	@Override
-	public void setPlayerName(String name) {
-		playerName = name;
-	}
-
 	private void dealerDiscardView(){
 		play.setText(R.string.Discard);
 		play.setVisibility(View.VISIBLE);
@@ -500,6 +511,17 @@ public class EuchrePlayerController implements PlayerController {
 		play.setText(R.string.Play);
 		play.setVisibility(View.VISIBLE);
 		play.setEnabled(true);
+		bet.setVisibility(View.INVISIBLE);
+		bet.setEnabled(false);
+		goAlone.setVisibility(View.INVISIBLE);
+		goAlone.setEnabled(false);
+		chooseSuit.setVisibility(View.INVISIBLE);
+		chooseSuit.setEnabled(false);
+	}
+
+	private void noButtonView(){
+		play.setVisibility(View.INVISIBLE);
+		play.setEnabled(false);
 		bet.setVisibility(View.INVISIBLE);
 		bet.setEnabled(false);
 		goAlone.setVisibility(View.INVISIBLE);
@@ -544,6 +566,7 @@ public class EuchrePlayerController implements PlayerController {
 			ScaleAnimation scale = new ScaleAnimation((float) 1.2, (float) 1.2,	(float) 1.2, (float) 1.2);
 			scale.scaleCurrentDuration(5);
 			v.startAnimation(scale);
+
 
 			// Let the UI know which card was selected
 			playerContext.setSelected(v.getId(), cardSuggestedId);
