@@ -61,4 +61,9 @@ public abstract class ConnectionCommon {
 		return true;
 	}
 
+	/**
+	 * Terminate the connection
+	 */
+	public abstract void disconnect();
+
 }

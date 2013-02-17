@@ -1,7 +1,5 @@
 package com.worthwhilegames.cardgames.shared;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -78,11 +76,11 @@ public class GameFactory {
 	 *
 	 * @return the PlayerController instance as specified by the currently specified game type
 	 */
-	public static PlayerController getPlayerControllerInstance(Activity activity, ArrayList<Card> cardHand) {
+	public static PlayerController getPlayerControllerInstance(Activity activity) {
 		if (CardGame.CrazyEights.equals(getGameType(activity))) {
-			return new CrazyEightsPlayerController(activity, cardHand);
+			return new CrazyEightsPlayerController(activity);
 		} else if (CardGame.Euchre.equals(getGameType(activity))) {
-			return new EuchrePlayerController(activity, cardHand);
+			return new EuchrePlayerController(activity);
 		}
 
 		return null;

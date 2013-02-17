@@ -25,7 +25,7 @@ public class Player {
 	/**
 	 * A string to store the id of the user which will be represented by a MAC Address
 	 */
-	private String id;
+	private String id = "";
 
 	/**
 	 * The position of the current user on the gameboard
@@ -35,7 +35,7 @@ public class Player {
 	/**
 	 * A boolean to set whether or not this player is a computer
 	 */
-	private boolean isComputer = false;
+	private PlayerType playerType = PlayerType.CONNECTED;
 
 	/**
 	 * A variable to set the difficulty of the player if they are a computer
@@ -51,6 +51,13 @@ public class Player {
 	 * Represents whether this player has been disconnected
 	 */
 	private boolean isDisconnected = false;
+
+	/**
+	 * This represents the type of player that this player is
+	 */
+	public enum PlayerType {
+		CONNECTED, PLAYER_HOST, COMPUTER;
+	}
 
 	/**
 	 * A default player constructor. A fields will be set with getters and setters
@@ -94,7 +101,16 @@ public class Player {
 	 * @return true if the current player is a computer, false otherwise
 	 */
 	public boolean getIsComputer() {
-		return this.isComputer;
+		return playerType == PlayerType.COMPUTER;
+	}
+
+	/**
+	 * A method to get a players computer status
+	 * 
+	 * @return true if the current player is a computer, false otherwise
+	 */
+	public boolean getIsPlayerHost() {
+		return playerType == PlayerType.PLAYER_HOST;
 	}
 
 	/**
@@ -103,9 +119,8 @@ public class Player {
 	 * @param isComp true if the player is a computer, false otherwise
 	 */
 	public void setIsComputer(boolean isComp) {
-		isComputer = isComp;
-
-		if (isComputer) {
+		if(isComp){
+			playerType = PlayerType.COMPUTER;
 			isDisconnected = false;
 		}
 
@@ -180,10 +195,21 @@ public class Player {
 	 * 
 	 * @param id a string representing the new ID of a player
 	 */
-	public void setId(String id) {
+	public void setConnectedId(String id) {
 		this.id = id;
 		isDisconnected = false;
-		isComputer = false;
+		playerType = PlayerType.CONNECTED;
+	}
+
+	/**
+	 * This method will set the id of a player
+	 * 
+	 * @param id a string representing the new ID of a player
+	 */
+	public void setPlayerHost(boolean isPlayerHost) {
+		if(isPlayerHost){
+			playerType = PlayerType.PLAYER_HOST;
+		}
 	}
 
 	/**

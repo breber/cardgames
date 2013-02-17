@@ -7,17 +7,45 @@ import java.util.List;
  * application supports. It provides methods for starting a
  * game, drawing cards, shuffling etc.
  */
-public interface Game {
+public abstract class Game {
+
+	/**
+	 * This will be 0 to 3 to indicate the spot in the players array for the
+	 * player currently taking their turn
+	 */
+	public int whoseTurn = 0;
+
+	/**
+	 * This is the current state of the game
+	 * Corresponds to the first round of betting second round of betting
+	 * trick leading etc constants in euchre constants and shared constants
+	 */
+	public int currentState;
+
+	/**
+	 * A private variable for a list of players in the current game
+	 */
+	protected List<Player> players;
+
+	/**
+	 * A private variable representing the game deck for the euchre game
+	 */
+	protected Deck gameDeck;
+
+	/**
+	 * A private variable to represent the difficulty of computers in the current game
+	 */
+	protected String computerDifficulty = Constants.EASY;
 
 	/**
 	 * This method will be used to set up the given game to it's initial state
 	 */
-	public void setup();
+	public abstract void setup();
 
 	/**
 	 * This method deals cards to the players involved in the current game
 	 */
-	public void deal();
+	public abstract void deal();
 
 	/**
 	 * This method is used to add a card to a players hand from the non-used deck
@@ -25,7 +53,7 @@ public interface Game {
 	 * @param player the player that needs another card
 	 * @return the card that was added to the players hand
 	 */
-	public Card draw(Player player);
+	public abstract Card draw(Player player);
 
 	/**
 	 * This method is used to discard a pile to the discard pile
@@ -33,27 +61,27 @@ public interface Game {
 	 * @param player the player that is making the discard
 	 * @param card the card that is to be added to the discard pile
 	 */
-	public void discard(Player player, Card card);
+	public abstract void discard(Player player, Card card);
 
 	/**
 	 * This method will shuffle the current deck of cards
 	 */
-	public void shuffleDeck();
+	public abstract void shuffleDeck();
 
 	/**
 	 * This method will remove a player from the current list of players in the game
 	 * 
 	 * @param player the id of the player that is to be removed from the current game
 	 */
-	public void dropPlayer(String playerMacAddress);
+	public abstract void dropPlayer(String playerMacAddress);
 
 	/**
 	 * This method will return the card last discarded
 	 * 
 	 * @return a Card object that represents the top of the discard pile
 	 */
-	public Card getDiscardPileTop();
-	
+	public abstract Card getDiscardPileTop();
+
 	/**
 	 * This method will return the card at the position requested
 	 * @param position position of the card to get
@@ -61,21 +89,21 @@ public interface Game {
 	 * 
 	 * @return card to be displayed at the position
 	 */
-	public Card getCardAtPosition(int position);
+	public abstract Card getCardAtPosition(int position);
 
 	/**
 	 * This method will return the number of players involved in the current game
 	 * 
 	 * @return and integer representation of the number of players in the current game
 	 */
-	public int getNumPlayers();
+	public abstract int getNumPlayers();
 
 	/**
 	 * The maximum number of players to allow to connect
 	 * 
 	 * @return the maximum number of players to allow to connect
 	 */
-	public int getMaxNumPlayers();
+	public abstract int getMaxNumPlayers();
 
 	/**
 	 * This method will tell if the game is over for a given player
@@ -83,48 +111,55 @@ public interface Game {
 	 * @param player the player to check
 	 * @return true if the game is over for the player false otherwise
 	 */
-	public boolean isGameOver(Player player);
+	public abstract boolean isGameOver(Player player);
 
 	/**
 	 * This method will return a list of Player objects that are currently involved in the game
 	 * 
 	 * @return a List of type Player
 	 */
-	public List<Player> getPlayers();
+	public abstract List<Player> getPlayers();
 
 	/**
 	 * This method is a getter for the shuffled deck pile
 	 * 
 	 * @return a list of Card objects representing the shuffled deck
 	 */
-	public List<Card> getShuffledDeck();
+	public abstract List<Card> getShuffledDeck();
 
 	/**
 	 * set the default computer difficulty
 	 * 
 	 * @param diff computer difficulty
 	 */
-	public void setComputerDifficulty(String diff);
+	public abstract void setComputerDifficulty(String diff);
 
 	/**
 	 * get the default computer difficulty
 	 * 
 	 * @return the computer difficulty
 	 */
-	public String getComputerDifficulty();
+	public abstract String getComputerDifficulty();
 
 	/**
 	 * Add a player to the game
 	 * 
 	 * @param p the player to add
 	 */
-	public void addPlayer(Player p);
+	public abstract void addPlayer(Player p);
 
 	/**
 	 * Returns whether the game has been started or not
 	 * 
 	 * @return whether a game is currently active
 	 */
-	public boolean isActive();
+	public abstract boolean isActive();
+
+	/**
+	 * Returns the player state for the given index of the player
+	 * @param index
+	 * @return player state at given index
+	 */
+	public abstract PlayerState getPlayerState(int index);
 
 }

@@ -4,25 +4,19 @@ import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
 import static com.worthwhilegames.cardgames.shared.Constants.fourthCard;
 import static com.worthwhilegames.cardgames.shared.Constants.fullCard;
 import static com.worthwhilegames.cardgames.shared.Constants.halfCard;
-import static com.worthwhilegames.cardgames.shared.Constants.halfCardVertCut;
 
+import java.util.Collections;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -34,9 +28,8 @@ import com.worthwhilegames.cardgames.shared.Game;
 import com.worthwhilegames.cardgames.shared.GameController;
 import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.Player;
-import com.worthwhilegames.cardgames.shared.TextView;
 import com.worthwhilegames.cardgames.shared.Util;
-import com.worthwhilegames.cardgames.shared.activities.QuitGameActivity;
+import com.worthwhilegames.cardgames.shared.activities.GameViewActivity;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
 
@@ -45,7 +38,7 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
  * is where the Game logic happens, and each player will be able to
  * play a turn.
  */
-public class GameboardActivity extends Activity {
+public class GameboardActivity extends GameViewActivity {
 
 	/**
 	 * The Logcat Debug tag
@@ -53,64 +46,9 @@ public class GameboardActivity extends Activity {
 	private static final String TAG = GameboardActivity.class.getName();
 
 	/**
-	 * The request code to keep track of the Pause Menu activity
-	 */
-	private static final int PAUSE_GAME = Math.abs("PAUSE_GAME".hashCode());
-
-	/**
-	 * The request code to keep track of the "Are you sure you want to quit"
-	 * activity
-	 */
-	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
-
-	/**
-	 * The request code to keep track of the "You have been disconnected"
-	 * activity
-	 */
-	public static final int DISCONNECTED = Math.abs("DISCONNECTED".hashCode());
-
-	/**
 	 * The request code to keep track of the "Player N Won!" activity
 	 */
 	private static final int DECLARE_WINNER = Math.abs("DECLARE_WINNER".hashCode());
-
-	/**
-	 * LayoutParams for adding a card to a player on the long edge of the screen
-	 * 
-	 * width  = WRAP_CONTENT
-	 * height = cardHeight
-	 */
-	private static LinearLayout.LayoutParams cardParams;
-
-	/**
-	 * The height of each card
-	 */
-	private static int cardHeight;
-
-	/**
-	 * The height of each button
-	 */
-	private static int buttonHeight;
-
-	/**
-	 * Represents the resource id to use for the back of the cards
-	 */
-	private static int CARD_BACK;
-
-	/**
-	 * The maximum number of cards displayed for each player
-	 */
-	private static int[] maxDisplayed = new int[] { Constants.MAX_DISPLAYED, Constants.MAX_DIS_SIDES, Constants.MAX_DISPLAYED, Constants.MAX_DIS_SIDES };
-
-	/**
-	 * Holds the scaled Bitmaps of the suit images
-	 */
-	private static Bitmap[] scaledSuitImages = new Bitmap[4];
-
-	/**
-	 * The ConnectionServer that sends and receives messages from other devices
-	 */
-	private ConnectionServer connection;
 
 	/**
 	 * This will handle the specific logic of the game chosen, it will follow
@@ -125,80 +63,50 @@ public class GameboardActivity extends Activity {
 	private Game mGame;
 
 	/**
-	 * These are the TextViews for all the player names
+	 * Returns BroadcastReceiver for handling messages from the connection module
+	 * @return BroadcastReceiver for handling messages from the connection module
 	 */
-	private TextView[] playerTextViews = new TextView[4];
+	private BroadcastReceiver getBroadCastReceiver(){
 
-	/**
-	 * These are the LinearLayouts for all the player cards
-	 */
-	private LinearLayout[] playerLinearLayouts = new LinearLayout[4];
+		return new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				String action = intent.getAction();
 
-	/**
-	 * These are the TextViews for the count of remaining cards not being displayed
-	 */
-	private TextView[] playerRemainingCards = new TextView[4];
-
-	/**
-	 * The ImageViews for the cards in the center of the screen
-	 * 
-	 * For games that don't use 4 cards in the middle:
-	 * Position 2 = discard pile
-	 * Position 4 = draw pile
-	 */
-	private ImageView[] centerCards = new ImageView[4];
-
-	/**
-	 * The current suit ImageView
-	 */
-	private ImageView suitView;
-
-	/**
-	 * The SharedPreferences used to store preferences for the game
-	 */
-	private SharedPreferences sharedPreferences;
-
-	/**
-	 * The BroadcastReceiver for handling messages from the Connection connection
-	 */
-	private BroadcastReceiver receiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-
-			if (Util.isDebugBuild()) {
-				Log.d(TAG, "onReceive: " + action);
-			}
-
-			if (ConnectionConstants.STATE_CHANGE_INTENT.equals(action)) {
-				// Handle a state change
-				int newState = intent.getIntExtra(ConnectionConstants.KEY_STATE_MESSAGE, ConnectionConstants.STATE_NONE);
-
-				// If the new state is anything but connected, display the
-				// "You have been disconnected" screen
-				if (newState != ConnectionConstants.STATE_CONNECTED) {
-					String deviceId = intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
-					for (Player p : mGame.getPlayers()) {
-						if (p.getId().equalsIgnoreCase(deviceId)) {
-							p.clearName();
-							p.setDisconnected(true);
-						}
-					}
-
-					Intent i = new Intent(GameboardActivity.this, ConnectionFailActivity.class);
-					i.putExtra(ConnectionConstants.KEY_DEVICE_ID, deviceId);
-					startActivityForResult(i, DISCONNECTED);
-
-					// Pause the players
-					gameController.pause();
+				if (Util.isDebugBuild()) {
+					Log.d(TAG, "onReceive: " + action);
 				}
-			} else {
-				// We didn't handle the Broadcast message here, so pass it on to
-				// the GameController
-				gameController.handleBroadcastReceive(context, intent);
+
+				if (ConnectionConstants.STATE_CHANGE_INTENT.equals(action)) {
+					// Handle a state change
+					int newState = intent.getIntExtra(ConnectionConstants.KEY_STATE_MESSAGE, ConnectionConstants.STATE_NONE);
+
+					// If the new state is anything but connected, display the
+					// "You have been disconnected" screen
+					if (newState != ConnectionConstants.STATE_CONNECTED) {
+						String deviceId = intent.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
+						for (Player p : mGame.getPlayers()) {
+							if (p.getId().equalsIgnoreCase(deviceId)) {
+								p.clearName();
+								p.setDisconnected(true);
+							}
+						}
+
+						Intent i = new Intent(GameboardActivity.this, ConnectionFailActivity.class);
+						i.putExtra(ConnectionConstants.KEY_DEVICE_ID, deviceId);
+						startActivityForResult(i, DISCONNECTED);
+
+						// Pause the players
+						gameController.pause();
+					}
+				} else {
+					// We didn't handle the Broadcast message here, so pass it on to
+					// the GameController
+					gameController.handleBroadcastReceive(context, intent);
+				}
 			}
-		}
-	};
+		};
+	}
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -206,17 +114,16 @@ public class GameboardActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.gameboard);
-		initUIElements();
+
+		receiver = getBroadCastReceiver();
 
 		sharedPreferences = getSharedPreferences(PREFERENCES, 0);
-
 		// Get the image to use for the back of a card
 		CARD_BACK = sharedPreferences.getInt(Constants.PREF_CARD_BACK, R.drawable.back_blue_1);
 
-		// Update the refresh button image
-		ImageView refresh = (ImageView) findViewById(R.id.gameboard_refresh);
-		refresh.setImageBitmap(scaleButton(R.drawable.refresh_button));
+		setContentView(R.layout.gameboardplayerhost);
+
+		initUIElements();
 
 		// Register the BroadcastReceiver to handle all
 		// messages from the Connection module
@@ -237,7 +144,7 @@ public class GameboardActivity extends Activity {
 		for (int j = currentNumPlayers; j < 4 && ((j < requiredNumPlayers) || (j - currentNumPlayers < numComputers)); j++) {
 			Player p = new Player();
 			p.setName("Computer " + (j - currentNumPlayers + 1));
-			p.setId("Computer" + (j - currentNumPlayers + 1));
+			p.setConnectedId("Computer" + (j - currentNumPlayers + 1));
 			p.setPosition(j + 1);
 			p.setIsComputer(true);
 			p.setComputerDifficulty(computerDifficulty);
@@ -245,8 +152,9 @@ public class GameboardActivity extends Activity {
 			mGame.addPlayer(p);
 		}
 
-		// the GameController now handles the setup of the game.
-		gameController = GameFactory.getGameControllerInstance(this, connection);
+		setupGame();
+
+		// Set the computer Difficulty
 		mGame.setComputerDifficulty(computerDifficulty);
 
 		// Draw the names from the Game on the gameboard
@@ -254,108 +162,33 @@ public class GameboardActivity extends Activity {
 	}
 
 	/**
-	 * Set up all the references to UI elements
+	 * Setup the game information
 	 */
-	private void initUIElements() {
-		// Get references to commonly used UI elements
-		playerTextViews[0] = (TextView) findViewById(R.id.player1text);
-		playerTextViews[1] = (TextView) findViewById(R.id.player2text);
-		playerTextViews[2] = (TextView) findViewById(R.id.player3text);
-		playerTextViews[3] = (TextView) findViewById(R.id.player4text);
+	private void setupGame() {
+		synchronized (this) {
+			// the GameController now handles the setup of the game.
+			if (gameController == null) {
 
-		playerLinearLayouts[0] = (LinearLayout) findViewById(R.id.player1ll);
-		playerLinearLayouts[1] = (LinearLayout) findViewById(R.id.player2ll);
-		playerLinearLayouts[2] = (LinearLayout) findViewById(R.id.player3ll);
-		playerLinearLayouts[3] = (LinearLayout) findViewById(R.id.player4ll);
+				if(Util.isPlayerHost()){
+					// Initialize the buttons
+					ViewStub buttonLayout = (ViewStub) findViewById(R.id.playerHandButtonView);
+					buttonLayout.setLayoutResource(GameFactory.getPlayerButtonViewLayout(this));
+					buttonLayout.inflate();
 
-		playerRemainingCards[0] = (TextView) findViewById(R.id.player1RemainingCount);
-		playerRemainingCards[1] = (TextView) findViewById(R.id.player2RemainingCount);
-		playerRemainingCards[2] = (TextView) findViewById(R.id.player3RemainingCount);
-		playerRemainingCards[3] = (TextView) findViewById(R.id.player4RemainingCount);
+					// Set up the game controller to point to the player controller for message sending
+					playerController =  GameFactory.getPlayerControllerInstance(this);
+				}
+				gameController = GameFactory.getGameControllerInstance(this, (ConnectionServer) connection);
 
-		centerCards[0] = (ImageView) findViewById(R.id.cardPosition1);
-		centerCards[1] = (ImageView) findViewById(R.id.cardPosition2);
-		centerCards[2] = (ImageView) findViewById(R.id.cardPosition3);
-		centerCards[3] = (ImageView) findViewById(R.id.cardPosition4);
+				if(Util.isPlayerHost()){
+					gameController.playerController = playerController;
 
-		suitView = (ImageView) findViewById(R.id.gameboard_suit);
-
-		// Set up the scale factors for the card images
-		int screenHeight = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
-		cardHeight = screenHeight / 4;
-		buttonHeight = screenHeight / 6;
-
-		// Update the size of the text in the name TextViews
-		for (TextView tv : playerTextViews) {
-			tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenHeight / 15);
-		}
-
-		// Set up the layout params for the cards
-		cardParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight / 2);
-
-		// Create the scaled suit images
-		scaledSuitImages[0] = scaleButton(R.drawable.clubsuitimage);
-		scaledSuitImages[1] = scaleButton(R.drawable.diamondsuitimage);
-		scaledSuitImages[2] = scaleButton(R.drawable.heartsuitimage);
-		scaledSuitImages[3] = scaleButton(R.drawable.spadesuitimage);
-
-		// Add the handler for the pause button
-		ImageView pause = (ImageView) findViewById(R.id.gameboard_pause);
-		pause.setImageBitmap(scaleButton(R.drawable.pause_button));
-		pause.setOnClickListener(new OnClickListener() {
-			/* (non-Javadoc)
-			 * @see android.view.View.OnClickListener#onClick(android.view.View)
-			 */
-			@Override
-			public void onClick(View v) {
-				gameController.pause();
-				Intent pauseButtonClick = new Intent(GameboardActivity.this, PauseMenuActivity.class);
-				startActivityForResult(pauseButtonClick, PAUSE_GAME);
-			}
-		});
-
-		// TODO add this back in. tv.setrotation causing problems
-		//setupGoogleTV();
-	}
-
-	/*@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public void setupGoogleTV(){
-
-		// If this is a Google TV, rotate the text of player 3 so that it isn't upside down
-		if (Util.isGoogleTv(this)) {
-			if (null != playerTextViews[2]) {
-				playerTextViews[2].setRotation(180); //TODO says it can't find this method
+					// Set up the player controller to point to the game controller for message sending
+					//TODO I think this breaks all the laws of layering we should think of a better way to do this
+					playerController.gameController = gameController;
+				}
 			}
 		}
-	}*/
-
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onBackPressed()
-	 */
-	@Override
-	public void onBackPressed() {
-		Intent intent = new Intent(this, QuitGameActivity.class);
-		startActivityForResult(intent, QUIT_GAME);
-	}
-
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onDestroy()
-	 */
-	@Override
-	protected void onDestroy() {
-		// Disconnect Connection
-		if (connection != null) {
-			connection.disconnect();
-		}
-
-		// Unregister the receiver
-		try {
-			unregisterReceiver(receiver);
-		} catch (IllegalArgumentException e) {
-			// We didn't get far enough to register the receiver
-		}
-
-		super.onDestroy();
 	}
 
 	/**
@@ -366,18 +199,6 @@ public class GameboardActivity extends Activity {
 		// Register the receiver for message/state change intents
 		registerReceiver(receiver, new IntentFilter(ConnectionConstants.MESSAGE_RX_INTENT));
 		registerReceiver(receiver, new IntentFilter(ConnectionConstants.STATE_CHANGE_INTENT));
-	}
-
-	/**
-	 * Unregister the BroadcastReceiver from all messages
-	 */
-	public void unregisterReceiver() {
-		// Unregister the receiver
-		try {
-			unregisterReceiver(receiver);
-		} catch (IllegalArgumentException e) {
-			// We didn't get far enough to register the receiver
-		}
 	}
 
 	/* (non-Javadoc)
@@ -423,11 +244,11 @@ public class GameboardActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	/**
-	 * Update the names that are displayed on the Gameboard.
-	 *
-	 * This data is pulled from the Game instance
+
+	/* (non-Javadoc)
+	 * @see com.worthwhilegames.cardgames.shared.activities.GameViewActivity#updateNamesOnGameboard()
 	 */
+	@Override
 	public void updateNamesOnGameboard() {
 		List<Player> players = GameFactory.getGameInstance(this).getPlayers();
 		for (int i = 0; i < 4; i++) {
@@ -440,28 +261,10 @@ public class GameboardActivity extends Activity {
 		}
 	}
 
-	/**
-	 * This method will update the suit on the gameboard message center to show the player
-	 * the current suit of the last card played
-	 * 
-	 * @param suit the suit of the card in which to change the picture to
+	/* (non-Javadoc)
+	 * @see com.worthwhilegames.cardgames.shared.activities.GameViewActivity#updateUi()
 	 */
-	public void updateSuit(int suit) {
-		if (suit >= 0 && suit < 4) {
-			suitView.setImageBitmap(scaledSuitImages[suit]);
-			suitView.setVisibility(View.VISIBLE);
-		} else {
-			suitView.setVisibility(View.INVISIBLE);
-		}
-	}
-
-	/**
-	 * Updates the User Interface
-	 * 
-	 * Places all cards in the users' hands
-	 * Updates the discard image
-	 * Updates the draw card image
-	 */
+	@Override
 	public void updateUi() {
 		Game game = GameFactory.getGameInstance(this);
 		List<Player> players = game.getPlayers();
@@ -470,6 +273,7 @@ public class GameboardActivity extends Activity {
 		// Place images for all player's cards
 		for (Player p : players) {
 			List<Card> cards = p.getCards();
+			Collections.sort(cards);
 			playerLinearLayouts[i].removeAllViews();
 
 			for (int j = 0; j < cards.size(); j++) {
@@ -482,22 +286,36 @@ public class GameboardActivity extends Activity {
 
 				// If we are in debug mode, show the face
 				// Otherwise stick with the back of the card
-				if (Util.isCheaterMode(this)) {
+				if (Util.isCheaterMode(this) || p.getIsPlayerHost()) {
 					resId = c.getResourceId();
 				}
 
 				int cardsToDisplay = cards.size();
-				if (cardsToDisplay > maxDisplayed[i]) {
+				if (cardsToDisplay > maxDisplayed[i] && !p.getIsPlayerHost()) {
 					cardsToDisplay = maxDisplayed[i];
 				}
 
-				// Scale card
-				Bitmap scaledCard = scaleCard(resId, (j < (cardsToDisplay - 1)) ? fourthCard : halfCard);
-				image.setImageBitmap(scaledCard);
+				if(p.getIsPlayerHost()){
+					image.setId(c.getIdNum());
+					image.setImageBitmap(scaleCard(c.getResourceId(), fullCard));
+					// Set the onClick Listener for selecting this card
+					image.setOnClickListener(playerController.getCardClickListener());
+
+					// Add a 5px border around the image
+					image.setPadding(5, 5, 5, 5);
+				} else {
+					// Scale card
+					Bitmap scaledCard = scaleCard(resId, (j < (cardsToDisplay - 1)) ? fourthCard : halfCard);
+					image.setImageBitmap(scaledCard);
+				}
 
 				// Check for max displayed
 				if (j < maxDisplayed[i]) {
-					playerLinearLayouts[i].addView(image, cardParams);
+					LinearLayout.LayoutParams params = cardParams;
+					if(p.getIsPlayerHost()){
+						params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, cardHeight);
+					}
+					playerLinearLayouts[i].addView(image, params);
 					playerRemainingCards[i].setVisibility(View.INVISIBLE);
 				} else {
 					// Display how many cards are remaining that aren't displayed
@@ -509,6 +327,9 @@ public class GameboardActivity extends Activity {
 
 			i++;
 		}
+
+		// Highlight whose turn it is
+		highlightPlayer(game.whoseTurn);
 
 		// Set all the cards in the center of the screen
 		for (int j = 0; j < 4; j++) {
@@ -524,82 +345,5 @@ public class GameboardActivity extends Activity {
 		}
 	}
 
-	/**
-	 * Scale a card image with the given resource
-	 * 
-	 * @param resId the resource id of the card to scale
-	 * @param cardPortion the amount of the card to show
-	 * 
-	 * @return a scaled card image
-	 */
-	private Bitmap scaleCard(int resId, int cardPortion) {
-		Bitmap fullCard = BitmapFactory.decodeResource(getResources(), resId);
-		float scaleFactor = (cardHeight + 0.0f) / fullCard.getHeight();
-		Matrix tempMatrix = new Matrix();
-		tempMatrix.setScale(scaleFactor, scaleFactor);
-
-		// Draw fourth card
-		if (cardPortion == fourthCard) {
-			return Bitmap.createBitmap(fullCard, 0, 0,
-					fullCard.getWidth() / 2, fullCard.getHeight() / 2, tempMatrix, true);
-		} else if (cardPortion == halfCard) {
-			return Bitmap.createBitmap(fullCard, 0, 0,
-					fullCard.getWidth(), fullCard.getHeight() / 2, tempMatrix, true);
-		} else if (cardPortion == halfCardVertCut) {
-			return Bitmap.createBitmap(fullCard, 0, 0,
-					fullCard.getWidth() / 2, fullCard.getHeight(), tempMatrix, true);
-		} else {
-			return Bitmap.createBitmap(fullCard, 0, 0,
-					fullCard.getWidth(), fullCard.getHeight(), tempMatrix, true);
-		}
-	}
-
-	/**
-	 * Scale a button image with the given resource
-	 * 
-	 * @param resId the resource id of the card to scale
-	 * @return a scaled button image
-	 */
-	private Bitmap scaleButton(int resId) {
-		Bitmap fullImage = BitmapFactory.decodeResource(getResources(), resId);
-		float scaleFactor = (buttonHeight + 0.0f) / fullImage.getHeight();
-		Matrix tempMatrix = new Matrix();
-		tempMatrix.setScale(scaleFactor, scaleFactor);
-
-		return Bitmap.createBitmap(fullImage, 0, 0,
-				fullImage.getWidth(), fullImage.getHeight(), tempMatrix, true);
-	}
-
-	/**
-	 * Highlight the name of the person whose turn it is
-	 *
-	 * @param playerNumber the player whose turn it is
-	 */
-	public void highlightPlayer(int playerNumber) {
-		for (int i = 0; i < 4; i++) {
-			if ((i + 1) == playerNumber) {
-				playerTextViews[i].setTextColor(getResources().getColor(R.color.gold));
-			} else {
-				playerTextViews[i].setTextColor(getResources().getColor(android.R.color.black));
-			}
-		}
-	}
-
-	/**
-	 * Bold the specified player text
-	 * @param playerNumber player whose name will be bolded
-	 */
-	public void boldPlayerText(int playerNumber){
-		playerTextViews[playerNumber].setTypeface(null, Typeface.BOLD);
-	}
-
-	/**
-	 * Sets all the players text to normal
-	 */
-	public void unboldAllPlayerText(){
-		for (int i = 0; i < 4; i++) {
-			playerTextViews[i].setTypeface(null, Typeface.NORMAL);
-		}
-	}
 
 }

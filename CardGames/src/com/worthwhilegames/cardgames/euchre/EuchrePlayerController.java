@@ -13,43 +13,33 @@ import static com.worthwhilegames.cardgames.shared.Constants.MSG_REFRESH;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_SETUP;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_SUGGESTED_CARD;
 import static com.worthwhilegames.cardgames.shared.Constants.MSG_WINNER;
-import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
 
-import java.util.List;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.player.activities.GameResultsActivity;
 import com.worthwhilegames.cardgames.player.activities.SelectSuitActivity;
-import com.worthwhilegames.cardgames.player.activities.ShowCardsActivity;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.PlayerController;
-import com.worthwhilegames.cardgames.shared.PlayerStateFull;
-import com.worthwhilegames.cardgames.shared.SoundManager;
+import com.worthwhilegames.cardgames.shared.PlayerState;
 import com.worthwhilegames.cardgames.shared.Util;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 
-public class EuchrePlayerController implements PlayerController {
+public class EuchrePlayerController extends PlayerController {
 
 	/**
 	 * The Logcat Debug tag
@@ -57,32 +47,10 @@ public class EuchrePlayerController implements PlayerController {
 	private static final String TAG = EuchreGameController.class.getName();
 
 	/**
-	 * intent code for choosing suit
-	 */
-	private static final int CHOOSE_SUIT = Math.abs("CHOOSE_SUIT".hashCode());
-
-	/**
-	 * The request code to keep track of the "Are you sure you want to quit"
-	 * activity
-	 */
-	private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
-
-	/**
-	 * An instance of the ShowCardsActivity that can be used to display cards
-	 * and do other things as if this class was the ShowCardsActivity.
-	 */
-	private ShowCardsActivity playerContext;
-
-	/**
 	 * An instance of the GameRules that is used to check if a card can be
 	 * played
 	 */
 	private EuchreGameRules gameRules;
-
-	/**
-	 * The play button on the layout also the pass and discard button
-	 */
-	private Button play;
 
 	/**
 	 * The Bet button on the layout
@@ -95,11 +63,6 @@ public class EuchrePlayerController implements PlayerController {
 	private Button goAlone;
 
 	/**
-	 * The refresh button in the lower right hand corner
-	 */
-	private ImageView refresh;
-
-	/**
 	 * The choose suit imageview that is used as a button
 	 */
 	private ImageView chooseSuit;
@@ -110,46 +73,19 @@ public class EuchrePlayerController implements PlayerController {
 	private boolean isBettingNow = false;
 
 	/**
-	 * The current selected Card
-	 */
-	private Card cardSelected;
-
-	/**
-	 * The id of the suggested Card
-	 */
-	private int cardSuggestedId = -1;
-
-	/**
-	 * This is the setting if the player would like to see card suggestions
-	 */
-	boolean isPlayAssistMode = false;
-
-	/**
-	 * The client that is used to send messages to the GameBoard
-	 */
-	private ConnectionClient connection;
-
-	/**
-	 * This is a SoundManager instance that can do text to speech and other
-	 * sounds.
-	 */
-	private SoundManager mySM;
-
-	/**
 	 * The suit that is currently Trump
 	 */
 	private int trumpSuit;
 
-	private PlayerStateFull playerState = new PlayerStateFull();
 
 	/**
-	 * The LinearLayout holding all card images
+	 * Initialize the playerController with the necessary setup
+	 * @param context ShowCardsActivity context
 	 */
-	private LinearLayout playerHandLayout;
+	public EuchrePlayerController(Activity context) {
 
-	//TODO remove "cardHandGiven" as a parameter to this constructor
-	public EuchrePlayerController(Activity context, List<Card> cardHandGiven) {
-		playerContext = (ShowCardsActivity) context;
+		super.initPlayerController(context);
+
 		play = (Button) context.findViewById(R.id.passOption);
 		bet = (Button) context.findViewById(R.id.betOption);
 		goAlone = (Button) context.findViewById(R.id.goAloneOption);
@@ -159,141 +95,116 @@ public class EuchrePlayerController implements PlayerController {
 		bet.setOnClickListener(betClickListener);
 		goAlone.setOnClickListener(goAloneClickListener);
 		chooseSuit.setOnClickListener(chooseSuitClickListener);
+
 		setButtonsEnabled(false);
-		mySM = SoundManager.getInstance(context);
-		playerHandLayout = (LinearLayout) playerContext.findViewById(R.id.playerCardContainer);
-
-		// Refresh button press will ask gameboard for updated state.
-		refresh = (ImageView) playerContext.findViewById(R.id.gameboard_refresh);
-		refresh.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				v.setEnabled(false);
-				connection.write(Constants.MSG_REFRESH, null);
-				v.setEnabled(true);
-			}
-		});
-
-		// set up play assist mode
-		SharedPreferences sharedPreferences = playerContext.getSharedPreferences(PREFERENCES, 0);
-		isPlayAssistMode = sharedPreferences.getBoolean(Constants.PREF_PLAY_ASSIST_MODE, false);
-
-		gameRules = new EuchreGameRules();
-		connection = ConnectionClient.getInstance(context);
 		noButtonView();
+		gameRules = new EuchreGameRules();
 	}
 
+
 	/* (non-Javadoc)
-	 * @see com.worthwhilegames.cardgames.shared.PlayerController#handleBroadcastReceive(android.content.Context, android.content.Intent)
+	 * @see com.worthwhilegames.cardgames.shared.PlayerController#handleMessage(int, java.lang.String)
 	 */
 	@Override
-	public void handleBroadcastReceive(Context context, Intent intent) {
-		String action = intent.getAction();
+	public void handleMessage(int messageType, String object) {
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "message: " + object);
+		}
 
-		if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
-			String object = intent.getStringExtra(ConnectionConstants.KEY_MESSAGE_RX);
-			int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
+		// Get either full state or partial state.
+		switch(messageType){
+		case MSG_PLAYER_STATE_FULL:
+			playerState = PlayerState.createStateFromJSON(object);
+			playerContext.updateUi();
+			playerContext.updateNamesOnGameboard();
+			messageType = playerState.currentState;
+			break;
+		case MSG_PLAYER_STATE_PARTIAL:
+			playerState.updateFromPartialState(object);
+			playerContext.updateUi();
+			messageType = playerState.currentState;
+			break;
+		}
 
-			if (Util.isDebugBuild()) {
-				Log.d(TAG, "message: " + object);
+		// Handle view changes based on current state.
+		switch (messageType) {
+		case MSG_SETUP:
+			setButtonsEnabled(false);
+			break;
+		case FIRST_ROUND_BETTING: /* purposely have both here */
+		case SECOND_ROUND_BETTING:
+			if(isMyTurn()){
+				mySM.sayBet(playerState.playerNames[playerState.playerIndex]);
+				if(playerState.currentState == SECOND_ROUND_BETTING) {
+					// Not chosen yet
+					trumpSuit = -1;
+				} else {
+					trumpSuit = playerState.extraInfo1;
+				}
+
+				// start select bet activity for round 1
+				// start select bet activity to let the player bet
+				isBettingNow = true;
+				bettingView();
+				setButtonsEnabled(true);
 			}
-
-			// Get either full state or partial state.
-			switch(messageType){
-			case MSG_PLAYER_STATE_FULL:
-				playerState = PlayerStateFull.createStateFromJSON(object);
-				playerContext.updateUi();
-				playerContext.updateNamesOnGameboard();
-				messageType = playerState.currentState;
-				break;
-			case MSG_PLAYER_STATE_PARTIAL:
-				playerState.updateFromPartialState(object);
-				playerContext.updateUi();
-				messageType = playerState.currentState;
-				break;
+			break;
+		case PLAY_LEAD_CARD:
+			if(isMyTurn()){
+				playingView();
+				mySM.sayTurn(playerState.playerNames[playerState.playerIndex]);
+				setButtonsEnabled(isMyTurn());
 			}
+			break;
+		case PICK_IT_UP:
+			if(isMyTurn()){
+				mySM.sayPickItUp(playerState.playerNames[playerState.playerIndex]);
+				dealerDiscardView();
+			}
+			break;
+		case MSG_PLAY_CARD:
+			if(isMyTurn()){
+				playingView();
+				mySM.sayTurn(playerState.playerNames[playerState.playerIndex]);
+				setButtonsEnabled(isMyTurn());
+			}
+			break;
+		case MSG_SUGGESTED_CARD:
+			if (isMyTurn() && object != null && isPlayAssistMode) {
+				try {
+					JSONObject obj = new JSONObject(object);
+					int id = obj.getInt(Constants.KEY_CARD_ID);
+					cardSuggestedId = id;
 
-			// Handle view changes based on current state.
-			switch (messageType) {
-			case MSG_SETUP:
-				setButtonsEnabled(false);
-				break;
-			case FIRST_ROUND_BETTING: /* purposely have both here */
-			case SECOND_ROUND_BETTING:
-				if(playerState.isTurn){
-					mySM.sayBet(playerState.playerNames[playerState.playerIndex]);
-					if(playerState.currentState == SECOND_ROUND_BETTING) {
-						// Not chosen yet
-						trumpSuit = -1;
-					} else {
-						trumpSuit = playerState.extraInfo1;
+					// Let the UI know which card was suggested
+					int selectedId = -1;
+					if (cardSelected != null) {
+						selectedId = cardSelected.getIdNum();
 					}
-
-					// start select bet activity for round 1
-					// start select bet activity to let the player bet
-					isBettingNow = true;
-					bettingView();
-					setButtonsEnabled(true);
+					playerContext.setSelected(selectedId, cardSuggestedId);
+				} catch (JSONException ex) {
+					ex.printStackTrace();
 				}
-				break;
-			case PLAY_LEAD_CARD:
-				if(playerState.isTurn){
-					playingView();
-					mySM.sayTurn(playerState.playerNames[playerState.playerIndex]);
-					setButtonsEnabled(playerState.isTurn);
-				}
-				break;
-			case PICK_IT_UP:
-				if(playerState.isTurn){
-					mySM.sayPickItUp(playerState.playerNames[playerState.playerIndex]);
-					dealerDiscardView();
-				}
-				break;
-			case MSG_PLAY_CARD:
-				if(playerState.isTurn){
-					playingView();
-					mySM.sayTurn(playerState.playerNames[playerState.playerIndex]);
-					setButtonsEnabled(playerState.isTurn);
-				}
-				break;
-			case MSG_SUGGESTED_CARD:
-				if (playerState.isTurn && object != null && isPlayAssistMode) {
-					try {
-						JSONObject obj = new JSONObject(object);
-						int id = obj.getInt(Constants.KEY_CARD_ID);
-						cardSuggestedId = id;
-
-						// Let the UI know which card was suggested
-						int selectedId = -1;
-						if (cardSelected != null) {
-							selectedId = cardSelected.getIdNum();
-						}
-						playerContext.setSelected(selectedId, cardSuggestedId);
-					} catch (JSONException ex) {
-						ex.printStackTrace();
-					}
-				}
-			case MSG_REFRESH:
-				//TODO remove
-				// This should be covered in gamestatefull reception.
-				break;
-			case ROUND_OVER:
-				// TODO display score
-				break;
-			case MSG_WINNER:
-				playerContext.unregisterReceiver();
-				Intent winner = new Intent(playerContext, GameResultsActivity.class);
-				winner.putExtra(GameResultsActivity.IS_WINNER, true);
-				playerContext.startActivityForResult(winner, QUIT_GAME);
-				break;
-			case MSG_LOSER:
-				playerContext.unregisterReceiver();
-				Intent loser = new Intent(playerContext, GameResultsActivity.class);
-				loser.putExtra(GameResultsActivity.IS_WINNER, false);
-				playerContext.startActivityForResult(loser, QUIT_GAME);
-				break;
 			}
+		case MSG_REFRESH:
+			//TODO remove
+			// This should be covered in gamestatefull reception.
+			break;
+		case ROUND_OVER:
+			// TODO display score
+			break;
+		case MSG_WINNER:
+			playerContext.unregisterReceiver();
+			Intent winner = new Intent(playerContext, GameResultsActivity.class);
+			winner.putExtra(GameResultsActivity.IS_WINNER, true);
+			playerContext.startActivityForResult(winner, QUIT_GAME);
+			break;
+		case MSG_LOSER:
+			playerContext.unregisterReceiver();
+			Intent loser = new Intent(playerContext, GameResultsActivity.class);
+			loser.putExtra(GameResultsActivity.IS_WINNER, false);
+			playerContext.startActivityForResult(loser, QUIT_GAME);
+			break;
 		}
 	}
 
@@ -301,16 +212,19 @@ public class EuchrePlayerController implements PlayerController {
 	 * @see com.worthwhilegames.cardgames.shared.PlayerController#getPlayerState()
 	 */
 	@Override
-	public PlayerStateFull getPlayerState() {
+	public PlayerState getPlayerState() {
 		return playerState;
 	}
 
 	@Override
-	public void handleActivityResult(int requestCode, int resultCode, Intent data) {
+	public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CHOOSE_SUIT) {
 			trumpSuit = resultCode;
 			updateTrumpSuit();
+			return true;
 		}
+
+		return false;
 	}
 
 	/**
@@ -319,7 +233,7 @@ public class EuchrePlayerController implements PlayerController {
 	private OnClickListener playClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			if ((playerState.isTurn && cardSelected != null)
+			if ((isMyTurn() && cardSelected != null)
 					&& playerState.currentState != FIRST_ROUND_BETTING
 					&& playerState.currentState != SECOND_ROUND_BETTING
 					&& (playerState.currentState == PICK_IT_UP
@@ -327,7 +241,7 @@ public class EuchrePlayerController implements PlayerController {
 							playerState.cards)) && playerState.cards.size() != 0) {
 				// play card or discard if it is pick_it_up mode
 
-				connection.write(playerState.currentState, cardSelected);
+				sendMessage(playerState.currentState, cardSelected.toString());
 
 				playerContext.removeFromHand(cardSelected.getIdNum());
 
@@ -341,19 +255,19 @@ public class EuchrePlayerController implements PlayerController {
 				cardSelected = null;
 				setButtonsEnabled(false);
 				noButtonView();
-				playerState.isTurn = false;
+				playerState.whoseTurn++;
 				cardSuggestedId = -1;
 				playerContext.setSelected(-1, cardSuggestedId);
 			} else if (playerState.currentState == FIRST_ROUND_BETTING || playerState.currentState == SECOND_ROUND_BETTING) {
 				EuchreBet bet = new EuchreBet(trumpSuit, false, false);
 
-				connection.write(playerState.currentState, bet.toString());
+				sendMessage(playerState.currentState, bet.toString());
 
 				isBettingNow = false;
 
 				setButtonsEnabled(false);
 				noButtonView();
-				playerState.isTurn = false;
+				playerState.whoseTurn++;
 				cardSuggestedId = -1;
 				playerContext.setSelected(-1, cardSuggestedId);
 			}
@@ -383,13 +297,13 @@ public class EuchrePlayerController implements PlayerController {
 
 				EuchreBet bet = new EuchreBet(trumpSuit, true, false);
 
-				connection.write(playerState.currentState, bet.toString());
+				sendMessage(playerState.currentState, bet.toString());
 
 				isBettingNow = false;
 
 				setButtonsEnabled(false);
 				noButtonView();
-				playerState.isTurn = false;
+				playerState.whoseTurn++;
 				cardSuggestedId = -1;
 			}
 		}
@@ -415,13 +329,13 @@ public class EuchrePlayerController implements PlayerController {
 				}
 				EuchreBet bet = new EuchreBet(trumpSuit, true, true);
 
-				connection.write(playerState.currentState, bet.toString());
+				sendMessage(playerState.currentState, bet.toString());
 
 				isBettingNow = false;
 
 				setButtonsEnabled(false);
 				noButtonView();
-				playerState.isTurn = false;
+				playerState.whoseTurn++;
 				cardSuggestedId = -1;
 			}
 		}

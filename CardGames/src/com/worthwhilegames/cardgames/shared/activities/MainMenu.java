@@ -55,6 +55,9 @@ public class MainMenu extends Activity {
 					// Set that we are the gameboard
 					Util.setIsGameboard(true);
 
+					//TODO make extra button or screen to set is player host
+					Util.setIsPlayerHost(true);
+
 					// Open the gameboard connect activity
 					Intent playButtonClick = new Intent(MainMenu.this, ConnectActivity.class);
 					startActivityForResult(playButtonClick, CONNECT_ACTIVITY);
@@ -93,6 +96,13 @@ public class MainMenu extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (Util.isDebugBuild() && create == null) {
+
+					// Set that we are the gameboard
+					Util.setIsGameboard(true);
+
+					//TODO make extra button or screen to set is player host
+					Util.setIsPlayerHost(true);
+
 					// Open the gameboard connect activity
 					Intent playButtonClick = new Intent(MainMenu.this, ConnectActivity.class);
 					startActivityForResult(playButtonClick, CONNECT_ACTIVITY);

@@ -21,13 +21,13 @@ import android.util.Log;
 
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.CardGame;
-import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.Deck;
 import com.worthwhilegames.cardgames.shared.Game;
 import com.worthwhilegames.cardgames.shared.Player;
+import com.worthwhilegames.cardgames.shared.PlayerState;
 import com.worthwhilegames.cardgames.shared.Util;
 
-public class EuchreTabletGame implements Game{
+public class EuchreTabletGame extends Game{
 
 	/**
 	 * A tag for the class name
@@ -38,21 +38,6 @@ public class EuchreTabletGame implements Game{
 	 * A variable for and instance of the euchre game type
 	 */
 	private static EuchreTabletGame instance = null;
-
-	/**
-	 * A private variable for a list of players in the current game
-	 */
-	private List<Player> players;
-
-	/**
-	 * A private variable representing the game deck for the euchre game
-	 */
-	private Deck gameDeck;
-
-	/**
-	 * A private variable to represent the difficulty of computers in the current game
-	 */
-	private String computerDifficulty = Constants.EASY;
 
 	/**
 	 * An integer to represent the trump suit
@@ -97,7 +82,7 @@ public class EuchreTabletGame implements Game{
 	/**
 	 * This is the total points for the team
 	 */
-	private int[] matchScores = new int[2];;
+	private int[] matchScores = new int[2];
 
 	/**
 	 * list of the cards played the last round
@@ -285,6 +270,21 @@ public class EuchreTabletGame implements Game{
 	 */
 	public void pickItUp(Player player) {
 		playerCalledTrump = player.getPosition();
+	}
+
+	/**
+	 * This function will change whose turn it is to the next player.
+	 */
+	public void incrementWhoseTurn() {
+		if (this.whoseTurn < this.getNumPlayers() - 1) {
+			this.whoseTurn++;
+		} else {
+			this.whoseTurn = 0;
+		}
+
+		if (this.isPlayerGoingAlone()	&& this.whoseTurn == this.getPlayerBeingSkipped()) {
+			incrementWhoseTurn();
+		}
 	}
 
 	/**
@@ -636,5 +636,30 @@ public class EuchreTabletGame implements Game{
 		} else {
 			return playerCalledTrump + 2;
 		}
+	}
+
+	@Override
+	public PlayerState getPlayerState(int index) {
+		PlayerState playerState = new PlayerState();
+		playerState.currentState = currentState;
+		playerState.onDiscard = getCardLead();
+
+		// update Trump
+		playerState.suitDisplay = getTrump();
+
+		int i = 0;
+		for(Player p : players){
+			playerState.numCards[i] = p.getNumCards();
+			playerState.playerNames[i] = p.getName();
+			playerState.cardsPlayed[i] = getCardAtPosition(i+1);
+			i++;
+		}
+
+		playerState.playerIndex = index;
+		playerState.whoseTurn = whoseTurn;
+		Player p = players.get(playerState.playerIndex);
+		playerState.cards = p.getCards();
+
+		return playerState;
 	}
 }

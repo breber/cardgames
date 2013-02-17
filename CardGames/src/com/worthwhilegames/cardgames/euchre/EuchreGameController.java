@@ -15,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
@@ -29,7 +28,6 @@ import com.worthwhilegames.cardgames.shared.GameController;
 import com.worthwhilegames.cardgames.shared.Player;
 import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.activities.RoundScoresActivity;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
 
 public class EuchreGameController extends GameController {
@@ -45,14 +43,7 @@ public class EuchreGameController extends GameController {
 	 * 
 	 * specific for Euchre since there are a lot of specific methods
 	 */
-	protected static EuchreTabletGame euchreGame = null;
-
-	/**
-	 * This is the current state of the game
-	 * Corresponds to the first round of betting second round of betting
-	 * trick leading etc constants in euchre constants and shared constants
-	 */
-	private int currentState;
+	protected static EuchreTabletGame game = null;
 
 	/**
 	 * This is how to tell if the gameboard is in the waiting phase to clear the
@@ -107,17 +98,17 @@ public class EuchreGameController extends GameController {
 		computerPlayer = new EuchreComputerPlayer(difficulty);
 		cardSuggestor = new EuchreComputerPlayer(Constants.MEDIUM);
 
-		euchreGame = EuchreTabletGame.getInstance();
-		game = euchreGame;
+		game = EuchreTabletGame.getInstance();
+		genericGame = game;
 
-		euchreGame.setup();
-		players = euchreGame.getPlayers();
+		game.setup();
+		players = game.getPlayers();
 		startRound();
 	}
 
 	private void startRound() {
-		euchreGame.startRound();
-		whoseTurn = euchreGame.getTrickLeader();
+		game.startRound();
+		game.whoseTurn = game.getTrickLeader();
 
 		for (Player p : players) {
 			if (Util.isDebugBuild()) {
@@ -139,67 +130,51 @@ public class EuchreGameController extends GameController {
 		gameContext.unboldAllPlayerText();
 
 		// If this is a computer, start having the computer play
-		currentState = FIRST_ROUND_BETTING;
+		game.currentState = FIRST_ROUND_BETTING;
 
 		// tell first person to bet
 		sendNextTurn(FIRST_ROUND_BETTING);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.worthwhilegames.cardgames.shared.GameController#handleBroadcastReceive(android.content.Context, android.content.Intent)
-	 */
+
 	@Override
-	public void handleBroadcastReceive(Context context, Intent intent) {
-		String action = intent.getAction();
+	public void handleMessage(int messageType, String object) {
+		switch (messageType) {
+		case FIRST_ROUND_BETTING:
+			handleBetting(FIRST_ROUND_BETTING, object);
+			break;
+		case SECOND_ROUND_BETTING:
+			handleBetting(SECOND_ROUND_BETTING, object);
+			break;
+		case PLAY_LEAD_CARD:
+			Card tmpCard = playReceivedCard(object);
+			game.setCardLead(tmpCard);
+			advanceTurn();
+			break;
+		case PICK_IT_UP:
+			//Get which card they discarded and discard it.
+			game.currentState = PLAY_LEAD_CARD;
+			playReceivedCard(object);
+			game.clearCardsPlayed();
 
-		if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
-			int messageSender = getWhoSentMessage(context, intent);
-			String object = intent.getStringExtra(ConnectionConstants.KEY_MESSAGE_RX);
-			int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
+			//start the first turn of the round by going one person the the right of the dealer.
+			game.whoseTurn = game.getTrickLeader();
 
-			// Only perform actions if it is the sender's turn
-			if (messageSender == whoseTurn) {
-				switch (messageType) {
-				case FIRST_ROUND_BETTING:
-					handleBetting(FIRST_ROUND_BETTING, object);
-					break;
-				case SECOND_ROUND_BETTING:
-					handleBetting(SECOND_ROUND_BETTING, object);
-					break;
-				case PLAY_LEAD_CARD:
-					Card tmpCard = playReceivedCard(object);
-					euchreGame.setCardLead(tmpCard);
-					advanceTurn();
-					break;
-				case PICK_IT_UP:
-					//Get which card they discarded and discard it.
-					currentState = PLAY_LEAD_CARD;
-					playReceivedCard(object);
-					euchreGame.clearCardsPlayed();
-
-					//start the first turn of the round by going one person the the right of the dealer.
-					whoseTurn = euchreGame.getTrickLeader();
-
-					refreshPlayers();
-					sendNextTurn(currentState);
-					break;
-				case MSG_PLAY_CARD:
-					playReceivedCard(object);
-					advanceTurn();
-					break;
-				case Constants.MSG_REFRESH:
-					refreshPlayers();
-					updateGameStateFull();
-					break;
-				}
-			} else {
-				Log.d(TAG, "It isn't " + messageSender + "'s turn - ignoring message");
-				Log.w(TAG, "messageSender: " + messageSender + " whoseTurn: " + whoseTurn);
-				// refresh players to get everyone to the same state.
-				refreshPlayers();
-			}
+			refreshPlayers();
+			sendNextTurn(game.currentState);
+			break;
+		case MSG_PLAY_CARD:
+			playReceivedCard(object);
+			advanceTurn();
+			break;
+		case Constants.MSG_REFRESH:
+			refreshPlayers();
+			updateGameStateFull();
+			break;
 		}
+
 	}
+
 
 	/* (non-Javadoc)
 	 * @see com.worthwhilegames.cardgames.shared.GameController#handleActivityResult(int, int, android.content.Intent)
@@ -215,6 +190,8 @@ public class EuchreGameController extends GameController {
 			//They have seen the score move on with game.
 			startRound();
 			return true;
+		} else if(playerController != null){
+			return playerController.handleActivityResult(requestCode, resultCode, data);
 		}
 
 		return false;
@@ -239,30 +216,16 @@ public class EuchreGameController extends GameController {
 	 * This will update the Game State completely for all players
 	 */
 	private void updateGameStateFull(){
-		pStateFull.currentState = currentState;
-		pStateFull.onDiscard = euchreGame.getCardLead();
 
-		// update Trump
-		pStateFull.suitDisplay = euchreGame.getTrump();
-
-		int i = 0;
-		for(Player p : players){
-			pStateFull.numCards[i] = p.getNumCards();
-			pStateFull.playerNames[i] = p.getName();
-			pStateFull.cardsPlayed[i] = euchreGame.getCardAtPosition(i+1);
-			i++;
-		}
-
-
-		Player pTurn = players.get(whoseTurn);
-		i=0;
-		for(Player p : players){
-			pStateFull.isTurn = ( pTurn.equals(p) && !isWaitingToClearCards);
-			pStateFull.playerIndex = i;
-			pStateFull.cards = p.getCards();
-
-			server.write(Constants.MSG_PLAYER_STATE_FULL, pStateFull.toJSONObject(), players.get(i).getId());
-			i++;
+		for(int i = 0; i < players.size(); i++){
+			Player p = game.getPlayers().get(i);
+			if(p.getIsPlayerHost() && playerController != null){
+				playerController.handleMessage(Constants.MSG_PLAYER_STATE_FULL, game.getPlayerState(i).toJSONObject());
+			} else if(i == game.whoseTurn){
+				server.write(Constants.MSG_PLAYER_STATE_FULL, game.getPlayerState(i).toJSONObject(), players.get(i).getId());
+			} else {
+				server.write(Constants.MSG_PLAYER_STATE_PARTIAL, game.getPlayerState(i).toPartialJSONObject(), players.get(i).getId());
+			}
 		}
 	}
 
@@ -272,19 +235,19 @@ public class EuchreGameController extends GameController {
 	 * turn
 	 */
 	private void advanceTurn() {
-		incrementWhoseTurn();
+		game.incrementWhoseTurn();
 		gameContext.updateUi();
 
-		if (whoseTurn == euchreGame.getTrickLeader()) {
+		if (game.whoseTurn == game.getTrickLeader()) {
 			updateGameStateFull();
 			startTrickEndWait();
 			return;
 		}
 
-		currentState = MSG_PLAY_CARD;
+		game.currentState = MSG_PLAY_CARD;
 
 		//tell the next person to play
-		sendNextTurn(currentState);
+		sendNextTurn(game.currentState);
 
 	}
 
@@ -294,13 +257,13 @@ public class EuchreGameController extends GameController {
 	 * add scores if round over, and clear off the cards played.
 	 */
 	private void endTurnRound(){
-		euchreGame.determineTrickWinner();
+		game.determineTrickWinner();
 
 		// Round is over if a player from both teams is out of cards
 		if (players.get(0).getCards().size() == 0 && players.get(1).getCards().size() == 0) {
-			euchreGame.endRound();
-			if(euchreGame.isGameOver(players.get(0))){
-				declareWinner(euchreGame.getWinningTeam());
+			game.endRound();
+			if(game.isGameOver(players.get(0))){
+				declareWinner(game.getWinningTeam());
 				return;
 			}
 			declareRoundScores();
@@ -311,10 +274,10 @@ public class EuchreGameController extends GameController {
 			gameContext.updateUi();
 
 			//make the trick leader to play next
-			whoseTurn = euchreGame.getTrickLeader();
-			currentState = PLAY_LEAD_CARD;
+			game.whoseTurn = game.getTrickLeader();
+			game.currentState = PLAY_LEAD_CARD;
 
-			sendNextTurn(currentState);
+			sendNextTurn(game.currentState);
 		}
 	}
 
@@ -373,7 +336,7 @@ public class EuchreGameController extends GameController {
 		// If the next player is a computer, and the computer isn't currently
 		// playing, have the computer initiate a move
 		// TODO: test this vs method used in crazy eights?
-		if (players.get(whoseTurn).getIsComputer()) {
+		if (players.get(game.whoseTurn).getIsComputer()) {
 			if (isComputerPlaying) {
 				// If a computer was playing before the game was refreshed
 				// let them know that they can play now
@@ -390,14 +353,13 @@ public class EuchreGameController extends GameController {
 	 * and send it to them as a suggestion
 	 */
 	protected void sendCardSuggestion() {
-		final int currentTurn = whoseTurn;
-
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				Card cardSelected = null;
+				int currentTurn = game.whoseTurn;
 
-				switch(currentState){
+				switch(game.currentState){
 				case PICK_IT_UP:
 					cardSelected = cardSuggestor.pickItUp(currentTurn);
 					break;
@@ -453,45 +415,45 @@ public class EuchreGameController extends GameController {
 	 */
 	@Override
 	protected void playComputerTurn() {
-		if (currentState == FIRST_ROUND_BETTING || currentState == SECOND_ROUND_BETTING) {
-			EuchreBet compBet = computerPlayer.getComputerBet(whoseTurn, currentState, euchreGame.getCardLead().getSuit());
-			this.handleBetting(currentState, compBet.toString());
+		if (game.currentState == FIRST_ROUND_BETTING || game.currentState == SECOND_ROUND_BETTING) {
+			EuchreBet compBet = computerPlayer.getComputerBet(game.whoseTurn, game.currentState, game.getCardLead().getSuit());
+			this.handleBetting(game.currentState, compBet.toString());
 		} else {
 			Card cardSelected = null;
 
-			switch(currentState){
+			switch(game.currentState){
 			case PICK_IT_UP:
-				cardSelected = computerPlayer.pickItUp(whoseTurn);
+				cardSelected = computerPlayer.pickItUp(game.whoseTurn);
 				break;
 			case PLAY_LEAD_CARD:
-				cardSelected = computerPlayer.getLeadCard(whoseTurn);
+				cardSelected = computerPlayer.getLeadCard(game.whoseTurn);
 				break;
 			case MSG_PLAY_CARD:
-				cardSelected = computerPlayer.getCardOnTurn(whoseTurn);
+				cardSelected = computerPlayer.getCardOnTurn(game.whoseTurn);
 				break;
 			default:
 				cardSelected = null;
 				break;
 			}
 
-			if (currentState == PICK_IT_UP) {
+			if (game.currentState == PICK_IT_UP) {
 				// Get which card they discarded and discard it.
-				currentState = PLAY_LEAD_CARD;
-				euchreGame.discard(players.get(whoseTurn), cardSelected);
-				euchreGame.clearCardsPlayed();
+				game.currentState = PLAY_LEAD_CARD;
+				game.discard(players.get(game.whoseTurn), cardSelected);
+				game.clearCardsPlayed();
 
 				// start the first turn of the round
-				whoseTurn = euchreGame.getTrickLeader();
-				sendNextTurn(currentState);
+				game.whoseTurn = game.getTrickLeader();
+				sendNextTurn(game.currentState);
 				return;
 			}
 
-			if (currentState == PLAY_LEAD_CARD) {
+			if (game.currentState == PLAY_LEAD_CARD) {
 				// set card lead
-				euchreGame.setCardLead(cardSelected);
+				game.setCardLead(cardSelected);
 			}
 			mySM.playCardSound();
-			euchreGame.discard(players.get(whoseTurn), cardSelected);
+			game.discard(players.get(game.whoseTurn), cardSelected);
 			advanceTurn();
 		}
 	}
@@ -517,67 +479,67 @@ public class EuchreGameController extends GameController {
 		//first round of betting
 		if (round == FIRST_ROUND_BETTING) {
 			if (bet.getPlaceBet()) {
-				if (bet.getTrumpSuit() == euchreGame.getCardLead().getSuit()) {
+				if (bet.getTrumpSuit() == game.getCardLead().getSuit()) {
 					//set trump and trump caller
-					euchreGame.setTrump(bet.getTrumpSuit());
-					euchreGame.setPlayerCalledTrump(whoseTurn);
+					game.setTrump(bet.getTrumpSuit());
+					game.setPlayerCalledTrump(game.whoseTurn);
 					this.boldBettingTeam();
 
 					// Update the Game board display with an indication of the current suit
-					gameContext.updateSuit(euchreGame.getTrump());
+					gameContext.updateSuit(game.getTrump());
 
-					euchreGame.setPlayerGoingAlone(bet.getGoAlone());
-					if (euchreGame.isPlayerGoingAlone() && euchreGame.getTrickLeader() == euchreGame.getPlayerBeingSkipped()) {
-						euchreGame.setTrickLeader(euchreGame.getTrickLeader() + 1);
+					game.setPlayerGoingAlone(bet.getGoAlone());
+					if (game.isPlayerGoingAlone() && game.getTrickLeader() == game.getPlayerBeingSkipped()) {
+						game.setTrickLeader(game.getTrickLeader() + 1);
 					}
-					if (!euchreGame.isPlayerGoingAlone() || euchreGame.getDealer() != euchreGame.getPlayerBeingSkipped()) {
-						whoseTurn = euchreGame.getDealer();
-						currentState = PICK_IT_UP;
-						players.get(euchreGame.getDealer()).addCard(euchreGame.getCardLead());
+					if (!game.isPlayerGoingAlone() || game.getDealer() != game.getPlayerBeingSkipped()) {
+						game.whoseTurn = game.getDealer();
+						game.currentState = PICK_IT_UP;
+						players.get(game.getDealer()).addCard(game.getCardLead());
 					} else {
-						whoseTurn = euchreGame.getTrickLeader();
-						currentState = PLAY_LEAD_CARD;
+						game.whoseTurn = game.getTrickLeader();
+						game.currentState = PLAY_LEAD_CARD;
 					}
 
 					//tell the dealer to "pick it up"
 					mySM.drawCardSound();
-					euchreGame.clearCardsPlayed();
+					game.clearCardsPlayed();
 				} else {
 					// Don't let player choose suit other than card lead suit
 					refreshPlayers();
 					return;
 				}
 			} else {
-				if (whoseTurn == euchreGame.getDealer()) {
+				if (game.whoseTurn == game.getDealer()) {
 					// start betting round 2
-					currentState = SECOND_ROUND_BETTING;
+					game.currentState = SECOND_ROUND_BETTING;
 				}
-				incrementWhoseTurn();
+				game.incrementWhoseTurn();
 			}
 
 			//second round of betting
 		} else if (round == SECOND_ROUND_BETTING) {
 			if (bet.getPlaceBet()) {
-				euchreGame.setTrump(bet.getTrumpSuit());
-				euchreGame.setPlayerCalledTrump(whoseTurn);
+				game.setTrump(bet.getTrumpSuit());
+				game.setPlayerCalledTrump(game.whoseTurn);
 				this.boldBettingTeam();
-				gameContext.updateSuit(euchreGame.getTrump());
+				gameContext.updateSuit(game.getTrump());
 
-				euchreGame.setPlayerGoingAlone(bet.getGoAlone());
-				if (euchreGame.isPlayerGoingAlone() && euchreGame.getTrickLeader() == euchreGame.getPlayerBeingSkipped()) {
-					euchreGame.setTrickLeader(euchreGame.getTrickLeader() + 1);
+				game.setPlayerGoingAlone(bet.getGoAlone());
+				if (game.isPlayerGoingAlone() && game.getTrickLeader() == game.getPlayerBeingSkipped()) {
+					game.setTrickLeader(game.getTrickLeader() + 1);
 				}
 
 				//set the turn to the first player to play and go
-				whoseTurn = euchreGame.getTrickLeader();
+				game.whoseTurn = game.getTrickLeader();
 
-				euchreGame.clearCardsPlayed();
+				game.clearCardsPlayed();
 
-				currentState = PLAY_LEAD_CARD;
+				game.currentState = PLAY_LEAD_CARD;
 				refreshPlayers();
 			} else {
-				if (whoseTurn != euchreGame.getDealer()) {
-					incrementWhoseTurn();
+				if (game.whoseTurn != game.getDealer()) {
+					game.incrementWhoseTurn();
 				}
 				//if it is the second round and the dealer
 				//	passes we just keep telling him/her to bet. they must.
@@ -586,7 +548,7 @@ public class EuchreGameController extends GameController {
 		}
 
 		//all of the cases above should come to this statement.
-		sendNextTurn(currentState);
+		sendNextTurn(game.currentState);
 	}
 
 	/**
@@ -595,9 +557,9 @@ public class EuchreGameController extends GameController {
 	 * @param card the card to give the player or computer
 	 */
 	private void sendNextTurn(int state) {
-		currentState = state;
+		game.currentState = state;
 		updateGameStateFull();
-		if (players.get(whoseTurn).getIsComputer()) {
+		if (players.get(game.whoseTurn).getIsComputer()) {
 			if (!isComputerPlaying) {
 				startComputerTurn();
 			}
@@ -606,24 +568,9 @@ public class EuchreGameController extends GameController {
 		}
 
 		// Highlight the name of the current player
-		gameContext.highlightPlayer(whoseTurn + 1);
+		gameContext.highlightPlayer(game.whoseTurn);
 
 		gameContext.updateUi();
-	}
-
-	/**
-	 * This function will change whose turn it is to the next player.
-	 */
-	private void incrementWhoseTurn() {
-		if (whoseTurn < game.getNumPlayers() - 1) {
-			whoseTurn++;
-		} else {
-			whoseTurn = 0;
-		}
-
-		if (euchreGame.isPlayerGoingAlone()	&& whoseTurn == euchreGame.getPlayerBeingSkipped()) {
-			incrementWhoseTurn();
-		}
 	}
 
 	/**
@@ -632,7 +579,7 @@ public class EuchreGameController extends GameController {
 	private void boldBettingTeam() {
 		gameContext.unboldAllPlayerText();
 		for (int i = 0; i < 4; i++) {
-			if (euchreGame.getPlayerCalledTrump() % 2 == i % 2) {
+			if (game.getPlayerCalledTrump() % 2 == i % 2) {
 				gameContext.boldPlayerText(i);
 			}
 		}

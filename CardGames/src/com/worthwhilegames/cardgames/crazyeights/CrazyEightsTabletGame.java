@@ -17,12 +17,13 @@ import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.Deck;
 import com.worthwhilegames.cardgames.shared.Game;
 import com.worthwhilegames.cardgames.shared.Player;
+import com.worthwhilegames.cardgames.shared.PlayerState;
 import com.worthwhilegames.cardgames.shared.Util;
 
 /**
  * A class for keeping track of the logic and game state for the game type crazy eights
  */
-public class CrazyEightsTabletGame implements Game {
+public class CrazyEightsTabletGame extends Game {
 
 	/**
 	 * A tag for the class name
@@ -389,6 +390,12 @@ public class CrazyEightsTabletGame implements Game {
 			//TODO customizable back
 			return new Card(0,0,R.drawable.back_blue_1, 0);
 		}
+		return null;
+	}
+
+	@Override
+	public PlayerState getPlayerState(int index) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

@@ -6,8 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -17,7 +15,6 @@ import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.GameController;
 import com.worthwhilegames.cardgames.shared.Player;
 import com.worthwhilegames.cardgames.shared.Util;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
 
 /**
@@ -27,6 +24,11 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
  * state
  */
 public class CrazyEightsGameController extends GameController {
+
+	/**
+	 * This is the game that is specific to Crazy 8's
+	 */
+	private CrazyEightsTabletGame game;
 
 	/**
 	 * This represents the suit chosen when an 8 is played
@@ -62,9 +64,10 @@ public class CrazyEightsGameController extends GameController {
 		cardSuggestor = new CrazyEightsComputerPlayer(Constants.MEDIUM);
 
 		game = CrazyEightsTabletGame.getInstance();
+		genericGame = game;
+
 		game.setup();
 		players = game.getPlayers();
-		gameContext.highlightPlayer(1);
 
 		for (Player p : players) {
 			if (Util.isDebugBuild()) {
@@ -81,65 +84,55 @@ public class CrazyEightsGameController extends GameController {
 		// Update the indicator on the gameboard with the current suit
 		gameContext.updateSuit(onDiscard.getSuit());
 
-		server.write(Constants.MSG_IS_TURN, onDiscard, players.get(whoseTurn).getId());
+		gameContext.highlightPlayer(game.whoseTurn);
+
+		server.write(Constants.MSG_IS_TURN, onDiscard, players.get(game.whoseTurn).getId());
 		sendCardSuggestion();
 	}
 
+
+
 	/* (non-Javadoc)
-	 * @see cs309.a1.shared.GameController#handleBroadcastReceive(android.content.Context, android.content.Intent)
+	 * @see com.worthwhilegames.cardgames.shared.GameController#handleMessage(int, java.lang.String)
 	 */
 	@Override
-	public void handleBroadcastReceive(Context context, Intent intent) {
-		String action = intent.getAction();
-
-		if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
-			int messageSender = getWhoSentMessage(context, intent);
-			String object = intent.getStringExtra(ConnectionConstants.KEY_MESSAGE_RX);
-			int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
-
-			// Only perform actions if it is the sender's turn
-			if (messageSender == whoseTurn) {
-				switch (messageType) {
-				case Constants.MSG_PLAY_CARD:
-					playReceivedCard(object);
-					advanceTurn();
-					break;
-				case C8Constants.PLAY_EIGHT_C:
-					suitChosen = Constants.SUIT_CLUBS;
-					playReceivedCard(object);
-					advanceTurn();
-					break;
-				case C8Constants.PLAY_EIGHT_D:
-					suitChosen = Constants.SUIT_DIAMONDS;
-					playReceivedCard(object);
-					advanceTurn();
-					break;
-				case C8Constants.PLAY_EIGHT_H:
-					suitChosen = Constants.SUIT_HEARTS;
-					playReceivedCard(object);
-					advanceTurn();
-					break;
-				case C8Constants.PLAY_EIGHT_S:
-					suitChosen = Constants.SUIT_SPADES;
-					playReceivedCard(object);
-					advanceTurn();
-					break;
-				case Constants.MSG_DRAW_CARD:
-					drawCard();
-					advanceTurn();
-					break;
-				case Constants.MSG_REFRESH:
-					refreshPlayers();
-					break;
-				}
-			} else {
-				Log.d(TAG, "It isn't " + messageSender + "'s turn - ignoring message");
-				Log.w(TAG, "messageSender: " + messageSender + " whoseTurn: " + whoseTurn);
-				// refresh players to get everyone to the same state.
-				refreshPlayers();
-			}
+	public void handleMessage(int messageType, String object) {
+		switch (messageType) {
+		case Constants.MSG_PLAY_CARD:
+			playReceivedCard(object);
+			advanceTurn();
+			break;
+		case C8Constants.PLAY_EIGHT_C:
+			suitChosen = Constants.SUIT_CLUBS;
+			playReceivedCard(object);
+			advanceTurn();
+			break;
+		case C8Constants.PLAY_EIGHT_D:
+			suitChosen = Constants.SUIT_DIAMONDS;
+			playReceivedCard(object);
+			advanceTurn();
+			break;
+		case C8Constants.PLAY_EIGHT_H:
+			suitChosen = Constants.SUIT_HEARTS;
+			playReceivedCard(object);
+			advanceTurn();
+			break;
+		case C8Constants.PLAY_EIGHT_S:
+			suitChosen = Constants.SUIT_SPADES;
+			playReceivedCard(object);
+			advanceTurn();
+			break;
+		case Constants.MSG_DRAW_CARD:
+			drawCard();
+			advanceTurn();
+			break;
+		case Constants.MSG_REFRESH:
+			refreshPlayers();
+			break;
 		}
 	}
+
+
 
 	/**
 	 * This function will be called when a players turn is over It will change
@@ -149,20 +142,20 @@ public class CrazyEightsGameController extends GameController {
 	private void advanceTurn() {
 		// If the game is over, proceed to the declare winner section of the
 		// code
-		if (game.isGameOver(players.get(whoseTurn))) {
-			declareWinner(whoseTurn);
+		if (game.isGameOver(players.get(game.whoseTurn))) {
+			declareWinner(game.whoseTurn);
 			return;
 		}
 
 		// Figure out whose turn it is now
-		if (whoseTurn < game.getNumPlayers() - 1) {
-			whoseTurn++;
+		if (game.whoseTurn < game.getNumPlayers() - 1) {
+			game.whoseTurn++;
 		} else {
-			whoseTurn = 0;
+			game.whoseTurn = 0;
 		}
 
 		// Highlight the name of the current player
-		gameContext.highlightPlayer(whoseTurn + 1);
+		gameContext.highlightPlayer(game.whoseTurn);
 
 		// Get the top discard pile card, so that we can tell the user which
 		// cards
@@ -188,14 +181,14 @@ public class CrazyEightsGameController extends GameController {
 		gameContext.updateSuit(onDiscard.getSuit());
 
 		// If this is a computer, start having the computer play
-		if (players.get(whoseTurn).getIsComputer()) {
+		if (players.get(game.whoseTurn).getIsComputer()) {
 			// play turn for computer player if not already
 			if (!isComputerPlaying) {
 				startComputerTurn();
 			}
 		} else {
 			// tell the player it is their turn
-			server.write(Constants.MSG_IS_TURN, onDiscard, players.get(whoseTurn).getId());
+			server.write(Constants.MSG_IS_TURN, onDiscard, players.get(game.whoseTurn).getId());
 			sendCardSuggestion();
 		}
 
@@ -237,11 +230,11 @@ public class CrazyEightsGameController extends GameController {
 		// Play draw card sound
 		mySM.drawCardSound();
 
-		Card tmpCard = game.draw(players.get(whoseTurn));
+		Card tmpCard = game.draw(players.get(game.whoseTurn));
 
 		if (tmpCard != null) {
 			// And send the card to the player
-			server.write(Constants.MSG_CARD_DRAWN, tmpCard, players.get(whoseTurn).getId());
+			server.write(Constants.MSG_CARD_DRAWN, tmpCard, players.get(game.whoseTurn).getId());
 		} else {
 			// there are no cards to draw so make it no longer that players turn
 			// and refresh the players
@@ -260,7 +253,7 @@ public class CrazyEightsGameController extends GameController {
 		unpause();
 
 		// Send users information
-		Player pTurn = players.get(whoseTurn);
+		Player pTurn = players.get(game.whoseTurn);
 
 		// send the card on the discard pile
 		Card discard = game.getDiscardPileTop();
@@ -300,7 +293,7 @@ public class CrazyEightsGameController extends GameController {
 
 		// If the next player is a computer, and the computer isn't currently
 		// playing, have the computer initiate a move
-		if (players.get(whoseTurn).getIsComputer() && !isComputerPlaying) {
+		if (players.get(game.whoseTurn).getIsComputer() && !isComputerPlaying) {
 			startComputerTurn();
 		}
 	}
@@ -310,7 +303,7 @@ public class CrazyEightsGameController extends GameController {
 	 * and send it to them as a suggestion
 	 */
 	protected void sendCardSuggestion() {
-		final int currentTurn = whoseTurn;
+		final int currentTurn = game.whoseTurn;
 		final int currentSuitChosen = suitChosen;
 
 		new Thread(new Runnable() {
@@ -342,20 +335,20 @@ public class CrazyEightsGameController extends GameController {
 	protected void playComputerTurn() {
 		Card cardSelected = null;
 
-		cardSelected = computerPlayer.getCardOnTurn(whoseTurn, suitChosen);
+		cardSelected = computerPlayer.getCardOnTurn(game.whoseTurn, suitChosen);
 
 		if (cardSelected != null && cardSelected.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
-			suitChosen = computerPlayer.getSuitChosen(whoseTurn, players.get(whoseTurn).getCards());
+			suitChosen = computerPlayer.getSuitChosen(game.whoseTurn, players.get(game.whoseTurn).getCards());
 		}
 
 		if (cardSelected != null) {
 			//Play Card
 			mySM.playCardSound();
 
-			game.discard(players.get(whoseTurn), cardSelected);
+			game.discard(players.get(game.whoseTurn), cardSelected);
 		} else {
 			// Draw Card
-			Card tmpCard = game.draw(players.get(whoseTurn));
+			Card tmpCard = game.draw(players.get(game.whoseTurn));
 
 			// If card is null then there are no cards to draw so just move on and allow the turn to advance
 			if (tmpCard != null) {
@@ -366,5 +359,6 @@ public class CrazyEightsGameController extends GameController {
 		//the computer has finished, advance the turn
 		advanceTurn();
 	}
+
 
 }

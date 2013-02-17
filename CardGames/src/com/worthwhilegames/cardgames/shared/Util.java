@@ -29,6 +29,11 @@ public class Util {
 	private static boolean isGameboard = false;
 
 	/**
+	 * Represents whether this device is acting as the gameboard and playing
+	 */
+	private static boolean isPlayerHost = false;
+
+	/**
 	 * Checks whether this is a debug build or not.
 	 *
 	 * This toggles different logging capabilities
@@ -78,6 +83,22 @@ public class Util {
 	 */
 	public static void setIsGameboard(boolean isGameboard) {
 		Util.isGameboard = isGameboard;
+	}
+
+	/**
+	 * is this device the gameboard and playing
+	 * @return
+	 */
+	public static boolean isPlayerHost() {
+		return isPlayerHost;
+	}
+
+	/**
+	 * Set if this device is the gameboard and is playing
+	 * @param isPlayerHost
+	 */
+	public static void setIsPlayerHost(boolean isPlayerHost) {
+		Util.isPlayerHost = isPlayerHost;
 	}
 
 	/**

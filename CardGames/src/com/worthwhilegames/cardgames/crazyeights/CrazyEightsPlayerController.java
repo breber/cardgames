@@ -2,6 +2,7 @@ package com.worthwhilegames.cardgames.crazyeights;
 
 import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -9,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -27,17 +27,16 @@ import com.worthwhilegames.cardgames.player.activities.ShowCardsActivity;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.PlayerController;
-import com.worthwhilegames.cardgames.shared.PlayerStateFull;
+import com.worthwhilegames.cardgames.shared.PlayerState;
 import com.worthwhilegames.cardgames.shared.Rules;
 import com.worthwhilegames.cardgames.shared.SoundManager;
 import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 
 /**
  * The PlayerController implementation for Crazy Eights
  */
-public class CrazyEightsPlayerController implements PlayerController {
+public class CrazyEightsPlayerController extends PlayerController {
 
 	/**
 	 * The Logcat Debug tag
@@ -60,7 +59,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	 */
 	private List<Card> cardHand;
 
-	private PlayerStateFull playerState;
+	private PlayerState playerState;
 
 	/**
 	 * An instance of the ShowCardsActivity that can be used to display cards
@@ -136,7 +135,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	 * @param context This is an instance of the ShowCardsActivity
 	 * @param cardHandGiven The list of cards that this player has
 	 */
-	public CrazyEightsPlayerController(Activity context, List<Card> cardHandGiven) {
+	public CrazyEightsPlayerController(Activity context) {
 		playerContext = (ShowCardsActivity) context;
 		// Get the play and draw buttons so that the playerController can
 		// do stuff with them
@@ -146,7 +145,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 		draw.setOnClickListener(drawClickListener);
 		setButtonsEnabled(false);
 		mySM = SoundManager.getInstance(context);
-		cardHand = cardHandGiven;
+		cardHand = new ArrayList<Card>();
 		playerName = "";
 		playerHandLayout = (LinearLayout) playerContext.findViewById(R.id.playerCardContainer);
 
@@ -158,115 +157,107 @@ public class CrazyEightsPlayerController implements PlayerController {
 		connection = ConnectionClient.getInstance(context);
 	}
 
+
 	/* (non-Javadoc)
-	 * @see cs309.a1.shared.PlayerController#handleBroadcastReceive(android.content.Context, android.content.Intent)
+	 * @see com.worthwhilegames.cardgames.shared.PlayerController#handleMessage(int, java.lang.String)
 	 */
 	@Override
-	public void handleBroadcastReceive(Context context, Intent intent) {
-		String action = intent.getAction();
-
-		if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
-			String object = intent.getStringExtra(ConnectionConstants.KEY_MESSAGE_RX);
-			int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
-
-			if (Util.isDebugBuild()) {
-				Log.d(TAG, "message: " + object);
-			}
-
-			switch (messageType) {
-			case Constants.MSG_SETUP:
-				// Parse the Message if it was the original setup
-				try {
-					JSONArray arr = new JSONArray(object);
-					for (int i = 0; i < arr.length(); i++) {
-						JSONObject obj = arr.getJSONObject(i);
-						playerContext.addCard(Card.createCardFromJSON(obj));
-					}
-				} catch (JSONException ex) {
-					ex.printStackTrace();
-				}
-				setButtonsEnabled(false);
-				isTurn = false;
-				cardSuggestedId = -1;
-				break;
-			case Constants.MSG_IS_TURN:
-				mySM.sayTurn(playerName);
-				try {
-					JSONObject obj = new JSONObject(object);
-					cardOnDiscard = Card.createCardFromJSON(obj);
-				} catch (JSONException ex) {
-					ex.printStackTrace();
-				}
-				setButtonsEnabled(true);
-				isTurn = true;
-				break;
-			case Constants.MSG_SUGGESTED_CARD:
-				if(isTurn && object != null && isPlayAssistMode){
-					try {
-						JSONObject obj = new JSONObject(object);
-						int id = obj.getInt(Constants.KEY_CARD_ID);
-						cardSuggestedId = id;
-
-						// Let the UI know which card was suggested
-						int selectedId = -1;
-						if(cardSelected != null){
-							selectedId = cardSelected.getIdNum();
-						}
-						playerContext.setSelected(selectedId, cardSuggestedId);
-					} catch (JSONException ex) {
-						ex.printStackTrace();
-					}
-				}
-				break;
-			case Constants.MSG_CARD_DRAWN:
-				try {
-					JSONObject obj = new JSONObject(object);
-					playerContext.addCard(Card.createCardFromJSON(obj));
-				} catch (JSONException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			case Constants.MSG_REFRESH:
-				// Parse the refresh Message
-				try {
-					JSONObject refreshInfo = new JSONObject(object);
-					isTurn = refreshInfo.getBoolean(Constants.KEY_TURN);
-					playerName = refreshInfo.getString(Constants.KEY_PLAYER_NAME);
-
-					playerContext.removeAllCards();
-
-					JSONObject discardObj = refreshInfo.getJSONObject(Constants.KEY_DISCARD_CARD);
-
-					cardOnDiscard = Card.createCardFromJSON(discardObj);
-
-					// Get the player's hand
-					JSONArray arr = refreshInfo.getJSONArray(Constants.KEY_CURRENT_HAND);
-					for (int i = 0; i < arr.length(); i++) {
-						JSONObject card = arr.getJSONObject(i);
-						playerContext.addCard(Card.createCardFromJSON(card));
-					}
-				} catch (JSONException ex) {
-					ex.printStackTrace();
-				}
-				setButtonsEnabled(isTurn);
-				cardSelected = null;
-				break;
-			case Constants.MSG_WINNER:
-				playerContext.unregisterReceiver();
-				Intent winner = new Intent(playerContext, GameResultsActivity.class);
-				winner.putExtra(GameResultsActivity.IS_WINNER, true);
-				playerContext.startActivityForResult(winner, QUIT_GAME);
-				break;
-			case Constants.MSG_LOSER:
-				playerContext.unregisterReceiver();
-				Intent loser = new Intent(playerContext, GameResultsActivity.class);
-				loser.putExtra(GameResultsActivity.IS_WINNER, false);
-				playerContext.startActivityForResult(loser, QUIT_GAME);
-				break;
-			}
+	public void handleMessage(int messageType, String object){
+		if (Util.isDebugBuild()) {
+			Log.d(TAG, "message: " + object);
 		}
 
+
+		switch (messageType) {
+		case Constants.MSG_SETUP:
+			// Parse the Message if it was the original setup
+			try {
+				JSONArray arr = new JSONArray(object);
+				for (int i = 0; i < arr.length(); i++) {
+					arr.getJSONObject(i);
+				}
+			} catch (JSONException ex) {
+				ex.printStackTrace();
+			}
+			setButtonsEnabled(false);
+			isTurn = false;
+			cardSuggestedId = -1;
+			break;
+		case Constants.MSG_IS_TURN:
+			mySM.sayTurn(playerName);
+			try {
+				JSONObject obj = new JSONObject(object);
+				cardOnDiscard = Card.createCardFromJSON(obj);
+			} catch (JSONException ex) {
+				ex.printStackTrace();
+			}
+			setButtonsEnabled(true);
+			isTurn = true;
+			break;
+		case Constants.MSG_SUGGESTED_CARD:
+			if(isTurn && object != null && isPlayAssistMode){
+				try {
+					JSONObject obj = new JSONObject(object);
+					int id = obj.getInt(Constants.KEY_CARD_ID);
+					cardSuggestedId = id;
+
+					// Let the UI know which card was suggested
+					int selectedId = -1;
+					if(cardSelected != null){
+						selectedId = cardSelected.getIdNum();
+					}
+					playerContext.setSelected(selectedId, cardSuggestedId);
+				} catch (JSONException ex) {
+					ex.printStackTrace();
+				}
+			}
+			break;
+		case Constants.MSG_CARD_DRAWN:
+			try {
+				new JSONObject(object);
+			} catch (JSONException ex) {
+				ex.printStackTrace();
+			}
+			break;
+		case Constants.MSG_REFRESH:
+			// Parse the refresh Message
+			try {
+				JSONObject refreshInfo = new JSONObject(object);
+				isTurn = refreshInfo.getBoolean(Constants.KEY_TURN);
+				playerName = refreshInfo.getString(Constants.KEY_PLAYER_NAME);
+
+
+				JSONObject discardObj = refreshInfo.getJSONObject(Constants.KEY_DISCARD_CARD);
+
+				cardOnDiscard = Card.createCardFromJSON(discardObj);
+
+				// Get the player's hand
+				JSONArray arr = refreshInfo.getJSONArray(Constants.KEY_CURRENT_HAND);
+				for (int i = 0; i < arr.length(); i++) {
+					arr.getJSONObject(i);
+				}
+			} catch (JSONException ex) {
+				ex.printStackTrace();
+			}
+			setButtonsEnabled(isTurn);
+			cardSelected = null;
+			break;
+		case Constants.MSG_WINNER:
+			playerContext.unregisterReceiver();
+			Intent winner = new Intent(playerContext, GameResultsActivity.class);
+			winner.putExtra(GameResultsActivity.IS_WINNER, true);
+			playerContext.startActivityForResult(winner, QUIT_GAME);
+			break;
+		case Constants.MSG_LOSER:
+			playerContext.unregisterReceiver();
+			Intent loser = new Intent(playerContext, GameResultsActivity.class);
+			loser.putExtra(GameResultsActivity.IS_WINNER, false);
+			playerContext.startActivityForResult(loser, QUIT_GAME);
+			break;
+		}
 	}
+
+
 
 	/**
 	 * The OnClickListener for the play button
@@ -322,7 +313,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	 * @see cs309.a1.shared.PlayerController#handleActivityResult(int, int, android.content.Intent)
 	 */
 	@Override
-	public void handleActivityResult(int requestCode, int resultCode, Intent data) {
+	public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CHOOSE_SUIT) {
 			boolean isSuitChosen = true;
 			switch (resultCode) {
@@ -350,7 +341,10 @@ public class CrazyEightsPlayerController implements PlayerController {
 				isTurn = false;
 				cardSuggestedId = -1;
 			}
+			return true;
 		}
+
+		return false;
 	}
 
 	/**
@@ -405,7 +399,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 	}
 
 	@Override
-	public PlayerStateFull getPlayerState() {
+	public PlayerState getPlayerState() {
 		return playerState;
 	}
 }

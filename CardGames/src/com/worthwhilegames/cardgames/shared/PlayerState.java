@@ -12,7 +12,7 @@ import org.json.JSONObject;
 /**
  * This is the complete information for a player's state
  */
-public class PlayerStateFull {
+public class PlayerState {
 
 	/**
 	 * Number of cards that each player has
@@ -27,7 +27,7 @@ public class PlayerStateFull {
 	/**
 	 * Is it the players turn?
 	 */
-	public boolean isTurn = false;
+	public int whoseTurn = 0;
 
 	/**
 	 * the current state of the game
@@ -75,7 +75,7 @@ public class PlayerStateFull {
 	/**
 	 * 
 	 */
-	public PlayerStateFull(){
+	public PlayerState(){
 		this.cards = new ArrayList<Card>();
 		this.cardsPlayed = new Card[Constants.DEFAULT_MAX_PLAYERS];
 		this.numCards = new int[Constants.DEFAULT_MAX_PLAYERS];
@@ -86,68 +86,13 @@ public class PlayerStateFull {
 			this.playerNames[i] = "";
 		}
 		this.currentState = 0;
-		this.isTurn = false;
+		this.whoseTurn = 0;
 		this.onDiscard = Card.getNullCard();
 		this.playerIndex = 0;
 
 	}
 
-	/**
-	 * Converts the input JSON string to a new PlayerState object
-	 * @param jsonIn
-	 * @return new object that represents the JSON object PlayerState
-	 */
-	public void updateFromPartialState(String jsonIn){
-		PlayerStateFull newState = this;
 
-		try {
-			JSONObject refreshInfo = new JSONObject(jsonIn);
-
-			JSONArray arrCardCount = refreshInfo.getJSONArray(Constants.KEY_NUM_CARDS_ARRAY);
-			newState.numCards = new int[arrCardCount.length()];
-			for (int i = 0; i < arrCardCount.length(); i++) {
-				JSONObject count = arrCardCount.getJSONObject(i);
-				newState.numCards[i] = count.getInt(Constants.KEY_NUM_CARDS);
-			}
-
-			newState.playerIndex = refreshInfo.getInt(Constants.KEY_PLAYER_INDEX);
-			newState.isTurn = refreshInfo.getBoolean(Constants.KEY_TURN);
-			newState.currentState = refreshInfo.getInt(KEY_CURRENT_STATE);
-
-			// Player Names to be displayed
-			JSONArray arrPlayerNames = refreshInfo.getJSONArray(Constants.KEY_PLAYER_NAMES);
-			newState.playerNames = new String[arrPlayerNames.length()];
-			for (int i = 0; i < arrPlayerNames.length(); i++) {
-				JSONObject pName = arrPlayerNames.getJSONObject(i);
-				newState.playerNames[0] = pName.getString(Constants.KEY_PLAYER_NAME);
-			}
-
-			newState.suitDisplay = refreshInfo.getInt(Constants.KEY_SUIT_DISPLAY);
-
-			// Extra information that a game may need
-			newState.extraInfo1 = refreshInfo.getInt(Constants.KEY_EXTRA_INFO_1);
-
-			JSONObject discardObj = refreshInfo.getJSONObject(Constants.KEY_DISCARD_CARD);
-			newState.onDiscard = Card.createCardFromJSON(discardObj);
-
-			// Get the cards Played
-			JSONArray cPlayedArr = refreshInfo.getJSONArray(Constants.KEY_CARDS_PLAYED);
-			for (int i = 0; i < cPlayedArr.length(); i++) {
-				JSONObject card = cPlayedArr.getJSONObject(i);
-				newState.cardsPlayed[i] = Card.createCardFromJSON(card);
-			}
-
-
-			// Get the player's hand
-			JSONArray arr = refreshInfo.getJSONArray(Constants.KEY_CURRENT_HAND);
-			for (int i = 0; i < arr.length(); i++) {
-				JSONObject card = arr.getJSONObject(i);
-				newState.cards.add(Card.createCardFromJSON(card));
-			}
-		} catch (JSONException ex) {
-			ex.printStackTrace();
-		}
-	}
 
 	/**
 	 * Takes the current PlayerState object and converts it into a JSON string
@@ -170,7 +115,7 @@ public class PlayerStateFull {
 			refreshInfo.put(Constants.KEY_NUM_CARDS_ARRAY, arrCardCount);
 
 			// send isTurn, player index, and current state
-			refreshInfo.put(Constants.KEY_TURN, this.isTurn);
+			refreshInfo.put(Constants.KEY_TURN, this.whoseTurn);
 			refreshInfo.put(Constants.KEY_PLAYER_INDEX, this.playerIndex);
 			refreshInfo.put(Constants.KEY_CURRENT_STATE, this.currentState);
 
@@ -225,8 +170,8 @@ public class PlayerStateFull {
 	 * @param jsonIn
 	 * @return new object that represents the JSON object PlayerState
 	 */
-	public static PlayerStateFull createStateFromJSON(String jsonIn){
-		PlayerStateFull newState = new PlayerStateFull();
+	public static PlayerState createStateFromJSON(String jsonIn){
+		PlayerState newState = new PlayerState();
 
 		try {
 			JSONObject refreshInfo = new JSONObject(jsonIn);
@@ -239,7 +184,7 @@ public class PlayerStateFull {
 			}
 
 			newState.playerIndex = refreshInfo.getInt(Constants.KEY_PLAYER_INDEX);
-			newState.isTurn = refreshInfo.getBoolean(Constants.KEY_TURN);
+			newState.whoseTurn = refreshInfo.getInt(Constants.KEY_TURN);
 			newState.currentState = refreshInfo.getInt(KEY_CURRENT_STATE);
 
 			// Player Names to be displayed
@@ -279,4 +224,135 @@ public class PlayerStateFull {
 
 		return newState;
 	}
+
+
+	/**
+	 * Converts the input JSON string to a new PlayerState object
+	 * @param jsonIn
+	 * @return new object that represents the JSON object PlayerState
+	 */
+	public void updateFromPartialState(String jsonIn){
+		PlayerState newState = this;
+
+		try {
+			JSONObject refreshInfo = new JSONObject(jsonIn);
+
+			JSONArray arrCardCount = refreshInfo.getJSONArray(Constants.KEY_NUM_CARDS_ARRAY);
+			newState.numCards = new int[arrCardCount.length()];
+			for (int i = 0; i < arrCardCount.length(); i++) {
+				JSONObject count = arrCardCount.getJSONObject(i);
+				newState.numCards[i] = count.getInt(Constants.KEY_NUM_CARDS);
+			}
+
+			newState.playerIndex = refreshInfo.getInt(Constants.KEY_PLAYER_INDEX);
+			newState.whoseTurn = refreshInfo.getInt(Constants.KEY_TURN);
+			newState.currentState = refreshInfo.getInt(KEY_CURRENT_STATE);
+
+			/*// Player Names to be displayed
+			JSONArray arrPlayerNames = refreshInfo.getJSONArray(Constants.KEY_PLAYER_NAMES);
+			newState.playerNames = new String[arrPlayerNames.length()];
+			for (int i = 0; i < arrPlayerNames.length(); i++) {
+				JSONObject pName = arrPlayerNames.getJSONObject(i);
+				newState.playerNames[0] = pName.getString(Constants.KEY_PLAYER_NAME);
+			}*/
+
+			newState.suitDisplay = refreshInfo.getInt(Constants.KEY_SUIT_DISPLAY);
+
+			// Extra information that a game may need
+			newState.extraInfo1 = refreshInfo.getInt(Constants.KEY_EXTRA_INFO_1);
+
+			JSONObject discardObj = refreshInfo.getJSONObject(Constants.KEY_DISCARD_CARD);
+			newState.onDiscard = Card.createCardFromJSON(discardObj);
+
+			// Get the cards Played
+			JSONArray cPlayedArr = refreshInfo.getJSONArray(Constants.KEY_CARDS_PLAYED);
+			for (int i = 0; i < cPlayedArr.length(); i++) {
+				JSONObject card = cPlayedArr.getJSONObject(i);
+				newState.cardsPlayed[i] = Card.createCardFromJSON(card);
+			}
+
+
+			/*// Get the player's hand
+			JSONArray arr = refreshInfo.getJSONArray(Constants.KEY_CURRENT_HAND);
+			for (int i = 0; i < arr.length(); i++) {
+				JSONObject card = arr.getJSONObject(i);
+				newState.cards.add(Card.createCardFromJSON(card));
+			}*/
+		} catch (JSONException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	/**
+	 * Takes the current PlayerState object and converts it into a JSON string representing part of it.
+	 * This is made to be a smaller JSON message to send to the player to perform an update.
+	 * @return JSON string representation of part of this object
+	 */
+	public String toPartialJSONObject(){
+		String jsonOut = "";
+
+		try {
+			// Create the base refresh info object
+			JSONObject refreshInfo = new JSONObject();
+
+			// send the number of cards for each player
+			JSONArray arrCardCount = new JSONArray();
+			for (int numCards: this.numCards) {
+				JSONObject numCardsobj = new JSONObject();
+				numCardsobj.put(Constants.KEY_NUM_CARDS, numCards);
+				arrCardCount.put(numCardsobj);
+			}
+			refreshInfo.put(Constants.KEY_NUM_CARDS_ARRAY, arrCardCount);
+
+			// send isTurn, player index, and current state
+			refreshInfo.put(Constants.KEY_TURN, this.whoseTurn);
+			refreshInfo.put(Constants.KEY_PLAYER_INDEX, this.playerIndex);
+			refreshInfo.put(Constants.KEY_CURRENT_STATE, this.currentState);
+
+			// send the name for each player
+			/*JSONArray arrPlayerNames = new JSONArray();
+			for (String pName: this.playerNames) {
+				JSONObject name = new JSONObject();
+				name.put(Constants.KEY_PLAYER_NAME, pName);
+				arrPlayerNames.put(name);
+			}
+			refreshInfo.put(Constants.KEY_PLAYER_NAMES, arrPlayerNames);*/
+
+			refreshInfo.put(Constants.KEY_SUIT_DISPLAY, this.suitDisplay);
+
+			// Extra information that a game may need
+			refreshInfo.put(Constants.KEY_EXTRA_INFO_1, this.extraInfo1);
+
+			// send the card on the discard pile
+			JSONObject discardObj = this.onDiscard.toJSONObject();
+			refreshInfo.put(Constants.KEY_DISCARD_CARD, discardObj);
+
+			JSONArray arrPlayedCards = new JSONArray();
+			for (Card cPlayed: this.cardsPlayed) {
+				if(cPlayed == null){
+					arrPlayedCards.put(Card.getNullCard().toJSONObject());
+				} else {
+					arrPlayedCards.put(cPlayed.toJSONObject());
+				}
+			}
+			refreshInfo.put(Constants.KEY_CARDS_PLAYED, arrPlayedCards);
+
+
+			/*// send all the cards in the players hand
+			JSONArray arr = new JSONArray();
+			for (Card c : this.cards) {
+				arr.put(c.toJSONObject());
+			}
+			refreshInfo.put(Constants.KEY_CURRENT_HAND, arr);*/
+
+			jsonOut = refreshInfo.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+
+
+		return jsonOut;
+	}
+
 }

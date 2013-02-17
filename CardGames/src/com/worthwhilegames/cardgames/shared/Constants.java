@@ -186,6 +186,7 @@ public class Constants {
 	 */
 	public static final String PLAYER_4 = "player4";
 
+
 	/* JSON keys */
 	/**
 	 * this is a JSON key for the suit of a card
@@ -432,6 +433,12 @@ public class Constants {
 	 * volume option
 	 */
 	public static final String PREF_PLAY_ASSIST_MODE = "PLAY ASSIST MODE";
+
+	/**
+	 * A constant to represent a key in the shared preferences for whether or not
+	 * the gameboard is a player or just a host.
+	 */
+	public static final String PREF_PLAYER_HOST = "PLAYERHOST";
 
 	/* AI Constants */
 	/**

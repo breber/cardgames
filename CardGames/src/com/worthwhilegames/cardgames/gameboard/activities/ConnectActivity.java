@@ -1,5 +1,6 @@
 package com.worthwhilegames.cardgames.gameboard.activities;
 
+import static com.worthwhilegames.cardgames.shared.Constants.GET_PLAYER_NAME;
 import static com.worthwhilegames.cardgames.shared.Constants.KEY_PLAYER_NAME;
 import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
 
@@ -21,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.player.activities.EnterNameActivty;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.Game;
 import com.worthwhilegames.cardgames.shared.GameFactory;
@@ -152,7 +154,7 @@ public class ConnectActivity extends Activity {
 						if (p.getId().equalsIgnoreCase(deviceAddress)) {
 							// Set deviceId again to make sure they aren't listed
 							// as disconnected
-							p.setId(deviceAddress);
+							p.setConnectedId(deviceAddress);
 							needToAdd = false;
 							break;
 						}
@@ -165,7 +167,7 @@ public class ConnectActivity extends Activity {
 						// place. If not, we will add a new player for them
 						for (Player p : mGame.getPlayers()) {
 							if (p.isDisconnected()) {
-								p.setId(deviceAddress);
+								p.setConnectedId(deviceAddress);
 								needToAdd = false;
 							}
 						}
@@ -177,7 +179,7 @@ public class ConnectActivity extends Activity {
 						// players, and we are not on the reconnect screen, add a new player to the
 						// current game.
 						Player p = new Player();
-						p.setId(deviceAddress);
+						p.setConnectedId(deviceAddress);
 						mGame.addPlayer(p);
 					}
 				}
@@ -250,6 +252,16 @@ public class ConnectActivity extends Activity {
 		mGame = GameFactory.getGameInstance(this);
 		isReconnect = mGame.getNumPlayers() > 0;
 
+		if(Util.isPlayerHost()){
+			Player p = new Player();
+			p.setPlayerHost(true);
+			mGame.addPlayer(p);
+
+			// Start Intent to get player host name
+			Intent getName = new Intent(ConnectActivity.this, EnterNameActivty.class);
+			startActivityForResult(getName, GET_PLAYER_NAME);
+		}
+
 		// Start listening for devices
 		startListeningForDevices();
 		updateName();
@@ -320,6 +332,9 @@ public class ConnectActivity extends Activity {
 			mConnectionServer.stopListening();
 		}
 
+		// Finish the get player name activity if it has been started
+		finishActivity(GET_PLAYER_NAME);
+
 		try {
 			unregisterReceiver(receiver);
 		} catch (IllegalArgumentException e) {
@@ -375,9 +390,22 @@ public class ConnectActivity extends Activity {
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// If we are coming back from the Bluetooth Enable request, and
-		// it was successful, start listening for device connections
-		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == GET_PLAYER_NAME && resultCode == RESULT_OK) {
+			String playerName = data.getStringExtra(KEY_PLAYER_NAME);
+
+			for(Player p : mGame.getPlayers()) {
+				if(p.getIsPlayerHost()){
+					p.setName(playerName);
+					updatePlayersConnected();
+					break;
+				}
+			}
+		} else {
+			// If we are coming back from the Bluetooth Enable request, and
+			// it was successful, start listening for device connections
+			super.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
 	/**

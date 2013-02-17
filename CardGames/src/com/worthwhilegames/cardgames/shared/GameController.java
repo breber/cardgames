@@ -20,6 +20,7 @@ import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.gameboard.activities.ConnectActivity;
 import com.worthwhilegames.cardgames.gameboard.activities.GameResultsActivity;
 import com.worthwhilegames.cardgames.gameboard.activities.GameboardActivity;
+import com.worthwhilegames.cardgames.shared.activities.GameViewActivity;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
 
@@ -67,24 +68,19 @@ public abstract class GameController {
 	 * This game object will keep track of the current state of the game and be
 	 * used to manage player hands and draw and discard piles
 	 */
-	protected static Game game = null;
-
-	/**
-	 * This player state object will be used to update each player on their state completely
-	 */
-	protected PlayerStateFull pStateFull = new PlayerStateFull();
-
-	/**
-	 * This will be 0 to 3 to indicate the spot in the players array for the
-	 * player currently taking their turn
-	 */
-	protected int whoseTurn = 0;
+	protected static Game genericGame = null;
 
 	/**
 	 * This is the context of the GameBoardActivity this allows this class to
 	 * call methods and activities as if it were in the GameBoardActivity
 	 */
 	protected GameboardActivity gameContext;
+
+	/**
+	 * This is an instance of a PlayerController that will allow the gameboard
+	 * host to also act as a player.
+	 */
+	public PlayerController playerController;
 
 	/**
 	 * The implementation of the Game Rules
@@ -118,7 +114,7 @@ public abstract class GameController {
 				Log.d(TAG, "handleMessage: about to play a card");
 			}
 
-			if (!isPaused && players.get(whoseTurn).getIsComputer() && isComputerPlaying) {
+			if (!isPaused && players.get(genericGame.whoseTurn).getIsComputer() && isComputerPlaying) {
 				isComputerPlaying = false;
 				playComputerTurn();
 			} else {
@@ -162,7 +158,34 @@ public abstract class GameController {
 	 * @param context context of the broadcast
 	 * @param intent intent of the broadcast, message is stored here
 	 */
-	public abstract void handleBroadcastReceive(Context context, Intent intent);
+	public void handleBroadcastReceive(Context context, Intent intent) {
+		String action = intent.getAction();
+
+		if (ConnectionConstants.MESSAGE_RX_INTENT.equals(action)) {
+			int messageSender = getWhoSentMessage(context, intent);
+			String object = intent.getStringExtra(ConnectionConstants.KEY_MESSAGE_RX);
+			int messageType = intent.getIntExtra(ConnectionConstants.KEY_MESSAGE_TYPE, -1);
+
+			// Only perform actions if it is the sender's turn
+			if (messageSender == genericGame.whoseTurn) {
+				handleMessage(messageType, object);
+			} else {
+				Log.d(TAG, "It isn't " + messageSender + "'s turn - ignoring message");
+				Log.w(TAG, "messageSender: " + messageSender + " game.whoseTurn: " + genericGame.whoseTurn);
+				// refresh players to get everyone to the same state.
+				refreshPlayers();
+			}
+
+		}
+	}
+
+
+	/**
+	 * Handles the message and json object that was received by this gameboard
+	 * @param messageType the message code received
+	 * @param jsonObject the data received
+	 */
+	public abstract void handleMessage(int messageType, String jsonObject);
 
 	/**
 	 * This method will return the player index that sent the message to the gameboard.
@@ -192,7 +215,7 @@ public abstract class GameController {
 			Log.w(TAG, "Can't figure out sender...: " + sender);
 		}
 
-		return whoseTurn;
+		return genericGame.whoseTurn;
 	}
 
 	/**
@@ -205,11 +228,11 @@ public abstract class GameController {
 	 * @param data the intent which may contain data from the activity that has finished
 	 */
 	public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == GameboardActivity.DISCONNECTED) {
+		if (requestCode == GameViewActivity.DISCONNECTED) {
 			if (resultCode == Activity.RESULT_CANCELED) {
 				// We chose to drop the player, so let the Game know to do that
 				String playerId = data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID);
-				game.dropPlayer(playerId);
+				genericGame.dropPlayer(playerId);
 				refreshPlayers();
 				unpause();
 			} else if (resultCode == Activity.RESULT_OK) {
@@ -221,7 +244,7 @@ public abstract class GameController {
 
 				// We will initially drop the player, to handle the case where
 				// they don't actually reconnect a player in the Connect Screen.
-				game.dropPlayer(data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID));
+				genericGame.dropPlayer(data.getStringExtra(ConnectionConstants.KEY_DEVICE_ID));
 
 				// Unregister the receiver so that we don't get an annoying
 				// popup when we are on the activity
@@ -270,8 +293,8 @@ public abstract class GameController {
 			JSONObject obj = new JSONObject(object);
 			tmpCard = Card.createCardFromJSON(obj);
 
-			//tell the game what was played
-			game.discard(players.get(whoseTurn), tmpCard);
+			//tell the genericGame what was played
+			genericGame.discard(players.get(genericGame.whoseTurn), tmpCard);
 
 			//update UI
 			gameContext.updateUi();
@@ -290,7 +313,7 @@ public abstract class GameController {
 	public void pause() {
 		isPaused = true;
 
-		for (int i = 0; i < game.getNumPlayers(); i++) {
+		for (int i = 0; i < genericGame.getNumPlayers(); i++) {
 			server.write(Constants.MSG_PAUSE, null, players.get(i).getId());
 		}
 	}
@@ -299,13 +322,13 @@ public abstract class GameController {
 	 * Un-pauses all the players
 	 */
 	public void unpause() {
-		for (int i = 0; i < game.getNumPlayers(); i++) {
+		for (int i = 0; i < genericGame.getNumPlayers(); i++) {
 			server.write(Constants.MSG_UNPAUSE, null, players.get(i).getId());
 		}
 
 		isPaused = false;
 
-		// If a computer was playing before the game was paused
+		// If a computer was playing before the genericGame was paused
 		// let them know that they can play now
 		if (isComputerPlaying) {
 			computerHandler.sendEmptyMessage(0);
@@ -317,7 +340,7 @@ public abstract class GameController {
 	 */
 	public void sendGameEnd() {
 		isComputerPlaying = true; // stop computer from playing
-		for (int i = 0; i < game.getNumPlayers(); i++) {
+		for (int i = 0; i < genericGame.getNumPlayers(); i++) {
 			server.write(Constants.MSG_END_GAME, null, players.get(i).getId());
 		}
 	}

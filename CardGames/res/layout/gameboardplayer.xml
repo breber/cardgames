@@ -267,6 +267,15 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/gameboard_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:padding="5dip"
+        android:src="@drawable/pause_button" />
+    
+    <ImageView
         android:id="@+id/gameboard_refresh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
