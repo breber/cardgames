@@ -1,9 +1,9 @@
 package com.worthwhilegames.cardgames.player.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.TextView;
 
 /**
@@ -14,7 +14,7 @@ import com.worthwhilegames.cardgames.shared.TextView;
  * Activity Results:
  * 		RESULT_CANCELLED - Always
  */
-public class ConnectionFailActivity extends Activity{
+public class ConnectionFailActivity extends AdActivity {
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)

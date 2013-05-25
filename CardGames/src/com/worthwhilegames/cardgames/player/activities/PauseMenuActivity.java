@@ -1,6 +1,5 @@
 package com.worthwhilegames.cardgames.player.activities;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.TextView;
 import com.worthwhilegames.cardgames.shared.activities.QuitGameActivity;
@@ -22,7 +22,7 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
  * 		RESULT_OK - if the game is resumed
  * 		RESULT_CANCELLED - if the game is ending
  */
-public class PauseMenuActivity extends Activity {
+public class PauseMenuActivity extends AdActivity {
 
 	/**
 	 * The request code to keep track of the Quit Game activity

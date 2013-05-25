@@ -1,12 +1,12 @@
 package com.worthwhilegames.cardgames.gameboard.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.TextView;
 
 /**
@@ -16,7 +16,7 @@ import com.worthwhilegames.cardgames.shared.TextView;
  * Activity Results:
  * 		RESULT_OK - Always
  */
-public class GameResultsActivity extends Activity{
+public class GameResultsActivity extends AdActivity {
 	/**
 	 * The Intent extra indicating which user won the game
 	 */

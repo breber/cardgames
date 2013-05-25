@@ -4,13 +4,13 @@ import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
 import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 
 /**
  * The popup displayed when a user plays an 8-Card.
@@ -24,7 +24,7 @@ import com.worthwhilegames.cardgames.R;
  * 		Constants.SUIT_DIAMONDS - If the user chose diamonds
  * 		RESULT_OK				- If the user doesn't choose
  */
-public class SelectSuitActivity extends Activity{
+public class SelectSuitActivity extends AdActivity {
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)

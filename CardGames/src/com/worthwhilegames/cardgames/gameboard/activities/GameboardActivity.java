@@ -9,7 +9,6 @@ import static com.worthwhilegames.cardgames.shared.Constants.halfCardVertCut;
 import java.util.List;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +29,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.Game;
@@ -48,7 +48,7 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
  * play a turn.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class GameboardActivity extends Activity {
+public class GameboardActivity extends AdActivity {
 
 	/**
 	 * The Logcat Debug tag

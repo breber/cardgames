@@ -6,7 +6,6 @@ import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.Game;
 import com.worthwhilegames.cardgames.shared.GameFactory;
@@ -39,7 +39,7 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
  * 		RESULT_OK - if the Start Game button was pressed
  * 		RESULT_CANCELLED - if the user backed out of the Activity
  */
-public class ConnectActivity extends Activity {
+public class ConnectActivity extends AdActivity {
 
 	/**
 	 * Logcat debug tag

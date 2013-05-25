@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.wifi.WifiConstants;
 
@@ -41,7 +42,7 @@ import com.worthwhilegames.cardgames.shared.wifi.WifiConstants;
  *
  * 		RESULT_CANCELLED - If no device was chosen
  */
-public class DeviceListActivity extends Activity implements ServiceListener {
+public class DeviceListActivity extends AdActivity implements ServiceListener {
 	/**
 	 * The Logcat Debug tag
 	 */

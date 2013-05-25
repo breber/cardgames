@@ -1,7 +1,6 @@
 package com.worthwhilegames.cardgames.player.activities;
 
 import static com.worthwhilegames.cardgames.shared.Constants.KEY_PLAYER_NAME;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -15,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.TextView;
 
 /**
@@ -29,7 +29,7 @@ import com.worthwhilegames.cardgames.shared.TextView;
  *
  * 		RESULT_CANCELLED - If the user didn't choose a name
  */
-public class EnterNameActivty extends Activity implements OnEditorActionListener {
+public class EnterNameActivty extends AdActivity implements OnEditorActionListener {
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)

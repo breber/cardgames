@@ -6,7 +6,6 @@ import static com.worthwhilegames.cardgames.shared.Constants.KEY_PLAYER_NAME;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +13,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.TextView;
@@ -31,7 +31,7 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
  * 		RESULT_OK - If the user is connected and the game can begin
  * 		RESULT_CANCELLED - If the user cancelled or is not connected
  */
-public class ConnectActivity extends Activity {
+public class ConnectActivity extends AdActivity {
 
 	/**
 	 * The request code to handle the result of the device list Activity

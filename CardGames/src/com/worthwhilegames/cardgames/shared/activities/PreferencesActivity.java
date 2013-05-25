@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
@@ -29,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.CardGame;
 import com.worthwhilegames.cardgames.shared.Language;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionType;
@@ -39,7 +39,7 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionType;
  * game including choosing the locale, number of computer players, the difficult
  * of the AI players, volume control and options to enable and disable sounds.
  */
-public class PreferencesActivity extends Activity {
+public class PreferencesActivity extends AdActivity {
 
 	/**
 	 * An AudioManager object to be used for controlling the game volume

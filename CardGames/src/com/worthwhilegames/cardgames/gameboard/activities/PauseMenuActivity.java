@@ -1,6 +1,5 @@
 package com.worthwhilegames.cardgames.gameboard.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +7,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.TextView;
 import com.worthwhilegames.cardgames.shared.activities.QuitGameActivity;
 import com.worthwhilegames.cardgames.shared.activities.RulesActivity;
@@ -20,7 +20,7 @@ import com.worthwhilegames.cardgames.shared.activities.RulesActivity;
  * 		RESULT_OK - Game should be resumed
  * 		RESULT_CANCELLED - End the game
  */
-public class PauseMenuActivity extends Activity {
+public class PauseMenuActivity extends AdActivity {
 	/**
 	 * The request code to keep track of the "Are you sure?" activity
 	 */

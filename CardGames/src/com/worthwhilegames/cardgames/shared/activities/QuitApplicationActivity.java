@@ -1,6 +1,5 @@
 package com.worthwhilegames.cardgames.shared.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -8,6 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 
 /**
  * This activity will be started when the user performs
@@ -19,7 +19,7 @@ import com.worthwhilegames.cardgames.R;
  * 		RESULT_OK - if the user chose the affirmative option
  * 		RESULT_CANCELLED - if the user chose the negative option
  */
-public class QuitApplicationActivity extends Activity {
+public class QuitApplicationActivity extends AdActivity {
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)

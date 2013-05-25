@@ -1,6 +1,5 @@
 package com.worthwhilegames.cardgames.player.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 
 /**
  * The activity that is displayed on the client when the game finishes.
@@ -17,7 +17,7 @@ import com.worthwhilegames.cardgames.R;
  * Activity Results:
  * 		RESULT_OK - Always
  */
-public class GameResultsActivity extends Activity {
+public class GameResultsActivity extends AdActivity {
 	/**
 	 * The Intent extra indicating whether the user
 	 * won the game or lost the game.

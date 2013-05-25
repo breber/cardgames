@@ -1,15 +1,15 @@
 package com.worthwhilegames.cardgames.shared.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 
 /**
  * This activity will display the About screen
  */
-public class AboutActivity extends Activity {
+public class AboutActivity extends AdActivity {
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)

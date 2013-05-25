@@ -2,7 +2,6 @@ package com.worthwhilegames.cardgames.shared.activities;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,6 +9,7 @@ import android.widget.Button;
 
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.euchre.EuchreTabletGame;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.Player;
 import com.worthwhilegames.cardgames.shared.TextView;
 
@@ -17,7 +17,7 @@ import com.worthwhilegames.cardgames.shared.TextView;
  * This will have a pop-up dialog that shows the score
  *
  */
-public class RoundScoresActivity extends Activity {
+public class RoundScoresActivity extends AdActivity {
 
 	/**
 	 * the list of current active players

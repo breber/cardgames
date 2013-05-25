@@ -1,6 +1,5 @@
 package com.worthwhilegames.cardgames.shared.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.ImageButton;
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.gameboard.activities.ConnectActivity;
 import com.worthwhilegames.cardgames.player.activities.ShowCardsActivity;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.SoundManager;
 import com.worthwhilegames.cardgames.shared.Util;
@@ -21,7 +21,7 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
 /**
  * The Main menu of the application
  */
-public class MainMenu extends Activity {
+public class MainMenu extends AdActivity {
 
 	/**
 	 * The request code to handle the result of the Connect Activity

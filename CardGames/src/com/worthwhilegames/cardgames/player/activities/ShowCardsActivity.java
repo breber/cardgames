@@ -3,7 +3,6 @@ package com.worthwhilegames.cardgames.player.activities;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.GameFactory;
@@ -29,7 +29,7 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 /**
  * This is the Activity that handles Game Play
  */
-public class ShowCardsActivity extends Activity {
+public class ShowCardsActivity extends AdActivity {
 	/**
 	 * The request code to keep track of the connect device activity
 	 */

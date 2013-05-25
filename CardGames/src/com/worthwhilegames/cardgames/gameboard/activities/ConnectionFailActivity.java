@@ -1,12 +1,12 @@
 package com.worthwhilegames.cardgames.gameboard.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.worthwhilegames.cardgames.R;
+import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.Button;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 
@@ -22,7 +22,7 @@ import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
  * 		the MAC address of the user this is referring to as a string
  * 		extra with key BluetoothConstants.KEY_DEVICE_ID.
  */
-public class ConnectionFailActivity extends Activity {
+public class ConnectionFailActivity extends AdActivity {
 
 	/**
 	 * The Intent that is passed back to the Activity that
