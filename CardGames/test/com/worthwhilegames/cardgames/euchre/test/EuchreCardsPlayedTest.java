@@ -31,10 +31,10 @@ public class EuchreCardsPlayedTest {
 
 	@Test
 	public void testWinner() {
-		Card card1 = new Card(SUIT_CLUBS, ACE_VALUE, 0, 0);//Ace of Clubs
-		Card card2 = new Card(SUIT_DIAMONDS, JACK_VALUE, 0, 23);//Jack of Diamonds
-		Card card3 = new Card(SUIT_CLUBS, NINE_VALUE, 0, 8);//Nine of clubs
-		Card card4 = new Card(SUIT_HEARTS, ACE_VALUE, 0, 26);//Ace of Hearts
+		Card card1 = new Card(SUIT_CLUBS, ACE_VALUE, 0);//Ace of Clubs
+		Card card2 = new Card(SUIT_DIAMONDS, JACK_VALUE, 23);//Jack of Diamonds
+		Card card3 = new Card(SUIT_CLUBS, NINE_VALUE, 8);//Nine of clubs
+		Card card4 = new Card(SUIT_HEARTS, ACE_VALUE, 26);//Ace of Hearts
 
 		t.cardsPlayed[0] = card1;
 		t.cardsPlayed[1] = card2;
@@ -49,10 +49,10 @@ public class EuchreCardsPlayedTest {
 
 	@Test
 	public void testWinner2() {
-		Card card1 = new Card(SUIT_CLUBS, ACE_VALUE, 0, 0);//Ace of clubs
-		Card card2 = new Card(SUIT_CLUBS, JACK_VALUE, 0, 10);//Jack of clubs
-		Card card3 = new Card(SUIT_SPADES, JACK_VALUE, 0, 49);//Jack of spades
-		Card card4 = new Card(SUIT_CLUBS, KING_VALUE, 0, 12);//King of clubs
+		Card card1 = new Card(SUIT_CLUBS, ACE_VALUE, 0);//Ace of clubs
+		Card card2 = new Card(SUIT_CLUBS, JACK_VALUE, 10);//Jack of clubs
+		Card card3 = new Card(SUIT_SPADES, JACK_VALUE, 49);//Jack of spades
+		Card card4 = new Card(SUIT_CLUBS, KING_VALUE, 12);//King of clubs
 
 		t.cardsPlayed[0] = card1;
 		t.cardsPlayed[1] = card2;
@@ -67,10 +67,10 @@ public class EuchreCardsPlayedTest {
 
 	@Test
 	public void testWinner3() {
-		Card card1 = new Card(SUIT_CLUBS, ACE_VALUE, 0, 0);//Ace of clubs
-		Card card2 = new Card(SUIT_CLUBS, JACK_VALUE, 0, 10);//Jack of clubs
-		Card card3 = new Card(SUIT_SPADES, JACK_VALUE, 0, 49);//Jack of spades
-		Card card4 = new Card(SUIT_CLUBS, KING_VALUE, 0, 12);//King of clubs
+		Card card1 = new Card(SUIT_CLUBS, ACE_VALUE, 0);//Ace of clubs
+		Card card2 = new Card(SUIT_CLUBS, JACK_VALUE, 10);//Jack of clubs
+		Card card3 = new Card(SUIT_SPADES, JACK_VALUE, 49);//Jack of spades
+		Card card4 = new Card(SUIT_CLUBS, KING_VALUE, 12);//King of clubs
 
 		t.cardsPlayed[0] = card1;
 		t.cardsPlayed[1] = card2;
@@ -85,10 +85,10 @@ public class EuchreCardsPlayedTest {
 
 	@Test
 	public void testWinner4() {
-		Card card1 = new Card(SUIT_CLUBS, ACE_VALUE, 0, 0);//Ace of clubs
-		Card card2 = new Card(SUIT_CLUBS, JACK_VALUE, 0, 10);//Jack of clubs
-		Card card3 = new Card(SUIT_SPADES, NINE_VALUE, 0, 49);//Nine of spades
-		Card card4 = new Card(SUIT_CLUBS, KING_VALUE, 0, 12);//King of clubs
+		Card card1 = new Card(SUIT_CLUBS, ACE_VALUE, 0);//Ace of clubs
+		Card card2 = new Card(SUIT_CLUBS, JACK_VALUE, 10);//Jack of clubs
+		Card card3 = new Card(SUIT_SPADES, NINE_VALUE, 49);//Nine of spades
+		Card card4 = new Card(SUIT_CLUBS, KING_VALUE, 12);//King of clubs
 
 		t.cardsPlayed[0] = card1;
 		t.cardsPlayed[1] = card2;
@@ -103,10 +103,10 @@ public class EuchreCardsPlayedTest {
 
 	@Test
 	public void testWinner5() {
-		Card card1 = new Card(SUIT_CLUBS, ACE_VALUE, 0, 0);//Ace of clubs
-		Card card2 = new Card(SUIT_CLUBS, JACK_VALUE, 0, 10);//Jack of clubs
-		Card card3 = new Card(SUIT_SPADES, JACK_VALUE, 0, 49);//Jack of spades
-		Card card4 = new Card(SUIT_CLUBS, KING_VALUE, 0, 12);//King of clubs
+		Card card1 = new Card(SUIT_CLUBS, ACE_VALUE, 0);//Ace of clubs
+		Card card2 = new Card(SUIT_CLUBS, JACK_VALUE, 10);//Jack of clubs
+		Card card3 = new Card(SUIT_SPADES, JACK_VALUE, 49);//Jack of spades
+		Card card4 = new Card(SUIT_CLUBS, KING_VALUE, 12);//King of clubs
 
 		t.cardsPlayed[0] = card1;
 		t.cardsPlayed[1] = card2;
