@@ -55,7 +55,6 @@ public class CrazyEightsGameController extends GameController {
 		super.initGameController(context, connectionGiven);
 
 		// Crazy Eights specific setup
-		ct = new CrazyEightsCardTranslator();
 		gameRules = new CrazyEightGameRules();
 		SharedPreferences sharedPreferences = gameContext.getSharedPreferences(PREFERENCES, 0);
 		String difficulty = sharedPreferences.getString(Constants.PREF_DIFFICULTY, Constants.EASY);
@@ -181,8 +180,7 @@ public class CrazyEightsGameController extends GameController {
 			}
 
 			// Create a temporary card for sending to the players
-			onDiscard = new Card(suitChosen, onDiscard.getValue(),
-					onDiscard.getResourceId(), onDiscard.getIdNum());
+			onDiscard = new Card(suitChosen, onDiscard.getValue(), onDiscard.getIdNum());
 		}
 
 		// Update the Game board display with an indication of the current suit

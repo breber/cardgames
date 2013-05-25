@@ -10,7 +10,6 @@ import java.util.Random;
 
 import android.util.Log;
 
-import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.CardGame;
 import com.worthwhilegames.cardgames.shared.Constants;
@@ -387,11 +386,11 @@ public class CrazyEightsTabletGame implements Game {
 
 	@Override
 	public Card getCardAtPosition(int position) {
-		if( position == 2 ){
+		if (position == 2) {
 			return this.getDiscardPileTop();
-		} else if ( position == 4 ) {
-			//TODO customizable back
-			return new Card(0,0,R.drawable.back_blue_1, 0);
+		} else if (position == 4) {
+			// TODO customizable back
+			return new Card();
 		}
 		return null;
 	}
