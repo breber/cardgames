@@ -382,10 +382,16 @@ public class Constants {
 	 */
 	public static final String PREF_PLAY_ASSIST_MODE = "PLAY ASSIST MODE";
 
+	/**
+	 * Does this device have TTS?
+	 */
+	public static final String PREF_HAS_TTS = "PREF_HAS_TTS";
+
 	/* AI Constants */
 	/**
 	 * The time you wait in between computer turns, about 1 and a half seconds
 	 * now
 	 */
 	public static final long COMPUTER_WAIT_TIME = 1500;
+
 }

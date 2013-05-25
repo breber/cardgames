@@ -2,7 +2,9 @@ package com.worthwhilegames.cardgames.shared.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech.Engine;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.widget.ImageButton;
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.gameboard.activities.ConnectActivity;
 import com.worthwhilegames.cardgames.player.activities.ShowCardsActivity;
+import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.SoundManager;
 import com.worthwhilegames.cardgames.shared.Util;
@@ -28,6 +31,11 @@ public class MainMenu extends Activity {
 	 */
 	private static final int CONNECT_ACTIVITY = Math.abs("CONNECT_ACTIVITY".hashCode());
 
+	/**
+	 * The request code to handle the result of the checking TTS activity
+	 */
+	private static final int CHECK_TTS = Math.abs(Engine.ACTION_CHECK_TTS_DATA.hashCode());
+
 	/*
 	 * (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -37,14 +45,9 @@ public class MainMenu extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		// Initialize the SoundManager on a separate thread, so that we don't
-		// don't have to wait for it to initialize when starting the game
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				SoundManager.getInstance(MainMenu.this);
-			}
-		}).start();
+		// Check to see if TTS exists
+		Intent checkTts = new Intent(Engine.ACTION_CHECK_TTS_DATA);
+		startActivityForResult(checkTts, CHECK_TTS);
 
 		// Set the listener for the Create Game button if it exists
 		final Button create = (Button) findViewById(R.id.btCreate);
@@ -138,6 +141,29 @@ public class MainMenu extends Activity {
 
 			// Clear the game
 			GameFactory.clearGameInstance(this);
+		} else if (requestCode == CHECK_TTS) {
+			if (resultCode == Engine.CHECK_VOICE_DATA_PASS) {
+				// Indicate that we have TTS
+				SharedPreferences prefs = getSharedPreferences(Constants.PREFERENCES, 0);
+				prefs.edit().putBoolean(Constants.PREF_HAS_TTS, true).commit();
+			} else {
+				// Indicate that we do not have TTS
+				SharedPreferences prefs = getSharedPreferences(Constants.PREFERENCES, 0);
+				prefs.edit().putBoolean(Constants.PREF_HAS_TTS, false).commit();
+
+				// TODO: maybe enable this once we have a way to test it
+				// Try to install TTS
+				// startActivity(new Intent(Engine.ACTION_INSTALL_TTS_DATA));
+			}
+
+			// Initialize the SoundManager on a separate thread, so that we don't
+			// don't have to wait for it to initialize when starting the game
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					SoundManager.getInstance(MainMenu.this);
+				}
+			}).start();
 		}
 	}
 }

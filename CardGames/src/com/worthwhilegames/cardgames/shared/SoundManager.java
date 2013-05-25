@@ -73,14 +73,14 @@ public class SoundManager {
 	 * Strings to be spoken when it is a player's turn
 	 */
 	private static String[] playerTurnPrompt;
-	
+
 	/**
 	 * Strings to be spoken when it is a player's turn
 	 */
 	private static String[] playerBetPrompt;
-	
+
 	/**
-	 * Strings to be spoken when the player should pick up 
+	 * Strings to be spoken when the player should pick up
 	 * the card and discard a card
 	 */
 	private static String[] playerPickItUpPrompt;
@@ -122,24 +122,26 @@ public class SoundManager {
 	 */
 	private SoundManager(Context context) {
 		sharedPreferences = context.getSharedPreferences(Constants.PREFERENCES, 0);
+		boolean tryInitTTS = sharedPreferences.getBoolean(Constants.PREF_HAS_TTS, false);
 		isSoundFXOn = sharedPreferences.getBoolean(Constants.PREF_SOUND_EFFECTS, true);
-		isTTSOn = sharedPreferences.getBoolean(Constants.PREF_SPEECH_VOLUME, true);
+		isTTSOn = tryInitTTS && sharedPreferences.getBoolean(Constants.PREF_SPEECH_VOLUME, true);
 
 		// Initialize the strings to speak when it is a users turn
 		playerTurnPrompt = context.getResources().getStringArray(R.array.phrases);
-		
+
 		// Initialize the strings to speak when it is a users turn to bet
 		playerBetPrompt = context.getResources().getStringArray(R.array.betPhrases);
-		
+
 		// Initialize the strings to speak when the player should pick up the card
 		playerPickItUpPrompt = context.getResources().getStringArray(R.array.pickItUpPhrases);
-		
+
 		// draw card sounds
 		TypedArray drawSounds = context.getResources().obtainTypedArray(R.array.drawCard);
 		drawCardSounds = new int[drawSounds.length()];
 		for (int i = 0; i < drawCardSounds.length; i++) {
 			drawCardSounds[i] = soundpool.load(context, drawSounds.getResourceId(i, 0), 1);
 		}
+		drawSounds.recycle();
 
 		// card playing sounds
 		TypedArray playSounds = context.getResources().obtainTypedArray(R.array.playCard);
@@ -147,6 +149,7 @@ public class SoundManager {
 		for (int i = 0; i < playCardSounds.length; i++) {
 			playCardSounds[i] = soundpool.load(context, playSounds.getResourceId(i, 0), 1);
 		}
+		playSounds.recycle();
 
 		// card shuffling sounds
 		TypedArray shuffleSounds = context.getResources().obtainTypedArray(R.array.shuffle);
@@ -154,43 +157,46 @@ public class SoundManager {
 		for (int i = 0; i < shuffleCardSounds.length; i++) {
 			shuffleCardSounds[i] = soundpool.load(context, shuffleSounds.getResourceId(i, 0), 1);
 		}
+		shuffleSounds.recycle();
 
-		tts = new TextToSpeech(context.getApplicationContext(), new OnInitListener() {
-			@Override
-			public void onInit(int status) {
-				if (status == TextToSpeech.SUCCESS) {
-					// get the user preference
-					String lang = sharedPreferences.getString(PREF_LANGUAGE, Language.US.toString());
-					int langResult = TextToSpeech.LANG_MISSING_DATA;
+		if (isTTSOn) {
+			tts = new TextToSpeech(context.getApplicationContext(), new OnInitListener() {
+				@Override
+				public void onInit(int status) {
+					if (status == TextToSpeech.SUCCESS) {
+						// get the user preference
+						String lang = sharedPreferences.getString(PREF_LANGUAGE, Language.US.toString());
+						int langResult = TextToSpeech.LANG_MISSING_DATA;
 
-					if (tts == null) {
-						langResult = TextToSpeech.LANG_MISSING_DATA;
-					} else if (lang.equals(Language.US.toString())) { // default
-						langResult = tts.setLanguage(Locale.US);
-					} else if (lang.equals(Language.German.toString())) {
-						langResult = tts.setLanguage(Locale.GERMAN);
-					} else if (lang.equals(Language.French.toString())) {
-						langResult = tts.setLanguage(Locale.FRANCE);
-					} else if (lang.equals(Language.Canadian.toString())) {
-						langResult = tts.setLanguage(Locale.CANADA);
-					} else if (lang.equals(Language.UK.toString())) {
-						langResult = tts.setLanguage(Locale.UK);
-					}
-
-					if (langResult == TextToSpeech.LANG_MISSING_DATA
-							|| langResult == TextToSpeech.LANG_NOT_SUPPORTED) {
-						if (Util.isDebugBuild()) {
-							Log.d(TAG, "Language not available");
+						if (tts == null) {
+							langResult = TextToSpeech.LANG_MISSING_DATA;
+						} else if (lang.equals(Language.US.toString())) { // default
+							langResult = tts.setLanguage(Locale.US);
+						} else if (lang.equals(Language.German.toString())) {
+							langResult = tts.setLanguage(Locale.GERMAN);
+						} else if (lang.equals(Language.French.toString())) {
+							langResult = tts.setLanguage(Locale.FRANCE);
+						} else if (lang.equals(Language.Canadian.toString())) {
+							langResult = tts.setLanguage(Locale.CANADA);
+						} else if (lang.equals(Language.UK.toString())) {
+							langResult = tts.setLanguage(Locale.UK);
 						}
-					} else {
-						// let us know that it is safe to use it now
-						isTTSInitialized = true;
+
+						if (langResult == TextToSpeech.LANG_MISSING_DATA
+								|| langResult == TextToSpeech.LANG_NOT_SUPPORTED) {
+							if (Util.isDebugBuild()) {
+								Log.d(TAG, "Language not available");
+							}
+						} else {
+							// let us know that it is safe to use it now
+							isTTSInitialized = true;
+						}
+					} else if (Util.isDebugBuild()) {
+						Log.d(TAG, "Text To Speech did not initialize correctly");
 					}
-				} else if (Util.isDebugBuild()) {
-					Log.d(TAG, "Text To Speech did not initialize correctly");
 				}
-			}
-		});
+			});
+		}
 	}
 
 	/**
@@ -247,7 +253,7 @@ public class SoundManager {
 		int i = Math.abs(rand.nextInt() % playerTurnPrompt.length);
 		speak(playerTurnPrompt[i].replace("%s", name) );
 	}
-	
+
 	/**
 	 * This function will tell a dealer if they are going to pick it up
 	 * 
@@ -258,8 +264,8 @@ public class SoundManager {
 		int i = Math.abs(rand.nextInt() % playerPickItUpPrompt.length);
 		speak(playerPickItUpPrompt[i].replace("%s", name) );
 	}
-	
-	
+
+
 	/**
 	 * This function will tell a player it is their turn to bet
 	 * 
