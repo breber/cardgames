@@ -25,7 +25,6 @@ import com.worthwhilegames.cardgames.player.activities.GameResultsActivity;
 import com.worthwhilegames.cardgames.player.activities.SelectSuitActivity;
 import com.worthwhilegames.cardgames.player.activities.ShowCardsActivity;
 import com.worthwhilegames.cardgames.shared.Card;
-import com.worthwhilegames.cardgames.shared.CardTranslator;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.PlayerController;
 import com.worthwhilegames.cardgames.shared.Rules;
@@ -113,11 +112,6 @@ public class CrazyEightsPlayerController implements PlayerController {
 	private ConnectionClient connection;
 
 	/**
-	 * This is how we can make sure that the card resource IDs are correct
-	 */
-	private CardTranslator ct;
-
-	/**
 	 * This is a SoundManager instance that can do text to speech and other
 	 * sounds.
 	 */
@@ -158,7 +152,6 @@ public class CrazyEightsPlayerController implements PlayerController {
 		isPlayAssistMode = sharedPreferences.getBoolean(Constants.PREF_PLAY_ASSIST_MODE, false);
 
 		gameRules = new CrazyEightGameRules();
-		ct = new CrazyEightsCardTranslator();
 		connection = ConnectionClient.getInstance(context);
 	}
 
@@ -187,7 +180,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 						int suit = obj.getInt(Constants.KEY_SUIT);
 						int value = obj.getInt(Constants.KEY_VALUE);
 						int id = obj.getInt(Constants.KEY_CARD_ID);
-						playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+						playerContext.addCard(new Card(suit, value, id));
 					}
 				} catch (JSONException ex) {
 					ex.printStackTrace();
@@ -203,7 +196,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 					int suit = obj.getInt(Constants.KEY_SUIT);
 					int value = obj.getInt(Constants.KEY_VALUE);
 					int id = obj.getInt(Constants.KEY_CARD_ID);
-					cardOnDiscard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
+					cardOnDiscard = new Card(suit, value, id);
 				} catch (JSONException ex) {
 					ex.printStackTrace();
 				}
@@ -219,7 +212,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 
 						// Let the UI know which card was suggested
 						int selectedId = -1;
-						if(cardSelected != null){
+						if (cardSelected != null) {
 							selectedId = cardSelected.getIdNum();
 						}
 						playerContext.setSelected(selectedId, cardSuggestedId);
@@ -234,7 +227,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 					int suit = obj.getInt(Constants.KEY_SUIT);
 					int value = obj.getInt(Constants.KEY_VALUE);
 					int id = obj.getInt(Constants.KEY_CARD_ID);
-					playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+					playerContext.addCard(new Card(suit, value, id));
 				} catch (JSONException ex) {
 					ex.printStackTrace();
 				}
@@ -252,7 +245,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 					int suit = discardObj.getInt(Constants.KEY_SUIT);
 					int value = discardObj.getInt(Constants.KEY_VALUE);
 					int id = discardObj.getInt(Constants.KEY_CARD_ID);
-					cardOnDiscard = new Card(suit, value, ct.getResourceForCardWithId(id), id);
+					cardOnDiscard = new Card(suit, value, id);
 
 					// Get the player's hand
 					JSONArray arr = refreshInfo.getJSONArray(Constants.KEY_CURRENT_HAND);
@@ -261,7 +254,7 @@ public class CrazyEightsPlayerController implements PlayerController {
 						suit = card.getInt(Constants.KEY_SUIT);
 						value = card.getInt(Constants.KEY_VALUE);
 						id = card.getInt(Constants.KEY_CARD_ID);
-						playerContext.addCard(new Card(suit, value, ct.getResourceForCardWithId(id), id));
+						playerContext.addCard(new Card(suit, value, id));
 					}
 				} catch (JSONException ex) {
 					ex.printStackTrace();

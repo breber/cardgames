@@ -7,6 +7,8 @@ import static com.worthwhilegames.cardgames.shared.Constants.KEY_VALUE;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.worthwhilegames.cardgames.R;
+
 /**
  * This class will be used to represent a card. Each card will have four different fields
  * and will be identified through the use of the fields. Each card will have an image to represent
@@ -24,14 +26,18 @@ public class Card implements Comparable<Card> {
 	private int value;
 
 	/**
-	 * The resource id used to display as an image
-	 */
-	private int resourceId;
-
-	/**
 	 * The unique card id, 0 - 53
 	 */
 	private int idNum;
+
+	/**
+	 * This constructor will create and make an invalid card
+	 */
+	public Card() {
+		this.suit = -1;
+		this.value = -1;
+		this.idNum = -1;
+	}
 
 	/**
 	 * This constructor will create and make a card object based upon the given
@@ -43,10 +49,9 @@ public class Card implements Comparable<Card> {
 	 * @param resourceId the id of the card image to be used with the card
 	 * @param idNum the id number representing the card 0-53
 	 */
-	public Card(int suit, int value, int resourceId, int idNum) {
+	public Card(int suit, int value, int idNum) {
 		this.suit = suit;
 		this.value = value;
-		this.resourceId = resourceId;
 		this.idNum = idNum;
 	}
 
@@ -58,7 +63,6 @@ public class Card implements Comparable<Card> {
 	public Card(Card c) {
 		this.suit = c.suit;
 		this.value = c.value;
-		this.resourceId = c.resourceId;
 		this.idNum = c.idNum;
 	}
 
@@ -104,16 +108,117 @@ public class Card implements Comparable<Card> {
 	 * @return an integer representing the resource id of a card object
 	 */
 	public int getResourceId() {
-		return resourceId;
-	}
+		if (idNum == 0) {
+			return R.drawable.clubs_a;
+		} else if (idNum == 1) {
+			return R.drawable.clubs_2;
+		} else if (idNum == 2) {
+			return R.drawable.clubs_3;
+		} else if (idNum == 3) {
+			return R.drawable.clubs_4;
+		} else if (idNum == 4) {
+			return R.drawable.clubs_5;
+		} else if (idNum == 5) {
+			return R.drawable.clubs_6;
+		} else if (idNum == 6) {
+			return R.drawable.clubs_7;
+		} else if (idNum == 7) {
+			return R.drawable.clubs_8;
+		} else if (idNum == 8) {
+			return R.drawable.clubs_9;
+		} else if (idNum == 9) {
+			return R.drawable.clubs_10;
+		} else if (idNum == 10) {
+			return R.drawable.clubs_j;
+		} else if (idNum == 11) {
+			return R.drawable.clubs_q;
+		} else if (idNum == 12) {
+			return R.drawable.clubs_k;
+		} else if (idNum == 13) {
+			return R.drawable.diamonds_a;
+		} else if (idNum == 14) {
+			return R.drawable.diamonds_2;
+		} else if (idNum == 15) {
+			return R.drawable.diamonds_3;
+		} else if (idNum == 16) {
+			return R.drawable.diamonds_4;
+		} else if (idNum == 17) {
+			return R.drawable.diamonds_5;
+		} else if (idNum == 18) {
+			return R.drawable.diamonds_6;
+		} else if (idNum == 19) {
+			return R.drawable.diamonds_7;
+		} else if (idNum == 20) {
+			return R.drawable.diamonds_8;
+		} else if (idNum == 21) {
+			return R.drawable.diamonds_9;
+		} else if (idNum == 22) {
+			return R.drawable.diamonds_10;
+		} else if (idNum == 23) {
+			return R.drawable.diamonds_j;
+		} else if (idNum == 24) {
+			return R.drawable.diamonds_q;
+		} else if (idNum == 25) {
+			return R.drawable.diamonds_k;
+		} else if (idNum == 26) {
+			return R.drawable.hearts_a;
+		} else if (idNum == 27) {
+			return R.drawable.hearts_2;
+		} else if (idNum == 28) {
+			return R.drawable.hearts_3;
+		} else if (idNum == 29) {
+			return R.drawable.hearts_4;
+		} else if (idNum == 30) {
+			return R.drawable.hearts_5;
+		} else if (idNum == 31) {
+			return R.drawable.hearts_6;
+		} else if (idNum == 32) {
+			return R.drawable.hearts_7;
+		} else if (idNum == 33) {
+			return R.drawable.hearts_8;
+		} else if (idNum == 34) {
+			return R.drawable.hearts_9;
+		} else if (idNum == 35) {
+			return R.drawable.hearts_10;
+		} else if (idNum == 36) {
+			return R.drawable.hearts_j;
+		} else if (idNum == 37) {
+			return R.drawable.hearts_q;
+		} else if (idNum == 38) {
+			return R.drawable.hearts_k;
+		} else if (idNum == 39) {
+			return R.drawable.spades_a;
+		} else if (idNum == 40) {
+			return R.drawable.spades_2;
+		} else if (idNum == 41) {
+			return R.drawable.spades_3;
+		} else if (idNum == 42) {
+			return R.drawable.spades_4;
+		} else if (idNum == 43) {
+			return R.drawable.spades_5;
+		} else if (idNum == 44) {
+			return R.drawable.spades_6;
+		} else if (idNum == 45) {
+			return R.drawable.spades_7;
+		} else if (idNum == 46) {
+			return R.drawable.spades_8;
+		} else if (idNum == 47) {
+			return R.drawable.spades_9;
+		} else if (idNum == 48) {
+			return R.drawable.spades_10;
+		} else if (idNum == 49) {
+			return R.drawable.spades_j;
+		} else if (idNum == 50) {
+			return R.drawable.spades_q;
+		} else if (idNum == 51) {
+			return R.drawable.spades_k;
+		} else if (idNum == 52) {
+			return R.drawable.joker_b;
+		} else if (idNum == 53) {
+			return R.drawable.joker_r;
+		}
 
-	/**
-	 * This method will set the resource id of a given card
-	 * 
-	 * @param resourceId the new resource id for the given card object
-	 */
-	public void setResourceId(int resourceId) {
-		this.resourceId = resourceId;
+		return R.drawable.back_blue_1;
 	}
 
 	/**

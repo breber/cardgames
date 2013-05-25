@@ -69,7 +69,7 @@ public class CrazyEightsComputerPlayer {
 	public Card getCardOnTurn(int whoseTurn, int suitChosen) {
 		Card onDiscard = game.getDiscardPileTop();
 		if (onDiscard.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
-			onDiscard = new Card(suitChosen, onDiscard.getValue(), onDiscard.getResourceId(), onDiscard.getIdNum());
+			onDiscard = new Card(suitChosen, onDiscard.getValue(), onDiscard.getIdNum());
 		}
 		List<Card> cards = players.get(whoseTurn).getCards();
 		Card cardSelected = null;
@@ -177,7 +177,7 @@ public class CrazyEightsComputerPlayer {
 			csc = new CardScoreCalculator(whoseTurn, cardsClone);
 			Card firstOnDiscard = game.getDiscardPileTop();
 			if (firstOnDiscard.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
-				firstOnDiscard = new Card(suitChosen, firstOnDiscard.getValue(), firstOnDiscard.getResourceId(), firstOnDiscard.getIdNum());
+				firstOnDiscard = new Card(suitChosen, firstOnDiscard.getValue(), firstOnDiscard.getIdNum());
 			}
 			Card curOnDiscard = game.getDiscardPileTop();
 			int suitToChoose = findMaxSuitIndex(whoseTurn, cardsClone.get(whoseTurn));
@@ -210,13 +210,13 @@ public class CrazyEightsComputerPlayer {
 					tmpScore = csc.calculateScorePlayed(tmpCard, curOnDiscard, whoseTurn);
 					curOnDiscard = tmpCard;
 					if (curOnDiscard.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
-						curOnDiscard = new Card(suitToChoose, curOnDiscard.getValue(), curOnDiscard.getResourceId(), curOnDiscard.getIdNum());
+						curOnDiscard = new Card(suitToChoose, curOnDiscard.getValue(), curOnDiscard.getIdNum());
 						//TODO: make the suitToChoose be calculated using the future recursion stuff.
 						//		Check suit chosen for all four suits to see which brings the best result.
 						double suitChoosingScores[] = new double[4];
 						int bestSuitIndex = 0;
 						for (int k = 0; k < 4; k++) {
-							curOnDiscard = new Card(k, curOnDiscard.getValue(), curOnDiscard.getResourceId(), curOnDiscard.getIdNum());
+							curOnDiscard = new Card(k, curOnDiscard.getValue(), curOnDiscard.getIdNum());
 							suitChoosingScores[k] = findBestMove(whoseTurn, nextTurnIndex, cardsClone, curOnDiscard, drawPile, recDepth);
 							if (suitChoosingScores[k] < suitChoosingScores[bestSuitIndex]) {
 								bestSuitIndex = k;
@@ -355,7 +355,7 @@ public class CrazyEightsComputerPlayer {
 				}
 				curOnDiscard = tmpCard;
 				if (curOnDiscard.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
-					curOnDiscard = new Card(suitToChoose, curOnDiscard.getValue(), curOnDiscard.getResourceId(), curOnDiscard.getIdNum());
+					curOnDiscard = new Card(suitToChoose, curOnDiscard.getValue(), curOnDiscard.getIdNum());
 				}
 				tmpScore += findBestMove(whoseTurn, nextTurnIndex, cardsClone, curOnDiscard, drawPile, recDepth-1);
 				moves[i] = tmpScore;

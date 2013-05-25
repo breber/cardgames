@@ -24,8 +24,6 @@ import static com.worthwhilegames.cardgames.shared.Constants.TWO_VALUE;
 import java.util.ArrayList;
 
 import com.worthwhilegames.cardgames.R;
-import com.worthwhilegames.cardgames.crazyeights.CrazyEightsCardTranslator;
-import com.worthwhilegames.cardgames.euchre.EuchreCardTranslator;
 
 /**
  * Represents a deck of cards
@@ -100,106 +98,88 @@ public class Deck {
 
 		switch(gameName) {
 		case CrazyEights:
-			cardImages.add(new Card(SUIT_CLUBS, ACE_VALUE, R.drawable.clubs_a, 0));
-			cardImages.add(new Card(SUIT_CLUBS, TWO_VALUE, R.drawable.clubs_2, 1));
-			cardImages.add(new Card(SUIT_CLUBS, THREE_VALUE, R.drawable.clubs_3, 2));
-			cardImages.add(new Card(SUIT_CLUBS, FOUR_VALUE, R.drawable.clubs_4, 3));
-			cardImages.add(new Card(SUIT_CLUBS, FIVE_VALUE, R.drawable.clubs_5, 4));
-			cardImages.add(new Card(SUIT_CLUBS, SIX_VALUE, R.drawable.clubs_6, 5));
-			cardImages.add(new Card(SUIT_CLUBS, SEVEN_VALUE, R.drawable.clubs_7, 6));
-			cardImages.add(new Card(SUIT_CLUBS, EIGHT_VALUE, R.drawable.clubs_8, 7));
-			cardImages.add(new Card(SUIT_CLUBS, NINE_VALUE, R.drawable.clubs_9, 8));
-			cardImages.add(new Card(SUIT_CLUBS, TEN_VALUE, R.drawable.clubs_10, 9));
-			cardImages.add(new Card(SUIT_CLUBS, JACK_VALUE, R.drawable.clubs_j, 10));
-			cardImages.add(new Card(SUIT_CLUBS, QUEEN_VALUE, R.drawable.clubs_q, 11));
-			cardImages.add(new Card(SUIT_CLUBS, KING_VALUE, R.drawable.clubs_k, 12));
-			cardImages.add(new Card(SUIT_DIAMONDS, ACE_VALUE, R.drawable.diamonds_a, 13));
-			cardImages.add(new Card(SUIT_DIAMONDS, TWO_VALUE, R.drawable.diamonds_2, 14));
-			cardImages.add(new Card(SUIT_DIAMONDS, THREE_VALUE, R.drawable.diamonds_3, 15));
-			cardImages.add(new Card(SUIT_DIAMONDS, FOUR_VALUE, R.drawable.diamonds_4, 16));
-			cardImages.add(new Card(SUIT_DIAMONDS, FIVE_VALUE, R.drawable.diamonds_5, 17));
-			cardImages.add(new Card(SUIT_DIAMONDS, SIX_VALUE, R.drawable.diamonds_6, 18));
-			cardImages.add(new Card(SUIT_DIAMONDS, SEVEN_VALUE, R.drawable.diamonds_7, 19));
-			cardImages.add(new Card(SUIT_DIAMONDS, EIGHT_VALUE, R.drawable.diamonds_8, 20));
-			cardImages.add(new Card(SUIT_DIAMONDS, NINE_VALUE, R.drawable.diamonds_9, 21));
-			cardImages.add(new Card(SUIT_DIAMONDS, TEN_VALUE, R.drawable.diamonds_10, 22));
-			cardImages.add(new Card(SUIT_DIAMONDS, JACK_VALUE, R.drawable.diamonds_j, 23));
-			cardImages.add(new Card(SUIT_DIAMONDS, QUEEN_VALUE, R.drawable.diamonds_q, 24));
-			cardImages.add(new Card(SUIT_DIAMONDS, KING_VALUE, R.drawable.diamonds_k, 25));
-			cardImages.add(new Card(SUIT_HEARTS, ACE_VALUE, R.drawable.hearts_a, 26));
-			cardImages.add(new Card(SUIT_HEARTS, TWO_VALUE, R.drawable.hearts_2, 27));
-			cardImages.add(new Card(SUIT_HEARTS, THREE_VALUE, R.drawable.hearts_3, 28));
-			cardImages.add(new Card(SUIT_HEARTS, FOUR_VALUE, R.drawable.hearts_4, 29));
-			cardImages.add(new Card(SUIT_HEARTS, FIVE_VALUE, R.drawable.hearts_5, 30));
-			cardImages.add(new Card(SUIT_HEARTS, SIX_VALUE, R.drawable.hearts_6, 31));
-			cardImages.add(new Card(SUIT_HEARTS, SEVEN_VALUE, R.drawable.hearts_7, 32));
-			cardImages.add(new Card(SUIT_HEARTS, EIGHT_VALUE, R.drawable.hearts_8, 33));
-			cardImages.add(new Card(SUIT_HEARTS, NINE_VALUE, R.drawable.hearts_9, 34));
-			cardImages.add(new Card(SUIT_HEARTS, TEN_VALUE, R.drawable.hearts_10, 35));
-			cardImages.add(new Card(SUIT_HEARTS, JACK_VALUE, R.drawable.hearts_j, 36));
-			cardImages.add(new Card(SUIT_HEARTS, QUEEN_VALUE, R.drawable.hearts_q, 37));
-			cardImages.add(new Card(SUIT_HEARTS, KING_VALUE, R.drawable.hearts_k, 38));
-			cardImages.add(new Card(SUIT_SPADES, ACE_VALUE, R.drawable.spades_a, 39));
-			cardImages.add(new Card(SUIT_SPADES, TWO_VALUE, R.drawable.spades_2, 40));
-			cardImages.add(new Card(SUIT_SPADES, THREE_VALUE, R.drawable.spades_3, 41));
-			cardImages.add(new Card(SUIT_SPADES, FOUR_VALUE, R.drawable.spades_4, 42));
-			cardImages.add(new Card(SUIT_SPADES, FIVE_VALUE, R.drawable.spades_5, 43));
-			cardImages.add(new Card(SUIT_SPADES, SIX_VALUE, R.drawable.spades_6, 44));
-			cardImages.add(new Card(SUIT_SPADES, SEVEN_VALUE, R.drawable.spades_7, 45));
-			cardImages.add(new Card(SUIT_SPADES, EIGHT_VALUE, R.drawable.spades_8, 46));
-			cardImages.add(new Card(SUIT_SPADES, NINE_VALUE, R.drawable.spades_9, 47));
-			cardImages.add(new Card(SUIT_SPADES, TEN_VALUE, R.drawable.spades_10, 48));
-			cardImages.add(new Card(SUIT_SPADES, JACK_VALUE, R.drawable.spades_j, 49));
-			cardImages.add(new Card(SUIT_SPADES, QUEEN_VALUE, R.drawable.spades_q, 50));
-			cardImages.add(new Card(SUIT_SPADES, KING_VALUE, R.drawable.spades_k, 51));
-			cardImages.add(new Card(SUIT_JOKER, BLACK_JOKER_VALUE, R.drawable.joker_b, 52));
-			cardImages.add(new Card(SUIT_JOKER, RED_JOKER_VALUE, R.drawable.joker_r, 53));
+			cardImages.add(new Card(SUIT_CLUBS, ACE_VALUE, 0));
+			cardImages.add(new Card(SUIT_CLUBS, TWO_VALUE, 1));
+			cardImages.add(new Card(SUIT_CLUBS, THREE_VALUE, 2));
+			cardImages.add(new Card(SUIT_CLUBS, FOUR_VALUE, 3));
+			cardImages.add(new Card(SUIT_CLUBS, FIVE_VALUE, 4));
+			cardImages.add(new Card(SUIT_CLUBS, SIX_VALUE, 5));
+			cardImages.add(new Card(SUIT_CLUBS, SEVEN_VALUE, 6));
+			cardImages.add(new Card(SUIT_CLUBS, EIGHT_VALUE, 7));
+			cardImages.add(new Card(SUIT_CLUBS, NINE_VALUE, 8));
+			cardImages.add(new Card(SUIT_CLUBS, TEN_VALUE, 9));
+			cardImages.add(new Card(SUIT_CLUBS, JACK_VALUE, 10));
+			cardImages.add(new Card(SUIT_CLUBS, QUEEN_VALUE, 11));
+			cardImages.add(new Card(SUIT_CLUBS, KING_VALUE, 12));
+			cardImages.add(new Card(SUIT_DIAMONDS, ACE_VALUE, 13));
+			cardImages.add(new Card(SUIT_DIAMONDS, TWO_VALUE, 14));
+			cardImages.add(new Card(SUIT_DIAMONDS, THREE_VALUE, 15));
+			cardImages.add(new Card(SUIT_DIAMONDS, FOUR_VALUE, 16));
+			cardImages.add(new Card(SUIT_DIAMONDS, FIVE_VALUE, 17));
+			cardImages.add(new Card(SUIT_DIAMONDS, SIX_VALUE, 18));
+			cardImages.add(new Card(SUIT_DIAMONDS, SEVEN_VALUE, 19));
+			cardImages.add(new Card(SUIT_DIAMONDS, EIGHT_VALUE, 20));
+			cardImages.add(new Card(SUIT_DIAMONDS, NINE_VALUE, 21));
+			cardImages.add(new Card(SUIT_DIAMONDS, TEN_VALUE, 22));
+			cardImages.add(new Card(SUIT_DIAMONDS, JACK_VALUE, 23));
+			cardImages.add(new Card(SUIT_DIAMONDS, QUEEN_VALUE, 24));
+			cardImages.add(new Card(SUIT_DIAMONDS, KING_VALUE, 25));
+			cardImages.add(new Card(SUIT_HEARTS, ACE_VALUE, 26));
+			cardImages.add(new Card(SUIT_HEARTS, TWO_VALUE, 27));
+			cardImages.add(new Card(SUIT_HEARTS, THREE_VALUE, 28));
+			cardImages.add(new Card(SUIT_HEARTS, FOUR_VALUE, 29));
+			cardImages.add(new Card(SUIT_HEARTS, FIVE_VALUE, 30));
+			cardImages.add(new Card(SUIT_HEARTS, SIX_VALUE, 31));
+			cardImages.add(new Card(SUIT_HEARTS, SEVEN_VALUE, 32));
+			cardImages.add(new Card(SUIT_HEARTS, EIGHT_VALUE, 33));
+			cardImages.add(new Card(SUIT_HEARTS, NINE_VALUE, 34));
+			cardImages.add(new Card(SUIT_HEARTS, TEN_VALUE, 35));
+			cardImages.add(new Card(SUIT_HEARTS, JACK_VALUE, 36));
+			cardImages.add(new Card(SUIT_HEARTS, QUEEN_VALUE, 37));
+			cardImages.add(new Card(SUIT_HEARTS, KING_VALUE, 38));
+			cardImages.add(new Card(SUIT_SPADES, ACE_VALUE, 39));
+			cardImages.add(new Card(SUIT_SPADES, TWO_VALUE, 40));
+			cardImages.add(new Card(SUIT_SPADES, THREE_VALUE, 41));
+			cardImages.add(new Card(SUIT_SPADES, FOUR_VALUE, 42));
+			cardImages.add(new Card(SUIT_SPADES, FIVE_VALUE, 43));
+			cardImages.add(new Card(SUIT_SPADES, SIX_VALUE, 44));
+			cardImages.add(new Card(SUIT_SPADES, SEVEN_VALUE, 45));
+			cardImages.add(new Card(SUIT_SPADES, EIGHT_VALUE, 46));
+			cardImages.add(new Card(SUIT_SPADES, NINE_VALUE, 47));
+			cardImages.add(new Card(SUIT_SPADES, TEN_VALUE, 48));
+			cardImages.add(new Card(SUIT_SPADES, JACK_VALUE, 49));
+			cardImages.add(new Card(SUIT_SPADES, QUEEN_VALUE, 50));
+			cardImages.add(new Card(SUIT_SPADES, KING_VALUE, 51));
+			cardImages.add(new Card(SUIT_JOKER, BLACK_JOKER_VALUE, 52));
+			cardImages.add(new Card(SUIT_JOKER, RED_JOKER_VALUE, 53));
 			break;
 
 		case Euchre:
-			cardImages.add(new Card(SUIT_CLUBS, ACE_VALUE, R.drawable.clubs_a, 0));
-			cardImages.add(new Card(SUIT_CLUBS, NINE_VALUE, R.drawable.clubs_9, 8));
-			cardImages.add(new Card(SUIT_CLUBS, TEN_VALUE, R.drawable.clubs_10, 9));
-			cardImages.add(new Card(SUIT_CLUBS, JACK_VALUE, R.drawable.clubs_j, 10));
-			cardImages.add(new Card(SUIT_CLUBS, QUEEN_VALUE, R.drawable.clubs_q, 11));
-			cardImages.add(new Card(SUIT_CLUBS, KING_VALUE, R.drawable.clubs_k, 12));
-			cardImages.add(new Card(SUIT_DIAMONDS, ACE_VALUE, R.drawable.diamonds_a, 13));
-			cardImages.add(new Card(SUIT_DIAMONDS, NINE_VALUE, R.drawable.diamonds_9, 21));
-			cardImages.add(new Card(SUIT_DIAMONDS, TEN_VALUE, R.drawable.diamonds_10, 22));
-			cardImages.add(new Card(SUIT_DIAMONDS, JACK_VALUE, R.drawable.diamonds_j, 23));
-			cardImages.add(new Card(SUIT_DIAMONDS, QUEEN_VALUE, R.drawable.diamonds_q, 24));
-			cardImages.add(new Card(SUIT_DIAMONDS, KING_VALUE, R.drawable.diamonds_k, 25));
-			cardImages.add(new Card(SUIT_HEARTS, ACE_VALUE, R.drawable.hearts_a, 26));
-			cardImages.add(new Card(SUIT_HEARTS, NINE_VALUE, R.drawable.hearts_9, 34));
-			cardImages.add(new Card(SUIT_HEARTS, TEN_VALUE, R.drawable.hearts_10, 35));
-			cardImages.add(new Card(SUIT_HEARTS, JACK_VALUE, R.drawable.hearts_j, 36));
-			cardImages.add(new Card(SUIT_HEARTS, QUEEN_VALUE, R.drawable.hearts_q, 37));
-			cardImages.add(new Card(SUIT_HEARTS, KING_VALUE, R.drawable.hearts_k, 38));
-			cardImages.add(new Card(SUIT_SPADES, ACE_VALUE, R.drawable.spades_a, 39));
-			cardImages.add(new Card(SUIT_SPADES, NINE_VALUE, R.drawable.spades_9, 47));
-			cardImages.add(new Card(SUIT_SPADES, TEN_VALUE, R.drawable.spades_10, 48));
-			cardImages.add(new Card(SUIT_SPADES, JACK_VALUE, R.drawable.spades_j, 49));
-			cardImages.add(new Card(SUIT_SPADES, QUEEN_VALUE, R.drawable.spades_q, 50));
-			cardImages.add(new Card(SUIT_SPADES, KING_VALUE, R.drawable.spades_k, 51));
+			cardImages.add(new Card(SUIT_CLUBS, ACE_VALUE, 0));
+			cardImages.add(new Card(SUIT_CLUBS, NINE_VALUE, 8));
+			cardImages.add(new Card(SUIT_CLUBS, TEN_VALUE, 9));
+			cardImages.add(new Card(SUIT_CLUBS, JACK_VALUE, 10));
+			cardImages.add(new Card(SUIT_CLUBS, QUEEN_VALUE, 11));
+			cardImages.add(new Card(SUIT_CLUBS, KING_VALUE, 12));
+			cardImages.add(new Card(SUIT_DIAMONDS, ACE_VALUE, 13));
+			cardImages.add(new Card(SUIT_DIAMONDS, NINE_VALUE, 21));
+			cardImages.add(new Card(SUIT_DIAMONDS, TEN_VALUE, 22));
+			cardImages.add(new Card(SUIT_DIAMONDS, JACK_VALUE, 23));
+			cardImages.add(new Card(SUIT_DIAMONDS, QUEEN_VALUE, 24));
+			cardImages.add(new Card(SUIT_DIAMONDS, KING_VALUE, 25));
+			cardImages.add(new Card(SUIT_HEARTS, ACE_VALUE, 26));
+			cardImages.add(new Card(SUIT_HEARTS, NINE_VALUE, 34));
+			cardImages.add(new Card(SUIT_HEARTS, TEN_VALUE, 35));
+			cardImages.add(new Card(SUIT_HEARTS, JACK_VALUE, 36));
+			cardImages.add(new Card(SUIT_HEARTS, QUEEN_VALUE, 37));
+			cardImages.add(new Card(SUIT_HEARTS, KING_VALUE, 38));
+			cardImages.add(new Card(SUIT_SPADES, ACE_VALUE, 39));
+			cardImages.add(new Card(SUIT_SPADES, NINE_VALUE, 47));
+			cardImages.add(new Card(SUIT_SPADES, TEN_VALUE, 48));
+			cardImages.add(new Card(SUIT_SPADES, JACK_VALUE, 49));
+			cardImages.add(new Card(SUIT_SPADES, QUEEN_VALUE, 50));
+			cardImages.add(new Card(SUIT_SPADES, KING_VALUE, 51));
 			break;
-		}
-	}
-
-	/**
-	 * Get the CardTranslator for the given game.
-	 *
-	 * @param game the game to get the translator for
-	 * @return the CardTranslator that will properly return the
-	 * resource id for the right cards.
-	 */
-	public static CardTranslator getCardTranslatorForGame(CardGame game) {
-		switch(game) {
-		case CrazyEights:
-			return new CrazyEightsCardTranslator();
-		case Euchre:
-			return new EuchreCardTranslator();
-		default:
-			return null;
 		}
 	}
 }
