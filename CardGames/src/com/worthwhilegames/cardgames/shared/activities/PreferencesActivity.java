@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.CardGame;
+import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.Language;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionType;
 
@@ -153,7 +154,13 @@ public class PreferencesActivity extends AdActivity {
 
 		if (speechVolume != null) {
 			// set the check box to it's preference
-			speechVolume.setChecked(sharedPref.getBoolean(PREF_SPEECH_VOLUME, true));
+			speechVolume.setChecked(sharedPref.getBoolean(Constants.PREF_HAS_TTS, false) && sharedPref.getBoolean(PREF_SPEECH_VOLUME, true));
+
+			// Disable the speech volume checkbox if the phone
+			// doesn't currently have TTS support
+			if (!sharedPref.getBoolean(Constants.PREF_HAS_TTS, false)) {
+				speechVolume.setEnabled(false);
+			}
 		}
 
 		// Number of Computers from the shared preferences
