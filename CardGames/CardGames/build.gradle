@@ -1,0 +1,16 @@
+apply plugin: 'android'
+
+dependencies {
+    compile files('libs/jmdns-3.4.1.jar')
+    compile files('libs/GoogleAdMobAdsSdk-6.4.1.jar')
+}
+
+android {
+    compileSdkVersion 17
+    buildToolsVersion "17.0.0"
+
+    defaultConfig {
+        minSdkVersion 7
+        targetSdkVersion 16
+    }
+}
