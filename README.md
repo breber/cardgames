@@ -1,4 +1,4 @@
-# README #
+# README # [![Build Status](https://travis-ci.org/breber/cardgames.png)](https://travis-ci.org/breber/cardgames)
 
 ## Creating a Release ##
 
