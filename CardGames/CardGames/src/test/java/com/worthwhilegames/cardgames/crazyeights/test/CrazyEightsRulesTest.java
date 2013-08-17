@@ -1,21 +1,13 @@
 package com.worthwhilegames.cardgames.crazyeights.test;
 
-import static com.worthwhilegames.cardgames.shared.Constants.ACE_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.EIGHT_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.JACK_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.QUEEN_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_JOKER;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
-import static org.junit.Assert.assertEquals;
-
+import com.worthwhilegames.cardgames.crazyeights.CrazyEightGameRules;
+import com.worthwhilegames.cardgames.shared.Card;
+import com.worthwhilegames.cardgames.shared.Util;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.worthwhilegames.cardgames.crazyeights.CrazyEightGameRules;
-import com.worthwhilegames.cardgames.shared.Card;
+import static com.worthwhilegames.cardgames.shared.Constants.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * This class will test the rules of the crazy eights game
@@ -31,6 +23,7 @@ public class CrazyEightsRulesTest {
 	 */
 	@Before
 	public void setup() {
+        Util.isTestSuite = true;
 		r = new CrazyEightGameRules();
 	}
 

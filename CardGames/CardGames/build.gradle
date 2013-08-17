@@ -1,16 +1,24 @@
 apply plugin: 'android'
+apply plugin: 'android-test'
 
 dependencies {
     compile files('libs/jmdns-3.4.1.jar')
     compile files('libs/GoogleAdMobAdsSdk-6.4.1.jar')
+
+    repositories {
+        mavenCentral()
+    }
+    testCompile 'junit:junit:4.10'
+    testCompile 'org.robolectric:robolectric:2.1.+'
+    testCompile 'com.squareup:fest-android:1.0.+'
 }
 
 android {
-    compileSdkVersion 17
-    buildToolsVersion "17.0.0"
+    compileSdkVersion 18
+    buildToolsVersion "18.0.1"
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 16
+        targetSdkVersion 18
     }
 }

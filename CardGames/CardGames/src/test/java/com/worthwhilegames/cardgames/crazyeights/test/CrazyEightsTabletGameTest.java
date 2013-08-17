@@ -1,18 +1,18 @@
 package com.worthwhilegames.cardgames.crazyeights.test;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Iterator;
-import java.util.List;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.worthwhilegames.cardgames.crazyeights.C8Constants;
 import com.worthwhilegames.cardgames.crazyeights.CrazyEightsTabletGame;
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.Player;
+import com.worthwhilegames.cardgames.shared.Util;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.Iterator;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * This class will test the game logic behind the crazy eights game
@@ -27,6 +27,7 @@ public class CrazyEightsTabletGameTest {
 	 */
 	@Before
 	public void setup() {
+        Util.isTestSuite = true;
 		Player p1 = new Player();
 		Player p2 = new Player();
 

@@ -1,21 +1,14 @@
 package com.worthwhilegames.cardgames.euchre.test;
 
-import static com.worthwhilegames.cardgames.shared.Constants.ACE_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.JACK_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.KING_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.NINE_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
-import static org.junit.Assert.assertEquals;
-
+import com.worthwhilegames.cardgames.euchre.EuchreTabletGame;
+import com.worthwhilegames.cardgames.shared.Card;
+import com.worthwhilegames.cardgames.shared.Util;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.worthwhilegames.cardgames.euchre.EuchreTabletGame;
-import com.worthwhilegames.cardgames.shared.Card;
+import static com.worthwhilegames.cardgames.shared.Constants.*;
+import static org.junit.Assert.assertEquals;
 
 public class EuchreCardsPlayedTest {
 
@@ -26,6 +19,7 @@ public class EuchreCardsPlayedTest {
 	 */
 	@Before
 	public void setup() {
+        Util.isTestSuite = true;
 		t = EuchreTabletGame.getInstance();
 	}
 

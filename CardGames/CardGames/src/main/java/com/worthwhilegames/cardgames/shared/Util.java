@@ -1,19 +1,17 @@
 package com.worthwhilegames.cardgames.shared;
 
-import static com.worthwhilegames.cardgames.shared.Constants.PREF_CHEATER_MODE;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+import com.worthwhilegames.cardgames.BuildConfig;
+import org.apache.http.conn.util.InetAddressUtils;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-import org.apache.http.conn.util.InetAddressUtils;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
-
-import com.worthwhilegames.cardgames.BuildConfig;
+import static com.worthwhilegames.cardgames.shared.Constants.PREF_CHEATER_MODE;
 
 /**
  * A Utility class that contains common generic methods relevant
@@ -28,6 +26,11 @@ public class Util {
 	 */
 	private static boolean isGameboard = false;
 
+    /**
+     * Are we in a unit test?
+     */
+    public static boolean isTestSuite = false;
+
 	/**
 	 * Checks whether this is a debug build or not.
 	 *
@@ -36,7 +39,7 @@ public class Util {
 	 * @return whether this is a production build or not
 	 */
 	public static boolean isDebugBuild() {
-		return BuildConfig.DEBUG;
+		return !isTestSuite && BuildConfig.DEBUG;
 	}
 
 	/**
@@ -63,7 +66,7 @@ public class Util {
 
 	/**
 	 * Returns whether this device is a Google TV
-	 * 
+	 *
 	 * @param ctx
 	 * @return whether this device is a Google TV
 	 */
@@ -82,7 +85,7 @@ public class Util {
 
 	/**
 	 * Get this device's IP address
-	 * 
+	 *
 	 * @return the ip address of this device
 	 */
 	public static InetAddress getLocalIpAddress() {

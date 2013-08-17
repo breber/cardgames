@@ -1,37 +1,18 @@
 package com.worthwhilegames.cardgames.crazyeights.test;
 
-import static com.worthwhilegames.cardgames.shared.Constants.ACE_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.BLACK_JOKER_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.EIGHT_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.FIVE_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.FOUR_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.JACK_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.KING_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.NINE_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.QUEEN_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.RED_JOKER_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.SEVEN_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.SIX_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_JOKER;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
-import static com.worthwhilegames.cardgames.shared.Constants.TEN_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.THREE_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.TWO_VALUE;
-import static org.junit.Assert.assertEquals;
+import com.worthwhilegames.cardgames.shared.Card;
+import com.worthwhilegames.cardgames.shared.CardGame;
+import com.worthwhilegames.cardgames.shared.Deck;
+import com.worthwhilegames.cardgames.shared.Util;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.worthwhilegames.cardgames.shared.Card;
-import com.worthwhilegames.cardgames.shared.CardGame;
-import com.worthwhilegames.cardgames.shared.Deck;
+import static com.worthwhilegames.cardgames.shared.Constants.*;
+import static org.junit.Assert.assertEquals;
 
 
 /**
@@ -49,6 +30,7 @@ public class CrazyEightsGameDeckTest {
 	 */
 	@Before
 	public void setup() {
+        Util.isTestSuite = true;
 		deck = new Deck(CardGame.CrazyEights);
 	}
 
