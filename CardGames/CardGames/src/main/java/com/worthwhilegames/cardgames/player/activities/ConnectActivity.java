@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.*;
@@ -80,7 +79,7 @@ public class ConnectActivity extends AdActivity {
                 // Show the device list
                 Intent showDeviceList = null;
 
-                if (Util.shouldUseNsd && android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                if (Util.shouldUseNsd) {
                     showDeviceList = new Intent(ConnectActivity.this, NsdDeviceListActivity.class);
                 } else {
                     showDeviceList = new Intent(ConnectActivity.this, JmDnsDeviceListActivity.class);
@@ -128,7 +127,7 @@ public class ConnectActivity extends AdActivity {
         // Show the device list
         Intent showDeviceList = null;
 
-        if (Util.shouldUseNsd && android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if (Util.shouldUseNsd) {
             showDeviceList = new Intent(ConnectActivity.this, NsdDeviceListActivity.class);
         } else {
             showDeviceList = new Intent(ConnectActivity.this, JmDnsDeviceListActivity.class);

@@ -1,7 +1,6 @@
 package com.worthwhilegames.cardgames.shared.wifi;
 
 import android.content.Context;
-import android.os.Build;
 import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.connection.*;
@@ -27,7 +26,7 @@ public class WifiServerSocket implements IServerSocket {
      * Create a new WifiServerSocket
      */
     public WifiServerSocket(Context ctx) {
-        if (Util.shouldUseNsd && android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if (Util.shouldUseNsd) {
             dnsWrapper = new NsdWrapper(ctx);
         } else {
             dnsWrapper = new JmDnsWrapper(ctx);

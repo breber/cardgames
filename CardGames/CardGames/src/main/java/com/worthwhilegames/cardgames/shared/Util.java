@@ -2,6 +2,7 @@ package com.worthwhilegames.cardgames.shared;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.util.Log;
 import com.worthwhilegames.cardgames.BuildConfig;
 import org.apache.http.conn.util.InetAddressUtils;
@@ -25,7 +26,7 @@ public class Util {
      * Should we try and use Android's NSD library instead of
      * the jmDns library we package with the app?
      */
-    public static final boolean shouldUseNsd = true;
+    public static final boolean shouldUseNsd = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1;
 
     /**
      * Represents whether this device is acting as the gameboard
