@@ -12,22 +12,22 @@ import com.worthwhilegames.cardgames.shared.GameFactory;
  */
 public class RulesActivity extends AdActivity {
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.information);
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.information);
 
-		// Update the title to "Rules"
-		TextView title = (TextView) findViewById(R.id.title);
-		title.setText(R.string.rulesActivityTitle);
+        // Update the title to "Rules"
+        TextView title = (TextView) findViewById(R.id.title);
+        title.setText(R.string.rulesActivityTitle);
 
-		// Update the body text to the Rules
-		TextView body = (TextView) findViewById(R.id.informationBody);
+        // Update the body text to the Rules
+        TextView body = (TextView) findViewById(R.id.informationBody);
 
-		// Set the rules based on the Game type
-		body.setText(GameFactory.getGameRulesText(this));
-	}
+        // Set the rules based on the Game type
+        body.setText(GameFactory.getGameRulesText(this));
+    }
 }

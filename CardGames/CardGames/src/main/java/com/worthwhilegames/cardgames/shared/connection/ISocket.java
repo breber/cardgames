@@ -12,47 +12,47 @@ import java.io.OutputStream;
  */
 public interface ISocket {
 
-	/**
-	 * Close the socket
-	 * 
-	 * @throws IOException
-	 */
-	void close() throws IOException;
+    /**
+     * Close the socket
+     * 
+     * @throws IOException
+     */
+    void close() throws IOException;
 
-	/**
-	 * Get the input stream for this socket
-	 * 
-	 * @return the input stream for this socket
-	 * @throws IOException
-	 */
-	InputStream getInputStream() throws IOException;
+    /**
+     * Get the input stream for this socket
+     * 
+     * @return the input stream for this socket
+     * @throws IOException
+     */
+    InputStream getInputStream() throws IOException;
 
-	/**
-	 * Get the output stream for this socket
-	 * 
-	 * @return the output stream for this socket
-	 * @throws IOException
-	 */
-	OutputStream getOutputStream() throws IOException;
+    /**
+     * Get the output stream for this socket
+     * 
+     * @return the output stream for this socket
+     * @throws IOException
+     */
+    OutputStream getOutputStream() throws IOException;
 
-	/**
-	 * Stop all output for this socket
-	 * 
-	 * @throws IOException
-	 */
-	void shutdownOutput() throws IOException;
+    /**
+     * Stop all output for this socket
+     * 
+     * @throws IOException
+     */
+    void shutdownOutput() throws IOException;
 
-	/**
-	 * Stop all input for this socket
-	 * 
-	 * @throws IOException
-	 */
-	void shutdownInput() throws IOException;
+    /**
+     * Stop all input for this socket
+     * 
+     * @throws IOException
+     */
+    void shutdownInput() throws IOException;
 
-	/**
-	 * Connect to the socket
-	 * 
-	 * @throws IOException
-	 */
-	void connect() throws IOException;
+    /**
+     * Connect to the socket
+     * 
+     * @throws IOException
+     */
+    void connect() throws IOException;
 }

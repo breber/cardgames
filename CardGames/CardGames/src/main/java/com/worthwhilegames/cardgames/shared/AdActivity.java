@@ -13,18 +13,18 @@ import com.worthwhilegames.cardgames.R;
  */
 public abstract class AdActivity extends Activity {
 
-	private boolean mAdsHidden = false;
+    private boolean mAdsHidden = false;
 
-	@Override
-	protected void onStart() {
-		super.onStart();
+    @Override
+    protected void onStart() {
+        super.onStart();
 
-		if (mAdsHidden) {
-			View v = findViewById(R.id.adView);
+        if (mAdsHidden) {
+            View v = findViewById(R.id.adView);
 
-			if (v != null) {
-				v.setVisibility(View.GONE);
-			}
-		}
-	}
+            if (v != null) {
+                v.setVisibility(View.GONE);
+            }
+        }
+    }
 }

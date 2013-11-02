@@ -5,6 +5,6 @@ package com.worthwhilegames.cardgames.shared.connection;
  */
 public enum ConnectionType {
 
-	WiFi
+    WiFi
 
 }

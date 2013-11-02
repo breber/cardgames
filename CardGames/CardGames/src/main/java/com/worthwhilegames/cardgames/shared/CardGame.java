@@ -5,6 +5,6 @@ package com.worthwhilegames.cardgames.shared;
  */
 public enum CardGame {
 
-	CrazyEights,
-	Euchre
+    CrazyEights,
+    Euchre
 }

@@ -19,56 +19,56 @@ import com.worthwhilegames.cardgames.shared.TextView;
  */
 public class RoundScoresActivity extends AdActivity {
 
-	/**
-	 * the list of current active players
-	 */
-	private List<Player> players;
+    /**
+     * the list of current active players
+     */
+    private List<Player> players;
 
-	/**
-	 * This game object will keep track of the current state of the game and be
-	 * used to manage player hands and draw and discard piles
-	 */
-	private static EuchreTabletGame game = null;
+    /**
+     * This game object will keep track of the current state of the game and be
+     * used to manage player hands and draw and discard piles
+     */
+    private static EuchreTabletGame game = null;
 
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.notification_dialog);
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.notification_dialog);
 
-		game = EuchreTabletGame.getInstance();
+        game = EuchreTabletGame.getInstance();
 
-		players = game.getPlayers();
+        players = game.getPlayers();
 
-		// Update the prompt dialog title text
-		TextView tv = (TextView) findViewById(R.id.notificationDialogTitle);
+        // Update the prompt dialog title text
+        TextView tv = (TextView) findViewById(R.id.notificationDialogTitle);
 
-		tv.setText(players.get(0).getName() + " & " + players.get(2).getName()
-				+ ": " + game.getMatchScores()[0] +
-				" \n" + players.get(1).getName() + " & " + players.get(3).getName()
-				+ ": " + game.getMatchScores()[1]);
+        tv.setText(players.get(0).getName() + " & " + players.get(2).getName()
+                + ": " + game.getMatchScores()[0] +
+                " \n" + players.get(1).getName() + " & " + players.get(3).getName()
+                + ": " + game.getMatchScores()[1]);
 
-		// Add handlers to affirmative and negative buttons
-		Button affirmative = (Button) findViewById(R.id.notificationAffirmative);
-		affirmative.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				setResult(RESULT_OK);
-				finish();
-			}
-		});
-	}
+        // Add handlers to affirmative and negative buttons
+        Button affirmative = (Button) findViewById(R.id.notificationAffirmative);
+        affirmative.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
+    }
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onBackPressed()
-	 */
-	@Override
-	public void onBackPressed() {
-		//leave activity
-		setResult(RESULT_OK);
-		finish();
-	}
+    /* (non-Javadoc)
+     * @see android.app.Activity#onBackPressed()
+     */
+    @Override
+    public void onBackPressed() {
+        //leave activity
+        setResult(RESULT_OK);
+        finish();
+    }
 }

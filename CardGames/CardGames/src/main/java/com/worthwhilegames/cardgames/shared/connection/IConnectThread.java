@@ -5,14 +5,14 @@ package com.worthwhilegames.cardgames.shared.connection;
  */
 public interface IConnectThread {
 
-	/**
-	 * Cancel the connecting
-	 */
-	void cancel();
+    /**
+     * Cancel the connecting
+     */
+    void cancel();
 
-	/**
-	 * Start the connecting
-	 */
-	void start();
+    /**
+     * Start the connecting
+     */
+    void start();
 
 }
