@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.TextView;
@@ -49,11 +50,22 @@ public class GameResultsActivity extends AdActivity {
                 finish();
             }
         });
+
+        // Send analytics
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Send analytics
+        EasyTracker.getInstance(this).activityStop(this);
     }
 
     /* (non-Javadoc)
-     * @see android.app.Activity#onBackPressed()
-     */
+         * @see android.app.Activity#onBackPressed()
+         */
     @Override
     public void onBackPressed() {
         setResult(RESULT_OK);

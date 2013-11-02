@@ -4,6 +4,7 @@ apply plugin: 'android-test'
 dependencies {
     compile files('libs/jmdns-3.4.1.jar')
     compile files('libs/GoogleAdMobAdsSdk-6.4.1.jar')
+    compile files('libs/libGoogleAnalyticsServices.jar')
 
     repositories {
         mavenCentral()
