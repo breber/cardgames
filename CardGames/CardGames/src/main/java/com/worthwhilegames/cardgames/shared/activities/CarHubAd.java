@@ -18,56 +18,56 @@ import com.worthwhilegames.cardgames.R;
  * the application.
  *
  * Activity Results:
- * 		RESULT_OK - if the user chose the affirmative option
- * 		RESULT_CANCELLED - if the user chose the negative option
+ *         RESULT_OK - if the user chose the affirmative option
+ *         RESULT_CANCELLED - if the user chose the negative option
  */
 public class CarHubAd extends Activity {
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.prompt_dialog);
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.prompt_dialog);
 
-		// Update the title to the prompt "Are you sure you want to
-		// exit the application?"
-		TextView body = (TextView) findViewById(R.id.promptDialogTitle);
-		body.setText("Would you like to view our new application CarHub Mobile?");
+        // Update the title to the prompt "Are you sure you want to
+        // exit the application?"
+        TextView body = (TextView) findViewById(R.id.promptDialogTitle);
+        body.setText("Would you like to view our new application CarHub Mobile?");
 
-		// Add handlers to the affirmative and negative buttons
-		Button affirmative = (Button) findViewById(R.id.affirmative);
-		affirmative.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				final String appName = "com.worthwhilegames.carhubmobile";
-				try {
-					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+appName)));
-				} catch (android.content.ActivityNotFoundException anfe) {
-					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id="+appName)));
-				}
-				setResult(RESULT_OK);
-				finish();
-			}
-		});
+        // Add handlers to the affirmative and negative buttons
+        Button affirmative = (Button) findViewById(R.id.affirmative);
+        affirmative.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String appName = "com.worthwhilegames.carhubmobile";
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+appName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id="+appName)));
+                }
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
 
-		Button negative = (Button) findViewById(R.id.negative);
-		negative.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				setResult(RESULT_CANCELED);
-				finish();
-			}
-		});
-	}
+        Button negative = (Button) findViewById(R.id.negative);
+        negative.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_CANCELED);
+                finish();
+            }
+        });
+    }
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onBackPressed()
-	 */
-	@Override
-	public void onBackPressed() {
-		// Do nothing. They should have to choose one
-		// of the options in order to leave this activity
-	}
+    /* (non-Javadoc)
+     * @see android.app.Activity#onBackPressed()
+     */
+    @Override
+    public void onBackPressed() {
+        // Do nothing. They should have to choose one
+        // of the options in order to leave this activity
+    }
 }

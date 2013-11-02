@@ -10,24 +10,24 @@ import java.io.IOException;
  */
 public interface IServerSocket {
 
-	/**
-	 * Perform any necessary setup
-	 */
-	void setup();
+    /**
+     * Perform any necessary setup
+     */
+    void setup();
 
-	/**
-	 * Accept a connection
-	 * 
-	 * @return an ISocket that contains the actual Socket
-	 * @throws IOException
-	 */
-	ISocket accept() throws IOException;
+    /**
+     * Accept a connection
+     * 
+     * @return an ISocket that contains the actual Socket
+     * @throws IOException
+     */
+    ISocket accept() throws IOException;
 
-	/**
-	 * Close the ServerSocket
-	 * 
-	 * @throws IOException
-	 */
-	void close() throws IOException;
+    /**
+     * Close the ServerSocket
+     * 
+     * @throws IOException
+     */
+    void close() throws IOException;
 
 }

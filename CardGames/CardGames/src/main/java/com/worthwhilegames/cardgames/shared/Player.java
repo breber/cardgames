@@ -12,241 +12,241 @@ import org.json.JSONArray;
  */
 public class Player {
 
-	/**
-	 * A list of card objects to represent the cards a player has
-	 */
-	private List<Card> cards;
+    /**
+     * A list of card objects to represent the cards a player has
+     */
+    private List<Card> cards;
 
-	/**
-	 * A string to store the name of the user
-	 */
-	private String name;
+    /**
+     * A string to store the name of the user
+     */
+    private String name;
 
-	/**
-	 * A string to store the id of the user which will be represented by a MAC Address
-	 */
-	private String id;
+    /**
+     * A string to store the id of the user which will be represented by a MAC Address
+     */
+    private String id;
 
-	/**
-	 * The position of the current user on the gameboard
-	 */
-	private int position;
+    /**
+     * The position of the current user on the gameboard
+     */
+    private int position;
 
-	/**
-	 * A boolean to set whether or not this player is a computer
-	 */
-	private boolean isComputer = false;
+    /**
+     * A boolean to set whether or not this player is a computer
+     */
+    private boolean isComputer = false;
 
-	/**
-	 * A variable to set the difficulty of the player if they are a computer
-	 */
-	private String computerDifficulty = Constants.EASY;
+    /**
+     * A variable to set the difficulty of the player if they are a computer
+     */
+    private String computerDifficulty = Constants.EASY;
 
-	/**
-	 * Represents whether this player has a name yet
-	 */
-	private boolean hasName = false;
+    /**
+     * Represents whether this player has a name yet
+     */
+    private boolean hasName = false;
 
-	/**
-	 * Represents whether this player has been disconnected
-	 */
-	private boolean isDisconnected = false;
+    /**
+     * Represents whether this player has been disconnected
+     */
+    private boolean isDisconnected = false;
 
-	/**
-	 * A default player constructor. A fields will be set with getters and setters
-	 */
-	public Player() {
-		this.cards = new ArrayList<Card>();
-		this.name = null;
-		this.id = null;
-	}
+    /**
+     * A default player constructor. A fields will be set with getters and setters
+     */
+    public Player() {
+        this.cards = new ArrayList<Card>();
+        this.name = null;
+        this.id = null;
+    }
 
-	/**
-	 * A method to get a list of cards that a player currently has
-	 * 
-	 * @return a list of card objects that a player has in their hand
-	 */
-	public List<Card> getCards() {
-		return cards;
-	}
+    /**
+     * A method to get a list of cards that a player currently has
+     * 
+     * @return a list of card objects that a player has in their hand
+     */
+    public List<Card> getCards() {
+        return cards;
+    }
 
-	/**
-	 * A method to get the number of cards that a player has
-	 * 
-	 * @return an integer representing the number of cards in a players hand
-	 */
-	public int getNumCards() {
-		return cards.size();
-	}
+    /**
+     * A method to get the number of cards that a player has
+     * 
+     * @return an integer representing the number of cards in a players hand
+     */
+    public int getNumCards() {
+        return cards.size();
+    }
 
-	/**
-	 * A method to add a card to a players hand
-	 * 
-	 * @param card the card to be added to the list of cards a player has
-	 */
-	public void addCard(Card card) {
-		cards.add(card);
-	}
+    /**
+     * A method to add a card to a players hand
+     * 
+     * @param card the card to be added to the list of cards a player has
+     */
+    public void addCard(Card card) {
+        cards.add(card);
+    }
 
-	/**
-	 * A method to get a players computer status
-	 * 
-	 * @return true if the current player is a computer, false otherwise
-	 */
-	public boolean getIsComputer() {
-		return this.isComputer;
-	}
+    /**
+     * A method to get a players computer status
+     * 
+     * @return true if the current player is a computer, false otherwise
+     */
+    public boolean getIsComputer() {
+        return this.isComputer;
+    }
 
-	/**
-	 * A method to set if a player is a computer or not
-	 * 
-	 * @param isComp true if the player is a computer, false otherwise
-	 */
-	public void setIsComputer(boolean isComp) {
-		isComputer = isComp;
+    /**
+     * A method to set if a player is a computer or not
+     * 
+     * @param isComp true if the player is a computer, false otherwise
+     */
+    public void setIsComputer(boolean isComp) {
+        isComputer = isComp;
 
-		if (isComputer) {
-			isDisconnected = false;
-		}
+        if (isComputer) {
+            isDisconnected = false;
+        }
 
-		// TODO: we might want to set a name for the computer if we
-		//		 previously cleared it...
-	}
+        // TODO: we might want to set a name for the computer if we
+        //         previously cleared it...
+    }
 
-	/**
-	 * A method to get the difficulty of a computer player
-	 * 
-	 * @return an String representing easy, medium or hard
-	 */
-	public String getComputerDifficulty() {
-		return computerDifficulty;
-	}
+    /**
+     * A method to get the difficulty of a computer player
+     * 
+     * @return an String representing easy, medium or hard
+     */
+    public String getComputerDifficulty() {
+        return computerDifficulty;
+    }
 
-	/**
-	 * A method to set the difficulty of a computer player
-	 * 
-	 * @param dif an String representing easy, medium or hard
-	 */
-	public void setComputerDifficulty(String dif) {
-		computerDifficulty = dif;
-	}
+    /**
+     * A method to set the difficulty of a computer player
+     * 
+     * @param dif an String representing easy, medium or hard
+     */
+    public void setComputerDifficulty(String dif) {
+        computerDifficulty = dif;
+    }
 
-	/**
-	 * This method will remove a card from a players hand by object matching
-	 * using a loop that checks every card in the players hand
-	 * 
-	 * @param card
-	 *            the card to be removed from the players hand
-	 */
-	public void removeCard(Card card) {
-		for (Card c : cards) {
-			if (c.getIdNum() == card.getIdNum()) {
-				cards.remove(c);
-				return;
-			}
-		}
-	}
+    /**
+     * This method will remove a card from a players hand by object matching
+     * using a loop that checks every card in the players hand
+     * 
+     * @param card
+     *            the card to be removed from the players hand
+     */
+    public void removeCard(Card card) {
+        for (Card c : cards) {
+            if (c.getIdNum() == card.getIdNum()) {
+                cards.remove(c);
+                return;
+            }
+        }
+    }
 
-	/**
-	 * A method to return the name of a player
-	 * 
-	 * @return a string representing the name of the player
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * A method to return the name of a player
+     * 
+     * @return a string representing the name of the player
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * A method to set the name of a player object
-	 * 
-	 * @param name the new name of the player
-	 */
-	public void setName(String name) {
-		this.name = name;
-		hasName = true;
-	}
+    /**
+     * A method to set the name of a player object
+     * 
+     * @param name the new name of the player
+     */
+    public void setName(String name) {
+        this.name = name;
+        hasName = true;
+    }
 
-	/**
-	 * This method will return the MAC Address of a player
-	 * 
-	 * @return a string representing the MAC Address of a player
-	 */
-	public String getId() {
-		return id;
-	}
+    /**
+     * This method will return the MAC Address of a player
+     * 
+     * @return a string representing the MAC Address of a player
+     */
+    public String getId() {
+        return id;
+    }
 
-	/**
-	 * This method will set the id of a player
-	 * 
-	 * @param id a string representing the new ID of a player
-	 */
-	public void setId(String id) {
-		this.id = id;
-		isDisconnected = false;
-		isComputer = false;
-	}
+    /**
+     * This method will set the id of a player
+     * 
+     * @param id a string representing the new ID of a player
+     */
+    public void setId(String id) {
+        this.id = id;
+        isDisconnected = false;
+        isComputer = false;
+    }
 
-	/**
-	 * This method will get the current position of the player based on the game board
-	 * 
-	 * @return an integer to represent the player's location on the game board
-	 */
-	public int getPosition() {
-		return position;
-	}
+    /**
+     * This method will get the current position of the player based on the game board
+     * 
+     * @return an integer to represent the player's location on the game board
+     */
+    public int getPosition() {
+        return position;
+    }
 
-	/**
-	 * This method will set the position of the player on the game board
-	 * 
-	 * @param position an integer representing the new player position
-	 */
-	public void setPosition(int position) {
-		this.position = position;
-	}
+    /**
+     * This method will set the position of the player on the game board
+     * 
+     * @param position an integer representing the new player position
+     */
+    public void setPosition(int position) {
+        this.position = position;
+    }
 
-	/**
-	 * @return the hasName
-	 */
-	public boolean hasName() {
-		return hasName;
-	}
+    /**
+     * @return the hasName
+     */
+    public boolean hasName() {
+        return hasName;
+    }
 
-	/**
-	 * @param hasName the hasName to set
-	 */
-	public void clearName() {
-		hasName = false;
-	}
+    /**
+     * @param hasName the hasName to set
+     */
+    public void clearName() {
+        hasName = false;
+    }
 
-	/**
-	 * @return the isDisconnected
-	 */
-	public boolean isDisconnected() {
-		return isDisconnected;
-	}
+    /**
+     * @return the isDisconnected
+     */
+    public boolean isDisconnected() {
+        return isDisconnected;
+    }
 
-	/**
-	 * @param isDisconnected the isDisconnected to set
-	 */
-	public void setDisconnected(boolean isDisconnected) {
-		this.isDisconnected = isDisconnected;
-	}
+    /**
+     * @param isDisconnected the isDisconnected to set
+     */
+    public void setDisconnected(boolean isDisconnected) {
+        this.isDisconnected = isDisconnected;
+    }
 
-	/**
-	 * This toString() method will override the default toString() method. This
-	 * will return a JSON object that is in the form of a string which will be
-	 * easy for decoding
-	 * 
-	 * @return a string representation of a player object
-	 */
-	@Override
-	public String toString() {
-		// Encode the cards into a JSONArray
-		JSONArray arr = new JSONArray();
-		for (Card c : cards) {
-			arr.put(c.toJSONObject());
-		}
+    /**
+     * This toString() method will override the default toString() method. This
+     * will return a JSON object that is in the form of a string which will be
+     * easy for decoding
+     * 
+     * @return a string representation of a player object
+     */
+    @Override
+    public String toString() {
+        // Encode the cards into a JSONArray
+        JSONArray arr = new JSONArray();
+        for (Card c : cards) {
+            arr.put(c.toJSONObject());
+        }
 
-		return arr.toString();
-	}
+        return arr.toString();
+    }
 }
