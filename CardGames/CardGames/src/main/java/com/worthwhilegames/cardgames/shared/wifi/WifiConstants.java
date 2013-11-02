@@ -14,6 +14,8 @@ public class WifiConstants {
     /**
      * The Bonjour Service Type to use for this app
      */
-    public static final String SERVICE_TYPE = "_cardgames._tcp.local.";
+    public static final String SERVICE_TYPE = "_cardgames._tcp.";
+
+    public static final String JMDNS_SERVICE_TYPE = SERVICE_TYPE + "local.";
 
 }

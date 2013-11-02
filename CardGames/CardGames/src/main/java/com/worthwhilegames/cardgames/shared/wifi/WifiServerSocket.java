@@ -2,18 +2,16 @@ package com.worthwhilegames.cardgames.shared.wifi;
 
 import java.io.IOException;
 
-import javax.jmdns.JmDNS;
-import javax.jmdns.ServiceInfo;
-import javax.jmdns.impl.JmDNSImpl;
-
 import android.content.Context;
-import android.net.wifi.WifiManager;
-import android.net.wifi.WifiManager.MulticastLock;
+import android.os.Build;
 
 import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.Util;
+import com.worthwhilegames.cardgames.shared.connection.IDnsWrapper;
 import com.worthwhilegames.cardgames.shared.connection.IServerSocket;
 import com.worthwhilegames.cardgames.shared.connection.ISocket;
+import com.worthwhilegames.cardgames.shared.connection.JmDnsWrapper;
+import com.worthwhilegames.cardgames.shared.connection.NsdWrapper;
 
 /**
  * The Wifi implementation of a ServerSocket
@@ -26,35 +24,19 @@ public class WifiServerSocket implements IServerSocket {
     private java.net.ServerSocket mServerSocket;
 
     /**
-     * The Context
-     */
-    private Context mContext;
-
-    /**
-     * The JmDNS instance
-     */
-    private JmDNS jmdns = null;
-
-    /**
-     * The ServiceInfo we are broadcasting
-     */
-    private ServiceInfo serviceInfo;
-
-    /**
      * The Wifi MulticastLock
      */
-    private MulticastLock lock;
+    private IDnsWrapper dnsWrapper;
 
     /**
      * Create a new WifiServerSocket
      */
     public WifiServerSocket(Context ctx) {
-        mContext = ctx;
-
-        WifiManager wifi = (WifiManager) ctx.getSystemService(android.content.Context.WIFI_SERVICE);
-        lock = wifi.createMulticastLock("CardGamesLock");
-        lock.setReferenceCounted(true);
-        lock.acquire();
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            dnsWrapper = new NsdWrapper(ctx);
+        } else {
+            dnsWrapper = new JmDnsWrapper(ctx);
+        }
 
         try {
             mServerSocket = new java.net.ServerSocket(GameFactory.getPortNumber(ctx), 0, Util.getLocalIpAddress());
@@ -68,13 +50,8 @@ public class WifiServerSocket implements IServerSocket {
      */
     @Override
     public void setup() {
-        try {
-            jmdns = new JmDNSImpl(Util.getLocalIpAddress(), "CardGames");
-            serviceInfo = ServiceInfo.create(WifiConstants.SERVICE_TYPE, GameFactory.getGameType(mContext) + ": " + android.os.Build.MODEL, GameFactory.getPortNumber(mContext), "Card Games for Android");
-            jmdns.registerService(serviceInfo);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
+        if (dnsWrapper != null) {
+            dnsWrapper.setup();
         }
     }
 
@@ -95,18 +72,8 @@ public class WifiServerSocket implements IServerSocket {
      */
     @Override
     public void close() throws IOException {
-        if (jmdns != null) {
-            jmdns.unregisterAllServices();
-            try {
-                jmdns.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            jmdns = null;
-        }
-
-        if (lock.isHeld()) {
-            lock.release();
+        if (dnsWrapper != null) {
+            dnsWrapper.close();
         }
 
         if (mServerSocket != null) {
