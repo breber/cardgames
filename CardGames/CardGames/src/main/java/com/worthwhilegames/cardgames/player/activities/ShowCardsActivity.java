@@ -16,6 +16,7 @@ import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.Card;
@@ -138,6 +139,9 @@ public class ShowCardsActivity extends AdActivity {
         // broadcast receiver so that we don't miss any messages
         Intent i = new Intent(this, ConnectActivity.class);
         startActivityForResult(i, CONNECT_DEVICE);
+
+        // Send analytics
+        EasyTracker.getInstance(this).activityStart(this);
     }
 
     /* (non-Javadoc)
@@ -154,6 +158,9 @@ public class ShowCardsActivity extends AdActivity {
      */
     @Override
     protected void onDestroy() {
+        // Send analytics
+        EasyTracker.getInstance(this).activityStop(this);
+
         // Disconnect connection
         if (connection != null) {
             connection.disconnect();
@@ -273,7 +280,7 @@ public class ShowCardsActivity extends AdActivity {
 
     /**
      * Scale a card image with the given resource
-     * 
+     *
      * @param resId the resource id of the card to scale
      * @return a scaled card image
      */

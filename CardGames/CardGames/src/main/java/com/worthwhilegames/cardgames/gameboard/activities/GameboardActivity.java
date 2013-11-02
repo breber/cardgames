@@ -1,19 +1,7 @@
 package com.worthwhilegames.cardgames.gameboard.activities;
 
-import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
-import static com.worthwhilegames.cardgames.shared.Constants.fourthCard;
-import static com.worthwhilegames.cardgames.shared.Constants.fullCard;
-import static com.worthwhilegames.cardgames.shared.Constants.halfCard;
-import static com.worthwhilegames.cardgames.shared.Constants.halfCardVertCut;
-
-import java.util.List;
-
 import android.annotation.TargetApi;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -27,20 +15,16 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
-
+import com.google.analytics.tracking.android.EasyTracker;
 import com.worthwhilegames.cardgames.R;
-import com.worthwhilegames.cardgames.shared.AdActivity;
-import com.worthwhilegames.cardgames.shared.Card;
-import com.worthwhilegames.cardgames.shared.Constants;
-import com.worthwhilegames.cardgames.shared.Game;
-import com.worthwhilegames.cardgames.shared.GameController;
-import com.worthwhilegames.cardgames.shared.GameFactory;
-import com.worthwhilegames.cardgames.shared.Player;
-import com.worthwhilegames.cardgames.shared.TextView;
-import com.worthwhilegames.cardgames.shared.Util;
+import com.worthwhilegames.cardgames.shared.*;
 import com.worthwhilegames.cardgames.shared.activities.QuitGameActivity;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
+
+import java.util.List;
+
+import static com.worthwhilegames.cardgames.shared.Constants.*;
 
 /**
  * The Activity that the user will spend the most time in.  This
@@ -79,7 +63,7 @@ public class GameboardActivity extends AdActivity {
 
     /**
      * LayoutParams for adding a card to a player on the long edge of the screen
-     * 
+     *
      * width  = WRAP_CONTENT
      * height = cardHeight
      */
@@ -144,7 +128,7 @@ public class GameboardActivity extends AdActivity {
 
     /**
      * The ImageViews for the cards in the center of the screen
-     * 
+     *
      * For games that don't use 4 cards in the middle:
      * Position 2 = discard pile
      * Position 4 = draw pile
@@ -254,6 +238,9 @@ public class GameboardActivity extends AdActivity {
 
         // Draw the names from the Game on the gameboard
         updateNamesOnGameboard();
+
+        // Send analytics
+        EasyTracker.getInstance(this).activityStart(this);
     }
 
     /**
@@ -339,6 +326,9 @@ public class GameboardActivity extends AdActivity {
      */
     @Override
     protected void onDestroy() {
+        // Send analytics
+        EasyTracker.getInstance(this).activityStop(this);
+
         // Disconnect Connection
         if (connection != null) {
             connection.disconnect();
@@ -438,7 +428,7 @@ public class GameboardActivity extends AdActivity {
     /**
      * This method will update the suit on the gameboard message center to show the player
      * the current suit of the last card played
-     * 
+     *
      * @param suit the suit of the card in which to change the picture to
      */
     public void updateSuit(int suit) {
@@ -452,7 +442,7 @@ public class GameboardActivity extends AdActivity {
 
     /**
      * Updates the User Interface
-     * 
+     *
      * Places all cards in the users' hands
      * Updates the discard image
      * Updates the draw card image
@@ -521,10 +511,10 @@ public class GameboardActivity extends AdActivity {
 
     /**
      * Scale a card image with the given resource
-     * 
+     *
      * @param resId the resource id of the card to scale
      * @param cardPortion the amount of the card to show
-     * 
+     *
      * @return a scaled card image
      */
     private Bitmap scaleCard(int resId, int cardPortion) {
@@ -551,7 +541,7 @@ public class GameboardActivity extends AdActivity {
 
     /**
      * Scale a button image with the given resource
-     * 
+     *
      * @param resId the resource id of the card to scale
      * @return a scaled button image
      */
