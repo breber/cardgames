@@ -124,6 +124,11 @@ public abstract class DeviceListActivity extends AdActivity {
 
         // Otherwise start discovering devices
         mDevicesArrayAdapter.clear();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         doDiscovery();
     }
 
@@ -135,6 +140,12 @@ public abstract class DeviceListActivity extends AdActivity {
         cancelDiscovery();
 
         super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        cancelDiscovery();
+        super.onPause();
     }
 
     /**

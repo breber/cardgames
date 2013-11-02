@@ -22,18 +22,25 @@ public class NsdDeviceListActivity extends DeviceListActivity implements Discove
      */
     private NsdManager mNsdManager = null;
 
+    /**
+     * Whether we are discovering or not
+     */
+    private boolean isDiscovering = false;
+
     @Override
     protected void doDiscovery() {
         super.doDiscovery();
 
         // Create the JmDNS instance and start listening
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mNsdManager = (NsdManager) NsdDeviceListActivity.this.getSystemService(Context.NSD_SERVICE);
-                mNsdManager.discoverServices(WifiConstants.SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, NsdDeviceListActivity.this);
-            }
-        }).start();
+        if (!isDiscovering) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mNsdManager = (NsdManager) NsdDeviceListActivity.this.getSystemService(Context.NSD_SERVICE);
+                    mNsdManager.discoverServices(WifiConstants.SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, NsdDeviceListActivity.this);
+                }
+            }).start();
+        }
     }
 
     @Override
@@ -60,11 +67,13 @@ public class NsdDeviceListActivity extends DeviceListActivity implements Discove
     @Override
     public void onDiscoveryStarted(String arg0) {
         Log.d(TAG, "Service discovery started");
+        isDiscovering = true;
     }
 
     @Override
     public void onDiscoveryStopped(String serviceType) {
         Log.i(TAG, "Discovery stopped: " + serviceType);
+        isDiscovering = false;
     }
 
     @Override
