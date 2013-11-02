@@ -1,28 +1,22 @@
 package com.worthwhilegames.cardgames.crazyeights;
 
-import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
-
 import com.worthwhilegames.cardgames.gameboard.activities.GameboardActivity;
-import com.worthwhilegames.cardgames.shared.Card;
-import com.worthwhilegames.cardgames.shared.Constants;
-import com.worthwhilegames.cardgames.shared.GameController;
-import com.worthwhilegames.cardgames.shared.Player;
-import com.worthwhilegames.cardgames.shared.Util;
+import com.worthwhilegames.cardgames.shared.*;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static com.worthwhilegames.cardgames.shared.Constants.PREFERENCES;
 
 /**
  * This is the GameController for the game of Crazy Eights.
- * 
+ *
  * Responsible for communicating game info, advancing turns, and handling game
  * state
  */
@@ -45,7 +39,7 @@ public class CrazyEightsGameController extends GameController {
 
     /**
      * This will initialize a CrazyEightsGameController
-     * 
+     *
      * @param context
      *            Context of the GameBoardActivity
      * @param connectionGiven
@@ -164,9 +158,11 @@ public class CrazyEightsGameController extends GameController {
         // Highlight the name of the current player
         gameContext.highlightPlayer(whoseTurn + 1);
 
+        // Update the UI
+        gameContext.updateUi();
+
         // Get the top discard pile card, so that we can tell the user which
-        // cards
-        // are valid moves
+        // cards are valid moves
         Card onDiscard = game.getDiscardPileTop();
 
         // If the top card is an 8, we need to do some special logic
@@ -197,15 +193,12 @@ public class CrazyEightsGameController extends GameController {
             server.write(Constants.MSG_IS_TURN, onDiscard, players.get(whoseTurn).getId());
             sendCardSuggestion();
         }
-
-        // Update the UI
-        gameContext.updateUi();
     }
 
     /**
      * This will send winner and loser messages to all the players depending on
      * if they won or not
-     * 
+     *
      * @param whoWon
      *            The player that won
      */
