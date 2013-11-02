@@ -22,6 +22,12 @@ public class Util {
     public static final String TAG_GENERIC = Util.class.getName();
 
     /**
+     * Should we try and use Android's NSD library instead of
+     * the jmDns library we package with the app?
+     */
+    public static final boolean shouldUseNsd = true;
+
+    /**
      * Represents whether this device is acting as the gameboard
      */
     private static boolean isGameboard = false;

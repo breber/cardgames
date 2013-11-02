@@ -27,7 +27,7 @@ public class WifiServerSocket implements IServerSocket {
      * Create a new WifiServerSocket
      */
     public WifiServerSocket(Context ctx) {
-        if (false && android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if (Util.shouldUseNsd && android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             dnsWrapper = new NsdWrapper(ctx);
         } else {
             dnsWrapper = new JmDnsWrapper(ctx);

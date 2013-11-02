@@ -1,17 +1,15 @@
 package com.worthwhilegames.cardgames.shared.activities;
 
-import java.io.IOException;
+import android.net.wifi.WifiManager;
+import android.net.wifi.WifiManager.MulticastLock;
+import android.util.Log;
+import com.worthwhilegames.cardgames.shared.Util;
+import com.worthwhilegames.cardgames.shared.wifi.WifiConstants;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
-
-import android.net.wifi.WifiManager;
-import android.net.wifi.WifiManager.MulticastLock;
-import android.util.Log;
-
-import com.worthwhilegames.cardgames.shared.Util;
-import com.worthwhilegames.cardgames.shared.wifi.WifiConstants;
+import java.io.IOException;
 
 public class JmDnsDeviceListActivity extends DeviceListActivity implements ServiceListener {
 
@@ -87,7 +85,11 @@ public class JmDnsDeviceListActivity extends DeviceListActivity implements Servi
         }
 
         if (ev.getInfo().getHostAddresses().length > 0) {
-            DeviceListItem item = new DeviceListItem(ev.getName(), ev.getInfo().getHostAddresses()[0], ev.getInfo().getPort());
+            String name = ev.getName();
+            if (name != null) {
+                name = name.replace("\\\\032", " ");
+            }
+            DeviceListItem item = new DeviceListItem(name, ev.getInfo().getHostAddresses()[0], ev.getInfo().getPort());
 
             updateUi(item, ev.getDNS().getHostName());
         }

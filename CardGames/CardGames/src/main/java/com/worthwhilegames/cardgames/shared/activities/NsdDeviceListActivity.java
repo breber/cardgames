@@ -113,7 +113,11 @@ public class NsdDeviceListActivity extends DeviceListActivity implements Discove
         }
 
         if (host != null) {
-            DeviceListItem item = new DeviceListItem(serviceInfo.getServiceName(), host.getHostAddress(), port);
+            String name = serviceInfo.getServiceName();
+            if (name != null) {
+                name = name.replace("\\\\032", " ");
+            }
+            DeviceListItem item = new DeviceListItem(name, host.getHostAddress(), port);
 
             updateUi(item, host.getHostName());
         }
