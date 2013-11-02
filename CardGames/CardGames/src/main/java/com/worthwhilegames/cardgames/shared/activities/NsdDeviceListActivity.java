@@ -1,17 +1,18 @@
 package com.worthwhilegames.cardgames.shared.activities;
 
-import java.net.InetAddress;
-
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdManager.DiscoveryListener;
 import android.net.nsd.NsdManager.ResolveListener;
 import android.net.nsd.NsdServiceInfo;
 import android.util.Log;
-
 import com.worthwhilegames.cardgames.shared.Util;
 import com.worthwhilegames.cardgames.shared.wifi.WifiConstants;
 
+import java.net.InetAddress;
+
+@TargetApi(16)
 public class NsdDeviceListActivity extends DeviceListActivity implements DiscoveryListener, ResolveListener {
 
     private static final String TAG = NsdDeviceListActivity.class.getName();
@@ -112,7 +113,7 @@ public class NsdDeviceListActivity extends DeviceListActivity implements Discove
         }
 
         if (host != null) {
-            DeviceListItem item = new DeviceListItem(host.getHostName(), host.getHostAddress(), port);
+            DeviceListItem item = new DeviceListItem(serviceInfo.getServiceName(), host.getHostAddress(), port);
 
             updateUi(item, host.getHostName());
         }

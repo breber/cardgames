@@ -1,17 +1,12 @@
 package com.worthwhilegames.cardgames.shared.wifi;
 
-import java.io.IOException;
-
 import android.content.Context;
 import android.os.Build;
-
 import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.Util;
-import com.worthwhilegames.cardgames.shared.connection.IDnsWrapper;
-import com.worthwhilegames.cardgames.shared.connection.IServerSocket;
-import com.worthwhilegames.cardgames.shared.connection.ISocket;
-import com.worthwhilegames.cardgames.shared.connection.JmDnsWrapper;
-import com.worthwhilegames.cardgames.shared.connection.NsdWrapper;
+import com.worthwhilegames.cardgames.shared.connection.*;
+
+import java.io.IOException;
 
 /**
  * The Wifi implementation of a ServerSocket
@@ -32,7 +27,7 @@ public class WifiServerSocket implements IServerSocket {
      * Create a new WifiServerSocket
      */
     public WifiServerSocket(Context ctx) {
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if (false && android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             dnsWrapper = new NsdWrapper(ctx);
         } else {
             dnsWrapper = new JmDnsWrapper(ctx);

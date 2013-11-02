@@ -1,5 +1,6 @@
 package com.worthwhilegames.cardgames.shared.connection;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdManager.RegistrationListener;
@@ -9,6 +10,7 @@ import android.util.Log;
 import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.wifi.WifiConstants;
 
+@TargetApi(16)
 public class NsdWrapper implements IDnsWrapper, RegistrationListener {
 
     private static final String TAG = NsdWrapper.class.getName();

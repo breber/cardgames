@@ -1,18 +1,16 @@
 package com.worthwhilegames.cardgames.shared.connection;
 
-import java.io.IOException;
+import android.content.Context;
+import android.net.wifi.WifiManager;
+import android.net.wifi.WifiManager.MulticastLock;
+import com.worthwhilegames.cardgames.shared.GameFactory;
+import com.worthwhilegames.cardgames.shared.Util;
+import com.worthwhilegames.cardgames.shared.wifi.WifiConstants;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
 import javax.jmdns.impl.JmDNSImpl;
-
-import android.content.Context;
-import android.net.wifi.WifiManager;
-import android.net.wifi.WifiManager.MulticastLock;
-
-import com.worthwhilegames.cardgames.shared.GameFactory;
-import com.worthwhilegames.cardgames.shared.Util;
-import com.worthwhilegames.cardgames.shared.wifi.WifiConstants;
+import java.io.IOException;
 
 public class JmDnsWrapper implements IDnsWrapper {
 
@@ -47,7 +45,7 @@ public class JmDnsWrapper implements IDnsWrapper {
     public void setup() {
         try {
             jmdns = new JmDNSImpl(Util.getLocalIpAddress(), "CardGames");
-            serviceInfo = ServiceInfo.create(WifiConstants.SERVICE_TYPE, GameFactory.getGameType(mContext) + ": " + android.os.Build.MODEL, GameFactory.getPortNumber(mContext), "Card Games for Android");
+            serviceInfo = ServiceInfo.create(WifiConstants.JMDNS_SERVICE_TYPE, GameFactory.getGameType(mContext) + ": " + android.os.Build.MODEL, GameFactory.getPortNumber(mContext), "Card Games for Android");
             jmdns.registerService(serviceInfo);
         } catch (IOException e) {
             e.printStackTrace();
