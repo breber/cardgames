@@ -1,25 +1,23 @@
 package com.worthwhilegames.cardgames.player.activities;
 
-import static com.worthwhilegames.cardgames.shared.Constants.GET_PLAYER_NAME;
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_PLAYER_NAME;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
-
 import com.worthwhilegames.cardgames.R;
-import com.worthwhilegames.cardgames.shared.AdActivity;
-import com.worthwhilegames.cardgames.shared.Constants;
-import com.worthwhilegames.cardgames.shared.GameFactory;
-import com.worthwhilegames.cardgames.shared.TextView;
+import com.worthwhilegames.cardgames.shared.*;
 import com.worthwhilegames.cardgames.shared.activities.DeviceListActivity;
+import com.worthwhilegames.cardgames.shared.activities.JmDnsDeviceListActivity;
+import com.worthwhilegames.cardgames.shared.activities.NsdDeviceListActivity;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionClient;
 import com.worthwhilegames.cardgames.shared.connection.ConnectionConstants;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static com.worthwhilegames.cardgames.shared.Constants.GET_PLAYER_NAME;
+import static com.worthwhilegames.cardgames.shared.Constants.KEY_PLAYER_NAME;
 
 /**
  * The Activity that initiates the device list, and then
@@ -80,7 +78,14 @@ public class ConnectActivity extends AdActivity {
                 finishActivity(GET_PLAYER_NAME);
 
                 // Show the device list
-                Intent showDeviceList = new Intent(ConnectActivity.this, DeviceListActivity.class);
+                Intent showDeviceList = null;
+
+                if (Util.shouldUseNsd && android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    showDeviceList = new Intent(ConnectActivity.this, NsdDeviceListActivity.class);
+                } else {
+                    showDeviceList = new Intent(ConnectActivity.this, JmDnsDeviceListActivity.class);
+                }
+
                 startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
             }
         }
@@ -121,7 +126,14 @@ public class ConnectActivity extends AdActivity {
         tv.setText(R.string.connecting);
 
         // Show the device list
-        Intent showDeviceList = new Intent(this, DeviceListActivity.class);
+        Intent showDeviceList = null;
+
+        if (Util.shouldUseNsd && android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            showDeviceList = new Intent(ConnectActivity.this, NsdDeviceListActivity.class);
+        } else {
+            showDeviceList = new Intent(ConnectActivity.this, JmDnsDeviceListActivity.class);
+        }
+
         startActivityForResult(showDeviceList, DEVICE_LIST_RESULT);
 
         returnIntent = new Intent();

@@ -117,7 +117,13 @@
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.CardGames" />
         <activity
-            android:name=".shared.activities.DeviceListActivity"
+            android:name=".shared.activities.JmDnsDeviceListActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_device_list"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.CardGames" />
+        <activity
+            android:name=".shared.activities.NsdDeviceListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_device_list"
             android:screenOrientation="sensorLandscape"
