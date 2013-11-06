@@ -291,6 +291,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         ads:adSize="BANNER"
-        ads:adUnitId="8bc25cd8acbc490a"/>
+        ads:adUnitId="@string/ad_unit_id"/>
 
 </RelativeLayout>
