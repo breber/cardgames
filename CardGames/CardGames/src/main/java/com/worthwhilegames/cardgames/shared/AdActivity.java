@@ -28,10 +28,12 @@ public abstract class AdActivity extends Activity {
             }
         } else {
             AdView adView = (AdView)this.findViewById(R.id.adView);
-            AdRequest adRequest = new AdRequest.Builder()
-                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                    .build();
-            adView.loadAd(adRequest);
+            if (adView != null) {
+                AdRequest adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        .build();
+                adView.loadAd(adRequest);
+            }
         }
     }
 
@@ -39,7 +41,9 @@ public abstract class AdActivity extends Activity {
     protected void onPause() {
         if (!mAdsHidden) {
             AdView adView = (AdView)this.findViewById(R.id.adView);
-            adView.pause();
+            if (adView != null) {
+                adView.pause();
+            }
         }
 
         super.onPause();
@@ -51,7 +55,9 @@ public abstract class AdActivity extends Activity {
 
         if (!mAdsHidden) {
             AdView adView = (AdView)this.findViewById(R.id.adView);
-            adView.resume();
+            if (adView != null) {
+                adView.resume();
+            }
         }
     }
 
@@ -59,7 +65,9 @@ public abstract class AdActivity extends Activity {
     protected void onDestroy() {
         if (!mAdsHidden) {
             AdView adView = (AdView)this.findViewById(R.id.adView);
-            adView.destroy();
+            if (adView != null) {
+                adView.destroy();
+            }
         }
 
         super.onDestroy();
