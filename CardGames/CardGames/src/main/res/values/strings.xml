@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Card Games</string>
+    <string name="ad_unit_id">ca-app-pub-7851995014179009/2484621259</string>
 
     <!-- Main Menu -->
     <string name="Play">Play</string>

@@ -5,7 +5,7 @@
     android:versionName="1.1.4" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="10"
         android:targetSdkVersion="19" />
 
     <!-- For Wifi Mode -->
@@ -139,9 +139,13 @@
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.CardGames.Dialog" />
 
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <!-- Ad Activities -->
         <activity
-            android:name="com.google.ads.AdActivity"
+            android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
     </application>
 
