@@ -26,7 +26,7 @@ public class Util {
      * Should we try and use Android's NSD library instead of
      * the jmDns library we package with the app?
      */
-    public static final boolean shouldUseNsd = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1;
+    public static final boolean shouldUseNsd = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
 
     /**
      * Represents whether this device is acting as the gameboard
