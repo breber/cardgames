@@ -1,29 +1,10 @@
 package com.worthwhilegames.cardgames.shared;
 
-import static com.worthwhilegames.cardgames.shared.Constants.ACE_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.BLACK_JOKER_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.EIGHT_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.FIVE_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.FOUR_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.JACK_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.KING_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.NINE_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.QUEEN_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.RED_JOKER_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.SEVEN_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.SIX_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_CLUBS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_DIAMONDS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_HEARTS;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_JOKER;
-import static com.worthwhilegames.cardgames.shared.Constants.SUIT_SPADES;
-import static com.worthwhilegames.cardgames.shared.Constants.TEN_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.THREE_VALUE;
-import static com.worthwhilegames.cardgames.shared.Constants.TWO_VALUE;
+import com.worthwhilegames.cardgames.R;
 
 import java.util.ArrayList;
 
-import com.worthwhilegames.cardgames.R;
+import static com.worthwhilegames.cardgames.shared.Constants.*;
 
 /**
  * Represents a deck of cards

@@ -1,57 +1,27 @@
 package com.worthwhilegames.cardgames.crazyeights;
 
-import static com.worthwhilegames.cardgames.crazyeights.C8Constants.NUMBER_OF_CARDS_PER_HAND;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-
 import android.util.Log;
+import com.worthwhilegames.cardgames.shared.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import com.worthwhilegames.cardgames.shared.Card;
-import com.worthwhilegames.cardgames.shared.CardGame;
-import com.worthwhilegames.cardgames.shared.Constants;
-import com.worthwhilegames.cardgames.shared.Deck;
-import com.worthwhilegames.cardgames.shared.Game;
-import com.worthwhilegames.cardgames.shared.Player;
-import com.worthwhilegames.cardgames.shared.Util;
+import java.util.*;
 
 /**
  * A class for keeping track of the logic and game state for the game type crazy eights
  */
-public class CrazyEightsTabletGame implements Game {
+public class CrazyEightsGame implements Game {
 
     /**
      * A tag for the class name
      */
-    private static final String TAG = CrazyEightsTabletGame.class.getName();
-
-    /**
-     * A variable for and instance of the crazy eights game type
-     */
-    private static CrazyEightsTabletGame instance = null;
+    private static final String TAG = CrazyEightsGame.class.getName();
 
     /**
      * A private variable for a list of players in the current game
      */
     private List<Player> players;
-
-    /**
-     * A private variable representing the game deck for the crazy eights game
-     */
-    private Deck gameDeck;
-
-    /**
-     * A private variable to represent the difficulty of computers in the current game
-     */
-    private String computerDifficulty = Constants.EASY;
-
-    /**
-     * An iterator for removing cards from the shuffled deck
-     */
-    private Iterator<Card> iter;
 
     /**
      * A list of all the cards in the shuffle deck
@@ -69,34 +39,12 @@ public class CrazyEightsTabletGame implements Game {
     private boolean gameActive = false;
 
     /**
-     * Create a new instance of the tablet game so that multiple classes are able to reference
-     * the same card game and only one instance will be made available. This method uses the default
-     * constructor.
-     * 
-     * @return an instance of CrazyEightsTabletGame
-     */
-    public static CrazyEightsTabletGame getInstance() {
-        if (instance == null) {
-            instance = new CrazyEightsTabletGame();
-        }
-
-        return instance;
-    }
-
-    /**
-     * Clear the game instance
-     */
-    public static void clearInstance() {
-        instance = null;
-    }
-
-    /**
      * A constructor for the crazy eights game type. This constructor will initialize the all the variables
      * for a game of crazy eights including the rules, players, deck, shuffled deck pile and the discard pile.
      */
-    private CrazyEightsTabletGame() {
+    public CrazyEightsGame() {
         players = new ArrayList<Player>();
-        gameDeck = new Deck(CardGame.CrazyEights);
+        Deck gameDeck = new Deck(CardGame.CrazyEights);
         shuffledDeck = gameDeck.getCardIDs();
         discardPile = new ArrayList<Card>();
     }
@@ -118,37 +66,21 @@ public class CrazyEightsTabletGame implements Game {
     }
 
     /* (non-Javadoc)
-     * @see com.worthwhilegames.cardgames.shared.Game#setComputerDifficulty(java.lang.String)
-     */
-    @Override
-    public void setComputerDifficulty(String diff){
-        this.computerDifficulty = diff;
-    }
-
-    /* (non-Javadoc)
-     * @see com.worthwhilegames.cardgames.shared.Game#getComputerDifficulty()
-     */
-    @Override
-    public String getComputerDifficulty() {
-        return this.computerDifficulty;
-    }
-
-    /* (non-Javadoc)
      * @see com.worthwhilegames.cardgames.shared.Game#setup()
      */
     @Override
     public void setup() {
         // Shuffle the card ID's
-        this.shuffleDeck();
+        shuffleDeck();
 
         // Deal the initial cards to all the players in the game
-        this.deal();
+        deal();
 
         // Discard pile first one
-        discardPile.add(iter.next());
+        discardPile.add(shuffledDeck.get(0));
 
         // Remove the last card returned by iter.next()
-        iter.remove();
+        shuffledDeck.remove(0);
     }
 
     /* (non-Javadoc)
@@ -161,9 +93,6 @@ public class CrazyEightsTabletGame implements Game {
 
         //shuffle the deck
         Collections.shuffle(shuffledDeck, generator);
-
-        //set the iterator to go through the shuffled deck
-        iter = shuffledDeck.iterator();
     }
 
     /**
@@ -190,7 +119,7 @@ public class CrazyEightsTabletGame implements Game {
         discardPile.add(card);
 
         // Shuffle the deck
-        this.shuffleDeck();
+        shuffleDeck();
     }
 
     /* (non-Javadoc)
@@ -208,24 +137,14 @@ public class CrazyEightsTabletGame implements Game {
             }
         }
 
-        // Count the number of human players
-        for (Player p : players) {
-            if (!p.getIsComputer()) {
-            }
-        }
-
         // Deal the given number of cards to each player
-        for (int i = 0; i < NUMBER_OF_CARDS_PER_HAND; i++) {
+        for (int i = 0; i < 5; i++) {
             for (Player p : players) {
-                // give them a card
-                p.addCard(iter.next());
+                draw(p);
 
                 if (Util.isDebugBuild()) {
                     Log.d(TAG, "p.addCard: player[" + p.getId() + "] has " + p.getNumCards() + " cards");
                 }
-
-                //remove the last card returned by iter.next()
-                iter.remove();
             }
         }
 
@@ -239,7 +158,7 @@ public class CrazyEightsTabletGame implements Game {
 
     /**
      * Get the discard pile
-     * 
+     *
      * @return the discard pile
      */
     public List<Card> getDiscardPile() {
@@ -273,20 +192,20 @@ public class CrazyEightsTabletGame implements Game {
      */
     @Override
     public Card draw(Player player) {
-        if (!iter.hasNext()) {
-            this.shuffleDiscardPile();
+        if (shuffledDeck.isEmpty()) {
+            shuffleDiscardPile();
         }
 
-        if (!iter.hasNext()) {
+        if (shuffledDeck.isEmpty()) {
             return null;
         }
 
         // Get a card out of the shuffled pile and add to the players hand
-        Card card = iter.next();
+        Card card = shuffledDeck.get(0);
         player.addCard(card);
 
         // Remove the last card returned by iter.next()
-        iter.remove();
+        shuffledDeck.remove(0);
 
         // Shuffle the deck if the player drew the last card
         if (shuffledDeck.isEmpty()) {
@@ -294,39 +213,6 @@ public class CrazyEightsTabletGame implements Game {
         }
 
         return card;
-    }
-
-    /* (non-Javadoc)
-     * @see com.worthwhilegames.cardgames.shared.Game#dropPlayer(java.lang.String)
-     */
-    @Override
-    public void dropPlayer(String playerMacAddress) {
-        if (Util.isDebugBuild()) {
-            Log.d(TAG, "dropPlayer: " + playerMacAddress);
-        }
-
-        Player p = null;
-
-        for (Player player : players) {
-            if (player.getId().equals(playerMacAddress)) {
-                p = player;
-                break;
-            }
-        }
-
-        if (gameActive) {
-            if (p != null) {
-                p.setIsComputer(true);
-                p.setComputerDifficulty(computerDifficulty);
-            } else {
-                if (Util.isDebugBuild()) {
-                    Log.d(TAG, "dropPlayer: couldn't find player with id: " + playerMacAddress);
-                }
-            }
-        } else {
-            // If the game hasn't been started yet, just remove them from the list
-            players.remove(p);
-        }
     }
 
     /* (non-Javadoc)
@@ -350,25 +236,6 @@ public class CrazyEightsTabletGame implements Game {
     }
 
     /* (non-Javadoc)
-     * @see com.worthwhilegames.cardgames.shared.Game#getMaxNumPlayers()
-     */
-    @Override
-    public int getMaxNumPlayers() {
-        if (players.isEmpty() || !gameActive) {
-            return C8Constants.MAX_NUM_PLAYERS;
-        } else {
-            int count = 0;
-            for (Player p : players) {
-                if (p.isDisconnected()) {
-                    count++;
-                }
-            }
-
-            return players.size() - count;
-        }
-    }
-
-    /* (non-Javadoc)
      * @see com.worthwhilegames.cardgames.shared.Game#addPlayer(com.worthwhilegames.cardgames.shared.Player)
      */
     @Override
@@ -382,6 +249,65 @@ public class CrazyEightsTabletGame implements Game {
     @Override
     public boolean isActive() {
         return gameActive;
+    }
+
+    @Override
+    public byte[] persist() {
+        JSONObject toRet = new JSONObject();
+
+        try {
+            JSONArray players = new JSONArray();
+            for (Player p : getPlayers()) {
+                players.put(p.toJSONObject());
+            }
+
+            toRet.put("players", players);
+
+            JSONArray shuffled = new JSONArray();
+            for (Card c : shuffledDeck) {
+                shuffled.put(c.toJSONObject());
+            }
+            toRet.put("shuffled", shuffled);
+
+            JSONArray discard = new JSONArray();
+            for (Card c : discardPile) {
+                discard.put(c.toJSONObject());
+            }
+            toRet.put("discard", discard);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return toRet.toString().getBytes();
+    }
+
+    @Override
+    public boolean load(byte[] state) {
+        String stringState = new String(state);
+
+        try {
+            JSONObject obj = new JSONObject(stringState);
+
+            JSONArray players = obj.getJSONArray("players");
+            for (int i = 0; i < players.length(); i++) {
+                addPlayer(new Player(players.getJSONObject(i)));
+            }
+
+            JSONArray shuffled = obj.getJSONArray("shuffled");
+            for (int i = 0; i < shuffled.length(); i++) {
+                shuffledDeck.add(new Card(shuffled.getJSONObject(i)));
+            }
+
+            JSONArray discard = obj.getJSONArray("discard");
+            for (int i = 0; i < discard.length(); i++) {
+                discardPile.add(new Card(discard.getJSONObject(i)));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     @Override

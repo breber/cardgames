@@ -2,9 +2,9 @@ apply plugin: 'android'
 apply plugin: 'android-test'
 
 dependencies {
-    compile 'com.google.android.gms:play-services:4.0.30'
+    compile 'com.google.android.gms:play-services:4.1.+'
+    compile 'com.jakewharton:butterknife:4.0.+'
 
-    compile files('libs/jmdns-3.4.1.jar')
     compile files('libs/libGoogleAnalyticsServices.jar')
 
     repositories {
@@ -17,10 +17,12 @@ dependencies {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19"
+    buildToolsVersion "19.0.0"
 
     defaultConfig {
-        minSdkVersion 8
+        minSdkVersion 11
         targetSdkVersion 19
+        versionCode 14
+        versionName "1.1.5"
     }
 }

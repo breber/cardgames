@@ -1,10 +1,10 @@
 package com.worthwhilegames.cardgames.crazyeights;
 
-import java.util.List;
-
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.Constants;
 import com.worthwhilegames.cardgames.shared.Rules;
+
+import java.util.List;
 
 /**
  * An implementation of the Rules interface
@@ -14,7 +14,7 @@ public class CrazyEightGameRules implements Rules {
 
     /**
      * This method will check to see if a play is valid
-     * 
+     *
      * @param cardPlayed the card which is trying to be discarded by a player
      * @param onDiscard the last card discarded in the game
      * @return true if the card played on the discard pile is valid else false

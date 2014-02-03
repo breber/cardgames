@@ -6,20 +6,12 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech.Engine;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.Button;
-import android.widget.ImageButton;
-
+import com.worthwhilegames.cardgames.GameActivity;
 import com.worthwhilegames.cardgames.R;
-import com.worthwhilegames.cardgames.gameboard.activities.ConnectActivity;
-import com.worthwhilegames.cardgames.player.activities.ShowCardsActivity;
 import com.worthwhilegames.cardgames.shared.AdActivity;
 import com.worthwhilegames.cardgames.shared.Constants;
-import com.worthwhilegames.cardgames.shared.GameFactory;
 import com.worthwhilegames.cardgames.shared.SoundManager;
-import com.worthwhilegames.cardgames.shared.Util;
-import com.worthwhilegames.cardgames.shared.connection.ConnectionServer;
 
 /**
  * The Main menu of the application
@@ -51,58 +43,23 @@ public class MainMenu extends AdActivity {
 
         // Set the listener for the Create Game button if it exists
         final Button create = (Button) findViewById(R.id.btCreate);
-        if (create != null) {
-            create.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Set that we are the gameboard
-                    Util.setIsGameboard(true);
-
-                    // Open the gameboard connect activity
-                    Intent playButtonClick = new Intent(MainMenu.this, ConnectActivity.class);
-                    startActivityForResult(playButtonClick, CONNECT_ACTIVITY);
-                }
-            });
-        }
+        create.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Open the gameboard connect activity
+                Intent playButtonClick = new Intent(MainMenu.this, GameActivity.class);
+                startActivityForResult(playButtonClick, CONNECT_ACTIVITY);
+            }
+        });
 
 
         Button play = (Button) findViewById(R.id.btJoin);
-        if (Util.isGoogleTv(this)) {
-            // If this is a Google TV, hide the Join Game button
-            play.setVisibility(View.GONE);
-
-            ViewGroup.MarginLayoutParams createParams = (MarginLayoutParams) create.getLayoutParams();
-            createParams.setMargins((int)getResources().getDimension(R.dimen.mainMenuLargeButtonPadding),
-                    (int) getResources().getDimension(R.dimen.mainMenuButtonSpacing),
-                    (int) getResources().getDimension(R.dimen.mainMenuLargeButtonPadding),
-                    (int) getResources().getDimension(R.dimen.mainMenuButtonSpacing));
-        } else {
-            // Set the listener for the Join Game button
-            play.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Set that we are NOT the gameboard
-                    Util.setIsGameboard(false);
-
-                    Intent playButtonClick = new Intent(MainMenu.this, ShowCardsActivity.class);
-                    startActivity(playButtonClick);
-                }
-            });
-        }
-
-        // Set the listener for the rules button
-        Button rules = (Button) findViewById(R.id.btRules);
-        rules.setOnClickListener(new OnClickListener() {
+        // Set the listener for the Join Game button
+        play.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Util.isDebugBuild() && create == null) {
-                    // Open the gameboard connect activity
-                    Intent playButtonClick = new Intent(MainMenu.this, ConnectActivity.class);
-                    startActivityForResult(playButtonClick, CONNECT_ACTIVITY);
-                } else {
-                    Intent ruleButtonClick = new Intent(MainMenu.this, RulesActivity.class);
-                    startActivity(ruleButtonClick);
-                }
+                Intent playButtonClick = new Intent(MainMenu.this, GameActivity.class);
+                startActivity(playButtonClick);
             }
         });
 
@@ -115,17 +72,6 @@ public class MainMenu extends AdActivity {
                 startActivity(aboutButtonClick);
             }
         });
-
-        // Set the listener for the preferences button
-        ImageButton preferences = (ImageButton) findViewById(R.id.titleSettingsButton);
-        preferences.setVisibility(View.VISIBLE);
-        preferences.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent preferencesButtonClick = new Intent(MainMenu.this, PreferencesActivity.class);
-                startActivity(preferencesButtonClick);
-            }
-        });
     }
 
     /*
@@ -135,13 +81,7 @@ public class MainMenu extends AdActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CONNECT_ACTIVITY) {
-            // Disconnect all users when we are back at the main menu
-            ConnectionServer.getInstance(this).disconnect();
-
-            // Clear the game
-            GameFactory.clearGameInstance(this);
-        } else if (requestCode == CHECK_TTS) {
+        if (requestCode == CHECK_TTS) {
             if (resultCode == Engine.CHECK_VOICE_DATA_PASS) {
                 // Indicate that we have TTS
                 SharedPreferences prefs = getSharedPreferences(Constants.PREFERENCES, 0);

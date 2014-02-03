@@ -6,11 +6,6 @@ package com.worthwhilegames.cardgames.crazyeights;
 public class C8Constants {
 
     /**
-     * The maximum number of players allowed
-     */
-    public static final int MAX_NUM_PLAYERS = 4;
-
-    /**
      * A constant for the number of cards per hand to be dealt
      */
     public static final int NUMBER_OF_CARDS_PER_HAND = 5;

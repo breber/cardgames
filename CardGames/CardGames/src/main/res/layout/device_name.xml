@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.worthwhilegames.cardgames.shared.TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ListViewFont"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:padding="5dp"
-    android:textSize="@dimen/listViewText" />

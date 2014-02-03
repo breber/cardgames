@@ -1,9 +1,11 @@
 package com.worthwhilegames.cardgames.shared;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONArray;
 
 /**
  * This class will be used to represent a player. Each player will have a list of cards, a name,
@@ -33,26 +35,6 @@ public class Player {
     private int position;
 
     /**
-     * A boolean to set whether or not this player is a computer
-     */
-    private boolean isComputer = false;
-
-    /**
-     * A variable to set the difficulty of the player if they are a computer
-     */
-    private String computerDifficulty = Constants.EASY;
-
-    /**
-     * Represents whether this player has a name yet
-     */
-    private boolean hasName = false;
-
-    /**
-     * Represents whether this player has been disconnected
-     */
-    private boolean isDisconnected = false;
-
-    /**
      * A default player constructor. A fields will be set with getters and setters
      */
     public Player() {
@@ -61,9 +43,24 @@ public class Player {
         this.id = null;
     }
 
+    public Player(JSONObject obj) {
+        try {
+            name = obj.getString("name");
+            id = obj.getString("id");
+            position = obj.getInt("position");
+
+            JSONArray arr = obj.getJSONArray("cards");
+            for (int i = 0; i < arr.length(); i++) {
+                cards.add(new Card(arr.getJSONObject(i)));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * A method to get a list of cards that a player currently has
-     * 
+     *
      * @return a list of card objects that a player has in their hand
      */
     public List<Card> getCards() {
@@ -72,7 +69,7 @@ public class Player {
 
     /**
      * A method to get the number of cards that a player has
-     * 
+     *
      * @return an integer representing the number of cards in a players hand
      */
     public int getNumCards() {
@@ -81,7 +78,7 @@ public class Player {
 
     /**
      * A method to add a card to a players hand
-     * 
+     *
      * @param card the card to be added to the list of cards a player has
      */
     public void addCard(Card card) {
@@ -89,54 +86,10 @@ public class Player {
     }
 
     /**
-     * A method to get a players computer status
-     * 
-     * @return true if the current player is a computer, false otherwise
-     */
-    public boolean getIsComputer() {
-        return this.isComputer;
-    }
-
-    /**
-     * A method to set if a player is a computer or not
-     * 
-     * @param isComp true if the player is a computer, false otherwise
-     */
-    public void setIsComputer(boolean isComp) {
-        isComputer = isComp;
-
-        if (isComputer) {
-            isDisconnected = false;
-        }
-
-        // TODO: we might want to set a name for the computer if we
-        //         previously cleared it...
-    }
-
-    /**
-     * A method to get the difficulty of a computer player
-     * 
-     * @return an String representing easy, medium or hard
-     */
-    public String getComputerDifficulty() {
-        return computerDifficulty;
-    }
-
-    /**
-     * A method to set the difficulty of a computer player
-     * 
-     * @param dif an String representing easy, medium or hard
-     */
-    public void setComputerDifficulty(String dif) {
-        computerDifficulty = dif;
-    }
-
-    /**
      * This method will remove a card from a players hand by object matching
      * using a loop that checks every card in the players hand
-     * 
-     * @param card
-     *            the card to be removed from the players hand
+     *
+     * @param card the card to be removed from the players hand
      */
     public void removeCard(Card card) {
         for (Card c : cards) {
@@ -149,7 +102,7 @@ public class Player {
 
     /**
      * A method to return the name of a player
-     * 
+     *
      * @return a string representing the name of the player
      */
     public String getName() {
@@ -158,17 +111,16 @@ public class Player {
 
     /**
      * A method to set the name of a player object
-     * 
+     *
      * @param name the new name of the player
      */
     public void setName(String name) {
         this.name = name;
-        hasName = true;
     }
 
     /**
      * This method will return the MAC Address of a player
-     * 
+     *
      * @return a string representing the MAC Address of a player
      */
     public String getId() {
@@ -177,18 +129,16 @@ public class Player {
 
     /**
      * This method will set the id of a player
-     * 
+     *
      * @param id a string representing the new ID of a player
      */
     public void setId(String id) {
         this.id = id;
-        isDisconnected = false;
-        isComputer = false;
     }
 
     /**
      * This method will get the current position of the player based on the game board
-     * 
+     *
      * @return an integer to represent the player's location on the game board
      */
     public int getPosition() {
@@ -197,7 +147,7 @@ public class Player {
 
     /**
      * This method will set the position of the player on the game board
-     * 
+     *
      * @param position an integer representing the new player position
      */
     public void setPosition(int position) {
@@ -205,48 +155,36 @@ public class Player {
     }
 
     /**
-     * @return the hasName
-     */
-    public boolean hasName() {
-        return hasName;
-    }
-
-    /**
-     * @param hasName the hasName to set
-     */
-    public void clearName() {
-        hasName = false;
-    }
-
-    /**
-     * @return the isDisconnected
-     */
-    public boolean isDisconnected() {
-        return isDisconnected;
-    }
-
-    /**
-     * @param isDisconnected the isDisconnected to set
-     */
-    public void setDisconnected(boolean isDisconnected) {
-        this.isDisconnected = isDisconnected;
-    }
-
-    /**
      * This toString() method will override the default toString() method. This
      * will return a JSON object that is in the form of a string which will be
      * easy for decoding
-     * 
+     *
      * @return a string representation of a player object
      */
     @Override
     public String toString() {
-        // Encode the cards into a JSONArray
-        JSONArray arr = new JSONArray();
-        for (Card c : cards) {
-            arr.put(c.toJSONObject());
+        return toJSONObject().toString();
+    }
+
+    public JSONObject toJSONObject() {
+        JSONObject toRet = new JSONObject();
+
+        try {
+            toRet.put("name", getName());
+            toRet.put("id", getId());
+            toRet.put("position", getPosition());
+
+            // Encode the cards into a JSONArray
+            JSONArray arr = new JSONArray();
+            for (Card c : cards) {
+                arr.put(c.toJSONObject());
+            }
+
+            toRet.put("cards", arr);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
-        return arr.toString();
+        return toRet;
     }
 }

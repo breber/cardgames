@@ -23,10 +23,10 @@
 
         <com.worthwhilegames.cardgames.shared.Button
             android:id="@+id/btMainMenu"
-            style="@style/MainMenuSmallerButton"
+            style="@style/MainMenuButton"
             android:layout_marginBottom="@dimen/mainMenuButtonSpacing"
-            android:layout_marginLeft="@dimen/mainMenuSmallButtonPadding"
-            android:layout_marginRight="@dimen/mainMenuSmallButtonPadding"
+            android:layout_marginLeft="@dimen/mainMenuButtonPadding"
+            android:layout_marginRight="@dimen/mainMenuButtonPadding"
             android:text="@string/main_menu" />
     </LinearLayout>
 

@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/wooden_top"
     android:keepScreenOn="true"
     android:orientation="horizontal" >
@@ -202,7 +202,7 @@
         <ImageView
             android:id="@+id/cardPosition4"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:paddingRight="10dip"
             android:src="@drawable/back_blue_1"
@@ -221,7 +221,7 @@
         <ImageView
             android:id="@+id/cardPosition3"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:src="@drawable/back_blue_1"
             tools:ignore="ContentDescription" />
@@ -229,7 +229,7 @@
         <ImageView
             android:id="@+id/cardPosition1"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:paddingTop="10dip"
             android:src="@drawable/back_blue_1"
@@ -248,7 +248,7 @@
         <ImageView
             android:id="@+id/cardPosition2"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:paddingLeft="10dip"
             android:src="@drawable/back_blue_1"

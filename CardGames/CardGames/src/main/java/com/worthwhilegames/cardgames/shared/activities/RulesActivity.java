@@ -5,7 +5,7 @@ import android.widget.TextView;
 
 import com.worthwhilegames.cardgames.R;
 import com.worthwhilegames.cardgames.shared.AdActivity;
-import com.worthwhilegames.cardgames.shared.GameFactory;
+//import com.worthwhilegames.cardgames.shared.GameFactory;
 
 /**
  * This activity will display the Game Rules
@@ -27,7 +27,8 @@ public class RulesActivity extends AdActivity {
         // Update the body text to the Rules
         TextView body = (TextView) findViewById(R.id.informationBody);
 
+        // TODO: fix this
         // Set the rules based on the Game type
-        body.setText(GameFactory.getGameRulesText(this));
+//        body.setText(GameFactory.getGameRulesText(this));
     }
 }

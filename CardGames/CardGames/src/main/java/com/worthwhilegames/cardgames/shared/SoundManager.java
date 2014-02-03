@@ -1,10 +1,5 @@
 package com.worthwhilegames.cardgames.shared;
 
-import static com.worthwhilegames.cardgames.shared.Constants.PREF_LANGUAGE;
-
-import java.util.Locale;
-import java.util.Random;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
@@ -14,11 +9,15 @@ import android.media.SoundPool;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
-
 import com.worthwhilegames.cardgames.R;
 
+import java.util.Locale;
+import java.util.Random;
+
+import static com.worthwhilegames.cardgames.shared.Constants.PREF_LANGUAGE;
+
 /**
- * This class is used to control the all of the sound in the game. It has
+ * This class is used to control the all of the sound in the join_game. It has
  * several methods for playing specific sounds and for using the Text To Speech
  * feature of android
  */
@@ -102,7 +101,7 @@ public class SoundManager {
 
     /**
      * Get an instance of the SoundManager
-     * 
+     *
      * @param ctx
      * @return
      */
@@ -117,7 +116,7 @@ public class SoundManager {
     /**
      * this will initialize the SoundManager by initializing all the sound FX
      * and the TTS object and obtaining user sound preferences
-     * 
+     *
      * @param context The context of the class to use the SoundManager
      */
     private SoundManager(Context context) {
@@ -245,7 +244,7 @@ public class SoundManager {
 
     /**
      * This function will tell a player to pick it up
-     * 
+     *
      * @param name the name of the player
      */
     public void sayTurn(String name) {
@@ -256,7 +255,7 @@ public class SoundManager {
 
     /**
      * This function will tell a dealer if they are going to pick it up
-     * 
+     *
      * @param name the name of the player
      */
     public void sayPickItUp(String name) {
@@ -268,7 +267,7 @@ public class SoundManager {
 
     /**
      * This function will tell a player it is their turn to bet
-     * 
+     *
      * @param name the name of the player
      */
     public void sayBet(String name) {

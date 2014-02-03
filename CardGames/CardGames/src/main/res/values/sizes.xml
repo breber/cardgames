@@ -4,10 +4,8 @@
     <dimen name="titleFont">40sp</dimen>
     <dimen name="titlePaddingTopBottom">10dip</dimen>
     <dimen name="popupTitle">35sp</dimen>
-    <dimen name="mainMenuSmallButtonText">30sp</dimen>
-    <dimen name="mainMenuLargeButtonText">35sp</dimen>
-    <dimen name="mainMenuSmallButtonPadding">35dip</dimen>
-    <dimen name="mainMenuLargeButtonPadding">15dip</dimen>
+    <dimen name="mainMenuButtonText">30sp</dimen>
+    <dimen name="mainMenuButtonPadding">15dip</dimen>
     <dimen name="mainMenuButtonSpacing">8dip</dimen>
     <dimen name="buttonTextSize">45sp</dimen>
     <dimen name="listViewText">20sp</dimen>

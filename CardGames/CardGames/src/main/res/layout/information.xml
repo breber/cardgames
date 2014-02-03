@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/title_ref"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         layout="@layout/title_bar" />
 

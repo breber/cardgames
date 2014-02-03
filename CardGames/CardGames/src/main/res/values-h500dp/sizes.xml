@@ -3,10 +3,8 @@
 
     <dimen name="titleFont">70sp</dimen>
     <dimen name="titlePaddingTopBottom">20dip</dimen>
-    <dimen name="mainMenuSmallButtonText">30sp</dimen>
-    <dimen name="mainMenuLargeButtonText">35sp</dimen>
-    <dimen name="mainMenuSmallButtonPadding">105dip</dimen>
-    <dimen name="mainMenuLargeButtonPadding">75dip</dimen>
+    <dimen name="mainMenuButtonText">30sp</dimen>
+    <dimen name="mainMenuButtonPadding">75dip</dimen>
     <dimen name="mainMenuButtonSpacing">15dip</dimen>
     <dimen name="popupMarginLeftRight">100dip</dimen>
     <dimen name="settingsIconSize">55dip</dimen>

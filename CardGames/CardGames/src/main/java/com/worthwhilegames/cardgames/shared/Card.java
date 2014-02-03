@@ -1,13 +1,8 @@
 package com.worthwhilegames.cardgames.shared;
 
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_CARD_ID;
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_SUIT;
-import static com.worthwhilegames.cardgames.shared.Constants.KEY_VALUE;
-
+import com.worthwhilegames.cardgames.R;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.worthwhilegames.cardgames.R;
 
 /**
  * This class will be used to represent a card. Each card will have four different fields
@@ -31,6 +26,21 @@ public class Card implements Comparable<Card> {
     private int idNum;
 
     /**
+     * this is a JSON key for the suit of a card
+     */
+    public static final String KEY_SUIT = "suit";
+
+    /**
+     * this is a JSON key for the value of a card
+     */
+    public static final String KEY_VALUE = "value";
+
+    /**
+     * this is a JSON key for a card id
+     */
+    public static final String KEY_CARD_ID = "id";
+
+    /**
      * This constructor will create and make an invalid card
      */
     public Card() {
@@ -43,10 +53,9 @@ public class Card implements Comparable<Card> {
      * This constructor will create and make a card object based upon the given
      * parameters. The suit, value and resource id all must match and follow a pattern
      * based upon the standard deck.
-     * 
+     *
      * @param suit the suit of the new card object
      * @param value the value of the card--0-12 based on number
-     * @param resourceId the id of the card image to be used with the card
      * @param idNum the id number representing the card 0-53
      */
     public Card(int suit, int value, int idNum) {
@@ -57,7 +66,7 @@ public class Card implements Comparable<Card> {
 
     /**
      * Copy Constructor
-     * 
+     *
      * @param c
      */
     public Card(Card c) {
@@ -66,9 +75,19 @@ public class Card implements Comparable<Card> {
         this.idNum = c.idNum;
     }
 
+    public Card(JSONObject obj) {
+        try {
+            suit = obj.getInt(KEY_SUIT);
+            value = obj.getInt(KEY_VALUE);
+            idNum = obj.getInt(KEY_CARD_ID);
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     /**
      * This method will return the suit of a card object
-     * 
+     *
      * @return and integer representing the suit of the card
      */
     public int getSuit() {
@@ -77,7 +96,7 @@ public class Card implements Comparable<Card> {
 
     /**
      * This method will set the suit of a given card
-     * 
+     *
      * @param suit the new suit of the card
      */
     public void setSuit(int suit) {
@@ -86,7 +105,7 @@ public class Card implements Comparable<Card> {
 
     /**
      * This method will return the value of the card object
-     * 
+     *
      * @return an integer value representing the card object
      */
     public int getValue() {
@@ -95,7 +114,7 @@ public class Card implements Comparable<Card> {
 
     /**
      * This method will set the value of the card object
-     * 
+     *
      * @param value an integer representing the new value of the card
      */
     public void setValue(int value) {
@@ -104,7 +123,7 @@ public class Card implements Comparable<Card> {
 
     /**
      * This method will return the resource id of a card object
-     * 
+     *
      * @return an integer representing the resource id of a card object
      */
     public int getResourceId() {
@@ -223,7 +242,7 @@ public class Card implements Comparable<Card> {
 
     /**
      * This method will return the id number of a card object
-     * 
+     *
      * @return an integer representing the id number of a card
      */
     public int getIdNum() {
@@ -232,7 +251,7 @@ public class Card implements Comparable<Card> {
 
     /**
      * This method will set the id number of a card object
-     * 
+     *
      * @param idNum an integer representing the new id number of the card
      */
     public void setIdNum(int idNum) {
@@ -241,7 +260,7 @@ public class Card implements Comparable<Card> {
 
     /**
      * Generate a JSONObject based on the necessary fields of this class.
-     * 
+     *
      * @return a JSONObject representation of this instance
      */
     public JSONObject toJSONObject() {
@@ -261,7 +280,7 @@ public class Card implements Comparable<Card> {
 
     /**
      * This is a custom toString method for the transferring of card data
-     * 
+     *
      * @return a JSON string representation of the card including suit, value, resourceId, idNum
      */
     @Override
