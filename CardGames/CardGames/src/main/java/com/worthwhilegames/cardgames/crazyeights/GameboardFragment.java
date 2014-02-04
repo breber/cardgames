@@ -111,7 +111,7 @@ public class GameboardFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.gameboard, container, false);
-        initUIElements();
+        initUIElements(v);
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.PREFERENCES, 0);
 
@@ -132,29 +132,29 @@ public class GameboardFragment extends Fragment {
     /**
      * Set up all the references to UI elements
      */
-    private void initUIElements() {
+    private void initUIElements(View view) {
         // Get references to commonly used UI elements
-        playerTextViews[0] = (TextView) findViewById(R.id.player1text);
-        playerTextViews[1] = (TextView) findViewById(R.id.player2text);
-        playerTextViews[2] = (TextView) findViewById(R.id.player3text);
-        playerTextViews[3] = (TextView) findViewById(R.id.player4text);
+        playerTextViews[0] = (TextView) view.findViewById(R.id.player1text);
+        playerTextViews[1] = (TextView) view.findViewById(R.id.player2text);
+        playerTextViews[2] = (TextView) view.findViewById(R.id.player3text);
+        playerTextViews[3] = (TextView) view.findViewById(R.id.player4text);
 
-        playerLinearLayouts[0] = (LinearLayout) findViewById(R.id.player1ll);
-        playerLinearLayouts[1] = (LinearLayout) findViewById(R.id.player2ll);
-        playerLinearLayouts[2] = (LinearLayout) findViewById(R.id.player3ll);
-        playerLinearLayouts[3] = (LinearLayout) findViewById(R.id.player4ll);
+        playerLinearLayouts[0] = (LinearLayout) view.findViewById(R.id.player1ll);
+        playerLinearLayouts[1] = (LinearLayout) view.findViewById(R.id.player2ll);
+        playerLinearLayouts[2] = (LinearLayout) view.findViewById(R.id.player3ll);
+        playerLinearLayouts[3] = (LinearLayout) view.findViewById(R.id.player4ll);
 
-        playerRemainingCards[0] = (TextView) findViewById(R.id.player1RemainingCount);
-        playerRemainingCards[1] = (TextView) findViewById(R.id.player2RemainingCount);
-        playerRemainingCards[2] = (TextView) findViewById(R.id.player3RemainingCount);
-        playerRemainingCards[3] = (TextView) findViewById(R.id.player4RemainingCount);
+        playerRemainingCards[0] = (TextView) view.findViewById(R.id.player1RemainingCount);
+        playerRemainingCards[1] = (TextView) view.findViewById(R.id.player2RemainingCount);
+        playerRemainingCards[2] = (TextView) view.findViewById(R.id.player3RemainingCount);
+        playerRemainingCards[3] = (TextView) view.findViewById(R.id.player4RemainingCount);
 
-        centerCards[0] = (ImageView) findViewById(R.id.cardPosition1);
-        centerCards[1] = (ImageView) findViewById(R.id.cardPosition2);
-        centerCards[2] = (ImageView) findViewById(R.id.cardPosition3);
-        centerCards[3] = (ImageView) findViewById(R.id.cardPosition4);
+        centerCards[0] = (ImageView) view.findViewById(R.id.cardPosition1);
+        centerCards[1] = (ImageView) view.findViewById(R.id.cardPosition2);
+        centerCards[2] = (ImageView) view.findViewById(R.id.cardPosition3);
+        centerCards[3] = (ImageView) view.findViewById(R.id.cardPosition4);
 
-        suitView = (ImageView) findViewById(R.id.gameboard_suit);
+        suitView = (ImageView) view.findViewById(R.id.gameboard_suit);
 
         // Set up the scale factors for the card images
         int screenHeight = getResources().getDisplayMetrics().heightPixels;

@@ -10,7 +10,6 @@ import android.widget.Toast;
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.Participant;
-import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.turnbased.LoadMatchesResponse;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatch;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatchConfig;
@@ -31,19 +30,24 @@ import java.util.ArrayList;
 public class GameActivity extends BaseGameActivity implements
         TurnBasedMultiplayerListener, PlayerHandFragment.GameUpdatedListener {
 
+    public static String CREATE_GAME_EXTRA = "CREATEGAME";
+
     public static final String TAG = GameActivity.class.getSimpleName();
 
     private GameboardFragment mGameboardFragment;
     private PlayerHandFragment mPlayerHandFragment;
 
-    // This is the current match we're in; null if not loaded
-    public TurnBasedMatch mMatch;
-
+    private TurnBasedMatch mMatch;
     private String mParticipantId;
     private boolean mIsDoingTurn = false;
 
+    private boolean mCreateGame = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent i = getIntent();
+        mCreateGame = i.getBooleanExtra(CREATE_GAME_EXTRA, false);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
 
@@ -54,7 +58,7 @@ public class GameActivity extends BaseGameActivity implements
         mGameboardFragment = new GameboardFragment();
         mPlayerHandFragment = new PlayerHandFragment();
 
-        switchToPlayerHand();
+        switchToGameboard();
     }
 
     private void switchToPlayerHand() {
@@ -74,7 +78,7 @@ public class GameActivity extends BaseGameActivity implements
     @Override
     public void onSignInFailed() {
         Toast.makeText(this, "Signin failed", Toast.LENGTH_SHORT).show();
-//        finish();
+        finish();
     }
 
     // TODO: look through this
@@ -85,51 +89,33 @@ public class GameActivity extends BaseGameActivity implements
 
     @Override
     public void onSignInSucceeded() {
-        if (mHelper.getTurnBasedMatch() != null) {
-            // GameHelper will cache any connection hint it gets. In this case,
-            // it can cache a TurnBasedMatch that it got from choosing a turn-based
-            // game notification. If that's the case, you should go straight into
-            // the game.
-//            updateMatch(mHelper.getTurnBasedMatch());
-            return;
+        if (mCreateGame) {
+            Intent intent = getGamesClient().getSelectPlayersIntent(1, 4, true);
+            startActivityForResult(intent, RC_SELECT_PLAYERS);
+        } else {
+            Intent intent = getGamesClient().getMatchInboxIntent();
+            startActivityForResult(intent, RC_LOOK_AT_MATCHES);
         }
 
-        switchToPlayerHand();
-
-        // As a demonstration, we are registering this activity as a handler for
-        // invitation and match events.
-
-        // This is *NOT* required; if you do not register a handler for
-        // invitation events, you will get standard notifications instead.
-        // Standard notifications may be preferable behavior in many cases.
-        getGamesClient().registerInvitationListener(this);
-
-        // Likewise, we are registering the optional MatchUpdateListener, which
-        // will replace notifications you would get otherwise. You do *NOT* have
-        // to register a MatchUpdateListener.
-        getGamesClient().registerMatchUpdateListener(this);
+        switchToGameboard();
     }
 
     @Override
     public void onActivityResult(int request, int response, Intent data) {
-        // It's VERY IMPORTANT for you to remember to call your superclass.
-        // BaseGameActivity will not work otherwise.
         super.onActivityResult(request, response, data);
 
         if (request == RC_LOOK_AT_MATCHES) {
-            // Returning from the 'Select Match' dialog
-
             if (response != Activity.RESULT_OK) {
                 // user canceled
+                finish();
                 return;
             }
 
-            TurnBasedMatch match = data
-                    .getParcelableExtra(GamesClient.EXTRA_TURN_BASED_MATCH);
+            TurnBasedMatch match = data.getParcelableExtra(GamesClient.EXTRA_TURN_BASED_MATCH);
 
-//            if (match != null) {
-//                updateMatch(match);
-//            }
+            if (match != null) {
+                onTurnBasedMatchUpdated(GamesClient.STATUS_OK, match);
+            }
 
             Log.d(TAG, "Match = " + match);
         } else if (request == RC_SELECT_PLAYERS) {
@@ -137,6 +123,7 @@ public class GameActivity extends BaseGameActivity implements
 
             if (response != Activity.RESULT_OK) {
                 // user canceled
+                finish();
                 return;
             }
 
@@ -144,26 +131,9 @@ public class GameActivity extends BaseGameActivity implements
             final ArrayList<String> invitees = data
                     .getStringArrayListExtra(GamesClient.EXTRA_PLAYERS);
 
-            // get automatch criteria
-            Bundle autoMatchCriteria = null;
-
-            int minAutoMatchPlayers = data.getIntExtra(
-                    GamesClient.EXTRA_MIN_AUTOMATCH_PLAYERS, 0);
-            int maxAutoMatchPlayers = data.getIntExtra(
-                    GamesClient.EXTRA_MAX_AUTOMATCH_PLAYERS, 0);
-
-            if (minAutoMatchPlayers > 0) {
-                autoMatchCriteria = RoomConfig.createAutoMatchCriteria(
-                        minAutoMatchPlayers, maxAutoMatchPlayers, 0);
-            } else {
-                autoMatchCriteria = null;
-            }
-
             TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
-                    .addInvitedPlayers(invitees)
-                    .setAutoMatchCriteria(autoMatchCriteria).build();
+                    .addInvitedPlayers(invitees).build();
 
-            // Kick the match off
             getGamesClient().createTurnBasedMatch(this, tbmc);
         }
     }
@@ -202,15 +172,15 @@ public class GameActivity extends BaseGameActivity implements
 
     @Override
     public void onTurnBasedMatchInitiated(int i, TurnBasedMatch turnBasedMatch) {
-        mMatch = turnBasedMatch;
-        mParticipantId = mMatch.getParticipantId(getGamesClient().getCurrentPlayerId());
+        Toast.makeText(this, "A match was initiated.", Toast.LENGTH_SHORT).show();
+        mParticipantId = turnBasedMatch.getParticipantId(getGamesClient().getCurrentPlayerId());
 
         // If we are the creator, set up the game state
-        if (mParticipantId == mMatch.getCreatorId()) {
+        if (mParticipantId.equals(turnBasedMatch.getCreatorId())) {
             // TODO: euchre
             Game game = new CrazyEightsGame();
             int j = 0;
-            for (Participant p : mMatch.getParticipants()) {
+            for (Participant p : turnBasedMatch.getParticipants()) {
                 Player player = new Player();
                 player.setId(p.getParticipantId());
                 player.setName(p.getDisplayName());
@@ -221,42 +191,43 @@ public class GameActivity extends BaseGameActivity implements
 
             game.setup();
 
-            mGameboardFragment.updateUi(game);
-
-            getGamesClient().takeTurn(this, mMatch.getMatchId(), game.persist(), mParticipantId);
+            getGamesClient().takeTurn(this, turnBasedMatch.getMatchId(), game.persist(), mParticipantId);
         }
 
-        mPlayerHandFragment.setCurrentPlayerId(mParticipantId);;
+        mPlayerHandFragment.setCurrentPlayerId(mParticipantId);
+
+        onTurnBasedMatchUpdated(GamesClient.STATUS_OK, turnBasedMatch);
     }
 
     @Override
     public void onTurnBasedMatchLeft(int i, TurnBasedMatch turnBasedMatch) {
-
+        Toast.makeText(this, "A match was left.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onTurnBasedMatchUpdated(int i, TurnBasedMatch turnBasedMatch) {
+        Toast.makeText(this, "A match was updated.", Toast.LENGTH_SHORT).show();
         if (!checkStatusCode(turnBasedMatch, i)) {
             return;
         }
 
-        mIsDoingTurn = (mMatch.getTurnStatus() == TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN);
+        mIsDoingTurn = (turnBasedMatch.getTurnStatus() == TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN);
 
         // TODO: euchre
         Game game = new CrazyEightsGame();
         game.load(turnBasedMatch.getData());
         if (mIsDoingTurn) {
-            mPlayerHandFragment.updateGame(game);
             switchToPlayerHand();
+            mPlayerHandFragment.updateGame(game);
         } else {
-            mGameboardFragment.updateUi(game);
             switchToGameboard();
+            mGameboardFragment.updateUi(game);
         }
     }
 
     @Override
     public void onTurnBasedMatchesLoaded(int i, LoadMatchesResponse loadMatchesResponse) {
-
+        Toast.makeText(this, "A match was loaded.", Toast.LENGTH_SHORT).show();
     }
 
     public void showErrorMessage(TurnBasedMatch match, int statusCode,
@@ -266,6 +237,7 @@ public class GameActivity extends BaseGameActivity implements
     }
 
     private boolean checkStatusCode(TurnBasedMatch match, int statusCode) {
+        mMatch = match;
         switch (statusCode) {
             case GamesClient.STATUS_OK:
                 return true;

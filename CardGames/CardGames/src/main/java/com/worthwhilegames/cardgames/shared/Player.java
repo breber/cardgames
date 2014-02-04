@@ -49,6 +49,7 @@ public class Player {
             id = obj.getString("id");
             position = obj.getInt("position");
 
+            cards = new ArrayList<Card>();
             JSONArray arr = obj.getJSONArray("cards");
             for (int i = 0; i < arr.length(); i++) {
                 cards.add(new Card(arr.getJSONObject(i)));

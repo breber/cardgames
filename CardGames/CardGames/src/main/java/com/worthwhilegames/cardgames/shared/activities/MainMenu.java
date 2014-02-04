@@ -48,6 +48,7 @@ public class MainMenu extends AdActivity {
             public void onClick(View v) {
                 // Open the gameboard connect activity
                 Intent playButtonClick = new Intent(MainMenu.this, GameActivity.class);
+                playButtonClick.putExtra(GameActivity.CREATE_GAME_EXTRA, true);
                 startActivityForResult(playButtonClick, CONNECT_ACTIVITY);
             }
         });
@@ -59,6 +60,7 @@ public class MainMenu extends AdActivity {
             @Override
             public void onClick(View v) {
                 Intent playButtonClick = new Intent(MainMenu.this, GameActivity.class);
+                playButtonClick.putExtra(GameActivity.CREATE_GAME_EXTRA, false);
                 startActivity(playButtonClick);
             }
         });
