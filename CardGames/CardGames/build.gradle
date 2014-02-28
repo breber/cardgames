@@ -2,7 +2,7 @@ apply plugin: 'android'
 apply plugin: 'android-test'
 
 dependencies {
-    compile 'com.google.android.gms:play-services:4.1.+'
+    compile 'com.google.android.gms:play-services:4.2.+'
     compile 'com.jakewharton:butterknife:4.0.+'
 
     compile files('libs/libGoogleAnalyticsServices.jar')

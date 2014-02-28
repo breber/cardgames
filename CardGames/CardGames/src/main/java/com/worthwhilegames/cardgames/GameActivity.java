@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.Participant;
@@ -90,10 +91,10 @@ public class GameActivity extends BaseGameActivity implements
     @Override
     public void onSignInSucceeded() {
         if (mCreateGame) {
-            Intent intent = getGamesClient().getSelectPlayersIntent(1, 4, true);
+            Intent intent = Games.TurnBasedMultiplayer.getSelectOpponentsIntent(getApiClient(), 1, 4, true);
             startActivityForResult(intent, RC_SELECT_PLAYERS);
         } else {
-            Intent intent = getGamesClient().getMatchInboxIntent();
+            Intent intent = Games.TurnBasedMultiplayer.getInboxIntent(getApiClient());
             startActivityForResult(intent, RC_LOOK_AT_MATCHES);
         }
 
@@ -134,7 +135,7 @@ public class GameActivity extends BaseGameActivity implements
             TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
                     .addInvitedPlayers(invitees).build();
 
-            getGamesClient().createTurnBasedMatch(this, tbmc);
+            Games.TurnBasedMultiplayer.createMatch(getApiClient(), tbmc);
         }
     }
 
@@ -173,7 +174,7 @@ public class GameActivity extends BaseGameActivity implements
     @Override
     public void onTurnBasedMatchInitiated(int i, TurnBasedMatch turnBasedMatch) {
         Toast.makeText(this, "A match was initiated.", Toast.LENGTH_SHORT).show();
-        mParticipantId = turnBasedMatch.getParticipantId(getGamesClient().getCurrentPlayerId());
+        mParticipantId = turnBasedMatch.getParticipantId(Games.Players.getCurrentPlayerId(getApiClient()));
 
         // If we are the creator, set up the game state
         if (mParticipantId.equals(turnBasedMatch.getCreatorId())) {
@@ -191,7 +192,7 @@ public class GameActivity extends BaseGameActivity implements
 
             game.setup();
 
-            getGamesClient().takeTurn(this, turnBasedMatch.getMatchId(), game.persist(), mParticipantId);
+            Games.TurnBasedMultiplayer.takeTurn(getApiClient(), turnBasedMatch.getMatchId(), game.persist(), mParticipantId);
         }
 
         mPlayerHandFragment.setCurrentPlayerId(mParticipantId);
@@ -299,6 +300,6 @@ public class GameActivity extends BaseGameActivity implements
             nextPlayer = 0;
         }
 
-        getGamesClient().takeTurn(this, mMatch.getMatchId(), game.persist(), mMatch.getParticipants().get(nextPlayer).getParticipantId());
+        Games.TurnBasedMultiplayer.takeTurn(getApiClient(), mMatch.getMatchId(), game.persist(), mMatch.getParticipants().get(nextPlayer).getParticipantId());
     }
 }
