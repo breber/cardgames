@@ -98,6 +98,8 @@ public class GameActivity extends BaseGameActivity implements
             startActivityForResult(intent, RC_LOOK_AT_MATCHES);
         }
 
+        Games.TurnBasedMultiplayer.registerMatchUpdateListener(getApiClient(), this);
+
         switchToGameboard();
     }
 

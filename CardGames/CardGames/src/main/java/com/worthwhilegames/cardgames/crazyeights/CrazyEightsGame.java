@@ -283,6 +283,10 @@ public class CrazyEightsGame implements Game {
 
     @Override
     public boolean load(byte[] state) {
+        if (state == null) {
+            return false;
+        }
+
         String stringState = new String(state);
 
         try {
