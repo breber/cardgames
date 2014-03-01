@@ -42,7 +42,11 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.CardGames" />
-
+        <activity
+            android:name=".player.activities.SelectSuitActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.CardGames.Dialog" />
         <meta-data
             android:name="com.google.android.gms.games.APP_ID"
             android:value="@string/app_id" />

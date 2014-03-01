@@ -34,6 +34,8 @@ public class PlayerHandFragment extends Fragment {
         void gameUpdated(Game game);
     }
 
+    private GameUpdatedListener mDelegate;
+
     /**
      * intent code for choosing suit
      */
@@ -59,6 +61,10 @@ public class PlayerHandFragment extends Fragment {
      */
     private View mButtonView;
 
+    public PlayerHandFragment(GameUpdatedListener delegate) {
+        mDelegate = delegate;
+    }
+
     /**
      * The LinearLayout holding all card images
      */
@@ -83,8 +89,7 @@ public class PlayerHandFragment extends Fragment {
             Button play = (Button) mButtonView.findViewById(R.id.btPlayCard);
             Button draw = (Button) mButtonView.findViewById(R.id.btDrawCard);
             play.setOnClickListener(playClickListener);
-            // TODO: fix this
-//            draw.setOnClickListener(drawClickListener);
+            draw.setOnClickListener(drawClickListener);
         }
 
         updateGame(mGame);
@@ -133,6 +138,9 @@ public class PlayerHandFragment extends Fragment {
 
             mPlayerHandLayout.addView(toAdd, params);
         }
+
+        mCardSelected = null;
+        setButtonsEnabled(mGame.isMyTurn());
     }
 
     /**
@@ -148,18 +156,30 @@ public class PlayerHandFragment extends Fragment {
                 // play card
                 if (mCardSelected.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
                     Intent selectSuit = new Intent(getActivity(), SelectSuitActivity.class);
-                    getActivity().startActivityForResult(selectSuit, CHOOSE_SUIT);
+                    startActivityForResult(selectSuit, CHOOSE_SUIT);
                     // go to the onActivityResult to finish this turn
                 } else {
                     // Discard the card
                     mGame.discard(mGame.getSelf(), mCardSelected);
-                    updateGame(mGame);
-
-                    mCardSelected = null;
-                    setButtonsEnabled(false);
 
                     // Call game update on the parent
-                    ((GameUpdatedListener)getActivity()).gameUpdated(mGame);
+                    if (mDelegate != null) {
+                        mDelegate.gameUpdated(mGame);
+                    }
+                }
+            }
+        }
+    };
+
+    private View.OnClickListener drawClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mGame.isMyTurn()) {
+                mGame.draw(mGame.getSelf());
+
+                // Call game update on the parent
+                if (mDelegate != null) {
+                    mDelegate.gameUpdated(mGame);
                 }
             }
         }
@@ -171,20 +191,20 @@ public class PlayerHandFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CHOOSE_SUIT) {
-            CrazyEightsGame g8Game = (CrazyEightsGame) mGame;
+            CrazyEightsGame c8Game = (CrazyEightsGame) mGame;
             boolean isSuitChosen = true;
             switch (resultCode) {
                 case Constants.SUIT_CLUBS:
-                    g8Game.discard(mGame.getSelf(), mCardSelected, C8Constants.PLAY_EIGHT_C);
+                    c8Game.discard(mGame.getSelf(), mCardSelected, C8Constants.PLAY_EIGHT_C);
                     break;
                 case Constants.SUIT_DIAMONDS:
-                    g8Game.discard(mGame.getSelf(), mCardSelected, C8Constants.PLAY_EIGHT_D);
+                    c8Game.discard(mGame.getSelf(), mCardSelected, C8Constants.PLAY_EIGHT_D);
                     break;
                 case Constants.SUIT_HEARTS:
-                    g8Game.discard(mGame.getSelf(), mCardSelected, C8Constants.PLAY_EIGHT_H);
+                    c8Game.discard(mGame.getSelf(), mCardSelected, C8Constants.PLAY_EIGHT_H);
                     break;
                 case Constants.SUIT_SPADES:
-                    g8Game.discard(mGame.getSelf(), mCardSelected, C8Constants.PLAY_EIGHT_S);
+                    c8Game.discard(mGame.getSelf(), mCardSelected, C8Constants.PLAY_EIGHT_S);
                     break;
                 case Activity.RESULT_OK:
                     isSuitChosen = false;
@@ -192,10 +212,15 @@ public class PlayerHandFragment extends Fragment {
             }
 
             if (isSuitChosen) {
-                updateGame(mGame);
+                updateGame(c8Game);
 
                 mCardSelected = null;
                 setButtonsEnabled(false);
+
+                // Call game update on the parent
+                if (mDelegate != null) {
+                    mDelegate.gameUpdated(mGame);
+                }
             }
         }
 

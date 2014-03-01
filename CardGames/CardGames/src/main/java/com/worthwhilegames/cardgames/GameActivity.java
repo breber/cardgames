@@ -53,7 +53,7 @@ public class GameActivity extends BaseGameActivity implements
         }
 
         mGameboardFragment = new GameboardFragment();
-        mPlayerHandFragment = new PlayerHandFragment();
+        mPlayerHandFragment = new PlayerHandFragment(this);
 
         if (mCreateGame) {
             switchToGameboard();
@@ -158,6 +158,8 @@ public class GameActivity extends BaseGameActivity implements
     @Override
     public void onTurnBasedMatchReceived(TurnBasedMatch match) {
         Toast.makeText(this, "A match was received.", Toast.LENGTH_SHORT).show();
+
+        onTurnBasedMatchUpdated(GamesClient.STATUS_OK, match);
     }
 
     @Override
@@ -308,5 +310,8 @@ public class GameActivity extends BaseGameActivity implements
         }
 
         Games.TurnBasedMultiplayer.takeTurn(getApiClient(), mMatch.getMatchId(), game.persist(), mMatch.getParticipants().get(nextPlayer).getParticipantId());
+
+        // TODO: check if this is automatically called
+//        onTurnBasedMatchUpdated(GamesClient.STATUS_OK, mMatch);
     }
 }

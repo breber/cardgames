@@ -106,6 +106,11 @@ public class GameboardFragment extends Fragment {
      */
     private ImageView suitView;
 
+    /**
+     * The current game
+     */
+    private Game mGame;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -121,6 +126,8 @@ public class GameboardFragment extends Fragment {
         // Update the refresh button image
         ImageView refresh = (ImageView) v.findViewById(R.id.gameboard_refresh);
         refresh.setImageBitmap(scaleButton(R.drawable.refresh_button));
+
+        updateUi(mGame);
 
         return v;
     }
@@ -216,6 +223,11 @@ public class GameboardFragment extends Fragment {
      * Updates the draw card image
      */
     public void updateUi(Game game) {
+        mGame = game;
+        if (mGame == null) {
+            return;
+        }
+
         List<Player> players = game.getPlayers();
         int i = 0;
 
