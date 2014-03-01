@@ -123,10 +123,6 @@ public class GameboardFragment extends Fragment {
         // Get the image to use for the back of a card
         CARD_BACK = sharedPreferences.getInt(Constants.PREF_CARD_BACK, R.drawable.back_blue_1);
 
-        // Update the refresh button image
-        ImageView refresh = (ImageView) v.findViewById(R.id.gameboard_refresh);
-        refresh.setImageBitmap(scaleButton(R.drawable.refresh_button));
-
         updateUi(mGame);
 
         return v;
@@ -237,8 +233,10 @@ public class GameboardFragment extends Fragment {
 
         updateNamesOnGameboard(game);
 
-        // TODO: draw current suit
         // TODO: highlight selected player
+
+        // TODO: special suit
+        updateSuit(game.getDiscardPileTop().getSuit());
 
         // Place images for all player's cards
         for (Player p : players) {

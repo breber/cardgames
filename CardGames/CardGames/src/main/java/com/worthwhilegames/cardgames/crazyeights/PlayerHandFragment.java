@@ -104,7 +104,7 @@ public class PlayerHandFragment extends Fragment {
      */
     public void updateGame(Game game) {
         mGame = game;
-        if (mGame == null) {
+        if (mGame == null || mPlayerHandLayout == null) {
             return;
         }
 

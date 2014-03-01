@@ -224,13 +224,15 @@ public class CrazyEightsGame implements Game {
     }
 
     /* (non-Javadoc)
-     * @see com.worthwhilegames.cardgames.shared.Game#isGameOver(com.worthwhilegames.cardgames.shared.Player)
+     * @see com.worthwhilegames.cardgames.shared.Game#isGameOver()
      */
     @Override
-    public boolean isGameOver(Player player) {
-        //check to see if the player has any cards left
-        if (player.getNumCards() == 0) {
-            return true;
+    public boolean isGameOver() {
+        // check to see if any player has any cards left
+        for (Player p : getPlayers()) {
+            if (p.getCards().isEmpty()) {
+                return true;
+            }
         }
 
         return false;

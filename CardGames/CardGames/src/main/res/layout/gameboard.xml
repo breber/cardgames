@@ -256,26 +256,6 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/gameboard_pause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:contentDescription="@string/pauseGameTitle"
-        android:padding="5dip"
-        android:src="@drawable/pause_button" />
-
-    <ImageView
-        android:id="@+id/gameboard_refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:contentDescription="@string/refresh"
-        android:padding="5dip"
-        android:src="@drawable/refresh_button" />
-
-    <ImageView
         android:id="@+id/gameboard_suit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

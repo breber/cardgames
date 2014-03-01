@@ -66,10 +66,9 @@ public interface Game {
     /**
      * This method will tell if the game is over for a given player
      *
-     * @param player the player to check
      * @return true if the game is over for the player false otherwise
      */
-    public boolean isGameOver(Player player);
+    public boolean isGameOver();
 
     /**
      * This method will return a list of Player objects that are currently involved in the game
