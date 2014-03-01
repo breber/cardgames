@@ -38,11 +38,6 @@ public class CrazyEightsGame implements Game {
     private List<Card> discardPile;
 
     /**
-     * Represents whether the game is currently active
-     */
-    private boolean gameActive = false;
-
-    /**
      * The turn based match from Google games
      */
     private TurnBasedMatch mTurnBasedMatch;
@@ -100,12 +95,13 @@ public class CrazyEightsGame implements Game {
         return new CrazyEightGameRules();
     }
 
-    /* (non-Javadoc)
-     * @see com.worthwhilegames.cardgames.shared.Game#getShuffledDeck()
-     */
     @Override
-    public List<Card> getShuffledDeck() {
-        return shuffledDeck;
+    public int getDisplaySuit() {
+        if (mSuitExtra != C8Constants.PLAY_SUIT_NONE) {
+            return mSuitExtra;
+        }
+
+        return getDiscardPileTop().getSuit();
     }
 
     /* (non-Javadoc)
@@ -170,7 +166,6 @@ public class CrazyEightsGame implements Game {
      */
     @Override
     public void deal() {
-        gameActive = true;
         if (Util.isDebugBuild()) {
             Log.d(TAG, "deal: numberOfPlayers: " + players.size());
 
@@ -199,27 +194,29 @@ public class CrazyEightsGame implements Game {
         }
     }
 
-    /**
-     * Get the discard pile
-     *
-     * @return the discard pile
-     */
-    public List<Card> getDiscardPile() {
-        return discardPile;
-    }
-
     /* (non-Javadoc)
      * @see com.worthwhilegames.cardgames.shared.Game#discard(com.worthwhilegames.cardgames.shared.Player, com.worthwhilegames.cardgames.shared.Card)
      */
     @Override
-    public void discard(Player player, Card card) {
+    public void discard(Card card) {
+        Player p = getSelf();
+        if (Util.isDebugBuild()) {
+            Log.d(TAG, "prediscard: player[" + p.getId() + "] has " + p.getNumCards() + " cards");
+            Log.d(TAG, "            player[" + p.getId() + "]: " + p);
+        }
+
         discardPile.add(card);
-        player.removeCard(card);
+        p.removeCard(card);
         mSuitExtra = C8Constants.PLAY_SUIT_NONE;
+
+        if (Util.isDebugBuild()) {
+            Log.d(TAG, "postdiscard: player[" + p.getId() + "] has " + p.getNumCards() + " cards");
+            Log.d(TAG, "             player[" + p.getId() + "]: " + p);
+        }
     }
 
-    public void discard(Player player, Card card, int extraSuit) {
-        discard(player, card);
+    public void discard(Card card, int extraSuit) {
+        discard(card);
         mSuitExtra = extraSuit;
     }
 
@@ -239,10 +236,19 @@ public class CrazyEightsGame implements Game {
     }
 
     /* (non-Javadoc)
-     * @see com.worthwhilegames.cardgames.shared.Game#draw(com.worthwhilegames.cardgames.shared.Player)
+     * @see com.worthwhilegames.cardgames.shared.Game#draw()
      */
     @Override
-    public Card draw(Player player) {
+    public Card draw() {
+        return draw(getSelf());
+    }
+
+    private Card draw(Player p) {
+        if (Util.isDebugBuild()) {
+            Log.d(TAG, "predraw: player[" + p.getId() + "] has " + p.getNumCards() + " cards");
+            Log.d(TAG, "         player[" + p.getId() + "]: " + p);
+        }
+
         if (shuffledDeck.isEmpty()) {
             shuffleDiscardPile();
         }
@@ -253,7 +259,7 @@ public class CrazyEightsGame implements Game {
 
         // Get a card out of the shuffled pile and add to the players hand
         Card card = shuffledDeck.get(0);
-        player.addCard(card);
+        p.addCard(card);
 
         // Remove the last card returned by iter.next()
         shuffledDeck.remove(0);
@@ -261,6 +267,11 @@ public class CrazyEightsGame implements Game {
         // Shuffle the deck if the player drew the last card
         if (shuffledDeck.isEmpty()) {
             shuffleDiscardPile();
+        }
+
+        if (Util.isDebugBuild()) {
+            Log.d(TAG, "postdraw: player[" + p.getId() + "] has " + p.getNumCards() + " cards");
+            Log.d(TAG, "          player[" + p.getId() + "]: " + p);
         }
 
         return card;
@@ -292,14 +303,6 @@ public class CrazyEightsGame implements Game {
     @Override
     public void addPlayer(Player p) {
         players.add(p);
-    }
-
-    /* (non-Javadoc)
-     * @see com.worthwhilegames.cardgames.shared.Game#isActive()
-     */
-    @Override
-    public boolean isActive() {
-        return gameActive;
     }
 
     @Override

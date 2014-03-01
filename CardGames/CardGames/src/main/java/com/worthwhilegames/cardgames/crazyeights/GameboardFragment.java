@@ -123,9 +123,14 @@ public class GameboardFragment extends Fragment {
         // Get the image to use for the back of a card
         CARD_BACK = sharedPreferences.getInt(Constants.PREF_CARD_BACK, R.drawable.back_blue_1);
 
-        updateUi(mGame);
-
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        updateUi(mGame);
     }
 
     private View findViewById(int id) {
@@ -220,25 +225,18 @@ public class GameboardFragment extends Fragment {
      */
     public void updateUi(Game game) {
         mGame = game;
-        if (mGame == null) {
+        if (mGame == null || !isAdded()) {
             return;
         }
-
-        List<Player> players = game.getPlayers();
-        int i = 0;
-
-        if (playerTextViews[0] == null) {
-            return;
-        }
-
-        updateNamesOnGameboard(game);
 
         // TODO: highlight selected player
+        updateNamesOnGameboard(game);
 
-        // TODO: special suit
-        updateSuit(game.getDiscardPileTop().getSuit());
+        updateSuit(game.getDisplaySuit());
 
         // Place images for all player's cards
+        List<Player> players = game.getPlayers();
+        int i = 0;
         for (Player p : players) {
             List<Card> cards = p.getCards();
             playerLinearLayouts[i].removeAllViews();

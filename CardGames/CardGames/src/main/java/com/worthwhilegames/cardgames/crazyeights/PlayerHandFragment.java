@@ -61,14 +61,14 @@ public class PlayerHandFragment extends Fragment {
      */
     private View mButtonView;
 
-    public PlayerHandFragment(GameUpdatedListener delegate) {
-        mDelegate = delegate;
-    }
-
     /**
      * The LinearLayout holding all card images
      */
     @InjectView(R.id.playerCardContainer) LinearLayout mPlayerHandLayout;
+
+    public void setDelegate(GameUpdatedListener delegate) {
+        mDelegate = delegate;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -92,9 +92,14 @@ public class PlayerHandFragment extends Fragment {
             draw.setOnClickListener(drawClickListener);
         }
 
-        updateGame(mGame);
-
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        updateGame(mGame);
     }
 
     /**
@@ -104,7 +109,7 @@ public class PlayerHandFragment extends Fragment {
      */
     public void updateGame(Game game) {
         mGame = game;
-        if (mGame == null || mPlayerHandLayout == null) {
+        if (mGame == null || !isAdded()) {
             return;
         }
 
@@ -160,7 +165,7 @@ public class PlayerHandFragment extends Fragment {
                     // go to the onActivityResult to finish this turn
                 } else {
                     // Discard the card
-                    mGame.discard(mGame.getSelf(), mCardSelected);
+                    mGame.discard(mCardSelected);
 
                     // Call game update on the parent
                     if (mDelegate != null) {
@@ -175,7 +180,7 @@ public class PlayerHandFragment extends Fragment {
         @Override
         public void onClick(View v) {
             if (mGame.isMyTurn()) {
-                mGame.draw(mGame.getSelf());
+                mGame.draw();
 
                 // Call game update on the parent
                 if (mDelegate != null) {
@@ -195,16 +200,16 @@ public class PlayerHandFragment extends Fragment {
             boolean isSuitChosen = true;
             switch (resultCode) {
                 case Constants.SUIT_CLUBS:
-                    c8Game.discard(mGame.getSelf(), mCardSelected, C8Constants.PLAY_EIGHT_C);
+                    c8Game.discard(mCardSelected, C8Constants.PLAY_EIGHT_C);
                     break;
                 case Constants.SUIT_DIAMONDS:
-                    c8Game.discard(mGame.getSelf(), mCardSelected, C8Constants.PLAY_EIGHT_D);
+                    c8Game.discard(mCardSelected, C8Constants.PLAY_EIGHT_D);
                     break;
                 case Constants.SUIT_HEARTS:
-                    c8Game.discard(mGame.getSelf(), mCardSelected, C8Constants.PLAY_EIGHT_H);
+                    c8Game.discard(mCardSelected, C8Constants.PLAY_EIGHT_H);
                     break;
                 case Constants.SUIT_SPADES:
-                    c8Game.discard(mGame.getSelf(), mCardSelected, C8Constants.PLAY_EIGHT_S);
+                    c8Game.discard(mCardSelected, C8Constants.PLAY_EIGHT_S);
                     break;
                 case Activity.RESULT_OK:
                     isSuitChosen = false;

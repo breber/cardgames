@@ -22,18 +22,16 @@ public interface Game {
     /**
      * This method is used to add a card to a players hand from the non-used deck
      *
-     * @param player the player that needs another card
      * @return the card that was added to the players hand
      */
-    public Card draw(Player player);
+    public Card draw();
 
     /**
      * This method is used to discard a pile to the discard pile
      *
-     * @param player the player that is making the discard
      * @param card the card that is to be added to the discard pile
      */
-    public void discard(Player player, Card card);
+    public void discard(Card card);
 
     /**
      * This method will shuffle the current deck of cards
@@ -93,11 +91,9 @@ public interface Game {
     public IRules getRules();
 
     /**
-     * This method is a getter for the shuffled deck pile
-     *
-     * @return a list of Card objects representing the shuffled deck
+     * Get the display suit
      */
-    public List<Card> getShuffledDeck();
+    public int getDisplaySuit();
 
     /**
      * Add a player to the game
@@ -105,13 +101,6 @@ public interface Game {
      * @param p the player to add
      */
     public void addPlayer(Player p);
-
-    /**
-     * Returns whether the game has been started or not
-     *
-     * @return whether a game is currently active
-     */
-    public boolean isActive();
 
     /**
      * Persist the game state to a byte array
