@@ -65,6 +65,8 @@ public class PlayerHandFragment extends Fragment {
         // Create a new, empty hand
         mCardHand = new ArrayList<Card>();
 
+        updateGame(mGame);
+
         return v;
     }
 
@@ -79,11 +81,15 @@ public class PlayerHandFragment extends Fragment {
      */
     public void updateGame(Game game) {
         mGame = game;
+        if (mCardHand == null || mGame == null || mPlayerId == null) {
+            return;
+        }
+
         mCardHand.clear();
 
         Player player = null;
         for (Player p : game.getPlayers()) {
-            if (p.getId() == mPlayerId) {
+            if (p.getId().equals(mPlayerId)) {
                 player = p;
                 break;
             }

@@ -7,14 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.Participant;
-import com.google.android.gms.games.multiplayer.turnbased.LoadMatchesResponse;
-import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatch;
-import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatchConfig;
-import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMultiplayerListener;
+import com.google.android.gms.games.multiplayer.turnbased.*;
 import com.worthwhilegames.cardgames.crazyeights.CrazyEightsGame;
 import com.worthwhilegames.cardgames.crazyeights.GameboardFragment;
 import com.worthwhilegames.cardgames.crazyeights.PlayerHandFragment;
@@ -53,13 +51,17 @@ public class GameActivity extends BaseGameActivity implements
         setContentView(R.layout.game);
 
         if (Util.isDebugBuild()) {
-            enableDebugLog(true, "BaseGame");
+            enableDebugLog(true);
         }
 
         mGameboardFragment = new GameboardFragment();
         mPlayerHandFragment = new PlayerHandFragment();
 
-        switchToGameboard();
+        if (mCreateGame) {
+            switchToGameboard();
+        } else {
+            switchToPlayerHand();
+        }
     }
 
     private void switchToPlayerHand() {
@@ -99,8 +101,6 @@ public class GameActivity extends BaseGameActivity implements
         }
 
         Games.TurnBasedMultiplayer.registerMatchUpdateListener(getApiClient(), this);
-
-        switchToGameboard();
     }
 
     @Override
@@ -137,7 +137,13 @@ public class GameActivity extends BaseGameActivity implements
             TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
                     .addInvitedPlayers(invitees).build();
 
-            Games.TurnBasedMultiplayer.createMatch(getApiClient(), tbmc);
+            Games.TurnBasedMultiplayer.createMatch(getApiClient(), tbmc).setResultCallback(
+                    new ResultCallback<TurnBasedMultiplayer.InitiateMatchResult>() {
+                        @Override
+                        public void onResult(TurnBasedMultiplayer.InitiateMatchResult result) {
+                            onTurnBasedMatchInitiated(result.getStatus().getStatusCode(), result.getMatch());
+                        }
+                    });
         }
     }
 
@@ -213,6 +219,9 @@ public class GameActivity extends BaseGameActivity implements
         if (!checkStatusCode(turnBasedMatch, i)) {
             return;
         }
+
+        mParticipantId = turnBasedMatch.getParticipantId(Games.Players.getCurrentPlayerId(getApiClient()));
+        mPlayerHandFragment.setCurrentPlayerId(mParticipantId);
 
         mIsDoingTurn = (turnBasedMatch.getTurnStatus() == TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN);
 
