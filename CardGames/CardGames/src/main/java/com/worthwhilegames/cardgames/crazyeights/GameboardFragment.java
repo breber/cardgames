@@ -219,6 +219,10 @@ public class GameboardFragment extends Fragment {
         List<Player> players = game.getPlayers();
         int i = 0;
 
+        if (playerTextViews[0] == null) {
+            return;
+        }
+
         updateNamesOnGameboard(game);
 
         // TODO: draw current suit

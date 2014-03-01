@@ -37,8 +37,6 @@ public class GameActivity extends BaseGameActivity implements
     private PlayerHandFragment mPlayerHandFragment;
 
     private TurnBasedMatch mMatch;
-    private String mParticipantId;
-    private boolean mIsDoingTurn = false;
 
     private boolean mCreateGame = false;
 
@@ -159,7 +157,7 @@ public class GameActivity extends BaseGameActivity implements
 
     @Override
     public void onTurnBasedMatchReceived(TurnBasedMatch match) {
-        Toast.makeText(this, "A match was updated.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "A match was received.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -182,12 +180,12 @@ public class GameActivity extends BaseGameActivity implements
     @Override
     public void onTurnBasedMatchInitiated(int i, TurnBasedMatch turnBasedMatch) {
         Toast.makeText(this, "A match was initiated.", Toast.LENGTH_SHORT).show();
-        mParticipantId = turnBasedMatch.getParticipantId(Games.Players.getCurrentPlayerId(getApiClient()));
+        String myParticipantId = turnBasedMatch.getParticipantId(Games.Players.getCurrentPlayerId(getApiClient()));
 
         // If we are the creator, set up the game state
-        if (mParticipantId.equals(turnBasedMatch.getCreatorId())) {
+        if (myParticipantId.equals(turnBasedMatch.getCreatorId())) {
             // TODO: euchre
-            Game game = new CrazyEightsGame();
+            Game game = new CrazyEightsGame(turnBasedMatch, Games.Players.getCurrentPlayerId(getApiClient()));
             int j = 0;
             for (Participant p : turnBasedMatch.getParticipants()) {
                 Player player = new Player();
@@ -200,10 +198,8 @@ public class GameActivity extends BaseGameActivity implements
 
             game.setup();
 
-            Games.TurnBasedMultiplayer.takeTurn(getApiClient(), turnBasedMatch.getMatchId(), game.persist(), mParticipantId);
+            Games.TurnBasedMultiplayer.takeTurn(getApiClient(), turnBasedMatch.getMatchId(), game.persist(), myParticipantId);
         }
-
-        mPlayerHandFragment.setCurrentPlayerId(mParticipantId);
 
         onTurnBasedMatchUpdated(GamesClient.STATUS_OK, turnBasedMatch);
     }
@@ -220,20 +216,18 @@ public class GameActivity extends BaseGameActivity implements
             return;
         }
 
-        mParticipantId = turnBasedMatch.getParticipantId(Games.Players.getCurrentPlayerId(getApiClient()));
-        mPlayerHandFragment.setCurrentPlayerId(mParticipantId);
-
-        mIsDoingTurn = (turnBasedMatch.getTurnStatus() == TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN);
-
         // TODO: euchre
-        Game game = new CrazyEightsGame();
+        Game game = new CrazyEightsGame(turnBasedMatch, Games.Players.getCurrentPlayerId(getApiClient()));
         game.load(turnBasedMatch.getData());
-        if (mIsDoingTurn) {
+
+        // Update both the gameboard and the player hand
+        mPlayerHandFragment.updateGame(game);
+        mGameboardFragment.updateUi(game);
+
+        if (game.isMyTurn()) {
             switchToPlayerHand();
-            mPlayerHandFragment.updateGame(game);
         } else {
             switchToGameboard();
-            mGameboardFragment.updateUi(game);
         }
     }
 
@@ -298,10 +292,12 @@ public class GameActivity extends BaseGameActivity implements
 
     @Override
     public void gameUpdated(Game game) {
+        Player self = game.getSelf();
+
         int nextPlayer = -1;
         for (int i = 0; i < game.getNumPlayers(); i++) {
             Player p = game.getPlayers().get(i);
-            if (p.getId().equals(mParticipantId)) {
+            if (p.getId().equals(self.getId())) {
                 nextPlayer = i + 1;
                 break;
             }

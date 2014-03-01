@@ -79,6 +79,21 @@ public interface Game {
     public List<Player> getPlayers();
 
     /**
+     * Get the player who is on this device
+     */
+    public Player getSelf();
+
+    /**
+     * Checks if it is the current players turn
+     */
+    public boolean isMyTurn();
+
+    /**
+     * Get the rules
+     */
+    public IRules getRules();
+
+    /**
      * This method is a getter for the shuffled deck pile
      *
      * @return a list of Card objects representing the shuffled deck

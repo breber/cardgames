@@ -2,15 +2,13 @@ package com.worthwhilegames.cardgames.crazyeights;
 
 import com.worthwhilegames.cardgames.shared.Card;
 import com.worthwhilegames.cardgames.shared.Constants;
-import com.worthwhilegames.cardgames.shared.Rules;
-
-import java.util.List;
+import com.worthwhilegames.cardgames.shared.IRules;
 
 /**
- * An implementation of the Rules interface
+ * An implementation of the IRules interface
  * for the game Crazy Eights.
  */
-public class CrazyEightGameRules implements Rules {
+public class CrazyEightGameRules implements IRules {
 
     /**
      * This method will check to see if a play is valid
@@ -49,12 +47,6 @@ public class CrazyEightGameRules implements Rules {
             return true;
         }
 
-        return false;
-    }
-
-    @Override
-    public boolean checkCard(Card cardPlayed, int trump, Card cardLed,
-            List<Card> cards) {
         return false;
     }
 

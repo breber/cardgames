@@ -1,12 +1,16 @@
 package com.worthwhilegames.cardgames.crazyeights;
 
 import android.util.Log;
+import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatch;
 import com.worthwhilegames.cardgames.shared.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 /**
  * A class for keeping track of the logic and game state for the game type crazy eights
@@ -39,14 +43,31 @@ public class CrazyEightsGame implements Game {
     private boolean gameActive = false;
 
     /**
+     * The turn based match from Google games
+     */
+    private TurnBasedMatch mTurnBasedMatch;
+
+    /**
+     * String id for the current player
+     */
+    private String mPlayerId;
+
+    /**
+     * Extra value for the suit
+     */
+    private int mSuitExtra = C8Constants.PLAY_SUIT_NONE;
+
+    /**
      * A constructor for the crazy eights game type. This constructor will initialize the all the variables
      * for a game of crazy eights including the rules, players, deck, shuffled deck pile and the discard pile.
      */
-    public CrazyEightsGame() {
+    public CrazyEightsGame(TurnBasedMatch turnBasedMatch, String playerId) {
         players = new ArrayList<Player>();
         Deck gameDeck = new Deck(CardGame.CrazyEights);
         shuffledDeck = gameDeck.getCardIDs();
         discardPile = new ArrayList<Card>();
+        mTurnBasedMatch = turnBasedMatch;
+        mPlayerId = playerId;
     }
 
     /* (non-Javadoc)
@@ -55,6 +76,28 @@ public class CrazyEightsGame implements Game {
     @Override
     public List<Player> getPlayers() {
         return players;
+    }
+
+    @Override
+    public Player getSelf() {
+        String currentParticipantId = mTurnBasedMatch.getParticipantId(mPlayerId);
+        for (Player p : getPlayers()) {
+            if (p.getId().equals(currentParticipantId)) {
+                return p;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean isMyTurn() {
+        return (mTurnBasedMatch.getTurnStatus() == TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN);
+    }
+
+    @Override
+    public IRules getRules() {
+        return new CrazyEightGameRules();
     }
 
     /* (non-Javadoc)
@@ -172,6 +215,12 @@ public class CrazyEightsGame implements Game {
     public void discard(Player player, Card card) {
         discardPile.add(card);
         player.removeCard(card);
+        mSuitExtra = C8Constants.PLAY_SUIT_NONE;
+    }
+
+    public void discard(Player player, Card card, int extraSuit) {
+        discard(player, card);
+        mSuitExtra = extraSuit;
     }
 
     /* (non-Javadoc)
@@ -274,6 +323,8 @@ public class CrazyEightsGame implements Game {
                 discard.put(c.toJSONObject());
             }
             toRet.put("discard", discard);
+
+            toRet.put("extra_suit", mSuitExtra);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -306,6 +357,8 @@ public class CrazyEightsGame implements Game {
             for (int i = 0; i < discard.length(); i++) {
                 discardPile.add(new Card(discard.getJSONObject(i)));
             }
+
+            mSuitExtra = obj.getInt("extra_suit");
         } catch (JSONException e) {
             e.printStackTrace();
             return false;

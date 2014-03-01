@@ -1,6 +1,8 @@
 package com.worthwhilegames.cardgames.crazyeights;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -9,17 +11,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.worthwhilegames.cardgames.R;
-import com.worthwhilegames.cardgames.shared.Card;
-import com.worthwhilegames.cardgames.shared.Game;
-import com.worthwhilegames.cardgames.shared.Player;
+import com.worthwhilegames.cardgames.player.activities.SelectSuitActivity;
+import com.worthwhilegames.cardgames.shared.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by breber on 2/2/14.
@@ -30,7 +34,10 @@ public class PlayerHandFragment extends Fragment {
         void gameUpdated(Game game);
     }
 
-    private String mPlayerId;
+    /**
+     * intent code for choosing suit
+     */
+    private static final int CHOOSE_SUIT = Math.abs("CHOOSE_SUIT".hashCode());
 
     /**
      * The height of each card
@@ -38,14 +45,19 @@ public class PlayerHandFragment extends Fragment {
     private static int sCardHeight;
 
     /**
-     * List of cards in player's hand
+     * The current selected Card
      */
-    private ArrayList<Card> mCardHand;
+    private Card mCardSelected;
 
     /**
      * The current game
      */
     private Game mGame;
+
+    /**
+     * The view containing the buttons
+     */
+    private View mButtonView;
 
     /**
      * The LinearLayout holding all card images
@@ -62,16 +74,22 @@ public class PlayerHandFragment extends Fragment {
         int screenHeight = getResources().getDisplayMetrics().heightPixels;
         sCardHeight = screenHeight * 3 / 5;
 
-        // Create a new, empty hand
-        mCardHand = new ArrayList<Card>();
+        // Set up the buttons
+        if (v != null) {
+            ViewStub buttonLayout = (ViewStub) v.findViewById(R.id.playerHandButtonView);
+            buttonLayout.setLayoutResource(R.layout.genericbuttons);
+            mButtonView = buttonLayout.inflate();
+
+            Button play = (Button) mButtonView.findViewById(R.id.btPlayCard);
+            Button draw = (Button) mButtonView.findViewById(R.id.btDrawCard);
+            play.setOnClickListener(playClickListener);
+            // TODO: fix this
+//            draw.setOnClickListener(drawClickListener);
+        }
 
         updateGame(mGame);
 
         return v;
-    }
-
-    public void setCurrentPlayerId(String playerId) {
-        mPlayerId = playerId;
     }
 
     /**
@@ -81,29 +99,21 @@ public class PlayerHandFragment extends Fragment {
      */
     public void updateGame(Game game) {
         mGame = game;
-        if (mCardHand == null || mGame == null || mPlayerId == null) {
+        if (mGame == null) {
             return;
         }
 
-        mCardHand.clear();
-
-        Player player = null;
-        for (Player p : game.getPlayers()) {
-            if (p.getId().equals(mPlayerId)) {
-                player = p;
-                break;
-            }
-        }
+        Player player = game.getSelf();
 
         // This shouldn't happen...
         if (player == null) {
             return;
         }
 
-        mCardHand.addAll(player.getCards());
+        List<Card> cards = new ArrayList<Card>(player.getCards());
 
         // Make sure the hand is sorted
-        Collections.sort(mCardHand);
+        Collections.sort(cards);
 
         // Remove all cards from the display
         mPlayerHandLayout.removeAllViews();
@@ -111,24 +121,120 @@ public class PlayerHandFragment extends Fragment {
         // edit layout attributes
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, sCardHeight);
 
-        for (Card c : mCardHand) {
+        for (Card c : cards) {
             // create ImageView to hold Card
             ImageView toAdd = new ImageView(getActivity());
             toAdd.setImageBitmap(scaleCard(c.getResourceId()));
             toAdd.setId(c.getIdNum());
-            toAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // TODO: check if playable
-                    // TODO: move to button click
-                    ((GameUpdatedListener)getActivity()).gameUpdated(mGame);
-                }
-            });
+            toAdd.setOnClickListener(new CardSelectionClickListener());
 
             // Add a 5px border around the image
             toAdd.setPadding(5, 5, 5, 5);
 
             mPlayerHandLayout.addView(toAdd, params);
+        }
+    }
+
+    /**
+     * The OnClickListener for the play button
+     */
+    private View.OnClickListener playClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mGame.isMyTurn() &&
+                mGame.getRules().checkCard(mCardSelected, mGame.getDiscardPileTop()) &&
+                !mGame.getSelf().getCards().isEmpty())
+            {
+                // play card
+                if (mCardSelected.getValue() == C8Constants.EIGHT_CARD_NUMBER) {
+                    Intent selectSuit = new Intent(getActivity(), SelectSuitActivity.class);
+                    getActivity().startActivityForResult(selectSuit, CHOOSE_SUIT);
+                    // go to the onActivityResult to finish this turn
+                } else {
+                    // Discard the card
+                    mGame.discard(mGame.getSelf(), mCardSelected);
+                    updateGame(mGame);
+
+                    mCardSelected = null;
+                    setButtonsEnabled(false);
+
+                    // Call game update on the parent
+                    ((GameUpdatedListener)getActivity()).gameUpdated(mGame);
+                }
+            }
+        }
+    };
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CHOOSE_SUIT) {
+            CrazyEightsGame g8Game = (CrazyEightsGame) mGame;
+            boolean isSuitChosen = true;
+            switch (resultCode) {
+                case Constants.SUIT_CLUBS:
+                    g8Game.discard(mGame.getSelf(), mCardSelected, C8Constants.PLAY_EIGHT_C);
+                    break;
+                case Constants.SUIT_DIAMONDS:
+                    g8Game.discard(mGame.getSelf(), mCardSelected, C8Constants.PLAY_EIGHT_D);
+                    break;
+                case Constants.SUIT_HEARTS:
+                    g8Game.discard(mGame.getSelf(), mCardSelected, C8Constants.PLAY_EIGHT_H);
+                    break;
+                case Constants.SUIT_SPADES:
+                    g8Game.discard(mGame.getSelf(), mCardSelected, C8Constants.PLAY_EIGHT_S);
+                    break;
+                case Activity.RESULT_OK:
+                    isSuitChosen = false;
+                    break;
+            }
+
+            if (isSuitChosen) {
+                updateGame(mGame);
+
+                mCardSelected = null;
+                setButtonsEnabled(false);
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * Used to set the play and draw buttons to enable or disabled
+     * Also if it is the player's turn then set the cards to be greyed
+     * out if they are not playable. if it is not the player's turn then
+     * do not grey out any cards
+     *
+     * @param isEnabled
+     */
+    private void setButtonsEnabled(boolean isEnabled) {
+        ViewGroup group = (ViewGroup) mButtonView;
+        for (int i = 0; i < group.getChildCount(); i++) {
+            View v = group.getChildAt(i);
+            if (v != null) {
+                v.setEnabled(isEnabled);
+            }
+        }
+
+        if (isEnabled) {
+            // it is your turn grey out cards
+            for (Card c : mGame.getSelf().getCards()) {
+                boolean isPlayable = mGame.getRules().checkCard(c, mGame.getDiscardPileTop());
+                setCardPlayable(c.getIdNum(), isPlayable);
+            }
+        } else {
+            // it is not your turn make cards normal
+            if (mPlayerHandLayout != null) {
+                for (int i = 0; i < mPlayerHandLayout.getChildCount(); i++) {
+                    ImageView v = (ImageView) mPlayerHandLayout.getChildAt(i);
+                    if (v != null) {
+                        setCardPlayable(v.getId(), true);
+                    }
+                }
+            }
         }
     }
 
@@ -155,7 +261,7 @@ public class PlayerHandFragment extends Fragment {
      * @param cardId - the currently selected card
      */
     public void setSelected(int cardId, int suggestedId) {
-        for (Card c : mCardHand) {
+        for (Card c : mGame.getSelf().getCards()) {
             if (c.getIdNum() == cardId && c.getIdNum() == suggestedId) {
                 ImageView iv = (ImageView)getView().findViewById(c.getIdNum());
                 iv.setBackgroundColor(getResources().getColor(R.color.suggested_selected_card_color));
@@ -179,7 +285,7 @@ public class PlayerHandFragment extends Fragment {
      * @param cardId - the currently selected card
      */
     public void setSuggested(int cardId) {
-        for (Card c : mCardHand) {
+        for (Card c : mGame.getSelf().getCards()) {
             if (c.getIdNum() == cardId) {
                 ImageView iv = (ImageView)getView().findViewById(c.getIdNum());
                 iv.setBackgroundColor(getResources().getColor(R.color.gold));
@@ -201,6 +307,29 @@ public class PlayerHandFragment extends Fragment {
             iv.setColorFilter(Color.TRANSPARENT);
         } else {
             iv.setColorFilter(getResources().getColor(R.color.transparent_grey));
+        }
+    }
+
+    /**
+     * This will be used for each card ImageView and will allow the card to be
+     * selected when it is Clicked
+     */
+    private class CardSelectionClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            // Show an animation indicating the card was selected
+            ScaleAnimation scale = new ScaleAnimation((float) 1.2, (float) 1.2, (float) 1.2, (float) 1.2);
+            scale.scaleCurrentDuration(5);
+            v.startAnimation(scale);
+
+            // Let the UI know which card was selected
+            setSelected(v.getId(), -1);
+
+            for (Card c : mGame.getSelf().getCards()) {
+                if (c.getIdNum() == v.getId()) {
+                    mCardSelected = c;
+                }
+            }
         }
     }
 }

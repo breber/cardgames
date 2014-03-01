@@ -8,7 +8,7 @@ import com.worthwhilegames.cardgames.shared.AdActivity;
 //import com.worthwhilegames.cardgames.shared.GameFactory;
 
 /**
- * This activity will display the Game Rules
+ * This activity will display the Game IRules
  */
 public class RulesActivity extends AdActivity {
 
@@ -20,11 +20,11 @@ public class RulesActivity extends AdActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.information);
 
-        // Update the title to "Rules"
+        // Update the title to "IRules"
         TextView title = (TextView) findViewById(R.id.title);
         title.setText(R.string.rulesActivityTitle);
 
-        // Update the body text to the Rules
+        // Update the body text to the IRules
         TextView body = (TextView) findViewById(R.id.informationBody);
 
         // TODO: fix this

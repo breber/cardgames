@@ -31,6 +31,11 @@ public class C8Constants {
     public static final int PLAY_EIGHT_S = 1003;
 
     /**
+     * A constant to represent no extra suit
+     */
+    public static final int PLAY_SUIT_NONE = 0;
+
+    /**
      * The card number associated with an 8
      */
     public static final int EIGHT_CARD_NUMBER = 7;
