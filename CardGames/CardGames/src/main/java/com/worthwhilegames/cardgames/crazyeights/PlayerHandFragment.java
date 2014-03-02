@@ -250,9 +250,15 @@ public class PlayerHandFragment extends Fragment {
         }
 
         if (isEnabled) {
+            // Get the discard card (updating it to have the chosen suit)
+            Card discardCard = new Card(mGame.getDiscardPileTop());
+            if (mGame.getDisplaySuit() != C8Constants.PLAY_SUIT_NONE) {
+                discardCard.setSuit(mGame.getDisplaySuit());
+            }
+
             // it is your turn grey out cards
             for (Card c : mGame.getSelf().getCards()) {
-                boolean isPlayable = mGame.getRules().checkCard(c, mGame.getDiscardPileTop());
+                boolean isPlayable = mGame.getRules().checkCard(c, discardCard);
                 setCardPlayable(c.getIdNum(), isPlayable);
             }
         } else {
@@ -291,18 +297,19 @@ public class PlayerHandFragment extends Fragment {
      * @param cardId - the currently selected card
      */
     public void setSelected(int cardId, int suggestedId) {
+        View v = getView();
+        if (v == null) {
+            return;
+        }
         for (Card c : mGame.getSelf().getCards()) {
+            ImageView iv = (ImageView)v.findViewById(c.getIdNum());
             if (c.getIdNum() == cardId && c.getIdNum() == suggestedId) {
-                ImageView iv = (ImageView)getView().findViewById(c.getIdNum());
                 iv.setBackgroundColor(getResources().getColor(R.color.suggested_selected_card_color));
             } else if (c.getIdNum() == cardId) {
-                ImageView iv = (ImageView)getView().findViewById(c.getIdNum());
                 iv.setBackgroundColor(getResources().getColor(R.color.gold));
-            } else if(c.getIdNum() == suggestedId){
-                ImageView iv = (ImageView)getView().findViewById(c.getIdNum());
+            } else if(c.getIdNum() == suggestedId) {
                 iv.setBackgroundColor(getResources().getColor(R.color.suggested_card_color));
             } else {
-                ImageView iv = (ImageView)getView().findViewById(c.getIdNum());
                 iv.setBackgroundColor(getResources().getColor(android.R.color.transparent));
             }
         }
@@ -315,9 +322,13 @@ public class PlayerHandFragment extends Fragment {
      * @param cardId - the currently selected card
      */
     public void setSuggested(int cardId) {
+        View v = getView();
+        if (v == null) {
+            return;
+        }
         for (Card c : mGame.getSelf().getCards()) {
             if (c.getIdNum() == cardId) {
-                ImageView iv = (ImageView)getView().findViewById(c.getIdNum());
+                ImageView iv = (ImageView) v.findViewById(c.getIdNum());
                 iv.setBackgroundColor(getResources().getColor(R.color.gold));
             }
         }
@@ -327,7 +338,11 @@ public class PlayerHandFragment extends Fragment {
      * Set the card as greyed out, or not greyed out.
      */
     public void setCardPlayable(int cardImageViewId, boolean isPlayable) {
-        ImageView iv = (ImageView)getView().findViewById(cardImageViewId);
+        View v = getView();
+        if (v == null) {
+            return;
+        }
+        ImageView iv = (ImageView) v.findViewById(cardImageViewId);
         if (isPlayable) {
             iv.setColorFilter(Color.TRANSPARENT);
         } else {

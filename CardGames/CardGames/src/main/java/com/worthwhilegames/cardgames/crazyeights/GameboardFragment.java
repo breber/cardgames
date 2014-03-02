@@ -229,8 +229,8 @@ public class GameboardFragment extends Fragment {
             return;
         }
 
-        // TODO: highlight selected player
         updateNamesOnGameboard(game);
+        highlightPlayer(game.getCurrentPlayerIndex());
 
         updateSuit(game.getDisplaySuit());
 
@@ -341,12 +341,10 @@ public class GameboardFragment extends Fragment {
 
     /**
      * Highlight the name of the person whose turn it is
-     *
-     * @param playerNumber the player whose turn it is
      */
     private void highlightPlayer(int playerNumber) {
         for (int i = 0; i < 4; i++) {
-            if ((i + 1) == playerNumber) {
+            if (i == playerNumber) {
                 playerTextViews[i].setTextColor(getResources().getColor(R.color.gold));
             } else {
                 playerTextViews[i].setTextColor(getResources().getColor(android.R.color.black));
@@ -356,7 +354,6 @@ public class GameboardFragment extends Fragment {
 
     /**
      * Bold the specified player text
-     * @param playerNumber player whose name will be bolded
      */
     private void boldPlayerText(int playerNumber) {
         playerTextViews[playerNumber].setTypeface(null, Typeface.BOLD);

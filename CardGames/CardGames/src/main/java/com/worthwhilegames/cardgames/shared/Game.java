@@ -76,6 +76,11 @@ public interface Game {
     public List<Player> getPlayers();
 
     /**
+     * Get the index of the player whose turn it is
+     */
+    public int getCurrentPlayerIndex();
+
+    /**
      * Get the player who is on this device
      */
     public Player getSelf();
