@@ -63,9 +63,9 @@ public class GameActivity extends BaseGameActivity implements
         mPlayerHandFragment.setDelegate(this);
 
         if (mCreateGame) {
-            switchToGameboard();
-        } else {
             switchToPlayerHand();
+        } else {
+            switchToGameboard();
         }
     }
 

@@ -154,8 +154,14 @@ public class PlayerHandFragment extends Fragment {
     private View.OnClickListener playClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            // Get the discard card (updating it to have the chosen suit)
+            Card discardCard = new Card(mGame.getDiscardPileTop());
+            if (mGame.getDisplaySuit() != C8Constants.PLAY_SUIT_NONE) {
+                discardCard.setSuit(mGame.getDisplaySuit());
+            }
+
             if (mGame.isMyTurn() &&
-                mGame.getRules().checkCard(mCardSelected, mGame.getDiscardPileTop()) &&
+                mGame.getRules().checkCard(mCardSelected, discardCard) &&
                 !mGame.getSelf().getCards().isEmpty())
             {
                 // play card
