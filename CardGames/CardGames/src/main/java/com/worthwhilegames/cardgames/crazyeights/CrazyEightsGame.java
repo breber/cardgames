@@ -334,6 +334,10 @@ public class CrazyEightsGame implements Game {
             e.printStackTrace();
         }
 
+        if (Util.isDebugBuild()) {
+            Log.d(TAG, "persist: " + toRet.toString());
+        }
+
         return toRet.toString().getBytes();
     }
 
@@ -344,6 +348,10 @@ public class CrazyEightsGame implements Game {
         }
 
         String stringState = new String(state);
+
+        if (Util.isDebugBuild()) {
+            Log.d(TAG, "load: " + stringState);
+        }
 
         try {
             JSONObject obj = new JSONObject(stringState);

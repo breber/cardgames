@@ -32,21 +32,17 @@ import java.util.ArrayList;
 public class GameActivity extends BaseGameActivity implements
         OnTurnBasedMatchUpdateReceivedListener, PlayerHandFragment.GameUpdatedListener {
 
-    /**
-     * The request code to keep track of the "Are you sure you want to quit"
-     * activity
-     */
+    private static final String TAG = GameActivity.class.getSimpleName();
+
     private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
+    private static final int SELECT_OPPONENTS = Math.abs("SELECT_OPPONENTS".hashCode());
+    private static final int LOOK_AT_MATCHES = Math.abs("LOOK_AT_MATCHES".hashCode());
 
     public static String CREATE_GAME_EXTRA = "CREATEGAME";
 
-    public static final String TAG = GameActivity.class.getSimpleName();
-
     private GameboardFragment mGameboardFragment;
     private PlayerHandFragment mPlayerHandFragment;
-
     private TurnBasedMatch mMatch;
-
     private boolean mCreateGame = false;
 
     @Override
@@ -93,20 +89,14 @@ public class GameActivity extends BaseGameActivity implements
         finish();
     }
 
-    // TODO: look through this
-
-    // For our intents
-    final static int RC_SELECT_PLAYERS = 10000;
-    final static int RC_LOOK_AT_MATCHES = 10001;
-
     @Override
     public void onSignInSucceeded() {
         if (mCreateGame) {
-            Intent intent = Games.TurnBasedMultiplayer.getSelectOpponentsIntent(getApiClient(), 1, 4, true);
-            startActivityForResult(intent, RC_SELECT_PLAYERS);
+            Intent intent = Games.TurnBasedMultiplayer.getSelectOpponentsIntent(getApiClient(), 1, 3, true);
+            startActivityForResult(intent, SELECT_OPPONENTS);
         } else {
             Intent intent = Games.TurnBasedMultiplayer.getInboxIntent(getApiClient());
-            startActivityForResult(intent, RC_LOOK_AT_MATCHES);
+            startActivityForResult(intent, LOOK_AT_MATCHES);
         }
 
         Games.TurnBasedMultiplayer.registerMatchUpdateListener(getApiClient(), this);
@@ -116,51 +106,43 @@ public class GameActivity extends BaseGameActivity implements
     public void onActivityResult(int request, int response, Intent data) {
         super.onActivityResult(request, response, data);
 
-        if (request == RC_LOOK_AT_MATCHES) {
+        if (request == LOOK_AT_MATCHES) {
             if (response != Activity.RESULT_OK) {
-                // user canceled
                 finish();
                 return;
             }
 
             TurnBasedMatch match = data.getParcelableExtra(GamesClient.EXTRA_TURN_BASED_MATCH);
-
             if (match != null) {
                 updateMatch(match);
             }
-
-            Log.d(TAG, "Match = " + match);
-        } else if (request == RC_SELECT_PLAYERS) {
-            // Returned from 'Select players to Invite' dialog
-
+        } else if (request == SELECT_OPPONENTS) {
             if (response != Activity.RESULT_OK) {
-                // user canceled
                 finish();
                 return;
             }
 
-            // get the invitee list
             final ArrayList<String> invitees = data.getStringArrayListExtra(GamesClient.EXTRA_PLAYERS);
+            TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder().addInvitedPlayers(
+                    invitees).build();
 
-            TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder().addInvitedPlayers(invitees).build();
-
-            Games.TurnBasedMultiplayer.createMatch(getApiClient(), tbmc).setResultCallback(initiateMatchResultResultCallback);
+            Games.TurnBasedMultiplayer.createMatch(getApiClient(), tbmc).setResultCallback(
+                    initiateMatchResultResultCallback);
         }
     }
 
     @Override
     public void onTurnBasedMatchReceived(TurnBasedMatch match) {
-        Toast.makeText(this, "A match was received.", Toast.LENGTH_SHORT).show();
-
         updateMatch(match);
     }
 
     @Override
     public void onTurnBasedMatchRemoved(String matchId) {
         Toast.makeText(this, "A match was removed.", Toast.LENGTH_SHORT).show();
-    }
+        // TODO: finish game
 
-    // TODO: End look through this
+        showAlert("Warning", "Match removed!");
+    }
 
     private ResultCallback<TurnBasedMultiplayer.InitiateMatchResult> initiateMatchResultResultCallback =
             new ResultCallback<TurnBasedMultiplayer.InitiateMatchResult>() {
@@ -196,8 +178,10 @@ public class GameActivity extends BaseGameActivity implements
                 }
             };
 
+    /**
+     * Process the UpdateMatchResult
+     */
     public void processResult(TurnBasedMultiplayer.UpdateMatchResult result) {
-        Toast.makeText(this, "A match was updated.", Toast.LENGTH_SHORT).show();
         TurnBasedMatch match = result.getMatch();
         if (!checkStatusCode(match, result.getStatus().getStatusCode())) {
             return;
@@ -206,24 +190,31 @@ public class GameActivity extends BaseGameActivity implements
         updateMatch(match);
     }
 
+    /**
+     * Take the match and update the UI accordingly
+     */
     public void updateMatch(TurnBasedMatch match) {
         mMatch = match;
 
         int status = match.getStatus();
         int turnStatus = match.getTurnStatus();
 
+        // TODO: euchre
         Game game = new CrazyEightsGame(match, Games.Players.getCurrentPlayerId(getApiClient()));
         game.load(match.getData());
 
         switch (status) {
             case TurnBasedMatch.MATCH_STATUS_CANCELED:
                 // TODO: implement this
+                showAlert("Warning", "Match cancelled");
                 return;
             case TurnBasedMatch.MATCH_STATUS_EXPIRED:
                 // TODO: implement this
+                showAlert("Warning", "Match expired");
                 return;
             case TurnBasedMatch.MATCH_STATUS_AUTO_MATCHING:
                 // TODO: implement this
+                showAlert("Warning", "Match auto-matching");
                 return;
             case TurnBasedMatch.MATCH_STATUS_COMPLETE:
                 if (turnStatus != TurnBasedMatch.MATCH_TURN_STATUS_COMPLETE) {
@@ -237,23 +228,18 @@ public class GameActivity extends BaseGameActivity implements
                 return;
         }
 
-        // TODO: euchre
-        // Update both the gameboard and the player hand
-        mPlayerHandFragment.updateGame(game);
-        mGameboardFragment.updateUi(game);
-
-        // OK, it's active. Check on turn status.
         switch (turnStatus) {
             case TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN:
                 switchToPlayerHand();
-                return;
+                break;
             case TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN:
                 switchToGameboard();
                 break;
-            case TurnBasedMatch.MATCH_TURN_STATUS_INVITED:
-                // TODO: implement this
-                break;
         }
+
+        // Update both the gameboard and the player hand
+        mPlayerHandFragment.updateGame(game);
+        mGameboardFragment.updateUi(game);
     }
 
     private boolean checkStatusCode(TurnBasedMatch match, int statusCode) {

@@ -200,16 +200,16 @@ public class PlayerHandFragment extends Fragment {
             boolean isSuitChosen = true;
             switch (resultCode) {
                 case Constants.SUIT_CLUBS:
-                    c8Game.discard(mCardSelected, C8Constants.PLAY_EIGHT_C);
+                    c8Game.discard(mCardSelected, Constants.SUIT_CLUBS);
                     break;
                 case Constants.SUIT_DIAMONDS:
-                    c8Game.discard(mCardSelected, C8Constants.PLAY_EIGHT_D);
+                    c8Game.discard(mCardSelected, Constants.SUIT_DIAMONDS);
                     break;
                 case Constants.SUIT_HEARTS:
-                    c8Game.discard(mCardSelected, C8Constants.PLAY_EIGHT_H);
+                    c8Game.discard(mCardSelected, Constants.SUIT_HEARTS);
                     break;
                 case Constants.SUIT_SPADES:
-                    c8Game.discard(mCardSelected, C8Constants.PLAY_EIGHT_S);
+                    c8Game.discard(mCardSelected, Constants.SUIT_SPADES);
                     break;
                 case Activity.RESULT_OK:
                     isSuitChosen = false;
@@ -325,11 +325,6 @@ public class PlayerHandFragment extends Fragment {
 
     /**
      * Set the card as greyed out, or not greyed out.
-     *
-     * @param cardImageViewId - This is the id of the image view of the card
-     *                             that is being greyed out or not greyed out
-     * @param isPlayable  - This is whether or not the card should be greyed
-     *                         out based on whether it is legal to play it
      */
     public void setCardPlayable(int cardImageViewId, boolean isPlayable) {
         ImageView iv = (ImageView)getView().findViewById(cardImageViewId);
