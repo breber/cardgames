@@ -9,7 +9,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.8.+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
         // Temporarily use the 0.9.1 SNAPSHOT
         // see https://github.com/JakeWharton/gradle-android-test-plugin/pull/26
         classpath 'com.squareup.gradle:gradle-android-test-plugin:0.9.1-SNAPSHOT'
