@@ -1,23 +1,23 @@
 apply plugin: 'android'
-apply plugin: 'android-test'
-
-dependencies {
-    compile 'com.google.android.gms:play-services:4.3.+'
-    compile 'com.jakewharton:butterknife:5.1.+'
-
-    compile files('libs/libGoogleAnalyticsServices.jar')
-
-    repositories {
-        mavenCentral()
-    }
-    testCompile 'junit:junit:4.10'
-    testCompile 'org.robolectric:robolectric:2.1.+'
-    testCompile 'com.squareup:fest-android:1.0.+'
-}
 
 android {
+
+    dependencies {
+        compile 'com.google.android.gms:play-services:4.4.+'
+        compile 'com.jakewharton:butterknife:5.1.0'
+
+        compile files('libs/libGoogleAnalyticsServices.jar')
+
+//        repositories {
+//            mavenCentral()
+//        }
+//        testCompile 'junit:junit:4.10'
+//        testCompile 'org.robolectric:robolectric:2.1.+'
+//        testCompile 'com.squareup:fest-android:1.0.+'
+    }
+
     compileSdkVersion 19
-    buildToolsVersion "19.1.+"
+    buildToolsVersion "19.1"
 
     defaultConfig {
         minSdkVersion 11

@@ -28,5 +28,6 @@ proguard/
 *.iws
 .idea/
 
-CardGames/.gradle/
-CardGames/CardGames/build/
+cardgames/.gradle/
+cardgames/build
+cardgames/cardgames/build/
