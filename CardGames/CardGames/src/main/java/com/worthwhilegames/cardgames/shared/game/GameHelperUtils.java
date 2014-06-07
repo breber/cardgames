@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Resources;
 import android.util.Log;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.games.GamesActivityResultCodes;
 import com.worthwhilegames.cardgames.R;
@@ -174,9 +173,9 @@ class GameHelperUtils {
         } catch (Exception ex) {
             ex.printStackTrace();
             Log.w(GameHelper.TAG, "*** GameHelper could not found resource id #" + resId + ". " +
-                "This probably happened because you included it as a stand-alone JAR. " +
-                "BaseGameUtils should be compiled as a LIBRARY PROJECT, so that it can access " +
-                "its resources. Using a fallback string.");
+                    "This probably happened because you included it as a stand-alone JAR. " +
+                    "BaseGameUtils should be compiled as a LIBRARY PROJECT, so that it can access " +
+                    "its resources. Using a fallback string.");
             return FALLBACK_STRINGS[whichString];
         }
     }

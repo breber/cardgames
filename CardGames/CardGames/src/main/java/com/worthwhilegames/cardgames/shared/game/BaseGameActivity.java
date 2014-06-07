@@ -18,17 +18,17 @@ package com.worthwhilegames.cardgames.shared.game;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.worthwhilegames.cardgames.shared.AdActivity;
 
 /**
  * Example base class for games. This implementation takes care of setting up
- * the GamesClient object and managing its lifecycle. Subclasses only need to
+ * the API client object and managing its lifecycle. Subclasses only need to
  * override the @link{#onSignInSucceeded} and @link{#onSignInFailed} abstract
  * methods. To initiate the sign-in flow when the user clicks the sign-in
  * button, subclasses should call @link{#beginUserInitiatedSignIn}. By default,
- * this class only instantiates the GamesClient object. If the PlusClient or
+ * this class only instantiates the GoogleApiClient object. If the PlusClient or
  * AppStateClient objects are also wanted, call the BaseGameActivity(int)
  * constructor and specify the requested clients. For example, to request
  * PlusClient and GamesClient, use BaseGameActivity(CLIENT_GAMES | CLIENT_PLUS).
@@ -39,7 +39,7 @@ import com.worthwhilegames.cardgames.shared.AdActivity;
  *
  * @author Bruno Oliveira (Google)
  */
-public abstract class BaseGameActivity extends AdActivity implements
+public abstract class BaseGameActivity extends FragmentActivity implements
         GameHelper.GameHelperListener {
 
     // The game helper object. This class is mainly a wrapper around this object.

@@ -9,7 +9,8 @@ import android.util.Log;
 import android.widget.Toast;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
-import com.google.android.gms.games.GamesClient;
+import com.google.android.gms.games.GamesStatusCodes;
+import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.games.multiplayer.Participant;
 import com.google.android.gms.games.multiplayer.turnbased.OnTurnBasedMatchUpdateReceivedListener;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatch;
@@ -112,7 +113,7 @@ public class GameActivity extends BaseGameActivity implements
                 return;
             }
 
-            TurnBasedMatch match = data.getParcelableExtra(GamesClient.EXTRA_TURN_BASED_MATCH);
+            TurnBasedMatch match = data.getParcelableExtra(Multiplayer.EXTRA_TURN_BASED_MATCH);
             if (match != null) {
                 updateMatch(match);
             }
@@ -122,7 +123,7 @@ public class GameActivity extends BaseGameActivity implements
                 return;
             }
 
-            final ArrayList<String> invitees = data.getStringArrayListExtra(GamesClient.EXTRA_PLAYERS);
+            final ArrayList<String> invitees = data.getStringArrayListExtra(Games.EXTRA_PLAYER_IDS);
             TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder().addInvitedPlayers(
                     invitees).build();
 
@@ -245,34 +246,34 @@ public class GameActivity extends BaseGameActivity implements
     private boolean checkStatusCode(TurnBasedMatch match, int statusCode) {
         mMatch = match;
         switch (statusCode) {
-            case GamesClient.STATUS_OK:
+            case GamesStatusCodes.STATUS_OK:
                 return true;
-            case GamesClient.STATUS_NETWORK_ERROR_OPERATION_DEFERRED:
+            case GamesStatusCodes.STATUS_NETWORK_ERROR_OPERATION_DEFERRED:
                 // This is OK; the action is stored by Google Play Services and will
                 // be dealt with later.
                 if (Util.isDebugBuild()) {
                     Toast.makeText(this, "Stored action for later.", Toast.LENGTH_SHORT).show();
                 }
                 return true;
-            case GamesClient.STATUS_MULTIPLAYER_ERROR_NOT_TRUSTED_TESTER:
+            case GamesStatusCodes.STATUS_MULTIPLAYER_ERROR_NOT_TRUSTED_TESTER:
                 showAlert("Warning", getResources().getString(R.string.status_multiplayer_error_not_trusted_tester));
                 break;
-            case GamesClient.STATUS_MATCH_ERROR_ALREADY_REMATCHED:
+            case GamesStatusCodes.STATUS_MATCH_ERROR_ALREADY_REMATCHED:
                 showAlert("Warning", getResources().getString(R.string.match_error_already_rematched));
                 break;
-            case GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED:
+            case GamesStatusCodes.STATUS_NETWORK_ERROR_OPERATION_FAILED:
                 showAlert("Warning", getResources().getString(R.string.network_error_operation_failed));
                 break;
-            case GamesClient.STATUS_CLIENT_RECONNECT_REQUIRED:
+            case GamesStatusCodes.STATUS_CLIENT_RECONNECT_REQUIRED:
                 showAlert("Warning", getResources().getString(R.string.client_reconnect_required));
                 break;
-            case GamesClient.STATUS_INTERNAL_ERROR:
+            case GamesStatusCodes.STATUS_INTERNAL_ERROR:
                 showAlert("Warning", getResources().getString(R.string.internal_error));
                 break;
-            case GamesClient.STATUS_MATCH_ERROR_INACTIVE_MATCH:
+            case GamesStatusCodes.STATUS_MATCH_ERROR_INACTIVE_MATCH:
                 showAlert("Warning", getResources().getString(R.string.match_error_inactive_match));
                 break;
-            case GamesClient.STATUS_MATCH_ERROR_LOCALLY_MODIFIED:
+            case GamesStatusCodes.STATUS_MATCH_ERROR_LOCALLY_MODIFIED:
                 showAlert("Warning", getResources().getString(R.string.match_error_locally_modified));
                 break;
             default:
