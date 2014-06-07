@@ -35,9 +35,9 @@ public class GameActivity extends BaseGameActivity implements
 
     private static final String TAG = GameActivity.class.getSimpleName();
 
-    private static final int QUIT_GAME = Math.abs("QUIT_GAME".hashCode());
-    private static final int SELECT_OPPONENTS = Math.abs("SELECT_OPPONENTS".hashCode());
-    private static final int LOOK_AT_MATCHES = Math.abs("LOOK_AT_MATCHES".hashCode());
+    private static final int QUIT_GAME = 1000;
+    private static final int SELECT_OPPONENTS = 1001;
+    private static final int LOOK_AT_MATCHES = 1002;
 
     public static String CREATE_GAME_EXTRA = "CREATEGAME";
 
