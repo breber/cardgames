@@ -1,26 +1,28 @@
 apply plugin: 'android'
-apply plugin: 'android-test'
 
-dependencies {
-    compile 'com.google.android.gms:play-services:4.0.30'
-
-    compile files('libs/jmdns-3.4.1.jar')
-    compile files('libs/libGoogleAnalyticsServices.jar')
-
-    repositories {
-        mavenCentral()
-    }
-    testCompile 'junit:junit:4.10'
-    testCompile 'org.robolectric:robolectric:2.1.+'
-    testCompile 'com.squareup:fest-android:1.0.+'
-}
+// TODO: re-enable android-test -- https://github.com/robolectric/gradle-android-test-plugin/issues/31
+//apply plugin: 'android-test'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19"
+    buildToolsVersion "19.1"
 
     defaultConfig {
-        minSdkVersion 8
+        minSdkVersion 9
         targetSdkVersion 19
+    }
+
+    dependencies {
+        compile 'com.google.android.gms:play-services:4.4.+'
+
+        compile files('libs/jmdns-3.4.1.jar')
+        compile files('libs/libGoogleAnalyticsServices.jar')
+
+//        repositories {
+//            mavenCentral()
+//        }
+//        testCompile 'junit:junit:4.10'
+//        testCompile 'org.robolectric:robolectric:2.1.+'
+//        testCompile 'com.squareup:fest-android:1.0.+'
     }
 }
