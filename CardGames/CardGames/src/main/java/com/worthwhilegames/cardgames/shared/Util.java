@@ -27,6 +27,7 @@ public class Util {
     public static boolean isDebugBuild() {
         return !isTestSuite && BuildConfig.DEBUG;
     }
+
     /**
      * Checks whether cheater mode is enabled
      *
@@ -37,7 +38,6 @@ public class Util {
     public static boolean isCheaterMode(Context ctx) {
         SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, 0);
 
-        // TODO: enable this
-        return true; //prefs.getBoolean(PREF_CHEATER_MODE, false);
+        return prefs.getBoolean(Constants.PREF_CHEATER_MODE, false);
     }
 }
