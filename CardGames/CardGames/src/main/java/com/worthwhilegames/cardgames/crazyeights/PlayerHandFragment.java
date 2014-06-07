@@ -39,7 +39,7 @@ public class PlayerHandFragment extends Fragment {
     /**
      * intent code for choosing suit
      */
-    private static final int CHOOSE_SUIT = Math.abs("CHOOSE_SUIT".hashCode());
+    private static final int CHOOSE_SUIT = 2000;
 
     /**
      * The height of each card

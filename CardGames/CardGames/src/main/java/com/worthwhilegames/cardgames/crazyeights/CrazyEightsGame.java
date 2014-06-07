@@ -333,6 +333,10 @@ public class CrazyEightsGame implements Game {
 
         String stringState = new String(state);
 
+        players = new ArrayList<Player>();
+        shuffledDeck = new ArrayList<Card>();
+        discardPile = new ArrayList<Card>();
+
         try {
             JSONObject obj = new JSONObject(stringState);
 

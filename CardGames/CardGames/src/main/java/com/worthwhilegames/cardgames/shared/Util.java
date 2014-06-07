@@ -3,7 +3,6 @@ package com.worthwhilegames.cardgames.shared;
 import android.content.Context;
 import android.content.SharedPreferences;
 import com.worthwhilegames.cardgames.BuildConfig;
-import static com.worthwhilegames.cardgames.shared.Constants.PREF_CHEATER_MODE;
 
 /**
  * A Utility class that contains common generic methods relevant
@@ -38,6 +37,7 @@ public class Util {
     public static boolean isCheaterMode(Context ctx) {
         SharedPreferences prefs = ctx.getSharedPreferences(Constants.PREFERENCES, 0);
 
-        return prefs.getBoolean(PREF_CHEATER_MODE, false);
+        // TODO: enable this
+        return true; //prefs.getBoolean(PREF_CHEATER_MODE, false);
     }
 }
