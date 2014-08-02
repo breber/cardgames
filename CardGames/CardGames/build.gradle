@@ -1,28 +1,19 @@
-apply plugin: 'android'
-
-// TODO: re-enable android-test -- https://github.com/robolectric/gradle-android-test-plugin/issues/31
-//apply plugin: 'android-test'
+apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.1"
+    compileSdkVersion 20
+    buildToolsVersion "20.0.0"
 
     defaultConfig {
+        applicationId "com.worthwhilegames.cardgames"
         minSdkVersion 9
-        targetSdkVersion 19
+        targetSdkVersion 20
+        versionCode 14
+        versionName "1.1.5"
     }
+}
 
-    dependencies {
-        compile 'com.google.android.gms:play-services:4.4.+'
-
-        compile files('libs/jmdns-3.4.1.jar')
-        compile files('libs/libGoogleAnalyticsServices.jar')
-
-//        repositories {
-//            mavenCentral()
-//        }
-//        testCompile 'junit:junit:4.10'
-//        testCompile 'org.robolectric:robolectric:2.1.+'
-//        testCompile 'com.squareup:fest-android:1.0.+'
-    }
+dependencies {
+    compile 'com.google.android.gms:play-services:5.0.+'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 }

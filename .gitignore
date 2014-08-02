@@ -1,3 +1,6 @@
+# linux files
+*~
+
 # built application files
 *.apk
 *.ap_
@@ -30,4 +33,4 @@ proguard/
 
 CardGames/.gradle/
 CardGames/CardGames/build/
-cardgames/build
+CardGames/build
